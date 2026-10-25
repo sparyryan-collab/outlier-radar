@@ -175,7 +175,8 @@ def main():
         env = dict(os.environ, YT_API_BASE=f"http://127.0.0.1:{port}", YT_API_KEY="wrong", SEARCH_EVERY="1", SCAN_TIME_OFFSET=str(9 * 3600), PYTHONIOENCODING="utf-8")
         out3 = Path(tmp) / "out3.json"
         r = subprocess.run([sys.executable, str(HERE / "scan.py"), "--seed", str(Path(tmp) / "seed.json"), "--queries", str(Path(tmp) / "queries.json"),
-                            "--picks", str(Path(tmp) / "picks.json"), "--out", str(out3), "--prev-url", out2.resolve().as_uri()],
+                            "--picks", str(Path(tmp) / "picks.json"), "--out", str(out3), "--prev-url", out2.resolve().as_uri(),
+                            "--extra", str(Path(tmp) / "extra.json")],
                            env=env, capture_output=True, text=True, encoding="utf-8", cwd=tmp)
         assert out3.exists() and r.returncode == 1, (r.returncode, r.stdout, r.stderr)
         assert "wrong" not in (r.stdout + r.stderr), "the API key must never be printed"
