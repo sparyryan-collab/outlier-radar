@@ -105,6 +105,7 @@ class YouTube:
                     "id": it["id"], "t": it["snippet"].get("title", ""), "v": int(st["viewCount"]), "ch_id": it["snippet"].get("channelId"),
                     "ch": it["snippet"].get("channelTitle"), "dur": parse_duration(it.get("contentDetails", {}).get("duration")),
                     "p": iso_to_ts(it["snippet"].get("publishedAt", "")),
+                    "l": int(st["likeCount"]) if "likeCount" in st else None, "c": int(st["commentCount"]) if "commentCount" in st else None,
                 }
         return out
 
@@ -121,6 +122,7 @@ class YouTube:
                     "id": it["id"], "name": sn.get("title"), "handle": sn.get("customUrl") or "",
                     "subs": 0 if st.get("hiddenSubscriberCount") else int(st.get("subscriberCount", 0)),
                     "descr": re.sub(r"\s+", " ", sn.get("description", "")).strip()[:400], "avatar": avatar,
+                    "created": iso_to_ts(sn.get("publishedAt", "")),
                 }
         return out
 

@@ -544,6 +544,82 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .confetti{position:fixed;top:-20px;z-index:99;font-size:22px;pointer-events:none;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
 
+
+/* ---- playbook ---- */
+.pbtop{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 16px;max-width:960px}
+.pbbar{flex:1 1 180px;max-width:300px;height:10px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.pbbar i{display:block;height:100%;background:var(--red);border-radius:99px;transition:width .3s}
+.pbstep{background:var(--card);box-shadow:0 0 0 1px var(--line);border-radius:16px;margin:0 0 10px;max-width:960px;scroll-margin-top:70px}
+.pbhead{display:flex;align-items:center;gap:14px;width:100%;border:0;background:none;padding:14px 18px;text-align:left;border-radius:16px}
+.pbhead:hover{background:var(--hover)}
+.pbnum{width:34px;height:34px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-weight:800;flex:none}
+.pbstep.open .pbnum{background:var(--red);color:#fff}
+.pbstep.done .pbnum{background:var(--good);color:#fff}
+.pbhead small{display:block;color:var(--muted);font-size:12px}
+.pbhead b{font-size:16.5px;line-height:1.35}
+.pbchev{margin-left:auto;font-size:22px;color:var(--muted)}
+.pbbody{padding:0 20px 18px 66px}
+.pbbody p{margin:0 0 10px}
+.pbbody ul{margin:0 0 10px;padding-left:20px}
+.pbbody li{margin:4px 0}
+.pbh{margin:16px 0 6px;font-size:15px}
+.pbfoot{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center}
+.pbtool,.pbcard{background:var(--surface);border-radius:14px;padding:14px 16px;margin:10px 0}
+.pbtool h4{margin:0 0 8px;font-size:14.5px}
+.pbcount{display:inline-block;background:color-mix(in srgb,var(--red) 12%,transparent);border-radius:12px;padding:8px 14px;margin:4px 0 10px;font-size:14.5px}
+.pbwarn{background:var(--tip);border:1px solid var(--tipline);border-radius:10px;padding:9px 12px}
+.pbtip{color:var(--muted);font-size:13px}
+.pbmuted{color:var(--muted)}
+.pbbody input:not([type]),.pbbody textarea,.pbbody select,.pbbody input[type=number],.pbbody input[type=datetime-local]{width:100%;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--bg);margin:3px 0;font:inherit;color:var(--text)}
+.pbbody textarea{resize:vertical}
+.pbbody select{width:auto;max-width:100%}
+.pbbody label.pbtip{display:block;margin:4px 0}
+.pbtool input[type=number]{width:160px}
+.pbrow2{display:flex;gap:10px;align-items:flex-start}
+.pbrow2 input[type=datetime-local]{width:auto;flex:none}
+.pbgrid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 12px}
+.crit{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.critrow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13.5px}
+.seg.sm{padding:2px}
+.seg.sm button{height:26px;min-width:32px;padding:0 8px;border-radius:13px}
+.pbtotal{font-size:15px;margin-top:6px}
+.tdthumb{width:54px;aspect-ratio:9/16;object-fit:cover;border-radius:8px;flex:none;background:var(--surface2)}
+.tdtable{width:100%;border-collapse:collapse;margin:8px 0}
+.tdtable th{text-align:left;font-size:12px;color:var(--muted);font-weight:500;padding:2px 4px}
+.tdtable td{padding:2px 4px;vertical-align:top}
+.tdtable td:first-child{width:76px}
+.pbchecks{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:2px 14px;margin:8px 0}
+.pbchk{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;cursor:pointer;padding:4px 0}
+.pbchk input{margin-top:3px;accent-color:var(--red);width:16px;height:16px;flex:none}
+.cptable{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0 10px;min-width:520px}
+.cptable th,.cptable td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.cptable th{color:var(--muted);font-weight:500;font-size:12px}
+.loggrid{display:grid;grid-template-columns:repeat(4,minmax(80px,1fr));gap:6px}
+.pbwin{color:var(--good);font-weight:700}
+.pbsrc{max-width:960px;color:var(--muted);font-size:12.5px;margin:18px 0}
+.pbsrc ul{margin:6px 0 10px;padding-left:18px}
+.pbsrc a{color:var(--accent)}
+.pbpromo{display:flex;align-items:center;gap:14px;width:100%;max-width:960px;border:0;text-align:left;background:linear-gradient(120deg,color-mix(in srgb,var(--accent) 15%,var(--bg)),color-mix(in srgb,#8a5cff 13%,var(--bg)));border-radius:16px;padding:14px 18px;margin:8px 0 18px}
+.pbpromo:hover{filter:brightness(1.05)}
+.pbpromo .em{font-size:32px;line-height:1}
+.pbpromo b{display:block;font-size:16px}
+.pbpromo .d{color:var(--muted);font-size:13px}
+.pbpromo .go{margin-left:auto;font-size:22px;color:var(--accent)}
+.ypp{display:flex;flex-direction:column;gap:12px;max-width:640px}
+.yrow{font-size:13.5px;display:flex;flex-direction:column;gap:5px}
+.ytrack{height:12px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.ytrack i{display:block;height:100%;background:var(--series-1);border-radius:99px}
+/* ---- method in 60 seconds ---- */
+.stage .msc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 26px 60px;gap:14px}
+.stage .mstep{font-size:14px;color:#ff8aa0;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.stage .memo{font-size:78px;line-height:1}
+.stage .msc h3{margin:0;font-size:25px;line-height:1.3}
+.stage .mb{background:#1f1f1f;border-radius:14px;padding:11px 14px;font-size:16px;width:100%}
+.stage .mdots{display:flex;gap:6px;position:absolute;bottom:28px;left:0;right:0;justify-content:center}
+.stage .mdots i{width:22px;height:5px;border-radius:3px;background:#3a3a3a}
+.stage .mdots i.lit{background:#ff0033}
+@media (max-width:760px){.pbbody{padding:0 14px 16px}.loggrid{grid-template-columns:repeat(2,1fr)}.pbrow2{flex-wrap:wrap}.pbhead{padding:12px 14px}}
+
 @media (max-width:1180px){.pillbtn .lbl{display:none}.pillbtn{padding:0 10px}}
 @media (max-width:1000px){
   #side{width:76px;padding:4px}
@@ -561,7 +637,7 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
   #chips{top:0;position:static;padding-top:4px}
   #side{position:fixed;inset:auto 0 0 0;top:auto;z-index:45;width:auto;height:60px;display:flex;padding:0 2px;background:var(--bg);border-top:1px solid var(--line);overflow:hidden}
   #side .nav{height:58px;flex:1;min-width:0;border-radius:0}
-  #side .nav[data-tab=channels],#side .nav[data-tab=live],#side .nav[data-tab=ideas],#side .nav[data-tab=topics],#side .nav[data-tab=compare],#side .nav[data-tab=help],#side .navsep{display:none}
+  #side .nav[data-tab=channels],#side .nav[data-tab=live],#side .nav[data-tab=ideas],#side .nav[data-tab=topics],#side .nav[data-tab=compare],#side .nav[data-tab=help],#side .nav[data-tab=playbook],#side .nav[data-tab=mine],#side .navsep{display:none}
   #side .nav[data-tab=more]{display:flex}
   #tray{bottom:72px}
   .wkgrid{grid-template-columns:1fr 1fr;gap:18px 8px}
@@ -978,6 +1054,175 @@ Object.assign(T.th, {
   sLimit: 'ใช้สิทธิ์ค้นหาฟรีของวันนี้บนอุปกรณ์นี้ครบแล้ว พรุ่งนี้ค้นหาได้อีก หรือใส่คีย์ฟรีของคุณเอง', sLeft: 'วันนี้เหลือสิทธิ์ค้นหาฟรีอีก {n} ครั้งบนอุปกรณ์นี้',
   sAddKey: 'ใส่คีย์ของฉันเอง', sCached: 'ผลที่บันทึกไว้เมื่อ {ago}'
 });
+Object.assign(T.en, {
+  nPlaybook: 'Playbook', nMine: 'My channel',
+  pbT: 'The Viral Shorts Playbook', pbD: 'The whole method from Jack Craig’s channel-growth experiments, checked against YouTube’s own rules and turned into 8 steps with tools. Your progress is saved on this device.',
+  pbProgress: '{a} of {b} steps done', pbDone: 'Mark this step as done', pbUndone: 'Done ✓ (tap to undo)', pbStep: 'Step {n}', pbReset: 'Start over',
+  pbResetQ: 'Clear all your playbook notes on this device?', pbSources: 'Where this comes from', pbBackup: '💾 Backup / move to another device', pbAdd: '＋ Add', pbRemove: 'Remove',
+  pbCardT: 'New: the Viral Shorts Playbook', pbCardD: 'Go from zero to your first viral Short in 8 guided steps, with tools for each one.',
+  methodT: 'The method in 60 seconds', methodBtn: '▶ Watch the method in 60 seconds', methodEnd: 'Your turn: open the Playbook', openPlaybook: '📘 Open the Playbook',
+  pbS1T: 'Set your goal and the deadline', pbS2T: 'Find an outlier niche', pbS3T: 'Tear down 3–5 winning Shorts', pbS4T: 'Set up your channel in under an hour',
+  pbS5T: 'Write 5 Shorts before you post any', pbS6T: 'Publish and read the numbers', pbS7T: 'Double down on what works', pbS8T: 'Grow beyond Shorts, safely',
+  mb1a: 'Today: 10M Shorts views in 90 days + 1,000 subscribers', mb1b: 'From Feb 1, 2027: 20M views', mb2a: 'Huge views from few uploads', mb2b: 'A format few people copy yet',
+  mb3a: 'Scene by scene: time, picture, words', mb3b: 'Rebuild the structure, never copy', mb4a: 'A name and a picture are enough', mb4b: 'Give it a brand character',
+  mb5a: 'Hook → conflict → comeback → payoff', mb5b: 'End where it began, so people replay', mb6a: 'Read it at 3h, 24h, 48h and 7 days', mb6b: 'Learn first, edit later',
+  mb7a: '3× your usual? Make 2 spin-offs', mb7b: 'Same structure, new subject', mb8a: 'Long videos pay far more', mb8b: 'Stay original and label realistic AI',
+  s1a: 'To earn from ads on YouTube you need to join the YouTube Partner Program (YPP).',
+  s1now: '**Today:** 1,000 subscribers + 10 million Shorts views in 90 days (or 4,000 watch hours of long videos in 12 months).',
+  s1next: '**From Feb 1, 2027:** 20 million Shorts views in 90 days (or 8,000 watch hours), according to YouTube Help.',
+  s1count: '<b>{n}</b> days left to qualify under today’s easier rules (by Jan 31, 2027)', s1countPast: 'The new, higher bar applies now.',
+  s1calcT: '🧮 How many Shorts do you need?', s1calcIn: 'Views you expect per Short',
+  s1calc10: 'For 10M views in 90 days: about <b>{n}</b> Shorts (≈{w} a week)', s1calc20: 'For 20M views (the 2027 bar): about <b>{n}</b> Shorts (≈{w} a week)',
+  s1money: '💵 Shorts pay little: roughly $0.01–$0.07 per 1,000 views, up to about $0.33 for US viewers (AIR estimates). 10M views ≈ <b>$100–$700</b>, up to about $3,300.',
+  s1funnel: 'So treat Shorts as the way people find you, and plan long videos later: they pay far more (a median of about $2.30 per 1,000 views).',
+  s1real: '⚠️ Reality check: even in Jack’s own videos only about 1 in 3–4 uploads broke out, and one hit carried most of the results.',
+  s2a: 'Look for channels with huge views from few uploads, in a format few people copy yet.', s2tools: 'Open the tools:',
+  s2talk: '💬 Jack’s extra signal: videos with far more comments per view than usual mean people really care. See “Most talked-about”.',
+  s2scoreT: '🎯 Score your niche ideas (0–3 each)', s2name: 'Niche idea, e.g. "cat rescue animation"', s2pick: 'Pick your top 2 and move on.',
+  s2v3: '🔥 Strong pick', s2v2: '🤔 Maybe', s2v1: '❌ Skip for now',
+  c1: 'Everyone can relate', c2: 'Strong emotional hook', c3: 'Makes you watch to the end', c4: 'Few people copy it yet', c5: 'Doesn’t depend on one creator',
+  c6: 'Will last beyond a fad', c7: 'Room for a brand character', c8: 'You can make one in 2 hours or less',
+  s3a: 'Don’t copy the video. Break a winner into scenes, then rebuild the same structure with your own subject.',
+  s3how: 'Tip: in any video player on this site, tap “✂️ Tear down this video” to start one here.', s3new: '＋ New teardown', s3link: 'Link to the Short',
+  s3time: 'Time', s3see: 'On screen', s3say: 'Said / text', s3addRow: '＋ Add scene', s3notes: 'What you’ll reuse (the structure, not the content)',
+  s3prompt: '🤖 Copy as an AI prompt', s3empty: 'No teardowns yet.',
+  k1: 'The first line asks a question or makes a bold claim', k2: 'Something moves in the very first frame', k3: 'There is a problem or conflict', k4: 'A comeback or twist',
+  k5: 'A satisfying payoff', k6: 'The end loops back to the start', k7: 'Cuts every 1–3 seconds',
+  s3promptText: 'Here is a scene-by-scene teardown of a viral YouTube Short: "{title}" {link}\n\n{rows}\n\nWhat it does: {checks}\nMy notes: {notes}\n\n1) Describe its structure as phases with timings.\n2) Write 10 hooks in the same style for my niche: {niche}.\n3) Suggest 3 new subjects that fit this structure without copying the original.',
+  s4a: 'Keep setup short. The videos matter, not the banner.',
+  s4c1: 'Create the channel: a name and a profile picture are enough', s4c2: 'Turn on 2-step verification for the Google account',
+  s4c3: 'Don’t post yet: build 5 Shorts first (step 5)', s4c4: 'Create your brand character (below)',
+  s4charT: '🦸 Your brand character', s4charD: 'A recurring character makes viewers come back for “them”, not only for the topic.',
+  chName: 'Name', chLook: 'Look', chPers: 'Personality', chCatch: 'Catchphrase or signature move', chWorld: 'World / setting',
+  s5a: 'Use the looped arc: hook → rising action → conflict → comeback → payoff, and end on a line that leads back to the hook so people replay.',
+  s5len: 'Test two lengths: 20–35 seconds and 45–60 seconds. There is no solid proof which wins, so watch what your viewers do.',
+  s5bank: '🪝 Hook bank: winning titles in this topic often start like this', s5progress: '{n} of 5 Shorts scripted', s5new: '＋ New script',
+  scTitle: 'Idea / title', scHook: 'Hook {n}', scRise: 'Rising action', scConf: 'Conflict', scBack: 'Comeback / twist', scPay: 'Payoff', scLoop: 'Last line that loops to the hook', scLen: 'Length',
+  s5copy: '📋 Copy script', s5ai: '🤖 Copy AI prompt to improve it',
+  s5aiText: 'Improve this YouTube Short script. Keep the looped structure, make the hook stronger in the first 2 seconds, and keep it to {len}.\n\n{script}',
+  s5ref: '🎨 Using AI video tools? Lock a character sheet and location pictures first, attach them to every shot, and expect about 3 tries per usable shot. Label realistic AI scenes when you upload.',
+  s6a: 'Post your first Short as a test, then read it at these times:', cpWhen: 'When', cpCheck: 'Check', cpDo: 'Then',
+  cp1: '3 hours|Viewed vs swiped away (in YouTube Studio)|If it is far below your other Shorts, don’t edit it. Learn for the next one.',
+  cp2: '24 hours|Average view duration vs length; comments|Compare with your own best Short, not with a number from a blog.',
+  cp3: '48 hours|The hourly views chart|Flat for 24 hours or more? Post the next Short.',
+  cp4: '7 days|Where viewers drop off (retention)|Fix that moment in your next Short.',
+  s6wait: 'Waiting rule (from Jack, not an official YouTube rule): post the next Short when the last one goes flat for a day. It costs little to follow for your first 5.',
+  s6logT: '📒 Your upload log', s6mine: 'Connect “My channel” to see your Shorts’ views automatically.', s6new: '＋ Log an upload',
+  lgTitle: 'Title', lg3: 'Views at 3h', lg24: 'at 24h', lg48: 'at 48h', lg7: 'at 7 days', h3: '3h', h24: '24h', h48: '48h', h7: '7-day',
+  s6next: 'next check: {when}', s6due: 'check due now: {h}', s6inH: '{h} in {n}h', s6usual: 'Your usual: {n} views', s6win: '🔥 {x}× your usual: a winner!',
+  s7a: 'When a Short beats your usual by 3× or more, make 2 spin-offs: the same structure with a new subject. This was the strongest pattern in Jack’s own results.',
+  s7none: 'No winners yet. Log uploads in step 6 or connect My channel, and winners show up here.', s7spin: 'Spin-off {n}: same structure, new subject',
+  s7review: '🗓️ Weekly review', rv1: 'Every upload is in the log', rv2: 'Dropped ideas that fell below your usual', rv3: 'Varied the structure and topics (nothing templated)',
+  s8a: 'Checkpoint on Dec 15:', s8c1: 'On pace for 10M Shorts views and 1,000 subscribers? Apply early in January.',
+  s8c2: 'Not on pace? Plan for the 20M bar and make long versions of your winners (8+ minutes allows mid-roll ads).',
+  s8c3: 'Add one income source besides ads, like affiliate links or a product.', s8c4: 'After YouTube proves a Short, post the watermark-free original to TikTok and Reels.',
+  s8safeT: '🛡️ Always (these protect your channel)', s8s1: 'Never re-upload or lightly edit someone else’s video. YouTube treats it as reused content.',
+  s8s2: 'Vary structure and topics so the channel never looks templated or mass-produced.', s8s3: 'Keep a human touch: your voice, your edit or your writing.',
+  s8s4: 'Turn on YouTube’s AI disclosure for realistic AI-made scenes.', s8s5: 'Don’t build a channel that depends on one other creator’s videos.',
+  s8unv: 'Treat these popular tips as unproven: “new accounts must be 7+ days old”, “wait for the flatline” and “re-uploads get shadowbanned”. They cost nothing to follow, but YouTube has never confirmed them.',
+  pMineT: 'My channel', pMineD: 'Connect your channel to see which of your Shorts beat your own usual, plus your progress toward monetization.',
+  mineIn: '@yourhandle or your channel link', mineGo: 'Connect', mineNeed: 'This needs YouTube search to be on for this site.',
+  mineNotFound: 'Couldn’t find that channel. Try the @handle exactly as on YouTube, or paste the channel link.', mineLoading: 'Loading your channel…',
+  mineRefresh: '🔄 Refresh', mineWait: 'You can refresh again in a few minutes.', mineDisconnect: 'Disconnect', mineUsual: 'Your usual views', mineShorts: 'Shorts found',
+  mineWinners: '🔥 Your winners (3× your usual or more)', mineWinTip: 'Make 2 spin-offs of each: same structure, new subject. Plan them in the Playbook, step 7.',
+  mineNoWin: 'No Short has beaten your usual by 3× yet. Keep testing new hooks.', mineAll: '🎬 Your recent Shorts', mineYpp: '💰 Road to monetization (rough estimate)',
+  mineSubs: 'Subscribers', mineViews90: 'Views on Shorts posted in the last 90 days',
+  mineYppNote: 'YouTube counts the last 90 days of views on all your Shorts; this only adds up your newest Shorts, so check YouTube Studio for the exact number.',
+  mineFew: 'Post at least 3 Shorts to see your usual and your winners.', mineCheck: '⏱️ {h} check due', mineUpdated: 'updated {ago}', mineDue: '⏱️ Checks due now',
+  bkT: 'Backup / move to another device', bkD: 'Your saved channels, playbook notes and settings live in this browser. Copy them as a code (or a file), then paste it on your phone or another computer.',
+  bkCopy: '📋 Copy backup code', bkFile: '⬇️ Download as a file', bkPaste: 'Paste a backup code here', bkRestore: 'Restore', bkOpen: 'or open a backup file:',
+  bkOk: 'Restored. Reloading…', bkBad: 'That code didn’t work. Copy the whole code and try again.', bkNoKey: 'Your own API key (if you added one) is not included.',
+  shTalk: '💬 Most talked-about', shTalkD: 'Far more comments per view than usual: people really care about these', talkV: '💬 {n} comments per 1K views',
+  lTalk: 'Comments per 1,000 views', gTalk: 'How many people comment for every 1,000 views. Far above normal means viewers really care (one of Jack Craig’s signals).',
+  vTalk: 'Sort: most talked-about', talkAvg: 'normal across the site: {n}',
+  lAge: 'Channel age', gAge: 'How long ago the channel was created on YouTube.', ageD: '{n} days', ageM: '{n} months', ageY: '{n} years',
+  wNewAge: 'New channel: started only {a} ago.', newAgeBadge: '🌱 New · {a}',
+  tearBtn: '✂️ Tear down this video', tearAdded: 'Added to your Playbook (step 3)'
+});
+Object.assign(T.th, {
+  nPlaybook: 'คู่มือสร้างช่อง', nMine: 'ช่องของฉัน',
+  pbT: 'คู่มือทำช่อง Shorts ให้ปัง', pbD: 'วิธีทั้งหมดจากการทดลองปั้นช่องของ Jack Craig ตรวจสอบกับกฎของ YouTube แล้ว จัดเป็น 8 ขั้นตอนพร้อมเครื่องมือ ความคืบหน้าบันทึกไว้ในอุปกรณ์นี้',
+  pbProgress: 'ทำแล้ว {a} จาก {b} ขั้นตอน', pbDone: 'ทำขั้นตอนนี้เสร็จแล้ว', pbUndone: 'เสร็จแล้ว ✓ (กดเพื่อยกเลิก)', pbStep: 'ขั้นตอนที่ {n}', pbReset: 'เริ่มใหม่',
+  pbResetQ: 'ล้างโน้ตในคู่มือทั้งหมดบนอุปกรณ์นี้?', pbSources: 'ข้อมูลนี้มาจากไหน', pbBackup: '💾 สำรองข้อมูล / ย้ายไปอุปกรณ์อื่น', pbAdd: '＋ เพิ่ม', pbRemove: 'ลบ',
+  pbCardT: 'ใหม่: คู่มือทำช่อง Shorts ให้ปัง', pbCardD: 'จากศูนย์สู่คลิปไวรัลคลิปแรกใน 8 ขั้นตอน พร้อมเครื่องมือในทุกขั้น',
+  methodT: 'วิธีทั้งหมดใน 60 วินาที', methodBtn: '▶ ดูวิธีทั้งหมดใน 60 วินาที', methodEnd: 'ตาคุณแล้ว: เปิดคู่มือเลย', openPlaybook: '📘 เปิดคู่มือ',
+  pbS1T: 'ตั้งเป้าหมายและเส้นตาย', pbS2T: 'หาหมวดที่มีช่องโดดเด่น', pbS3T: 'แยกชิ้นส่วนคลิปที่ปัง 3–5 คลิป', pbS4T: 'ตั้งค่าช่องภายในหนึ่งชั่วโมง',
+  pbS5T: 'เขียนสคริปต์ 5 คลิปก่อนลงคลิปแรก', pbS6T: 'ลงคลิปแล้วอ่านตัวเลข', pbS7T: 'ต่อยอดสิ่งที่ได้ผล', pbS8T: 'โตไปไกลกว่า Shorts อย่างปลอดภัย',
+  mb1a: 'ตอนนี้: ยอดวิว Shorts 10 ล้านใน 90 วัน + ผู้ติดตาม 1,000', mb1b: 'ตั้งแต่ 1 ก.พ. 2027: 20 ล้านวิว', mb2a: 'ยอดวิวมหาศาลจากคลิปไม่กี่คลิป', mb2b: 'รูปแบบที่ยังมีคนทำตามน้อย',
+  mb3a: 'แยกทีละฉาก: เวลา ภาพ คำพูด', mb3b: 'สร้างโครงเรื่องใหม่ ห้ามลอก', mb4a: 'มีชื่อกับรูปก็พอ', mb4b: 'มีตัวละครประจำช่อง',
+  mb5a: 'ฮุก → ขัดแย้ง → พลิกกลับ → ตอนจบ', mb5b: 'จบที่จุดเริ่ม คนจะได้ดูซ้ำ', mb6a: 'ดูผลที่ 3 ชม. 24 ชม. 48 ชม. และ 7 วัน', mb6b: 'เรียนรู้ก่อน แล้วค่อยแก้',
+  mb7a: 'ได้ 3 เท่าของปกติ? ทำต่อยอด 2 คลิป', mb7b: 'โครงเรื่องเดิม เรื่องใหม่', mb8a: 'คลิปยาวจ่ายมากกว่ามาก', mb8b: 'ทำของตัวเอง และติดป้ายฉาก AI ที่ดูสมจริง',
+  s1a: 'การจะได้เงินจากโฆษณาบน YouTube ต้องเข้าร่วมโปรแกรมพาร์ทเนอร์ของ YouTube (YPP)',
+  s1now: '**ตอนนี้:** ผู้ติดตาม 1,000 คน + ยอดวิว Shorts 10 ล้านใน 90 วัน (หรือชั่วโมงการดูคลิปยาว 4,000 ชั่วโมงใน 12 เดือน)',
+  s1next: '**ตั้งแต่ 1 ก.พ. 2027:** ยอดวิว Shorts 20 ล้านใน 90 วัน (หรือ 8,000 ชั่วโมง) ตามหน้าช่วยเหลือของ YouTube',
+  s1count: 'เหลือ <b>{n}</b> วันที่จะผ่านเกณฑ์แบบปัจจุบันซึ่งง่ายกว่า (ภายใน 31 ม.ค. 2027)', s1countPast: 'ตอนนี้ใช้เกณฑ์ใหม่ที่สูงขึ้นแล้ว',
+  s1calcT: '🧮 ต้องลงกี่คลิป?', s1calcIn: 'ยอดวิวที่คาดว่าจะได้ต่อคลิป',
+  s1calc10: 'ถ้าจะให้ได้ 10 ล้านวิวใน 90 วัน: ประมาณ <b>{n}</b> คลิป (≈ สัปดาห์ละ {w} คลิป)', s1calc20: 'ถ้า 20 ล้านวิว (เกณฑ์ปี 2027): ประมาณ <b>{n}</b> คลิป (≈ สัปดาห์ละ {w} คลิป)',
+  s1money: '💵 Shorts จ่ายน้อย: ประมาณ $0.01–$0.07 ต่อ 1,000 วิว สูงสุดราว $0.33 สำหรับคนดูในสหรัฐฯ (ประมาณการของ AIR) 10 ล้านวิว ≈ <b>$100–$700</b> สูงสุดราว $3,300',
+  s1funnel: 'ดังนั้นให้มอง Shorts เป็นทางที่คนจะได้เจอช่องคุณ แล้ววางแผนทำคลิปยาวทีหลัง เพราะจ่ายมากกว่ามาก (ค่ากลางประมาณ $2.30 ต่อ 1,000 วิว)',
+  s1real: '⚠️ ความจริงที่ควรรู้: แม้แต่ในคลิปของ Jack เอง มีแค่ประมาณ 1 ใน 3–4 คลิปที่ปัง และคลิปฮิตคลิปเดียวแบกผลลัพธ์ส่วนใหญ่',
+  s2a: 'มองหาช่องที่ได้ยอดวิวมหาศาลจากคลิปไม่กี่คลิป ในรูปแบบที่ยังมีคนทำตามน้อย', s2tools: 'เปิดเครื่องมือ:',
+  s2talk: '💬 สัญญาณเพิ่มเติมของ Jack: คลิปที่มีคอมเมนต์ต่อยอดวิวมากกว่าปกติมาก แปลว่าคนดูอินจริง ดูได้ที่ “คนพูดถึงมากที่สุด”',
+  s2scoreT: '🎯 ให้คะแนนไอเดียหมวด (ข้อละ 0–3)', s2name: 'ไอเดียหมวด เช่น "แอนิเมชันช่วยแมว"', s2pick: 'เลือก 2 อันดับแรก แล้วไปขั้นต่อไป',
+  s2v3: '🔥 น่าทำมาก', s2v2: '🤔 พอได้', s2v1: '❌ ข้ามไปก่อน',
+  c1: 'ใครดูก็เข้าใจ', c2: 'กระตุ้นอารมณ์ได้แรง', c3: 'ทำให้อยากดูจนจบ', c4: 'ยังมีคนทำตามน้อย', c5: 'ไม่ต้องพึ่งครีเอเตอร์คนเดียว',
+  c6: 'อยู่ได้นานกว่ากระแส', c7: 'สร้างตัวละครประจำช่องได้', c8: 'ทำเสร็จได้ภายใน 2 ชั่วโมงต่อคลิป',
+  s3a: 'อย่าก๊อปคลิป แต่แยกคลิปที่ปังออกเป็นฉาก ๆ แล้วสร้างโครงเรื่องแบบเดียวกันด้วยเรื่องของคุณเอง',
+  s3how: 'ทิป: ในตัวเล่นคลิปของเว็บนี้ กด “✂️ แยกชิ้นส่วนคลิปนี้” เพื่อเริ่มที่นี่ได้เลย', s3new: '＋ เริ่มแยกชิ้นส่วนใหม่', s3link: 'ลิงก์ของคลิป',
+  s3time: 'เวลา', s3see: 'บนจอ', s3say: 'คำพูด / ข้อความ', s3addRow: '＋ เพิ่มฉาก', s3notes: 'สิ่งที่จะนำไปใช้ (โครงเรื่อง ไม่ใช่เนื้อหา)',
+  s3prompt: '🤖 คัดลอกเป็นพรอมต์ AI', s3empty: 'ยังไม่มีการแยกชิ้นส่วน',
+  k1: 'ประโยคแรกตั้งคำถามหรือพูดอะไรที่ดึงดูด', k2: 'มีการเคลื่อนไหวตั้งแต่เฟรมแรก', k3: 'มีปัญหาหรือความขัดแย้ง', k4: 'มีการพลิกกลับหรือหักมุม',
+  k5: 'มีตอนจบที่สะใจหรือคุ้มค่า', k6: 'ตอนจบวนกลับไปหาตอนต้น', k7: 'ตัดภาพทุก 1–3 วินาที',
+  s3promptText: 'นี่คือการแยกฉากของคลิป YouTube Shorts ที่ไวรัล: "{title}" {link}\n\n{rows}\n\nสิ่งที่คลิปทำ: {checks}\nโน้ตของฉัน: {notes}\n\n1) อธิบายโครงเรื่องเป็นช่วง ๆ พร้อมเวลา\n2) เขียนฮุก 10 แบบในสไตล์เดียวกันสำหรับหมวดของฉัน: {niche}\n3) เสนอเรื่องใหม่ 3 เรื่องที่ใช้โครงนี้ได้โดยไม่ลอกคลิปต้นฉบับ',
+  s4a: 'ตั้งค่าแค่พอดี ที่สำคัญคือคลิป ไม่ใช่แบนเนอร์',
+  s4c1: 'สร้างช่อง: มีชื่อกับรูปโปรไฟล์ก็พอ', s4c2: 'เปิดการยืนยันตัวตน 2 ขั้นตอนของบัญชี Google', s4c3: 'ยังไม่ต้องลงคลิป ทำให้ครบ 5 คลิปก่อน (ขั้นตอนที่ 5)', s4c4: 'สร้างตัวละครประจำช่อง (ด้านล่าง)',
+  s4charT: '🦸 ตัวละครประจำช่องของคุณ', s4charD: 'ตัวละครที่ปรากฏทุกคลิปทำให้คนดูกลับมาเพราะ “เขา” ไม่ใช่แค่เพราะหัวข้อ',
+  chName: 'ชื่อ', chLook: 'หน้าตา', chPers: 'นิสัย', chCatch: 'คำพูดติดปากหรือท่าประจำตัว', chWorld: 'โลก / ฉากหลัง',
+  s5a: 'ใช้โครงเรื่องแบบวนลูป: ฮุก → เรื่องค่อย ๆ เข้มข้น → ความขัดแย้ง → พลิกกลับ → ตอนจบที่คุ้มค่า แล้วจบด้วยประโยคที่พากลับไปหาฮุก คนจะได้ดูซ้ำ',
+  s5len: 'ลองสองความยาว: 20–35 วินาที และ 45–60 วินาที ยังไม่มีข้อมูลยืนยันว่าแบบไหนดีกว่า ให้ดูจากคนดูของคุณเอง',
+  s5bank: '🪝 คลังฮุก: ชื่อคลิปที่ปังในหมวดนี้มักขึ้นต้นแบบนี้', s5progress: 'เขียนสคริปต์แล้ว {n} จาก 5 คลิป', s5new: '＋ สคริปต์ใหม่',
+  scTitle: 'ไอเดีย / ชื่อคลิป', scHook: 'ฮุกแบบที่ {n}', scRise: 'เรื่องค่อย ๆ เข้มข้น', scConf: 'ความขัดแย้ง', scBack: 'พลิกกลับ / หักมุม', scPay: 'ตอนจบที่คุ้มค่า', scLoop: 'ประโยคสุดท้ายที่วนกลับไปหาฮุก', scLen: 'ความยาว',
+  s5copy: '📋 คัดลอกสคริปต์', s5ai: '🤖 คัดลอกพรอมต์ให้ AI ช่วยปรับ',
+  s5aiText: 'ช่วยปรับสคริปต์ YouTube Shorts นี้ให้ดีขึ้น คงโครงเรื่องแบบวนลูปไว้ ทำให้ฮุกใน 2 วินาทีแรกแรงขึ้น และให้ยาว {len}\n\n{script}',
+  s5ref: '🎨 ใช้เครื่องมือสร้างวิดีโอด้วย AI? ทำภาพตัวละครและฉากอ้างอิงให้ตายตัวก่อน แนบไปกับทุกช็อต และเผื่อไว้ประมาณ 3 ครั้งต่อหนึ่งช็อตที่ใช้ได้ ติดป้ายฉาก AI ที่ดูสมจริงตอนอัปโหลดด้วย',
+  s6a: 'ลงคลิปแรกเป็นการทดสอบ แล้วดูผลตามเวลาเหล่านี้', cpWhen: 'เมื่อไร', cpCheck: 'ดูอะไร', cpDo: 'แล้วทำอะไร',
+  cp1: '3 ชั่วโมง|ดูต่อเทียบกับปัดผ่าน (ใน YouTube Studio)|ถ้าต่ำกว่าคลิปอื่นของคุณมาก อย่าเพิ่งแก้คลิป เก็บไว้เป็นบทเรียนสำหรับคลิปถัดไป',
+  cp2: '24 ชั่วโมง|ระยะเวลาการดูเฉลี่ยเทียบกับความยาวคลิป และคอมเมนต์|เทียบกับคลิปที่ดีที่สุดของคุณเอง ไม่ใช่ตัวเลขจากบล็อก',
+  cp3: '48 ชั่วโมง|กราฟยอดวิวรายชั่วโมง|นิ่งมา 24 ชั่วโมงขึ้นไป? ลงคลิปถัดไปได้เลย',
+  cp4: '7 วัน|จุดที่คนดูเลิกดู (การรักษาผู้ชม)|แก้จุดนั้นในคลิปถัดไป',
+  s6wait: 'กฎการรอ (จาก Jack ไม่ใช่กฎทางการของ YouTube): ลงคลิปถัดไปเมื่อคลิปก่อนหน้ายอดนิ่งไปหนึ่งวัน ทำตามได้ง่าย ๆ สำหรับ 5 คลิปแรก',
+  s6logT: '📒 บันทึกการลงคลิปของคุณ', s6mine: 'เชื่อม “ช่องของฉัน” เพื่อดูยอดวิวคลิปของคุณอัตโนมัติ', s6new: '＋ บันทึกคลิปใหม่',
+  lgTitle: 'ชื่อคลิป', lg3: 'วิวที่ 3 ชม.', lg24: 'ที่ 24 ชม.', lg48: 'ที่ 48 ชม.', lg7: 'ที่ 7 วัน', h3: '3 ชม.', h24: '24 ชม.', h48: '48 ชม.', h7: '7 วัน',
+  s6next: 'ตรวจครั้งถัดไป: {when}', s6due: 'ถึงเวลาตรวจแล้ว: {h}', s6inH: '{h} อีก {n} ชม.', s6usual: 'ยอดวิวปกติของคุณ: {n}', s6win: '🔥 {x} เท่าของปกติ: คลิปนี้ปัง!',
+  s7a: 'เมื่อคลิปไหนได้ยอดวิวมากกว่าปกติของคุณ 3 เท่าขึ้นไป ให้ทำคลิปต่อยอด 2 คลิป: โครงเรื่องเดิม แต่เปลี่ยนเรื่อง นี่คือรูปแบบที่ชัดที่สุดในผลลัพธ์ของ Jack เอง',
+  s7none: 'ยังไม่มีคลิปที่ปัง บันทึกคลิปในขั้นตอนที่ 6 หรือเชื่อมช่องของฉัน แล้วคลิปที่ปังจะขึ้นที่นี่', s7spin: 'คลิปต่อยอดที่ {n}: โครงเดิม เรื่องใหม่',
+  s7review: '🗓️ ทบทวนรายสัปดาห์', rv1: 'บันทึกทุกคลิปแล้ว', rv2: 'ตัดไอเดียที่ต่ำกว่าปกติของคุณทิ้ง', rv3: 'เปลี่ยนโครงเรื่องและหัวข้อบ้าง (ไม่ซ้ำแม่แบบเดิม)',
+  s8a: 'ตรวจความคืบหน้าวันที่ 15 ธ.ค.:', s8c1: 'ยอดวิว Shorts กำลังจะถึง 10 ล้านและผู้ติดตาม 1,000 คน? สมัครต้นเดือนมกราคม',
+  s8c2: 'ยังไม่ถึง? วางแผนสำหรับเกณฑ์ 20 ล้าน และทำคลิปยาวจากคลิปที่ปัง (ยาว 8 นาทีขึ้นไปใส่โฆษณากลางคลิปได้)',
+  s8c3: 'เพิ่มรายได้อีกทางนอกจากโฆษณา เช่น ลิงก์แอฟฟิลิเอตหรือสินค้า', s8c4: 'เมื่อคลิปไหนพิสูจน์แล้วว่าได้ผลบน YouTube ให้ลงไฟล์ต้นฉบับที่ไม่มีลายน้ำบน TikTok และ Reels',
+  s8safeT: '🛡️ ทำเสมอ (เพื่อปกป้องช่องของคุณ)', s8s1: 'ห้ามอัปโหลดซ้ำหรือแค่ตัดต่อคลิปของคนอื่นเล็กน้อย YouTube ถือว่าเป็นเนื้อหาที่นำมาใช้ซ้ำ',
+  s8s2: 'เปลี่ยนโครงเรื่องและหัวข้อ ไม่ให้ช่องดูเหมือนผลิตจากแม่แบบหรือผลิตจำนวนมาก', s8s3: 'ใส่ความเป็นมนุษย์: เสียงของคุณ การตัดต่อหรือการเขียนของคุณ',
+  s8s4: 'เปิดการแจ้งว่าใช้ AI ของ YouTube สำหรับฉากที่สร้างด้วย AI และดูสมจริง', s8s5: 'อย่าสร้างช่องที่ต้องพึ่งคลิปของครีเอเตอร์คนอื่นคนเดียว',
+  s8unv: 'เคล็ดลับยอดนิยมเหล่านี้ยังไม่มีหลักฐาน: “บัญชีใหม่ต้องมีอายุ 7 วันขึ้นไป” “รอให้ยอดนิ่งก่อน” และ “อัปโหลดซ้ำแล้วโดนลดการมองเห็น” ทำตามได้ไม่เสียอะไร แต่ YouTube ไม่เคยยืนยัน',
+  pMineT: 'ช่องของฉัน', pMineD: 'เชื่อมช่องของคุณ แล้วดูว่าคลิปไหนทำได้ดีกว่าปกติของคุณเอง พร้อมความคืบหน้าสู่การสร้างรายได้',
+  mineIn: '@ชื่อช่อง หรือลิงก์ช่องของคุณ', mineGo: 'เชื่อมต่อ', mineNeed: 'ต้องเปิดการค้นหา YouTube ของเว็บนี้ก่อน',
+  mineNotFound: 'หาช่องนี้ไม่เจอ ลองใส่ @ชื่อช่องให้ตรงกับบน YouTube หรือวางลิงก์ช่อง', mineLoading: 'กำลังโหลดช่องของคุณ…',
+  mineRefresh: '🔄 รีเฟรช', mineWait: 'รีเฟรชได้อีกครั้งในอีกไม่กี่นาที', mineDisconnect: 'ยกเลิกการเชื่อมต่อ', mineUsual: 'ยอดวิวปกติของคุณ', mineShorts: 'คลิปสั้นที่พบ',
+  mineWinners: '🔥 คลิปที่ปังของคุณ (3 เท่าของปกติขึ้นไป)', mineWinTip: 'ทำคลิปต่อยอด 2 คลิปจากแต่ละคลิป: โครงเรื่องเดิม เรื่องใหม่ วางแผนได้ในคู่มือขั้นตอนที่ 7',
+  mineNoWin: 'ยังไม่มีคลิปไหนได้มากกว่าปกติ 3 เท่า ลองฮุกใหม่ ๆ ต่อไป', mineAll: '🎬 คลิปสั้นล่าสุดของคุณ', mineYpp: '💰 เส้นทางสู่การสร้างรายได้ (ประมาณการคร่าว ๆ)',
+  mineSubs: 'ผู้ติดตาม', mineViews90: 'ยอดวิวของคลิปสั้นที่ลงใน 90 วันที่ผ่านมา',
+  mineYppNote: 'YouTube นับยอดวิว 90 วันล่าสุดจากคลิปสั้นทุกคลิปของคุณ แต่ตรงนี้รวมเฉพาะคลิปใหม่ ๆ ดูตัวเลขจริงได้ใน YouTube Studio',
+  mineFew: 'ลงคลิปสั้นอย่างน้อย 3 คลิปเพื่อดูยอดวิวปกติและคลิปที่ปัง', mineCheck: '⏱️ ถึงเวลาตรวจ {h}', mineUpdated: 'อัปเดต {ago}', mineDue: '⏱️ คลิปที่ถึงเวลาตรวจ',
+  bkT: 'สำรองข้อมูล / ย้ายไปอุปกรณ์อื่น', bkD: 'ช่องที่บันทึกไว้ โน้ตในคู่มือ และการตั้งค่าเก็บอยู่ในเบราว์เซอร์นี้ คัดลอกเป็นโค้ด (หรือไฟล์) แล้วนำไปวางบนโทรศัพท์หรือคอมพิวเตอร์เครื่องอื่น',
+  bkCopy: '📋 คัดลอกโค้ดสำรอง', bkFile: '⬇️ ดาวน์โหลดเป็นไฟล์', bkPaste: 'วางโค้ดสำรองที่นี่', bkRestore: 'กู้คืน', bkOpen: 'หรือเปิดไฟล์สำรอง:',
+  bkOk: 'กู้คืนแล้ว กำลังโหลดใหม่…', bkBad: 'โค้ดนี้ใช้ไม่ได้ คัดลอกโค้ดทั้งหมดแล้วลองอีกครั้ง', bkNoKey: 'ไม่รวมคีย์ API ของคุณเอง (ถ้าเคยใส่ไว้)',
+  shTalk: '💬 คนพูดถึงมากที่สุด', shTalkD: 'มีคอมเมนต์ต่อยอดวิวมากกว่าปกติมาก แปลว่าคนดูอินจริง ๆ', talkV: '💬 {n} คอมเมนต์ต่อ 1K วิว',
+  lTalk: 'คอมเมนต์ต่อ 1,000 วิว', gTalk: 'จำนวนคนที่คอมเมนต์ต่อทุก ๆ 1,000 วิว ถ้าสูงกว่าปกติมาก แปลว่าคนดูอินจริง ๆ (หนึ่งในสัญญาณที่ Jack Craig ใช้)',
+  vTalk: 'เรียง: คนพูดถึงมากที่สุด', talkAvg: 'ปกติทั้งเว็บ: {n}',
+  lAge: 'อายุช่อง', gAge: 'ช่องนี้สร้างบน YouTube มานานเท่าไร', ageD: '{n} วัน', ageM: '{n} เดือน', ageY: '{n} ปี',
+  wNewAge: 'ช่องใหม่: เพิ่งเริ่มเมื่อ {a} ที่แล้ว', newAgeBadge: '🌱 ช่องใหม่ · {a}',
+  tearBtn: '✂️ แยกชิ้นส่วนคลิปนี้', tearAdded: 'เพิ่มในคู่มือแล้ว (ขั้นตอนที่ 3)'
+});
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
     den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
@@ -1093,7 +1338,7 @@ const langName = c => (LN[c] ? LN[c][UI === 'th' ? 1 : 0] : c.toUpperCase());
 const topicName = tp => (UI === 'th' ? tp[3] : tp[2]);
 
 /* ---------- state ---------- */
-const TABS = ['home', 'week', 'videos', 'channels', 'live', 'ideas', 'topics', 'saved', 'compare', 'help'];
+const TABS = ['home', 'week', 'videos', 'channels', 'live', 'ideas', 'topics', 'playbook', 'mine', 'saved', 'compare', 'help'];
 const S = Object.assign({tab: 'home', q: '', topic: '', minScore: 0, maxSubs: 0, minMed: 0, lang: 'all', hideOne: true, tag: '', niche: '',
   sort: 'score', minX: 2, vsort: 'x', shelf: 'new', lsort: 'new', detail: false, cmp: []}, LS.get('radar.state4', {}));
 const hashTab = () => { const h = decodeURIComponent(location.hash.slice(1)); return TABS.includes(h) ? h : null; };
@@ -1154,7 +1399,8 @@ const needsTr = c => (c.lang && c.lang !== 'und' ? c.lang !== UI : UI === 'th');
 const grow = v => (v.g && v.h ? v.g / v.h : 0);
 const when = v => v.p || v.s || 0;   // real upload time on the hosted site, first-seen time in the local app
 const speed = v => { const age = v.p ? nowTs() - v.p : 0; return age > 0 && age < 72 * 3600 ? v.v / Math.max(age / 3600, 1) : 0; };   // views per hour of a fresh upload
-const findCh = id => (DATA && DATA.channels.find(c => c.ch_id === id)) || (SEARCH && SEARCH.channels.find(c => c.ch_id === id)) || null;
+const findCh = id => (DATA && DATA.channels.find(c => c.ch_id === id)) || (SEARCH && SEARCH.channels.find(c => c.ch_id === id)) ||
+  (MY && MY.data && MY.data.id === id ? mineChannel(MY.data) : null);
 const ICON = {
   home: '<svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20h-5.5v-6h-5v6H4z"/></svg>',
   videos: '<svg viewBox="0 0 24 24"><path d="M12 3c1 3.6 5.5 5.6 5.5 11a5.5 5.5 0 0 1-11 0c0-2.9 1.9-4.7 2.8-5.6 0 2 .9 3 2 3 0-2.9-.8-5.6.7-8.4z"/></svg>',
@@ -1171,7 +1417,9 @@ const ICON = {
   week: '<svg viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7M10 17h4"/></svg>',
   ideas: '<svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>',
   compare: '<svg viewBox="0 0 24 24"><path d="M12 4v16M8 20h8M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0z"/></svg>',
-  more: '<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>'
+  more: '<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>',
+  playbook: '<svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5M8 7h8M8 11h6"/></svg>',
+  mine: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 15l3-4 3 2 4-5"/></svg>'
 };
 
 async function api(path, body) {
@@ -1198,6 +1446,7 @@ function chFacts(c) {
     f.days = Math.max(1, Math.ceil((nowTs() - ps[ps.length - 1]) / 86400));
     f.isNew = f.days <= 60;
   }
+  if (c.created) { f.days = chAgeDays(c); f.isNew = f.days <= 120; }   // the real channel age when YouTube gave it
   factCache.set(c, f);
   return f;
 }
@@ -1215,7 +1464,7 @@ function whyLines(c) {
   if (k1 >= 2) out.push(t('wHits', {k: k1, n}));
   else if (k100 >= Math.max(3, n / 2)) out.push(t('wHits100', {k: k100, n}));
   const f = chFacts(c);
-  if (f.isNew) out.push(t('wNew', {n, d: f.days}));
+  if (f.isNew) out.push(c.created ? t('wNewAge', {a: ageText(f.days)}) : t('wNew', {n, d: f.days}));
   if (c.tags.includes('Rising')) out.push(t('wRising', {r: fmtX(c.trend)}));
   else if (c.tags.includes('Fading')) out.push(t('wFading'));
   if (c.tags.includes('One-hit')) out.push(t('wOneHit'));
@@ -1317,7 +1566,7 @@ function vCard(v, c, opts = {}) {
   return `<div class="vcard">${thumbBox(v, c)}<div class="vmeta">` +
     (opts.noCh ? '' : `<button type="button" class="avlink" data-open-ch="${esc(c.ch_id)}" aria-label="${esc(c.name)}">${avatarEl(c, 36)}</button>`) +
     `<div class="vtxt"><a class="vt" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" data-play="${esc(v.id)}" data-c="${esc(c.ch_id)}" title="${esc(v.t)}">${esc(v.t)}</a>${chLine}` +
-    `<div class="vst">${esc(t('views', {n: fmt(v.v)}))}${speed(v) ? ` · <span class="hotx">${esc(t('speed', {n: fmt(speed(v))}))}</span>` : v.x ? ` · <span class="${v.x >= 1.5 ? 'hotx' : ''}">${esc(xText(v.x))}</span>` : ''}</div>${w}</div></div></div>`;
+    `<div class="vst">${esc(t('views', {n: fmt(v.v)}))}${opts.talk && talk(v) != null ? ` · <span class="hotx">${esc(t('talkV', {n: fmtTalk(talk(v))}))}</span>` : speed(v) ? ` · <span class="hotx">${esc(t('speed', {n: fmt(speed(v))}))}</span>` : v.x ? ` · <span class="${v.x >= 1.5 ? 'hotx' : ''}">${esc(xText(v.x))}</span>` : ''}</div>${w}</div></div></div>`;
 }
 const topVids = (c, n) => c.series.slice().sort((a, b) => b.v - a.v).slice(0, n);
 const trio = c => `<div class="trio">${topVids(c, 3).map(v => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('')}</div>`;
@@ -1357,7 +1606,7 @@ function channelRow(c) {
     <div class="chhead">
       <button type="button" class="avlink" data-open-ch="${id}" aria-label="${esc(c.name)}">${avatarEl(c, 96)}</button>
       <div class="chinfo">
-        <div class="chname"><button type="button" data-open-ch="${id}">${esc(c.name)}</button>${vdPill(c)}${pick ? `<span class="tag pick">${esc(tier)}</span>` : ''}${f.isNew ? `<button type="button" class="tag new" data-help="new">${esc(t('newBadge'))}</button>` : ''}</div>
+        <div class="chname"><button type="button" data-open-ch="${id}">${esc(c.name)}</button>${vdPill(c)}${pick ? `<span class="tag pick">${esc(tier)}</span>` : ''}${f.isNew ? newBadge(c, f) : ''}</div>
         <div class="chsub">${c.handle ? `<span>${esc(c.handle)}</span><span>·</span>` : ''}<span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span>${langChip(c)}${needsTr(c) && c.descr ? `<a class="tr" href="${trUrl(c.descr)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}</div>
         <div class="why">${whyLines(c).slice(0, 2).map(s => `<div>${esc(s)}</div>`).join('')}</div>
         <div class="stats">${statPills(c, f)}</div>
@@ -1402,10 +1651,12 @@ function homeView() {
   const st = statusInfo();
   h += `<div class="sumline"><span>${t('sumTracked', {n: DATA.channels.length})}</span><span>${t('sumHot', {n: DATA.channels.filter(c => c.score >= 65).length})}</span>` +
     `<span>${t('sumNew', {n: liveVideos(DATA.channels).length})}</span><span class="livebox" style="margin:0"><span class="${st.cls}"></span>${esc(st.txt)}</span>${apiChip()}</div>`;
+  h += `<button type="button" class="pbpromo" data-tab="playbook"><span class="em">📘</span><span><b>${esc(t('pbCardT'))}</b><span class="d">${esc(t('pbCardD'))}</span></span><span class="go">→</span></button>`;
   const add = (title, desc, items, see) => { if (items.length) { h += shelf(title, desc, items, see); n++; } };
   const byScore = (a, b) => b.score - a.score;
   add('shPicks', 'shPicksD', picksList().filter(baseOk).map(pickCard), '');
   add('shViral', 'shViralD', viralVideos(chs).slice(0, 24).map(([v, c]) => vCard(v, c)), 'videos');
+  add('shTalk', 'shTalkD', talkedAbout(chs).slice(0, 24).map(([v, c]) => vCard(v, c, {talk: true})), 'talk');
   const fresh = liveVideos(chs), good = fresh.filter(([, c]) => c.score >= 40);
   add('shNew', 'shNewD', (good.length >= 4 ? good : fresh).sort((a, b) => speed(b[0]) - speed(a[0])).slice(0, 24).map(([v, c]) => vCard(v, c, {showWhen: true})), 'live');
   add('shSmall', 'shSmallD', chs.filter(c => c.subs > 0 && c.subs <= 50000 && c.score >= 50 && !c.tags.includes('One-hit')).sort((a, b) => b.med_recent - a.med_recent).slice(0, 24).map(chCard), 'small');
@@ -1431,7 +1682,7 @@ function filtersHtml(kind) {
   }
   if (kind === 'live') p.push(sel('fLSort', [['new', t('vNew')], ['fast', t('lFast')]], S.lsort));
   if (kind === 'videos') {
-    p.push(sel('fVSort', [['x', t('vX')], ['v', t('vV')], ['g', t('vG')], ['new', t('vNew')]], S.vsort),
+    p.push(sel('fVSort', [['x', t('vX')], ['v', t('vV')], ['g', t('vG')], ['new', t('vNew')], ['talk', t('vTalk')]], S.vsort),
       sel('fX', [[0, t('xAny')]].concat([2, 3, 5, 10, 20].map(v => [v, t('xGe', {n: v})])), S.minX, t('lX')), size);
   }
   if (det && (kind === 'channels' || kind === 'videos')) {
@@ -1457,11 +1708,11 @@ function channelsView(list, empty) {
 }
 function videosView() {
   const vids = videoPool(channelsFiltered(true)).filter(([v]) => v.x >= S.minX);
-  const key = {x: ([v]) => v.x, v: ([v]) => v.v, g: ([v]) => grow(v) || -1, new: ([v]) => when(v)}[S.vsort] || (([v]) => v.x);
+  const key = {x: ([v]) => v.x, v: ([v]) => v.v, g: ([v]) => grow(v) || -1, new: ([v]) => when(v), talk: ([v]) => talk(v) ?? -1}[S.vsort] || (([v]) => v.x);
   vids.sort((a, b) => key(b) - key(a));
   const head = pageHead('pVideosT', 'pVideosD', filtersHtml('videos') + qBanner());
   if (!vids.length) return head + emptyBox(t('emptyVid'));
-  return head + `<div class="vgrid">${vids.slice(0, shown.videos).map(([v, c]) => vCard(v, c, {showWhen: S.vsort === 'new'})).join('')}</div>` + moreBtn('videos', vids.length - shown.videos);
+  return head + `<div class="vgrid">${vids.slice(0, shown.videos).map(([v, c]) => vCard(v, c, {showWhen: S.vsort === 'new', talk: S.vsort === 'talk'})).join('')}</div>` + moreBtn('videos', vids.length - shown.videos);
 }
 function liveView() {
   const vids = liveVideos(channelsFiltered(true));
@@ -1511,7 +1762,8 @@ function helpView() {
   const poster = viralVideos(DATA.channels).slice(0, 4).map(([v]) => `<img src="${thumb(v.id)}" alt="">`).join('');
   return `<div class="phead"><h1>${esc(t('nHelp'))}</h1><p>${esc(t('helpD'))}</p></div>
     <div class="hcards"><button type="button" class="hcard" data-intro><div class="poster">${poster}<span class="pl">${ICON.play}</span><span class="tag2">${mmss(INTRO_MS)}</span></div><div class="hb"><b>${esc(t('introBtn'))}</b><small>${esc(t('introBtnD'))}</small></div></button>
-      <button type="button" class="hcard" data-tour><div class="poster tourp"><span>👆</span></div><div class="hb"><b>${esc(t('tourBtn'))}</b><small>${esc(t('tourBtnD'))}</small></div></button></div>
+      <button type="button" class="hcard" data-tour><div class="poster tourp"><span>👆</span></div><div class="hb"><b>${esc(t('tourBtn'))}</b><small>${esc(t('tourBtnD'))}</small></div></button>
+      <button type="button" class="hcard" data-tab="playbook"><div class="poster tourp" style="background:linear-gradient(120deg,#065fd4,#8a5cff)"><span>📘</span></div><div class="hb"><b>${esc(t('pbT'))}</b><small>${esc(t('pbCardD'))}</small></div></button></div>
     <h2 class="subhead">${esc(t('threeT'))}</h2>
     <div class="three"><div><div class="vis"><span class="vd v3">🔥🔥🔥 ${esc(t('vSuper'))}</span></div><b>${esc(t('k1T'))}</b><small>${esc(t('k1D'))}</small></div>
       <div><div class="vis">👁 ${esc(fmt(1200000))}</div><b>${esc(t('k2T'))}</b><small>${esc(t('k2D'))}</small></div>
@@ -1588,7 +1840,7 @@ function drawSheet(keepScroll) {
   body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
     <div class="shtop">${avatarEl(c, 104)}<div style="min-width:0">
       <h2>${esc(c.name)} ${vdPill(c)}</h2>
-      <div class="chsub">${c.handle ? `<span>${esc(c.handle)}</span><span>·</span>` : ''}<span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span>${langChip(c)}${pick ? `<span class="tag pick">${esc(tier)}</span>` : ''}${f.isNew ? `<button type="button" class="tag new" data-help="new">${esc(t('newBadge'))}</button>` : ''}</div>
+      <div class="chsub">${c.handle ? `<span>${esc(c.handle)}</span><span>·</span>` : ''}<span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span>${langChip(c)}${pick ? `<span class="tag pick">${esc(tier)}</span>` : ''}${f.isNew ? newBadge(c, f) : ''}</div>
       <div class="btns">${saveBtn(c)}<a class="pillbtn red" href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>${cmpBtn(c)}
         ${LIVE ? `<button type="button" class="pillbtn" data-copy="${id}">${esc(t('copyLink'))}</button>` : ''}</div></div></div>
     <div class="shbody">
@@ -1598,6 +1850,7 @@ function drawSheet(keepScroll) {
         ${card('lTypical', fmt(c.med_recent), '', 'typical')}${card('lBest', fmt(best.v), '', 'best')}
         ${card('lRatio', fmtX(c.ratio) + '×', '', 'ratio')}${card('lHits', t('hitsVal', {k: k100, n: c.series.length}), t('hitsSub'), 'hits')}
         ${f.freq ? card('lFreq', freqText(f.freq), f.last ? t('lLast') + ': ' + ago(f.last) : '', 'freq') : ''}
+        ${chTalk(c) != null ? card('lTalk', fmtTalk(chTalk(c)), talkNorm() ? t('talkAvg', {n: fmtTalk(talkNorm())}) : '', 'talk') : ''}${c.created ? card('lAge', ageText(chAgeDays(c)), '', 'age') : ''}
         ${S.detail ? card('lScore', Math.round(c.score) + ' / 100', '', 'score') + card('lTrend', fmtX(c.trend) + '×', '', 'trend') : ''}
       </div>
       <h3>📈 ${esc(t('chGrowth'))}</h3>${growthHtml(c)}
@@ -1643,7 +1896,7 @@ function openPlayer(vid, chId) {
       ${c ? `<button type="button" class="pch" data-closeplayer data-open-ch="${esc(c.ch_id)}">${avatarEl(c, 42)}<span><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))} · ${esc(t('pSeeCh'))} →</small></span></button>` : ''}
       <div class="pfacts">${facts.map(([e, s]) => `<div><span class="em">${e}</span><span>${esc(s)}</span></div>`).join('')}</div>
       <div class="btns"><a class="pillbtn red" href="${vidUrl(vid)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>
-        ${c && needsTr(c) && v.t ? `<a class="pillbtn" href="${trUrl(v.t)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}</div>
+        ${c && needsTr(c) && v.t ? `<a class="pillbtn" href="${trUrl(v.t)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}<button type="button" class="pillbtn" data-tear="${esc(vid)}" data-c="${esc(chId || '')}">${esc(t('tearBtn'))}</button></div>
       <span class="hint">${esc(t('pNoEmbed'))}</span></div></div>`;
   $('#player').showModal();
   tourEvent('player');
@@ -2074,15 +2327,15 @@ function introTick(ts) {
   I.raf = requestAnimationFrame(introTick);
 }
 function fitIntro() { const f = $('#intro .frame'), s = stageEl(); if (f && s) s.style.transform = `scale(${f.clientHeight / 640})`; }
-function openIntro() {
+function openIntro(kind) {
   if (!DATA || !DATA.channels.length) return;
   closePop();
   ['dlg', 'sheet', 'player'].forEach(id => { if ($('#' + id).open) $('#' + id).close(); });
-  I.scenes = introScenes(); I.total = INTRO_MS;
+  I.scenes = kind === 'method' ? methodScenes() : introScenes(); I.total = I.scenes.reduce((a, sc) => a + sc.d, 0);
   Object.assign(I, {t: 0, scene: -1, last: 0, playing: true, open: true, cur: [400, 700], btn: ''});
   let acc = 0;
   const marks = I.scenes.slice(0, -1).map(s => { acc += s.d; return `<b style="left:${(100 * acc / I.total).toFixed(2)}%"></b>`; }).join('');
-  $('#introBody').innerHTML = `<div class="iv"><div class="ihead"><b>${esc(t('introT'))}</b>` +
+  $('#introBody').innerHTML = `<div class="iv"><div class="ihead"><b>${esc(t(kind === 'method' ? 'methodT' : 'introT'))}</b>` +
     ('speechSynthesis' in window ? `<button type="button" data-ivoice aria-pressed="${I.voice}">${I.voice ? '🔊' : '🔇'} ${esc(t('voice'))}</button>` : '') +
     `<button type="button" data-iclose aria-label="${esc(t('dClose'))}">${ICON.close}</button></div>` +
     `<div class="frame"><div class="stage"></div></div><div class="icap" aria-live="polite"></div>` +
@@ -2097,6 +2350,7 @@ if ('speechSynthesis' in window) { try { speechSynthesis.getVoices(); } catch (e
 function introClick(x, e) {
   if (x.closest('[data-iclose]')) { $('#intro').close(); return true; }
   if (x.closest('[data-itour]')) { $('#intro').close(); startTour(); return true; }
+  if (x.closest('[data-iplaybook]')) { $('#intro').close(); go('playbook'); return true; }
   if (x.closest('[data-iplay]')) {
     if (I.t >= I.total) { I.t = 0; I.scene = -1; }
     I.playing = !I.playing;
@@ -2242,11 +2496,397 @@ function tourClick(x) {
 function openMore() {
   const dlg = $('#dlg'), body = $('#dlgBody');
   body.onclick = null;
-  const items = [['home', 'nHome'], ['week', 'nWeek'], ['videos', 'nVideos'], ['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['saved', 'nSaved'], ['compare', 'nCompare'], ['help', 'nHelp']];
+  const items = [['home', 'nHome'], ['week', 'nWeek'], ['videos', 'nVideos'], ['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['playbook', 'nPlaybook'], ['mine', 'nMine'], ['saved', 'nSaved'], ['compare', 'nCompare'], ['help', 'nHelp']];
   body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('nMore'))}</h3>` +
     items.map(([id, k]) => `<button type="button" class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(k))}</span></button>`).join('') +
     `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div><div class="sidesec">${apiChip()}</div>`;
   dlg.showModal();
+}
+
+
+/* ---------- comment signal + channel age ---------- */
+const talk = v => (v.c != null && v.v >= 1000 ? v.c / v.v * 1000 : null);   // comments per 1,000 views
+const fmtTalk = x => (x >= 10 ? String(Math.round(x)) : String(Math.round(x * 10) / 10));
+const talkCache = new WeakMap();
+function chTalk(c) {
+  if (talkCache.has(c)) return talkCache.get(c);
+  const xs = c.series.map(talk).filter(x => x != null);
+  const r = xs.length >= 3 ? median(xs) : null;
+  talkCache.set(c, r);
+  return r;
+}
+let TALK_NORM = null, TALK_SIG = '';
+function talkNorm() {   // the typical comments per 1K views across every Short on the site
+  const sig = DATA ? DATA.generated + ':' + DATA.channels.length : '';
+  if (sig !== TALK_SIG) {
+    const xs = videoPool(DATA.channels).map(([v]) => talk(v)).filter(x => x != null);
+    TALK_NORM = xs.length >= 20 ? median(xs) : null;
+    TALK_SIG = sig;
+  }
+  return TALK_NORM;
+}
+function talkedAbout(chs) {
+  const norm = talkNorm(), seen = new Set();
+  if (!norm) return [];
+  return videoPool(chs).filter(([v]) => v.v >= 50000 && talk(v) >= norm * 3)
+    .sort((a, b) => talk(b[0]) * Math.log10(b[0].v) - talk(a[0]) * Math.log10(a[0].v))
+    .filter(([, c]) => !seen.has(c.ch_id) && seen.add(c.ch_id));
+}
+function ageText(days) {
+  if (days < 60) return t('ageD', {n: Math.max(1, Math.round(days))});
+  if (days < 730) return t('ageM', {n: Math.round(days / 30.4)});
+  return t('ageY', {n: Math.round(days / 365 * 10) / 10});
+}
+const chAgeDays = c => (c.created ? Math.max(0, (nowTs() - c.created) / 86400) : null);
+const newBadge = (c, f) => `<button type="button" class="tag new" data-help="new">${esc(c.created ? t('newAgeBadge', {a: ageText(f.days)}) : t('newBadge'))}</button>`;
+Object.assign(HELPKEYS, {talk: ['lTalk', 'gTalk'], age: ['lAge', 'gAge']});
+
+/* ---------- playbook: the whole method as 8 steps with tools (saved on this device) ---------- */
+const PB_DEFAULT = () => ({done: {}, open: 1, views: 50000, niches: [], tds: [], todo: {}, ch: {}, scripts: [], log: [], spins: {}, review: {}, topic: ''});
+const PB = Object.assign(PB_DEFAULT(), LS.get('radar.pb', {}));
+let pbTimer = null;
+const pbSave = () => { clearTimeout(pbTimer); pbTimer = setTimeout(() => LS.set('radar.pb', PB), 250); };
+const pbGet = path => path.split('.').reduce((o, k) => (o == null ? o : o[k]), PB);
+function pbSet(path, val) {
+  const ks = path.split('.');
+  let o = PB;
+  for (let i = 0; i < ks.length - 1; i++) {
+    if (o[ks[i]] == null) o[ks[i]] = /^\d+$/.test(ks[i + 1]) ? [] : {};
+    o = o[ks[i]];
+  }
+  o[ks[ks.length - 1]] = val;
+  pbSave();
+}
+const fld = (path, ph, multi) => (multi ? `<textarea data-pb="${path}" placeholder="${esc(ph)}" rows="2">${esc(pbGet(path) || '')}</textarea>`
+  : `<input data-pb="${path}" placeholder="${esc(ph)}" value="${esc(pbGet(path) || '')}">`);
+const chk = (path, label) => `<label class="pbchk"><input type="checkbox" data-pbchk="${path}" ${pbGet(path) ? 'checked' : ''}><span>${rich(label)}</span></label>`;
+const rmBtn = path => `<button type="button" class="icon" data-pbrm="${path}" aria-label="${esc(t('pbRemove'))}">${ICON.close}</button>`;
+const PB_SOURCES = [
+  ['Jack Craig: helping a beginner start a channel in 7 days', 'https://www.youtube.com/watch?v=sKejab-4Rmw'],
+  ['Jack Craig: copying a channel’s formats for 30 days', 'https://www.youtube.com/watch?v=skWYZd85oFc'],
+  ['Jack Craig: a channel in 24 hours with AI', 'https://www.youtube.com/watch?v=za2VyvLl5T0'],
+  ['Jack Craig: a channel in 7 days with AI', 'https://www.youtube.com/watch?v=1r0eyM7suUg'],
+  ['YouTube Help: changes to the YouTube Partner Program', 'https://support.google.com/youtube/answer/12843009'],
+  ['YouTube Help: channel monetization policies', 'https://support.google.com/youtube/answer/1311392'],
+  ['AIR: Shorts RPM vs long-form (estimates)', 'https://air.io/en/air-data-findings/youtube-shorts-rpm-vs-long-form-how-much-do-shorts-earn-in-2026']
+];
+const CRIT = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8'], TD_CHECKS = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7'];
+const CHECKPOINTS = [['v3', 3, 'h3'], ['v24', 24, 'h24'], ['v48', 48, 'h48'], ['v7', 168, 'h7']];
+const logBest = lg => +lg.v7 || +lg.v48 || +lg.v24 || +lg.v3 || 0;
+function logUsual() { const b = PB.log.map(logBest).filter(x => x > 0); return b.length >= 3 ? median(b) : null; }
+function nextCheck(posted, have) {   // the next checkpoint for an upload posted at `posted` (ms); have(key) says if it is filled in
+  if (!posted) return '';
+  for (const [k, hrs, label] of CHECKPOINTS) {
+    if (have(k)) continue;
+    const due = posted + hrs * 3600e3;
+    return Date.now() >= due ? t('s6due', {h: t(label)}) : t('s6next', {when: t('s6inH', {h: t(label), n: Math.ceil((due - Date.now()) / 3600e3)})});
+  }
+  return '';
+}
+function pbCalc() {
+  const v = Math.max(1000, +PB.views || 50000), n10 = Math.ceil(1e7 / v), n20 = Math.ceil(2e7 / v), pw = n => Math.round(n * 7 / 90 * 10) / 10;
+  return `<div>${t('s1calc10', {n: n10.toLocaleString(), w: pw(n10)})}</div><div>${t('s1calc20', {n: n20.toLocaleString(), w: pw(n20)})}</div><div style="margin-top:8px">${t('s1money')}</div>`;
+}
+function pb1() {
+  const left = Math.ceil((Date.UTC(2027, 0, 31, 23, 59, 59) - Date.now()) / 86400e3);
+  return `<p>${esc(t('s1a'))}</p><ul><li>${rich(t('s1now'))}</li><li>${rich(t('s1next'))} <a class="tr" href="https://support.google.com/youtube/answer/12843009" target="_blank" rel="noopener noreferrer">YouTube Help ↗</a></li></ul>
+    <div class="pbcount">⏳ ${left > 0 ? t('s1count', {n: left}) : esc(t('s1countPast'))}</div>
+    <div class="pbtool"><h4>${esc(t('s1calcT'))}</h4><label class="pbtip">${esc(t('s1calcIn'))} <input type="number" min="1000" step="1000" data-pb="views" data-pbnum data-pbcalc value="${esc(PB.views || 50000)}"></label><div id="pbCalcOut" style="margin-top:8px">${pbCalc()}</div></div>
+    <p>${esc(t('s1funnel'))}</p><p class="pbwarn">${esc(t('s1real'))}</p>`;
+}
+function pb2() {
+  const cards = PB.niches.map((nc, i) => {
+    const s = nc.s || [], total = CRIT.reduce((a, k, j) => a + (+s[j] || 0), 0), vd = total >= 18 ? 's2v3' : total >= 12 ? 's2v2' : 's2v1';
+    return `<div class="pbcard"><div class="pbrow2"><div style="flex:1">${fld(`niches.${i}.name`, t('s2name'))}</div>${rmBtn(`niches.${i}`)}</div>
+      <div class="crit">${CRIT.map((k, j) => `<div class="critrow"><span>${esc(t(k))}</span><span class="seg sm">${[0, 1, 2, 3].map(v => `<button type="button" data-pbscore="${i}.${j}.${v}" aria-pressed="${(+s[j] || 0) === v}">${v}</button>`).join('')}</span></div>`).join('')}</div>
+      <div class="pbtotal"><b>${total} / 24</b> · ${esc(t(vd))}</div></div>`;
+  }).join('');
+  return `<p>${esc(t('s2a'))}</p><div class="filters"><b style="font-size:13px">${esc(t('s2tools'))}</b><button type="button" class="chip" data-see="small">${esc(t('shSmall'))}</button>
+      <button type="button" class="chip" data-tab="videos">🔥 ${esc(t('nVideos'))}</button><button type="button" class="chip" data-tab="week">🏆 ${esc(t('nWeek'))}</button>
+      <button type="button" class="chip" data-tab="ideas">💡 ${esc(t('nIdeas'))}</button><button type="button" class="chip" data-see="talk">${esc(t('shTalk'))}</button></div>
+    <p class="pbtip">${esc(t('s2talk'))}</p><h4 class="pbh">${esc(t('s2scoreT'))}</h4>${cards}
+    ${PB.niches.length < 3 ? `<button type="button" class="pillbtn" data-pbadd="niches">${esc(t('pbAdd'))}</button>` : ''}<p style="margin-top:10px">${esc(t('s2pick'))}</p>`;
+}
+function pb3() {
+  const cards = PB.tds.map((td, i) => `<div class="pbcard"><div class="pbrow2">${vidOk(td.vid) ? `<img class="tdthumb" src="${thumb(td.vid)}" alt="">` : ''}
+      <div style="flex:1;min-width:0">${fld(`tds.${i}.title`, t('lgTitle'))}${fld(`tds.${i}.link`, t('s3link'))}</div>${rmBtn(`tds.${i}`)}</div>
+    <table class="tdtable"><tr><th>${esc(t('s3time'))}</th><th>${esc(t('s3see'))}</th><th>${esc(t('s3say'))}</th></tr>${(td.rows || []).map((r, j) =>
+      `<tr><td>${fld(`tds.${i}.rows.${j}.t`, '0:00')}</td><td>${fld(`tds.${i}.rows.${j}.a`, '…')}</td><td>${fld(`tds.${i}.rows.${j}.b`, '…')}</td></tr>`).join('')}</table>
+    <button type="button" class="ghost" data-pbrow="${i}">${esc(t('s3addRow'))}</button>
+    <div class="pbchecks">${TD_CHECKS.map(k => chk(`tds.${i}.k.${k}`, t(k))).join('')}</div>
+    ${fld(`tds.${i}.notes`, t('s3notes'), true)}<button type="button" class="pillbtn" data-pbcopy="td.${i}">${esc(t('s3prompt'))}</button></div>`).join('');
+  return `<p>${esc(t('s3a'))}</p><p class="pbtip">${esc(t('s3how'))}</p>${cards || `<p class="pbmuted">${esc(t('s3empty'))}</p>`}
+    ${PB.tds.length < 5 ? `<button type="button" class="pillbtn" data-pbadd="tds">${esc(t('s3new'))}</button>` : ''}`;
+}
+function pb4() {
+  return `<p>${esc(t('s4a'))}</p><div class="pbchecks" style="grid-template-columns:1fr">${['s4c1', 's4c2', 's4c3', 's4c4'].map(k => chk(`todo.${k}`, t(k))).join('')}</div>
+    <div class="pbtool"><h4>${esc(t('s4charT'))}</h4><p class="pbtip">${esc(t('s4charD'))}</p>
+      <div class="pbgrid2">${[['name', 'chName'], ['look', 'chLook'], ['pers', 'chPers'], ['catch', 'chCatch'], ['world', 'chWorld']].map(([k, l]) => `<label class="pbtip">${esc(t(l))}${fld(`ch.${k}`, '')}</label>`).join('')}</div></div>`;
+}
+function scriptText(sc) {
+  return [sc.title, ...[1, 2, 3].map(n => sc['h' + n] ? `${t('scHook', {n})}: ${sc['h' + n]}` : ''), sc.rise && `${t('scRise')}: ${sc.rise}`, sc.conf && `${t('scConf')}: ${sc.conf}`,
+    sc.back && `${t('scBack')}: ${sc.back}`, sc.pay && `${t('scPay')}: ${sc.pay}`, sc.loop && `${t('scLoop')}: ${sc.loop}`, `${t('scLen')}: ${sc.len || '20–35 s'}`].filter(Boolean).join('\n');
+}
+function pb5() {
+  const tp = PB.topic || '', P = patterns(DATA.channels.filter(c => !tp || chTopics(c).has(tp)));
+  const ready = PB.scripts.filter(sc => sc.title && sc.h1 && sc.pay).length;
+  const cards = PB.scripts.map((sc, i) => `<div class="pbcard"><div class="pbrow2"><div style="flex:1">${fld(`scripts.${i}.title`, t('scTitle'))}</div>${rmBtn(`scripts.${i}`)}</div>
+    <div class="pbgrid2">${[1, 2, 3].map(n => `<label class="pbtip">${esc(t('scHook', {n}))}${fld(`scripts.${i}.h${n}`, '')}</label>`).join('')}</div>
+    ${[['rise', 'scRise'], ['conf', 'scConf'], ['back', 'scBack'], ['pay', 'scPay'], ['loop', 'scLoop']].map(([k, l]) => `<label class="pbtip">${esc(t(l))}${fld(`scripts.${i}.${k}`, '', true)}</label>`).join('')}
+    <label class="pbtip">${esc(t('scLen'))} <select data-pbsel="scripts.${i}.len">${['20–35 s', '45–60 s'].map(o => `<option ${sc.len === o ? 'selected' : ''}>${o}</option>`).join('')}</select></label>
+    <div class="pbfoot"><button type="button" class="pillbtn" data-pbcopy="sc.${i}">${esc(t('s5copy'))}</button><button type="button" class="pillbtn" data-pbcopy="scai.${i}">${esc(t('s5ai'))}</button></div></div>`).join('');
+  return `<p>${esc(t('s5a'))}</p><p class="pbtip">${esc(t('s5len'))}</p>
+    <div class="pbtool"><h4>${esc(t('s5bank'))}</h4><select data-pbsel="topic"><option value="">${esc(t('topicAll'))}</option>${TOPICS.map(x => `<option value="${x[0]}" ${tp === x[0] ? 'selected' : ''}>${x[1]} ${esc(topicName(x))}</option>`).join('')}</select>
+      <div class="wcloud" style="margin-top:10px">${P ? P.starts.map(([w, n]) => `<span>${esc(w)}…<small>${n}</small></span>`).join('') + P.words.slice(0, 10).map(w => `<span>${esc(w.w)}<small>${w.n}</small></span>`).join('') : `<span>${esc(t('ideaFew'))}</span>`}</div></div>
+    <h4 class="pbh">${esc(t('s5progress', {n: ready}))}</h4>${cards}${PB.scripts.length < 5 ? `<button type="button" class="pillbtn" data-pbadd="scripts">${esc(t('s5new'))}</button>` : ''}
+    <p class="pbtip" style="margin-top:12px">${esc(t('s5ref'))}</p>`;
+}
+function pb6() {
+  const usual = logUsual();
+  const rows = PB.log.map((lg, i) => {
+    const best = logBest(lg), x = usual && best ? best / usual : 0, posted = lg.posted ? Date.parse(lg.posted) : 0;
+    return `<div class="pbcard"><div class="pbrow2"><div style="flex:1">${fld(`log.${i}.title`, t('lgTitle'))}</div><input type="datetime-local" data-pb="log.${i}.posted" value="${esc(lg.posted || '')}">${rmBtn(`log.${i}`)}</div>
+      <div class="loggrid">${CHECKPOINTS.map(([k], j) => `<label class="pbtip">${esc(t(['lg3', 'lg24', 'lg48', 'lg7'][j]))}<input type="number" min="0" data-pb="log.${i}.${k}" data-pbnum value="${esc(lg[k] ?? '')}"></label>`).join('')}</div>
+      <div class="pbtip">${esc(nextCheck(posted, k => lg[k] !== '' && lg[k] != null))}${x >= 3 ? ` · <span class="pbwin">${esc(t('s6win', {x: fmtX(x)}))}</span>` : ''}</div></div>`;
+  }).join('');
+  const cps = [1, 2, 3, 4].map(n => t('cp' + n).split('|'));
+  return `<p>${esc(t('s6a'))}</p><div style="overflow-x:auto"><table class="cptable"><tr><th>${esc(t('cpWhen'))}</th><th>${esc(t('cpCheck'))}</th><th>${esc(t('cpDo'))}</th></tr>${cps.map(r => `<tr><td><b>${esc(r[0])}</b></td><td>${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join('')}</table></div>
+    <p class="pbtip">${esc(t('s6wait'))}</p><h4 class="pbh">${esc(t('s6logT'))}</h4><p class="pbtip"><button type="button" class="chip" data-tab="mine">📈 ${esc(t('nMine'))}</button> ${esc(t('s6mine'))}</p>
+    ${usual ? `<p><b>${esc(t('s6usual', {n: fmt(usual)}))}</b></p>` : ''}${rows}<button type="button" class="pillbtn" data-pbadd="log">${esc(t('s6new'))}</button>`;
+}
+function pbWinners() {
+  const out = [], usual = logUsual();
+  PB.log.forEach((lg, i) => { const b = logBest(lg); if (usual && b >= usual * 3) out.push({key: 'log' + i, title: lg.title || '—', x: b / usual}); });
+  const vs = MY && MY.data ? MY.data.vids : [];
+  if (vs.length >= 3) { const u = median(vs.map(v => v.v)); vs.forEach(v => { if (u && v.v >= u * 3) out.push({key: v.id, title: v.t, x: v.v / u, vid: v.id}); }); }
+  return out;
+}
+function pb7() {
+  const wins = pbWinners();
+  const cards = wins.map(w => `<div class="pbcard"><div class="pbrow2">${w.vid ? `<img class="tdthumb" src="${thumb(w.vid)}" alt="">` : ''}<div style="flex:1;min-width:0"><b>${esc(w.title)}</b>
+      <div class="pbwin">🔥 ${esc(fmtX(w.x))}×</div>${[0, 1].map(n => `<label class="pbtip">${esc(t('s7spin', {n: n + 1}))}${fld(`spins.${w.key}.${n}`, '')}</label>`).join('')}</div></div></div>`).join('');
+  return `<p>${esc(t('s7a'))}</p>${cards || `<p class="pbmuted">${esc(t('s7none'))}</p>`}
+    <div class="pbtool"><h4>${esc(t('s7review'))}</h4><div class="pbchecks" style="grid-template-columns:1fr">${['rv1', 'rv2', 'rv3'].map(k => chk(`review.${k}`, t(k))).join('')}</div></div>`;
+}
+function pb8() {
+  return `<p><b>${esc(t('s8a'))}</b></p><div class="pbchecks" style="grid-template-columns:1fr">${['s8c1', 's8c2', 's8c3', 's8c4'].map(k => chk(`todo.${k}`, t(k))).join('')}</div>
+    <div class="pbtool"><h4>${esc(t('s8safeT'))}</h4><ul>${['s8s1', 's8s2', 's8s3', 's8s4', 's8s5'].map(k => `<li>${esc(t(k))}</li>`).join('')}</ul></div><p class="pbtip">${esc(t('s8unv'))}</p>`;
+}
+const PB_STEPS = [pb1, pb2, pb3, pb4, pb5, pb6, pb7, pb8];
+function playbookView() {
+  const N = PB_STEPS.length, done = Object.values(PB.done).filter(Boolean).length;
+  return `<div class="phead"><h1>📘 ${esc(t('pbT'))}</h1><p>${esc(t('pbD'))}</p></div>
+    <div class="pbtop"><div class="pbbar"><i style="width:${100 * done / N}%"></i></div><b>${esc(t('pbProgress', {a: done, b: N}))}</b>
+      <button type="button" class="pillbtn red" data-intro="method">${esc(t('methodBtn'))}</button><button type="button" class="pillbtn" data-backup>${esc(t('pbBackup'))}</button></div>` +
+    PB_STEPS.map((fn, i) => {
+      const n = i + 1, open = PB.open === n;
+      return `<section class="pbstep ${open ? 'open' : ''} ${PB.done[n] ? 'done' : ''}" id="pb-step-${n}">
+        <button type="button" class="pbhead" data-pbopen="${n}" aria-expanded="${open}"><span class="pbnum">${PB.done[n] ? '✓' : n}</span><span><small>${esc(t('pbStep', {n}))}</small><b>${esc(t('pbS' + n + 'T'))}</b></span><span class="pbchev">${open ? '−' : '+'}</span></button>
+        ${open ? `<div class="pbbody">${fn()}<div class="pbfoot"><button type="button" class="pillbtn ${PB.done[n] ? '' : 'red'}" data-pbdone="${n}">${esc(t(PB.done[n] ? 'pbUndone' : 'pbDone'))}</button>
+          ${n < N ? `<button type="button" class="ghost" data-pbopen="${n + 1}">${esc(t('tNext'))} →</button>` : ''}</div></div>` : ''}</section>`;
+    }).join('') +
+    `<div class="pbsrc"><b>${esc(t('pbSources'))}</b><ul>${PB_SOURCES.map(([l, u]) => `<li><a href="${u}" target="_blank" rel="noopener noreferrer">${esc(l)}</a></li>`).join('')}</ul>
+      <button type="button" class="ghost" data-pbreset>${esc(t('pbReset'))}</button></div>`;
+}
+function pbCopyText(spec) {
+  const [kind, idx] = spec.split('.'), i = +idx;
+  if (kind === 'td') {
+    const td = PB.tds[i] || {};
+    return t('s3promptText', {title: td.title || '', link: td.link || '', rows: (td.rows || []).filter(r => r.t || r.a || r.b).map(r => `${r.t || '?'} | ${r.a || ''} | ${r.b || ''}`).join('\n'),
+      checks: TD_CHECKS.filter(k => td.k && td.k[k]).map(k => t(k)).join('; ') || '-', notes: td.notes || '-', niche: (PB.niches[0] && PB.niches[0].name) || '-'});
+  }
+  const sc = PB.scripts[i] || {};
+  return kind === 'scai' ? t('s5aiText', {len: sc.len || '20–35 s', script: scriptText(sc)}) : scriptText(sc);
+}
+function addTeardown(vid, chId) {   // from the video player: start a teardown prefilled with this Short
+  const c = findCh(chId), v = (c && c.series.find(s => s.id === vid)) || {id: vid, t: ''};
+  PB.tds.unshift({title: v.t || '', link: vidUrl(vid), vid, rows: [{t: '0:00', a: '', b: ''}, {t: '', a: '', b: ''}, {t: '', a: '', b: ''}], k: {}, notes: ''});
+  PB.tds = PB.tds.slice(0, 5); PB.open = 3; pbSave();
+}
+function pbClick(x) {
+  const op = x.closest('[data-pbopen]');
+  if (op) { const n = +op.dataset.pbopen; PB.open = PB.open === n && !op.classList.contains('ghost') ? 0 : n; pbSave(); renderContent(); const s = document.getElementById('pb-step-' + n); if (s) s.scrollIntoView({block: 'start'}); return true; }
+  const dn = x.closest('[data-pbdone]');
+  if (dn) { const n = +dn.dataset.pbdone; PB.done[n] = !PB.done[n]; if (PB.done[n] && n < PB_STEPS.length) PB.open = n + 1; pbSave(); renderContent(); renderSide(); const s = document.getElementById('pb-step-' + PB.open); if (s) s.scrollIntoView({block: 'start'}); return true; }
+  const sc = x.closest('[data-pbscore]');
+  if (sc) { const [i, j, v] = sc.dataset.pbscore.split('.').map(Number); pbSet(`niches.${i}.s.${j}`, v); renderContent(); return true; }
+  const ad = x.closest('[data-pbadd]');
+  if (ad) {
+    const k = ad.dataset.pbadd, blank = {niches: () => ({name: '', s: []}), tds: () => ({title: '', link: '', vid: '', rows: [{t: '0:00', a: '', b: ''}, {t: '', a: '', b: ''}, {t: '', a: '', b: ''}], k: {}, notes: ''}),
+      scripts: () => ({title: '', len: '20–35 s'}), log: () => ({title: '', posted: new Date(Date.now() - new Date().getTimezoneOffset() * 60e3).toISOString().slice(0, 16)})}[k];
+    if (blank) { PB[k].push(blank()); pbSave(); renderContent(); }
+    return true;
+  }
+  const rm = x.closest('[data-pbrm]');
+  if (rm) { const [k, i] = rm.dataset.pbrm.split('.'); PB[k].splice(+i, 1); pbSave(); renderContent(); return true; }
+  const rw = x.closest('[data-pbrow]');
+  if (rw) { const td = PB.tds[+rw.dataset.pbrow]; if (td) { (td.rows = td.rows || []).push({t: '', a: '', b: ''}); pbSave(); renderContent(); } return true; }
+  const cp = x.closest('[data-pbcopy]');
+  if (cp) { copyText(pbCopyText(cp.dataset.pbcopy)).then(ok => ok && toast(t('copied'))); return true; }
+  if (x.closest('[data-pbreset]')) { if (confirm(t('pbResetQ'))) { Object.keys(PB).forEach(k => delete PB[k]); Object.assign(PB, PB_DEFAULT()); pbSave(); renderContent(); } return true; }
+  if (x.closest('[data-backup]')) { openBackup(); return true; }
+  const tear = x.closest('[data-tear]');
+  if (tear) { addTeardown(tear.dataset.tear, tear.dataset.c); if ($('#player').open) $('#player').close(); go('playbook'); toast(t('tearAdded')); setTimeout(() => { const s = document.getElementById('pb-step-3'); if (s) s.scrollIntoView({block: 'start'}); }, 120); return true; }
+  return false;
+}
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (!el.dataset || el.dataset.pb == null) return;
+  pbSet(el.dataset.pb, el.dataset.pbnum != null ? (el.value === '' ? '' : +el.value) : el.value);
+  if (el.dataset.pbcalc != null) { const o = $('#pbCalcOut'); if (o) o.innerHTML = pbCalc(); }
+});
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (!el.dataset) return;
+  if (el.dataset.pbchk != null) pbSet(el.dataset.pbchk, el.checked);
+  if (el.dataset.pbsel != null) { pbSet(el.dataset.pbsel, el.value); if (el.dataset.pbsel === 'topic') renderContent(); }
+});
+
+/* ---------- my channel: your own Shorts against your own usual ---------- */
+let MY = LS.get('radar.mych', null), MY_BUSY = false, MY_ERR = '';
+function parseChannelInput(s) {
+  s = String(s || '').trim();
+  let m = /(UC[\w-]{22})/.exec(s);
+  if (m) return {id: m[1]};
+  m = /@([^\s/?#]+)/.exec(s);
+  if (m) return {handle: '@' + decodeURIComponent(m[1])};
+  return /^[\w.-]{3,}$/.test(s) ? {handle: '@' + s} : null;
+}
+async function fetchMine(info) {
+  const pl = await ytApi('playlistItems', {part: 'contentDetails', playlistId: 'UU' + info.id.slice(2), maxResults: 50});
+  const ids = (pl.items || []).map(i => i.contentDetails && i.contentDetails.videoId).filter(Boolean);
+  const vr = ids.length ? await ytApi('videos', {part: 'snippet,statistics,contentDetails', id: ids.join(',')}) : {items: []};
+  const byId = new Map((vr.items || []).map(it => [it.id, parseVideo(it)]));
+  const vids = ids.map(i => byId.get(i)).filter(v => v && v.v != null && v.dur <= 180)
+    .map(v => Object.assign({id: v.id, t: v.t, v: v.v}, v.dur < 1e6 ? {d: v.dur} : {}, v.p ? {p: Math.round(v.p)} : {}, v.c != null ? {c: v.c} : {}, v.l != null ? {l: v.l} : {}));
+  const sn = info.snippet || {}, st = info.statistics || {}, th = sn.thumbnails || {};
+  return {id: info.id, name: sn.title || '', handle: sn.customUrl || '', subs: st.hiddenSubscriberCount ? 0 : +(st.subscriberCount || 0),
+          avatar: (th.medium || th.default || {}).url || '', created: sn.publishedAt ? Math.round(Date.parse(sn.publishedAt) / 1000) : null, vids};
+}
+async function connectMine(input, byId) {
+  const q = byId ? {id: byId} : parseChannelInput(input);
+  if (!q) { MY_ERR = t('mineNotFound'); renderContent(); return; }
+  if (!getKey()) { MY_ERR = t('mineNeed'); renderContent(); return; }
+  MY_BUSY = true; MY_ERR = ''; renderContent();
+  try {
+    const cr = await ytApi('channels', Object.assign({part: 'snippet,statistics'}, q.id ? {id: q.id} : {forHandle: q.handle}));
+    const info = (cr.items || [])[0];
+    if (!info) throw {notFound: true};
+    MY = {id: info.id, t: Date.now(), data: await fetchMine(info)};
+    LS.set('radar.mych', MY);
+  } catch (e) {
+    MY_ERR = e && e.notFound ? t('mineNotFound') : e && e.quota ? t('kQuota') : e && e.badKey ? t('kBad') : e && e.net ? t('kNet') : t('sErr');
+  }
+  MY_BUSY = false;
+  if (S.tab === 'mine') renderContent();
+  renderSide();
+}
+function mineChannel(d) {   // the visitor's channel shaped like any other channel, so cards, the player and the channel page work
+  const vids = d.vids.map(v => Object.assign({}, v)), m = computeMetrics(vids, d.subs);
+  const usual = vids.length ? median(vids.map(v => v.v)) : 0;
+  if (!m) vids.forEach(v => { v.x = usual ? Math.round(v.v / usual * 10) / 10 : 0; });
+  return Object.assign({ch_id: d.id, name: d.name, handle: d.handle, subs: d.subs, avatar_url: d.avatar, created: d.created, lang: 'und', english: true, queries: [], tags: [],
+    series: vids, score: 0, med_recent: usual, med_all: usual, max_views: Math.max(0, ...vids.map(v => v.v)), ratio: d.subs ? usual / Math.max(d.subs, 1000) : 0, trend: 1, pick: null}, m || {});
+}
+function mineView() {
+  let h = pageHead('pMineT', 'pMineD');
+  if (!canSearch()) h += `<div class="banner"><span>${esc(t('mineNeed'))}</span>${apiChip()}</div>`;
+  if (MY_ERR) h += `<div class="banner" style="color:var(--bad)">${esc(MY_ERR)}</div>`;
+  const form = `<div class="row" style="max-width:640px"><input id="mineIn" placeholder="${esc(t('mineIn'))}"><button type="button" class="pillbtn red" data-mine>${esc(t('mineGo'))}</button></div>`;
+  if (MY_BUSY) return h + emptyBox(t('mineLoading'), '⏳');
+  if (!MY || !MY.data) return h + form;
+  const d = MY.data, c = mineChannel(d), vs = c.series, usual = vs.length >= 3 ? median(vs.map(v => v.v)) : null;
+  const wins = usual ? vs.filter(v => v.v >= usual * 3) : [], best = vs.reduce((a, v) => Math.max(a, v.v), 0);
+  const v90 = vs.filter(v => v.p && nowTs() - v.p <= 90 * 86400).reduce((a, v) => a + v.v, 0), target = Date.now() >= Date.UTC(2027, 1, 1) ? 2e7 : 1e7;
+  const due = vs.filter(v => v.p && Date.now() / 1000 - v.p < 7 * 86400).map(v => ({v, msg: nextCheck(v.p * 1000, k => (Date.now() / 1000 - v.p) / 3600 >= {v3: 3, v24: 24, v48: 48, v7: 168}[k] + 2)})).filter(r => r.msg);
+  const bar = (label, val, goal) => `<div class="yrow"><div>${esc(label)}: <b>${esc(fmt(val))}</b> / ${esc(fmt(goal))}${val >= goal ? ' ✅' : ''}</div><div class="ytrack"><i style="width:${Math.min(100, 100 * val / goal)}%"></i></div></div>`;
+  h += `<div class="shtop" style="border-radius:16px;padding:20px">${avatarEl(c, 84)}<div style="min-width:0"><h2>${esc(d.name)}</h2>
+      <div class="chsub">${d.handle ? `<span>${esc(d.handle)}</span><span>·</span>` : ''}<span>${esc(t('subscribers', {n: fmt(d.subs)}))}</span>${d.created ? `<span>·</span><span>${esc(t('lAge'))}: ${esc(ageText(chAgeDays(c)))}</span>` : ''}<span>· ${esc(t('mineUpdated', {ago: ago(MY.t / 1000)}))}</span></div>
+      <div class="btns"><button type="button" class="pillbtn" data-minerefresh>${esc(t('mineRefresh'))}</button><a class="pillbtn red" href="${chUrl(d.id)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>
+      <button type="button" class="ghost" data-minedrop>${esc(t('mineDisconnect'))}</button></div></div></div>`;
+  h += `<div class="cards4"><div class="scard"><div class="lbl">${esc(t('mineUsual'))}</div><b>${usual ? esc(fmt(usual)) : '–'}</b></div><div class="scard"><div class="lbl">${esc(t('lBest'))}</div><b>${esc(fmt(best))}</b></div>
+      <div class="scard"><div class="lbl">${esc(t('mineShorts'))}</div><b>${vs.length}</b></div>${chTalk(c) != null ? `<div class="scard"><div class="lbl">${esc(t('lTalk'))}</div><b>${esc(fmtTalk(chTalk(c)))}</b></div>` : ''}</div>`;
+  h += `<h3 class="subhead">${esc(t('mineYpp'))}</h3><div class="ypp">${bar(t('mineSubs'), d.subs, 1000)}${bar(t('mineViews90'), v90, target)}<p class="pbtip">${esc(t('mineYppNote'))}</p></div>`;
+  if (due.length) h += `<h3 class="subhead">${esc(t('mineDue'))}</h3><div class="rlist">${due.map(r => `<div class="rrow" style="cursor:default"><img class="tdthumb" src="${thumb(r.v.id)}" alt=""><div class="meta"><b>${esc(r.v.t)}</b><small>${esc(r.msg)}</small></div></div>`).join('')}</div>`;
+  if (!usual) h += `<p class="pbmuted" style="margin-top:16px">${esc(t('mineFew'))}</p>`;
+  else h += `<h3 class="subhead">${esc(t('mineWinners'))}</h3>` + (wins.length ? `<p class="pbtip">${esc(t('mineWinTip'))}</p><div class="vgrid">${wins.map(v => vCard(v, c, {noCh: true, showWhen: true})).join('')}</div>` : `<p class="pbmuted">${esc(t('mineNoWin'))}</p>`);
+  h += `<h3 class="subhead">${esc(t('mineAll'))}</h3><div class="vgrid">${vs.map(v => vCard(v, c, {noCh: true, showWhen: true})).join('')}</div>`;
+  return h;
+}
+function mineClick(x) {
+  if (x.closest('[data-mine]')) { const el = $('#mineIn'); connectMine(el ? el.value : ''); return true; }
+  if (x.closest('[data-minerefresh]')) {
+    if (MY && Date.now() - MY.t < 10 * 60e3) { toast(t('mineWait')); return true; }
+    if (MY) connectMine('', MY.id);
+    return true;
+  }
+  if (x.closest('[data-minedrop]')) { MY = null; MY_ERR = ''; try { localStorage.removeItem('radar.mych'); } catch (e) {} renderContent(); renderSide(); return true; }
+  return false;
+}
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target && e.target.id === 'mineIn') connectMine(e.target.value); });
+
+/* ---------- backup / move to another device ---------- */
+const BK_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.welcomed', 'radar.toured', 'radar.heroHidden', 'radar.scache'];
+function toB64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+  return btoa(bin);
+}
+function fromB64(b) {
+  const bin = atob(b.replace(/\s+/g, '')), bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+function backupJson() {
+  const o = {app: 'viral-radar', v: 1, at: Date.now(), d: {}};
+  BK_KEYS.forEach(k => { try { const v = localStorage.getItem(k); if (v != null) o.d[k] = v; } catch (e) {} });
+  return JSON.stringify(o);
+}
+function restoreBackup(text) {
+  let o;
+  try { text = String(text || '').trim(); o = JSON.parse(text.startsWith('{') ? text : fromB64(text.replace(/^VR1:/, ''))); } catch (e) { return false; }
+  if (!o || o.app !== 'viral-radar' || !o.d) return false;
+  Object.entries(o.d).forEach(([k, v]) => { if (BK_KEYS.includes(k)) { try { localStorage.setItem(k, v); } catch (e) {} } });
+  return true;
+}
+function openBackup() {
+  const dlg = $('#dlg'), body = $('#dlgBody');
+  body.onclick = null;
+  body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
+    <h3>💾 ${esc(t('bkT'))}</h3><p>${esc(t('bkD'))}</p>
+    <div class="pbfoot"><button type="button" class="pillbtn red" id="bkCopy">${esc(t('bkCopy'))}</button><button type="button" class="pillbtn" id="bkFile">${esc(t('bkFile'))}</button></div>
+    <p class="pbtip">${esc(t('bkNoKey'))}</p>
+    <textarea id="bkIn" rows="3" placeholder="${esc(t('bkPaste'))}" style="width:100%;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--bg);margin-top:10px"></textarea>
+    <div class="pbfoot"><button type="button" class="pillbtn" id="bkRestore">${esc(t('bkRestore'))}</button><label class="pbtip">${esc(t('bkOpen'))} <input type="file" id="bkFileIn" accept="application/json,.json"></label></div>
+    <p id="bkMsg" class="pbtip"></p>`;
+  const done = ok => { $('#bkMsg').textContent = t(ok ? 'bkOk' : 'bkBad'); if (ok) setTimeout(() => location.reload(), 700); };
+  $('#bkCopy').onclick = async () => { if (await copyText('VR1:' + toB64(backupJson()))) toast(t('copied')); };
+  $('#bkFile').onclick = () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([backupJson()], {type: 'application/json'}));
+    a.download = `viral-radar-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  };
+  $('#bkRestore').onclick = () => done(restoreBackup($('#bkIn').value));
+  $('#bkFileIn').onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => done(restoreBackup(r.result)); r.readAsText(f); };
+  dlg.showModal();
+}
+
+/* ---------- the method in 60 seconds (same player as the site intro) ---------- */
+const METHOD_EMO = ['🎯', '🔍', '✂️', '🛠️', '✍️', '📊', '🔁', '🚀'];
+function methodScenes() {
+  const sc = [];
+  for (let n = 1; n <= 8; n++) {
+    sc.push({cap: 'pbS' + n + 'T', d: 6200, html: () => `<div class="msc"><div class="mstep up" id="m_n">${esc(t('pbStep', {n}))}</div><div class="memo pop" id="m_e">${METHOD_EMO[n - 1]}</div>
+        <h3 class="up" id="m_t">${esc(t('pbS' + n + 'T'))}</h3><div class="mb up" id="m_a">${esc(t('mb' + n + 'a'))}</div><div class="mb up" id="m_b">${esc(t('mb' + n + 'b'))}</div>
+        <div class="mdots">${[1, 2, 3, 4, 5, 6, 7, 8].map(k => `<i class="${k <= n ? 'lit' : ''}"></i>`).join('')}</div></div>`,
+      at: [[100, () => iOn('m_n')], [300, () => iOn('m_e')], [700, () => iOn('m_t')], [1500, () => iOn('m_a')], [2600, () => iOn('m_b')]]});
+  }
+  sc.push({cap: 'methodEnd', d: 5000, html: () => `<div class="end"><div class="emo2 pop" id="i_end">📘</div><h3>${esc(t('methodEnd'))}</h3>
+      <button type="button" class="b1" data-iplaybook>${esc(t('openPlaybook'))}</button><button type="button" class="b2" data-iclose>${esc(t('dClose'))}</button></div>`,
+    at: [[100, () => { iOn('i_end'); iBurst(180, 190, '✨'); }]]});
+  return sc;
 }
 
 /* ---------- chrome ---------- */
@@ -2269,7 +2909,7 @@ function renderSide() {
   const saved = DATA.channels.filter(isWatched).length, fresh = liveVideos(DATA.channels).length, st = statusInfo();
   const nav = (id, key, n, hot) => `<button type="button" class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(key))}</span>${n ? `<span class="n ${hot ? 'hot' : ''}">${n}</span>` : ''}</button>`;
   $('#side').innerHTML = nav('home', 'nHome') + nav('week', 'nWeek') + nav('videos', 'nVideos') + nav('channels', 'nChannels') + nav('live', 'nLive', fresh, true) +
-    nav('ideas', 'nIdeas') + nav('topics', 'nTopics') + '<hr class="navsep">' + nav('saved', 'nSaved', saved) + nav('compare', 'nCompare', S.cmp.length) + nav('help', 'nHelp') + nav('more', 'nMore') +
+    nav('ideas', 'nIdeas') + nav('topics', 'nTopics') + '<hr class="navsep">' + nav('playbook', 'nPlaybook', PB_STEPS.length - Object.values(PB.done).filter(Boolean).length || null) + nav('mine', 'nMine') + nav('saved', 'nSaved', saved) + nav('compare', 'nCompare', S.cmp.length) + nav('help', 'nHelp') + nav('more', 'nMore') +
     `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` +
     `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div><div style="margin:10px 12px 0">${apiChip()}</div></div>`;
 }
@@ -2301,6 +2941,8 @@ function renderContent() {
   else if (tab === 'week') el.innerHTML = weekView();
   else if (tab === 'ideas') el.innerHTML = ideasView();
   else if (tab === 'compare') el.innerHTML = compareView();
+  else if (tab === 'playbook') el.innerHTML = playbookView();
+  else if (tab === 'mine') el.innerHTML = mineView();
   else if (tab === 'topics') el.innerHTML = topicsView();
   else if (tab === 'saved') el.innerHTML = pageHead('pSavedT', canLive() ? 'pSavedDLive' : 'pSavedD') + channelsView(DATA.channels.filter(isWatched).sort((a, b) => b.score - a.score), t('emptySaved'));
   else if (tab === 'help') el.innerHTML = helpView();
@@ -2362,13 +3004,14 @@ document.addEventListener('click', async e => {
   const help = x.closest('[data-help]');
   if (help) { e.preventDefault(); e.stopPropagation(); if (POP_BTN === help) closePop(); else showPop(help, helpHtml(help.dataset.help)); return; }
   if (POP_BTN && !x.closest('#pop')) closePop();
-  if (tourClick(x) || introClick(x, e)) return;
+  if (tourClick(x) || introClick(x, e) || pbClick(x) || mineClick(x)) return;
   for (const d of ['dlg', 'sheet', 'player', 'intro']) if (x === $('#' + d)) { $('#' + d).close(); return; }   // click on the dark backdrop
   const hist = x.closest('[data-hist]');
   if (hist) { S.q = hist.dataset.hist; $('#fq').value = S.q; $('#fq').blur(); staticSearch(S.q); return; }
   if (x.closest('[data-histclear]')) { try { localStorage.removeItem('radar.scache'); } catch (err) {} searchHint(); return; }
   if (x.closest('[data-research]')) { if (SEARCH) staticSearch(SEARCH.query, true); return; }
-  if (x.closest('[data-intro]')) { openIntro(); return; }
+  const intr = x.closest('[data-intro]');
+  if (intr) { openIntro(intr.dataset.intro || 'site'); return; }
   if (x.closest('[data-tour]')) { startTour(); return; }
   const cmp = x.closest('[data-cmp]');
   if (cmp) { toggleCmp(cmp.dataset.cmp); render(true); if ($('#sheet').open) drawSheet(true); return; }
@@ -2400,6 +3043,7 @@ document.addEventListener('click', async e => {
   if (see) {
     const k = see.dataset.see;
     if (k.startsWith('topic:')) { S.topic = k.slice(6); saveState(); go('videos'); }
+    else if (k === 'talk') { S.vsort = 'talk'; S.minX = 0; saveState(); go('videos'); }
     else if (PRESETS[k]) { Object.assign(S, PRESETS[k]); go('channels'); } else go(k);
     return;
   }
@@ -2596,7 +3240,8 @@ async function ytApi(path, params) {
 const parseVideo = it => ({
   id: it.id, t: (it.snippet || {}).title || '', ch: (it.snippet || {}).channelId,
   v: it.statistics && it.statistics.viewCount != null ? +it.statistics.viewCount : null,
-  dur: parseDur(it.contentDetails && it.contentDetails.duration), p: (it.snippet || {}).publishedAt ? Date.parse(it.snippet.publishedAt) / 1000 : null
+  dur: parseDur(it.contentDetails && it.contentDetails.duration), p: (it.snippet || {}).publishedAt ? Date.parse(it.snippet.publishedAt) / 1000 : null,
+  c: it.statistics && it.statistics.commentCount != null ? +it.statistics.commentCount : null, l: it.statistics && it.statistics.likeCount != null ? +it.statistics.likeCount : null
 });
 async function probeStatic(chId, info, query) {
   const pl = await ytApi('playlistItems', {part: 'contentDetails', playlistId: 'UU' + chId.slice(2), maxResults: 50});
@@ -2605,7 +3250,7 @@ async function probeStatic(chId, info, query) {
   const vr = await ytApi('videos', {part: 'snippet,statistics,contentDetails', id: ids.join(',')});
   const byId = new Map((vr.items || []).map(it => [it.id, parseVideo(it)]));
   const vids = ids.map(i => byId.get(i)).filter(v => v && v.v != null && v.dur <= 180).slice(0, 24)
-    .map(v => ({id: v.id, t: v.t, v: v.v, ...(v.p ? {p: Math.round(v.p)} : {}), ...(v.dur < 1e6 ? {d: v.dur} : {})}));
+    .map(v => ({id: v.id, t: v.t, v: v.v, ...(v.p ? {p: Math.round(v.p)} : {}), ...(v.dur < 1e6 ? {d: v.dur} : {}), ...(v.c != null ? {c: v.c} : {}), ...(v.l != null ? {l: v.l} : {})}));
   const sn = (info && info.snippet) || {}, st = (info && info.statistics) || {}, th = sn.thumbnails || {};
   const subs = st.hiddenSubscriberCount ? 0 : +(st.subscriberCount || 0);
   const m = computeMetrics(vids, subs);
@@ -2613,7 +3258,8 @@ async function probeStatic(chId, info, query) {
   const descr = (sn.description || '').replace(/\s+/g, ' ').trim().slice(0, 400);
   const lang = detectLang(vids.map(v => v.t).concat([descr]));
   return Object.assign({ch_id: chId, name: sn.title || chId, handle: sn.customUrl || '', subs, lang, english: lang === 'en' || lang === 'und',
-    queries: [query], series: vids, watch: false, descr, avatar_url: (th.medium || th.default || {}).url || '', pick: null}, m);
+    queries: [query], series: vids, watch: false, descr, avatar_url: (th.medium || th.default || {}).url || '',
+    created: sn.publishedAt ? Math.round(Date.parse(sn.publishedAt) / 1000) : undefined, pick: null}, m);
 }
 async function staticSearch(query, fresh) {
   const ck = query.toLowerCase(), hit = fresh ? null : searchCache().find(x => x.q === ck);   // saved results reopen for free
@@ -2696,7 +3342,7 @@ async function refresh() {
     const first = !DATA;
     DATA = d;
     if (first) { render(); afterFirstData(); return; }
-    if (!$('#dlg').open) render(true); else renderSide();
+    if (!$('#dlg').open && !['playbook', 'mine'].includes(S.tab)) render(true); else renderSide();
   } catch (e) {
     const box = $('#side .livebox');
     if (box) box.innerHTML = `<span class="dot"></span><span>${esc(t('offline'))}</span>`;

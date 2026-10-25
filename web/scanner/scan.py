@@ -180,7 +180,8 @@ def probe(radar, yt, ch_id, rec, info, now, is_new=False):
     ids = yt.recent_upload_ids(ch_id, 50)
     vids = yt.videos(ids)
     shorts = [vids[i] for i in ids if i in vids and vids[i]["dur"] <= 180][:24]
-    series = [{"id": v["id"], "t": v["t"], "v": v["v"], "d": v["dur"], **({"p": round(v["p"])} if v.get("p") else {})} for v in shorts]
+    series = [{"id": v["id"], "t": v["t"], "v": v["v"], "d": v["dur"], **({"p": round(v["p"])} if v.get("p") else {}),
+               **({"c": v["c"]} if v.get("c") is not None else {}), **({"l": v["l"]} if v.get("l") is not None else {})} for v in shorts]
     subs = info["subs"] if info else rec.get("subs", 0)
     m = radar.compute_metrics(series, subs)
     if not m:
@@ -201,7 +202,8 @@ def probe(radar, yt, ch_id, rec, info, now, is_new=False):
         "score": m["score"], "tags": m["tags"], "lang": lang, "english": lang in ("en", "und"), "queries": rec.get("queries", []),
         "series": series, "watch": False, "last_probe": now, "descr": descr,
         "avatar_url": (info or {}).get("avatar") or rec.get("avatar_url", ""), "hit_views": rec.get("hit_views", 0), "pick": None,
-        "hist": add_hist(rec, now, subs, m), **({"found": rec.get("found") or int(now)} if (is_new or rec.get("found")) else {}),
+        "hist": add_hist(rec, now, subs, m),
+        **({"created": int((info or {}).get("created") or rec.get("created"))} if ((info or {}).get("created") or rec.get("created")) else {}), **({"found": rec.get("found") or int(now)} if (is_new or rec.get("found")) else {}),
     }
 
 

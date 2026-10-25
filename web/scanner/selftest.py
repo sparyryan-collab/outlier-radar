@@ -78,14 +78,16 @@ class Fake(BaseHTTPRequestHandler):
                     v = vs[i]
                     items.append({"id": i, "snippet": {"title": f"Video {i} 🐱 what if", "channelId": cid(v["n"]), "channelTitle": CHANNELS[cid(v["n"])]["name"],
                                                        "publishedAt": v["pub"].strftime("%Y-%m-%dT%H:%M:%SZ")},
-                                  "statistics": {"viewCount": str(v["views"])}, "contentDetails": {"duration": v["dur"]}})
+                                  "statistics": {"viewCount": str(v["views"]), "likeCount": str(v["views"] // 40), "commentCount": str(v["views"] // 2000)},
+                                  "contentDetails": {"duration": v["dur"]}})
             return self.reply(200, {"items": items})
         if path == "channels":
             items = []
             for c in q["id"][0].split(","):
                 if c in CHANNELS:
                     items.append({"id": c, "snippet": {"title": CHANNELS[c]["name"], "customUrl": "@" + CHANNELS[c]["name"].replace(" ", "").lower(),
-                                                       "description": "A test channel about cats", "thumbnails": {"medium": {"url": "https://yt3.ggpht.com/test=s240"}}},
+                                                       "description": "A test channel about cats", "thumbnails": {"medium": {"url": "https://yt3.ggpht.com/test=s240"}},
+                                                       "publishedAt": "2026-08-01T00:00:00Z"},
                                   "statistics": {"subscriberCount": str(CHANNELS[c]["subs"])}})
             return self.reply(200, {"items": items})
         if path == "channelSections":   # channel 1 features channel 2 (already known, so nothing new is added)
@@ -146,6 +148,8 @@ def main():
         assert all(s["id"] != vid(1, 5) for s in hit["series"]), "12-minute video must be filtered out (not a Short)"
         assert hit["avatar_url"].startswith("https://yt3.ggpht.com/"), hit["avatar_url"]
         assert all(s.get("d") == 45 for s in hit["series"]), "each Short keeps its length in seconds"
+        assert all("c" in s and "l" in s for s in hit["series"]), "comments and likes are kept for the comment signal"
+        assert hit["created"] == 1785542400, hit.get("created")   # channel creation date (2026-08-01)
         assert hit["lang"] in ("en", "und") and hit["english"], hit["lang"]
         used1 = d1["_state"]["quota_used"]
         expect = 0 + 1 + 1 + 2 * 2 + 2  # search (own bucket) + videos(search) + channels + (playlistItems+videos) per channel + featured lookups for the 2 top channels
