@@ -1,0 +1,85 @@
+name: Refresh site
+
+# Every 30 minutes: re-check channels with the YouTube Data API and publish the updated site.
+# Needs a repository secret named YT_API_KEY (see web/README.md). Optional repository variables:
+#   CUSTOM_DOMAIN  your domain, e.g. radar.example.com   (the domain itself is set in Settings > Pages)
+#   BROWSER_KEY    a referrer-restricted API key that lets every visitor use live search
+#   SITE_URL       only if your site address is not https://<you>.github.io/<repo>
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  scan-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the page
+        env:
+          BROWSER_KEY: ${{ vars.BROWSER_KEY }}
+          CUSTOM_DOMAIN: ${{ vars.CUSTOM_DOMAIN }}
+        run: python web/scanner/build_site.py _site
+
+      - name: Restore profile pictures
+        uses: actions/cache@v4
+        with:
+          path: _site/avatars
+          key: avatars-${{ github.run_id }}
+          restore-keys: avatars-
+
+      - name: Add the starter profile pictures
+        run: mkdir -p _site/avatars && cp -n web/seed/avatars/* _site/avatars/ 2>/dev/null || true
+
+      - name: Scan with the YouTube API
+        continue-on-error: true
+        env:
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}
+          SITE_URL: ${{ vars.SITE_URL }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          OWNER_LC="$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')"
+          export PREV_DATA_URL="${SITE_URL:-https://${OWNER_LC}.github.io/${REPO}}/data.json"
+          python web/scanner/scan.py --out _site/data.json
+
+      - name: Fall back to the seed data if the scan produced nothing
+        run: test -f _site/data.json || cp web/seed/data.json _site/data.json
+
+      - name: Download any new profile pictures
+        run: python web/scanner/sync_avatars.py _site/data.json _site/avatars 60
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Publish
+        id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Keep the schedule alive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow enable "Refresh site" --repo "${{ github.repository }}" || true

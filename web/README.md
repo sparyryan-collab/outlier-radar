@@ -1,0 +1,124 @@
+# Outlier Radar on the web (always on, free, custom domain)
+
+This puts the dashboard on the internet at an address you choose, updating by itself while your PC is off.
+
+How it works: a static website on **GitHub Pages**, refreshed every 30 minutes by a **GitHub Actions** job that asks YouTube's **official Data API** for fresh numbers. There is no server to keep running and nothing sleeps. The PC app stays as it is; this is a second, hosted edition of the same dashboard.
+
+## Cost and billing details
+
+| Part | Cost | Payment details needed? |
+|---|---|---|
+| GitHub account, Pages hosting, scheduled jobs (public repository) | free | No. A free GitHub account has no card on it, so it cannot be charged. GitHub says standard runners are free and unlimited for public repositories. |
+| YouTube Data API key | free to use | Google's own pages say only that you need a Google account; they do not mention billing. Guides I found say you can create the key without a billing account, but one mentions a free-trial prompt, and I could not test this. **If Google insists on a card before it lets you create the key, stop there** and use the no-key option below. |
+| Custom domain | **about 10-15 USD a year** | **Yes, at a domain registrar** (not GitHub or Google). Some registrars take PayPal as well as cards; check before you buy. |
+
+If you want to pay nothing and give no payment details at all: skip the custom domain and use the free address `https://<your-github-name>.github.io/outlier-radar/` (name the repository `<your-github-name>.github.io` to get the shorter `https://<your-github-name>.github.io/`). You can add a domain later without changing anything else.
+
+Running out of YouTube quota never bills you. YouTube just refuses further calls until the next day; extra quota can only be requested through a review form, not bought. Do not attach a Google Cloud billing account; nothing here needs one.
+
+## What you get, and what is different from the PC app
+
+| | PC app | Hosted site |
+|---|---|---|
+| Always on, your PC can be off | no | **yes** |
+| Anyone can open it by link | no | **yes** (public, read-only) |
+| Custom domain with HTTPS | no | **yes** |
+| Data source | yt-dlp scraping, no quota | official YouTube Data API: free, with Google's default of about **100 searches and 10,000 other units a day** (it can change) |
+| How fresh | every 20 min, most channels hourly | every 30 min; each run re-checks 28 channels, so a good channel is re-checked about every 3 hours and every channel at least daily; a new search niche every hour |
+| Live search for any topic | yes, for you | yes, with an API key (see "Live search" below) |
+| Real upload times in the Live feed | no (first-seen time) | **yes** |
+| Cost | free | free (plus your domain, about 10-15 USD a year) |
+
+Be aware: because of the API quota, the hosted site covers fewer channels and refreshes less often than the PC app. It starts with the 700 best channels the PC app found, and grows from there.
+
+## Setup (about 15 minutes)
+
+You need: a free GitHub account, a free Google account, and (for a custom domain) a domain name.
+
+### 1. Get a YouTube API key (free)
+1. Go to https://console.cloud.google.com/ and create a project (any name).
+2. APIs & Services, Library, search "YouTube Data API v3", Enable.
+3. APIs & Services, Credentials, Create credentials, API key. Copy it.
+4. Optional but sensible: edit the key and restrict it to "YouTube Data API v3".
+
+Keep this key private. It goes into GitHub as a secret in step 3 and is never put in the website.
+
+If Google asks you to set up billing or start a free trial with a card before you can go on, do not. See "Cost and billing details" above for what to do instead.
+
+### 2. Put the project on GitHub
+In this folder run `python web/scanner/make_repo_folder.py`. It creates a folder `outlier-radar-site` with exactly the files GitHub needs. Open a terminal in that folder, then:
+
+```
+git init -b main
+git add .
+git commit -m "Outlier Radar site"
+gh auth login
+gh repo create outlier-radar --public --source . --push
+gh api -X POST repos/{owner}/{repo}/pages -f build_type=workflow
+```
+
+`gh auth login` opens your browser once to sign in. The repository has to be public for free GitHub Pages, so the code, your pick notes and the data are public too (it is all public YouTube information). The push itself starts one automatic run before Pages is switched on, so expect that first run to fail; step 3 runs it again properly.
+
+### 3. Add the key and start it
+```
+gh secret set YT_API_KEY
+gh workflow run "Refresh site"
+```
+`gh secret set` asks you to paste the key (you will not see it as you paste). After about two minutes your site is live at `https://<your-github-name>.github.io/outlier-radar/`. From then on it refreshes every 30 minutes by itself.
+
+If the first run shows a red cross under the repository's Actions tab, open it: the log says what failed (the most common cause is a wrong or not yet enabled API key). The site still publishes the starter data meanwhile.
+
+## Custom domain (for example radar.yourdomain.com)
+
+1. **Own a domain.** If you do not, buy one from any registrar (Cloudflare Registrar, Namecheap, Porkbun, GoDaddy and so on; usually 10-15 USD a year for a .com). Nobody can buy it for you from here.
+2. **Pick the address.** A subdomain such as `radar.yourdomain.com` is the simplest. A bare domain such as `yourdomain.com` also works.
+3. **Add DNS records at your registrar.**
+   - For a **subdomain**: one `CNAME` record, name `radar`, value `<your-github-name>.github.io` (no repository name in it).
+   - For a **bare domain** (apex): four `A` records for `@` pointing to `185.199.108.153`, `185.199.109.153`, `185.199.110.153` and `185.199.111.153`. Optionally four `AAAA` records: `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`.
+   - Remove other records for the same name (stray A/AAAA/CNAME records stop the HTTPS certificate from being issued). If you have a `CAA` record it must allow `letsencrypt.org`.
+4. **Tell GitHub.** In the repository: Settings, Pages, Custom domain, type the domain, Save. Wait for the green "DNS check successful" tick. Then switch on **Enforce HTTPS** (it can take from a few minutes up to a day to become available).
+   The same thing from the terminal: `gh api -X PUT repos/{owner}/{repo}/pages -f cname=radar.yourdomain.com`
+5. **Point the scanner at the new address** so it keeps reading its own last results: `gh variable set SITE_URL --body https://radar.yourdomain.com`
+
+The `CNAME` file is not used with this kind of deployment; the domain lives in Settings, Pages.
+
+### A free subdomain instead of a paid domain (is-a.dev)
+
+Services that hand out free `.tk`/`.ml` domains (Freenom) are gone; what still exists are free *subdomains*, which you do not own. One that fits this setup is **is-a.dev**, run by volunteers. From its own docs: it costs nothing, needs only a GitHub account (no card, no personal details beyond your GitHub username), and gives you `yourname.is-a.dev`. The conditions: the site must be "a personal website ... or a non-commercial project that's software development related", it must be reasonably complete, and a commercial site can be rejected. Review has no fixed timeline. I could not read their terms of service, so I cannot tell you exactly when a subdomain can be taken away.
+
+How to apply (after your site is already live on its github.io address):
+1. Fork https://github.com/is-a-dev/register on GitHub.
+2. In your fork, inside the `domains` folder, create `yourname.json` (lowercase letters, numbers and single dashes) containing:
+   ```json
+   {
+       "owner": { "username": "your-github-name" },
+       "records": { "CNAME": "your-github-name.github.io" }
+   }
+   ```
+3. Open a pull request, keep their template, and add the link to your live site and a screenshot.
+4. Only after it is merged: in your repository go to Settings, Pages, Custom domain, enter `yourname.is-a.dev`, Save, then tick Enforce HTTPS when it appears. Then run `gh variable set SITE_URL --body https://yourname.is-a.dev`.
+
+If it is declined, nothing breaks: keep using the free github.io address.
+
+## Live search on the site
+
+The search box on the site can search any topic on YouTube, in any language including Thai, but it needs an API key, because every search costs quota:
+
+- **Simplest:** each person pastes their own free API key the first time they search (the page asks). It stays in their browser and goes only to Google. Each search uses one of that project's roughly 100 free daily searches.
+- **Open to every visitor:** set `BROWSER_KEY` to a second key whose Google Cloud restriction is "HTTP referrers" limited to your site address (for example `https://radar.yourdomain.com/*`), and "YouTube Data API v3" only: `gh variable set BROWSER_KEY --body "<that key>"`. A key restricted that way is designed to be visible in a web page. Keep it in a **different Google Cloud project** from the scanner key, because the quota belongs to the project, not the key, and a busy day of searching would otherwise eat the scanner's budget.
+
+## Changing things
+
+- **Niches to scan:** edit `web/queries.json` (each entry has `q`, and optionally `lang` and `region`, for example `th` and `TH`). Push the change and the next run picks it up.
+- **Your notes on top channels:** edit `outlier-radar/picks.json` (English and Thai fields), push.
+- **How fast it spends quota:** environment values in the workflow, defaults in `web/scanner/scan.py` (`PROBES_PER_RUN`, `SEARCH_EVERY`, `DAILY_BUDGET`).
+- **Check the scanner logic without any key or network:** `python web/scanner/selftest.py` (it runs against a fake YouTube API).
+
+## Things to know
+
+- Scheduled GitHub jobs can start a few minutes late, and GitHub switches scheduled jobs off after 60 days without repository activity. The workflow ends each run by asking GitHub to keep it enabled, which is meant to prevent that. I could not confirm that here, so if you ever see the schedule stopped, open Actions and click Enable (or push any small change).
+- Google's limits reset at midnight Pacific time. The scanner keeps itself well inside them (at most 30 searches and 6,500 counted units a day by default, leaving the rest for visitors); if YouTube refuses a call it stops and the site keeps showing the last good data. Google's published numbers are described as subject to change, so if searches start failing early, lower `SEARCH_DAILY_CAP`.
+- The profile pictures are stored on the site itself (downloaded slowly and cached), because hot-linking Google's image server gets rate limited.
+- Channel numbers come from the official API, so a few things differ from the PC app: the API cannot tell a Short from a short regular video, so any upload of 3 minutes or less counts; subscriber counts are rounded by YouTube.
+- Scores rank patterns of demand. They do not predict results. Study the formats, then make something original.
+- The workflow file and the page were written and tested here against a fake YouTube API and in a browser, but not run on GitHub itself or with a real API key, so the first run is the real test.

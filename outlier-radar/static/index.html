@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://i.ytimg.com data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'">
+<title>Outlier Radar</title>
+<style>
+:root{
+  --bg:#ffffff; --surface:#f2f2f2; --surface2:#e5e5e5; --text:#0f0f0f; --muted:#606060; --line:#e5e5e5;
+  --on-bg:#0f0f0f; --on-fg:#ffffff; --accent:#065fd4; --good:#188038; --warn:#c26a00; --bad:#d93025; --hover:rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0f0f0f; --surface:#272727; --surface2:#3f3f3f; --text:#f1f1f1; --muted:#aaaaaa; --line:#303030;
+    --on-bg:#f1f1f1; --on-fg:#0f0f0f; --accent:#3ea6ff; --good:#4cc36f; --warn:#f2a33a; --bad:#ff6b61; --hover:rgba(255,255,255,.1);}
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:14px/20px Roboto,Arial,"Leelawadee UI","Noto Sans Thai",Tahoma,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,select,input{font:inherit;color:inherit}
+svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* top bar */
+#top{position:sticky;top:0;z-index:20;height:56px;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--bg)}
+.icon{border:0;background:transparent;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;cursor:pointer}
+.icon:hover{background:var(--hover)}
+.brand{display:flex;align-items:center;gap:6px;font-weight:700;font-size:18px;letter-spacing:-.02em;white-space:nowrap}
+.brand svg{color:var(--accent);width:26px;height:26px}
+.search{flex:1 1 auto;max-width:640px;margin:0 auto;display:flex;min-width:0}
+.search input{flex:1;min-width:0;height:40px;padding:0 16px;border:1px solid var(--line);border-right:0;border-radius:40px 0 0 40px;background:var(--bg);outline:none}
+.search input:focus{border-color:var(--accent)}
+.search button{width:64px;height:40px;border:1px solid var(--line);border-radius:0 40px 40px 0;background:var(--surface);cursor:pointer;display:grid;place-items:center}
+.actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+.status{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;max-width:290px;line-height:16px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
+.dot.live{background:var(--good);animation:pulse 1.6s infinite}
+.dot.snap{background:var(--warn)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--good) 60%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.pillbtn{height:36px;border:0;border-radius:18px;padding:0 14px;background:var(--surface);cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:500;white-space:nowrap}
+.pillbtn:hover{background:var(--surface2)}
+.pillbtn svg{width:20px;height:20px}
+.pillbtn.primary{background:var(--on-bg);color:var(--on-fg)}
+.pillbtn[disabled]{opacity:.6;cursor:default}
+.seg{display:inline-flex;background:var(--surface);border-radius:18px;padding:3px}
+.seg button{border:0;background:transparent;height:30px;min-width:44px;padding:0 12px;border-radius:15px;cursor:pointer;font-weight:500;color:var(--muted)}
+.seg button[aria-pressed=true]{background:var(--on-bg);color:var(--on-fg)}
+
+/* layout */
+#layout{display:flex}
+#side{position:sticky;top:56px;align-self:flex-start;height:calc(100vh - 56px);width:220px;flex:none;padding:6px 12px;overflow:auto}
+.nav{display:flex;align-items:center;gap:20px;width:100%;height:40px;padding:0 12px;border:0;border-radius:10px;background:transparent;cursor:pointer;text-align:left;font-size:14px}
+.nav:hover{background:var(--hover)}
+.nav[aria-current=true]{background:var(--surface);font-weight:600}
+.nav .n{margin-left:auto;color:var(--muted);font-size:12px}
+.mini #side{width:72px}
+.mini .nav{flex-direction:column;gap:4px;height:64px;justify-content:center;padding:0;font-size:10px;text-align:center}
+.mini .nav .n,.mini .nav span.lbl small{display:none}
+main{flex:1;min-width:0;padding:0 24px 40px}
+#chips{position:sticky;top:56px;z-index:10;background:var(--bg);display:flex;gap:10px;align-items:center;overflow-x:auto;padding:10px 0 12px;scrollbar-width:none}
+#chips::-webkit-scrollbar{display:none}
+.chip,#chips select{flex:none;height:32px;border:0;border-radius:8px;padding:0 12px;background:var(--surface);cursor:pointer;font-weight:500;white-space:nowrap}
+#chips select{padding:0 8px}
+.chip:hover,#chips select:hover{background:var(--surface2)}
+.chip[aria-pressed=true]{background:var(--on-bg);color:var(--on-fg)}
+.sep{width:1px;height:24px;background:var(--line);flex:none}
+details.how{margin:0 0 6px;color:var(--muted);font-size:13px}
+details.how summary{cursor:pointer;width:max-content}
+details.how p{margin:6px 0 10px;max-width:880px}
+
+/* avatars, chips */
+.av{position:relative;display:inline-grid;place-items:center;border-radius:50%;overflow:hidden;color:#fff;flex:none;font-weight:600}
+.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tag,.lang{display:inline-block;border-radius:6px;padding:0 8px;font-size:12px;line-height:20px;background:var(--surface);color:var(--muted);white-space:nowrap}
+.tag.good{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}
+.tag.warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.tag.bad{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+.tag.pick{background:var(--on-bg);color:var(--on-fg);font-weight:600}
+.tr{color:var(--accent);font-size:12px;white-space:nowrap}
+.tr:hover{text-decoration:underline}
+
+/* channel rows (like YouTube channel results + Shorts shelf) */
+.ch{padding:18px 0 14px;border-bottom:1px solid var(--line)}
+.chhead{display:flex;gap:18px;align-items:flex-start}
+.chinfo{flex:1;min-width:0}
+.chname{font-size:18px;line-height:26px;font-weight:500;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chname a:hover{text-decoration:underline}
+.chsub{color:var(--muted);font-size:13px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.chdesc{color:var(--muted);font-size:13px;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:760px}
+.chstats{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.stat b{font-size:15px;font-variant-numeric:tabular-nums;font-weight:600}
+.stat span{color:var(--muted);font-size:12px;margin-left:4px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.right{display:flex;flex-direction:column;align-items:center;gap:10px;flex:none}
+.ring{--p:0;--c:var(--muted);width:52px;height:52px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--surface2) 0);display:grid;place-items:center}
+.ring span{width:42px;height:42px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-weight:700;font-size:15px}
+.watchbtn{height:36px;border:0;border-radius:18px;padding:0 16px;background:var(--on-bg);color:var(--on-fg);font-weight:500;cursor:pointer;white-space:nowrap}
+.watchbtn.on{background:var(--surface);color:var(--text)}
+.note{margin:12px 0 0;padding:12px 14px;border-radius:12px;background:var(--surface);max-width:900px}
+.note b{display:block;margin-bottom:2px}
+.shelf{display:flex;gap:12px;overflow-x:auto;padding:14px 0 6px;scroll-snap-type:x proximity;scrollbar-width:thin}
+.short{flex:0 0 148px;scroll-snap-align:start}
+.th{position:relative;display:block;aspect-ratio:9/16;border-radius:12px;overflow:hidden;background:var(--surface)}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.th::after{content:"";position:absolute;inset:auto 0 0 0;height:46%;background:linear-gradient(transparent,rgba(0,0,0,.72));pointer-events:none}
+.th .views{position:absolute;left:9px;bottom:8px;z-index:1;color:#fff;font-size:12px;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.th .x{position:absolute;left:8px;top:8px;z-index:1;background:rgba(0,0,0,.72);color:#fff;border-radius:6px;padding:0 7px;font-size:12px;font-weight:700;line-height:20px}
+.th .x.mid{background:#c26a00}
+.th .x.hi{background:#188038}
+.th .g{position:absolute;right:8px;top:8px;z-index:1;background:#065fd4;color:#fff;border-radius:6px;padding:0 6px;font-size:11px;font-weight:700;line-height:18px}
+.short .t{margin-top:8px;font-size:14px;line-height:20px;font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:40px}
+.short .m{color:var(--muted);font-size:12px}
+
+/* shorts grid */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:22px 14px;padding-top:6px}
+.vmeta{display:flex;gap:10px;margin-top:10px}
+.vtxt{min-width:0;flex:1}
+.vt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:500;font-size:14px;line-height:20px}
+.vch{color:var(--muted);font-size:12px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.vch a:hover{color:var(--text)}
+.vst{color:var(--muted);font-size:12px}
+
+/* niches */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;padding-top:6px}
+.tile{border:0;text-align:left;border-radius:14px;padding:16px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;gap:8px}
+.tile:hover{background:var(--surface2)}
+.tile b{font-size:16px;line-height:22px}
+.tile small{color:var(--muted);font-size:12px}
+.tile .bar2{height:6px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.tile .bar2 i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.lead{color:var(--muted);margin:2px 0 12px}
+.empty{padding:56px 16px;text-align:center;color:var(--muted)}
+.more{display:block;margin:18px auto;height:36px;border:0;border-radius:18px;padding:0 20px;background:var(--surface);cursor:pointer;font-weight:500}
+.more:hover{background:var(--surface2)}
+footer{margin-top:28px;color:var(--muted);font-size:12px;max-width:820px}
+
+/* dialog */
+dialog{border:0;background:var(--bg);color:var(--text);border-radius:16px;padding:0;width:min(660px,94vw);max-height:88vh;box-shadow:0 12px 48px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+.dlg{padding:20px 22px;overflow:auto;max-height:86vh}
+.dlg h3{margin:0 0 4px;font-size:18px}
+.dlg p{margin:0;color:var(--muted)}
+.row{display:flex;gap:8px;margin:10px 0 14px}
+.row input{flex:1;height:38px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);outline:none}
+.row input:focus{border-color:var(--accent)}
+.qlist{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.q{display:inline-flex;gap:6px;align-items:center;background:var(--surface);border-radius:8px;padding:0 4px 0 10px;line-height:28px;font-size:13px}
+.q.dead{opacity:.5}
+.q small{color:var(--muted)}
+.q button{border:0;background:transparent;cursor:pointer;color:var(--muted);padding:0 6px;font-size:15px}
+pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size:12px;max-height:160px;overflow:auto;white-space:pre-wrap;margin:6px 0 0}
+
+@media (max-width:1100px){.pillbtn .lbl{display:none}.pillbtn{padding:0 10px}#side{width:72px}#side .nav{flex-direction:column;gap:4px;height:64px;justify-content:center;padding:0;font-size:10px;text-align:center}#side .nav .n{display:none}.status{display:none}}
+@media (max-width:760px){
+  #top{flex-wrap:wrap;height:auto;padding:8px 12px;gap:8px}
+  .search{order:5;flex:1 1 100%;max-width:none}
+  .actions{gap:6px}.pillbtn .lbl{display:none}.pillbtn{padding:0 10px}
+  #chips{top:0;position:static}
+  #side{position:fixed;inset:auto 0 0 0;top:auto;z-index:30;width:auto;height:58px;display:flex;padding:0 4px;background:var(--bg);border-top:1px solid var(--line)}
+  #side .nav{height:56px;flex:1}
+  main{padding:0 12px 80px}
+  .chhead{flex-wrap:wrap}.right{flex-direction:row;width:100%;justify-content:space-between}
+  .brand span{display:none}
+}
+</style>
+</head>
+<body>
+<header id="top">
+  <button class="icon" id="btnMenu" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+  <div class="brand"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12l6-5"/></svg><span>Outlier Radar</span></div>
+  <form class="search" id="searchForm" role="search"><input id="fq" type="search" autocomplete="off"><button type="submit" id="searchBtn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form>
+  <div class="actions">
+    <div class="status" id="status"></div>
+    <button class="pillbtn primary" id="btnScan"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg><span class="lbl" id="scanLbl"></span></button>
+    <button class="pillbtn" id="btnExport"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span class="lbl" id="exportLbl"></span></button>
+    <button class="pillbtn" id="btnSettings"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span class="lbl" id="settingsLbl"></span></button>
+    <div class="seg" id="langSeg" role="group" aria-label="Language"><button data-ui="en" aria-pressed="true">EN</button><button data-ui="th" aria-pressed="false">ไทย</button></div>
+  </div>
+</header>
+<div id="layout">
+  <nav id="side" aria-label="Sections"></nav>
+  <main>
+    <div id="chips"></div>
+    <details class="how"><summary id="howSum"></summary><p id="howBody"></p></details>
+    <div id="content"></div>
+    <footer id="foot"></footer>
+  </main>
+</div>
+<dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
+
+<script>window.RADAR_STATIC = false/*__STATIC__*/; window.RADAR_CFG = {}/*__CFG__*/;</script>
+<script>
+const SNAP = null/*__SNAPSHOT__*/;
+const STATIC = window.RADAR_STATIC === true;   // hosted website: reads data.json and searches with the visitor's own API key
+const CFG = window.RADAR_CFG || {};
+const LIVE = !SNAP;                            // live data (local app or hosted site) rather than an embedded snapshot
+const SERVER = LIVE && !STATIC;                // talks to the local app's API
+let DATA = SNAP;
+const $ = (s, el = document) => el.querySelector(s);
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------- translations ---------- */
+const T = {
+  en: {
+    search: 'Search channels, titles, niches', scan: 'Scan now', scanning: 'Scanning…', export: 'Export snapshot', settings: 'Niches & tracking',
+    exportTip: 'Download one HTML file with the current results to send to someone', menu: 'Menu',
+    nPicks: 'Top picks', nChannels: 'Channels', nShorts: 'Shorts', nNiches: 'Niches', nWatch: 'Watchlist',
+    all: 'All', anySize: 'Any size', anyViews: 'Any views', score: 'Score {n}+', subsLe: '≤ {n} subs', medGe: 'Median {n}+',
+    xGe: '{n}× channel median+', hideOne: 'Hide one-hit flukes', nicheChip: 'niche: {x} ×',
+    langEn: 'English only', langTh: 'Thai only', langAll: 'All languages', langOther: 'Not English',
+    sScore: 'Sort: score', sMed: 'Sort: median views', sRatio: 'Sort: views per sub', sBest: 'Sort: best video', sSmall: 'Sort: smallest channel', sTrend: 'Sort: trend',
+    vX: 'Sort: outlier ×', vV: 'Sort: views', vG: 'Sort: growing now', shNew: 'Videos: newest first', shTop: 'Videos: top first',
+    howSum: 'How is the score calculated?',
+    howBody: '0–100 per channel, built from its last ~24 Shorts: leverage (views per subscriber, up to 35) + demand (median recent views, up to 30) + consistency (share of Shorts above 100K and 1M, up to 25) + trend (newer vs older uploads, up to 10), minus a penalty when one viral video is carrying the channel. The × badge on a video is its views divided by that channel’s median. It ranks patterns of demand; it can’t promise results.',
+    foot: 'Public YouTube data via yt-dlp (unofficial; can break or be rate-limited). View counts lag. Use this to find formats to study and improve, not channels to copy.',
+    snap: 'Snapshot from {d} · {n} channels', stDisc: 'Scanning · finding breakout Shorts {a}/{b}', stProbe: 'Scanning · checking channels {a}/{b}',
+    stStart: 'Starting…', stIdle: 'Idle · last scan {ago}', stNext: ' · next in {n} min', stCounts: '{s} scored of {t} tracked', offline: 'Can’t reach the app. Is it still running?',
+    now: 'just now', min: '{n} min ago', hr: '{n} h ago', day: '{n} d ago', never: 'never',
+    subscribers: '{n} subscribers', analyzed: '{n} Shorts analyzed', median: 'median', best: 'best', vps: 'views/sub',
+    watch: 'Watch', watching: 'Watching', scoreTip: 'Score {n}', why: 'Why it’s on the list', translate: 'Translate', views: 'views', ofMedian: 'channel median',
+    gain: 'gained since {h}h ago', more: 'Show more ({n} left)',
+    emptyCh: 'No channels match these filters yet. Loosen the filters or wait for the scan to finish.', emptyFirst: 'First scan in progress. Channels show up here as they are checked (a few minutes).',
+    emptyVid: 'No videos match. Lower the outlier multiple or the score filter.', emptyNiche: 'Niches appear once channels are scored.',
+    emptyWatch: 'Press Watch on a channel to track it here. In live mode, watched channels are re-checked every hour.', emptyPicks: 'No curated picks in this file.',
+    nicheLead: 'Niches ranked by how many strong channels (score 55+) they surfaced. Click one to filter.', nicheStats: '{s} strong · top avg {a} · {n} found',
+    dTrack: 'Track a specific channel', dTrackD: 'Paste a @handle or channel link. It gets scored right away and added to your watchlist.', dTrackPh: '@channelhandle or https://www.youtube.com/@...',
+    dTrackBtn: 'Track', dReading: 'Reading channel…', dAdded: 'Added. It now shows in your Watchlist.', dFail: 'Could not add that channel',
+    dNiches: 'Niches being scanned', dNichesD: 'Each niche is searched for recent, high-view Shorts. The number is how many it found last run; faded ones keep returning nothing, so remove or reword them.',
+    dNichePh: 'Add a niche, e.g. "cooking animation"', dAdd: 'Add & scan', dLog: 'Activity', dNone: 'Nothing yet', dClose: 'Close', remove: 'Remove',
+    nLive: 'Live feed', searchPhLive: 'Search YouTube live: type a topic and press Enter',
+    liveLead: 'New uploads the scanner spotted in the last 3 days, newest first. The × badge shows how far a video beats its channel’s median.',
+    emptyLive: 'Nothing new spotted yet. The scanner re-checks channels about hourly, and new uploads appear here.', spotted: 'spotted {ago}',
+    sTitle: 'Live search: “{q}”', sSearching: 'Searching YouTube…', sChecking: 'Checking channels {a}/{b}', sDone: 'Done · {n} channels scored',
+    sEmpty: 'No channels with enough Shorts data came back. Try a more specific phrase or a different one.',
+    sBusy: 'Two searches are already running. Try again in a few seconds.', sTrack: 'Track this topic', sTracked: 'Tracking this topic',
+    sBack: '← Back', sErr: 'Search failed. Try again.',
+    stUpdated: 'Updated {ago}', uploaded: 'uploaded {ago}',
+    kTitle: 'Live search needs a free YouTube API key',
+    kBody: 'Create one in Google Cloud: enable “YouTube Data API v3”, then go to Credentials → Create credentials → API key, and paste it here.',
+    kPh: 'Your API key', kSave: 'Save and search', kChange: 'Change API key',
+    kPrivacy: 'The key stays in this browser and is only sent to Google. YouTube’s free allowance is about 100 searches a day per project, and each search here uses one.',
+    kQuota: 'YouTube says this key’s daily quota is used up. It resets at midnight Pacific time.',
+    kBad: 'YouTube refused this key. Check that it is an API key with YouTube Data API v3 enabled and that it is allowed on this website.',
+    kNet: 'Couldn’t reach YouTube. Check your connection.'
+  },
+  th: {
+    search: 'ค้นหาช่อง ชื่อวิดีโอ หรือหมวดเนื้อหา',
+    scan: 'สแกนเลย', scanning: 'กำลังสแกน…', export: 'ส่งออกไฟล์แชร์', settings: 'หมวดและการติดตาม',
+    exportTip: 'ดาวน์โหลดไฟล์ HTML ไฟล์เดียวที่มีผลลัพธ์ปัจจุบัน เพื่อส่งให้คนอื่น', menu: 'เมนู',
+    nPicks: 'ช่องแนะนำ', nChannels: 'ช่อง', nShorts: 'วิดีโอสั้น', nNiches: 'หมวดเนื้อหา', nWatch: 'รายการติดตาม',
+    all: 'ทั้งหมด', anySize: 'ทุกขนาด', anyViews: 'ยอดดูทุกระดับ', score: 'คะแนน {n}+', subsLe: 'ผู้ติดตาม ≤ {n}', medGe: 'ค่ากลาง {n}+',
+    xGe: 'สูงกว่าค่ากลางช่อง {n}× ขึ้นไป', hideOne: 'ซ่อนช่องที่ฮิตครั้งเดียว', nicheChip: 'หมวด: {x} ×',
+    langEn: 'เฉพาะภาษาอังกฤษ', langTh: 'เฉพาะภาษาไทย', langAll: 'ทุกภาษา', langOther: 'ไม่ใช่ภาษาอังกฤษ',
+    sScore: 'เรียง: คะแนน', sMed: 'เรียง: ยอดดูค่ากลาง', sRatio: 'เรียง: ยอดดูต่อผู้ติดตาม', sBest: 'เรียง: วิดีโอที่ดีที่สุด', sSmall: 'เรียง: ช่องเล็กสุด', sTrend: 'เรียง: แนวโน้ม',
+    vX: 'เรียง: ความโดดเด่น ×', vV: 'เรียง: ยอดดู', vG: 'เรียง: กำลังโตตอนนี้', shNew: 'วิดีโอ: ใหม่สุดก่อน', shTop: 'วิดีโอ: ยอดดูสูงสุดก่อน',
+    howSum: 'คำนวณคะแนนยังไง?',
+    howBody: 'คะแนน 0–100 ต่อช่อง คำนวณจากวิดีโอสั้นล่าสุดประมาณ 24 คลิป: ประสิทธิภาพเทียบผู้ติดตาม (ยอดดูต่อผู้ติดตาม สูงสุด 35) + ความต้องการ (ยอดดูค่ากลางล่าสุด สูงสุด 30) + ความสม่ำเสมอ (สัดส่วนคลิปที่เกิน 100K และ 1M สูงสุด 25) + แนวโน้ม (คลิปใหม่เทียบคลิปเก่า สูงสุด 10) แล้วหักคะแนนเมื่อมีคลิปไวรัลเพียงคลิปเดียวแบกทั้งช่อง ป้าย × บนวิดีโอคือยอดดูหารด้วยค่ากลางของช่องนั้น คะแนนนี้จัดอันดับรูปแบบของความต้องการ ไม่ได้รับประกันผลลัพธ์',
+    foot: 'ข้อมูลสาธารณะของ YouTube ผ่าน yt-dlp (ไม่เป็นทางการ อาจใช้ไม่ได้หรือถูกจำกัดความเร็ว) ยอดวิวอัปเดตช้ากว่าจริง ใช้เพื่อหารูปแบบที่ควรศึกษาและทำให้ดีกว่า ไม่ใช่เพื่อลอกช่อง',
+    snap: 'สแน็ปช็อตเมื่อ {d} · {n} ช่อง', stDisc: 'กำลังสแกน · ค้นหาวิดีโอสั้นที่ทะลุเป้า {a}/{b}', stProbe: 'กำลังสแกน · ตรวจสอบช่อง {a}/{b}',
+    stStart: 'กำลังเริ่มต้น…', stIdle: 'ว่าง · สแกนล่าสุด {ago}', stNext: ' · ครั้งถัดไปใน {n} นาที', stCounts: 'ให้คะแนนแล้ว {s} จาก {t} ช่องที่ติดตาม', offline: 'เชื่อมต่อแอปไม่ได้ แอปยังทำงานอยู่หรือเปล่า?',
+    now: 'เมื่อสักครู่', min: '{n} นาทีที่แล้ว', hr: '{n} ชม.ที่แล้ว', day: '{n} วันที่แล้ว', never: 'ยังไม่เคย',
+    subscribers: 'ผู้ติดตาม {n}', analyzed: 'วิเคราะห์ {n} วิดีโอสั้น', median: 'ค่ากลาง', best: 'สูงสุด', vps: 'ยอดดู/ผู้ติดตาม',
+    watch: 'ติดตาม', watching: 'กำลังติดตาม', scoreTip: 'คะแนน {n}', why: 'ทำไมถึงอยู่ในรายการ', translate: 'แปล', views: 'วิว', ofMedian: 'ของค่ากลางช่อง',
+    gain: 'เพิ่มขึ้นใน {h} ชม.ที่ผ่านมา', more: 'แสดงเพิ่ม (เหลือ {n})',
+    emptyCh: 'ยังไม่มีช่องที่ตรงกับตัวกรอง ลองผ่อนตัวกรองหรือรอให้สแกนเสร็จ', emptyFirst: 'กำลังสแกนครั้งแรก ช่องจะทยอยแสดงที่นี่เมื่อตรวจเสร็จ (ใช้เวลาไม่กี่นาที)',
+    emptyVid: 'ไม่พบวิดีโอที่ตรงกัน ลองลดตัวคูณหรือคะแนนขั้นต่ำ', emptyNiche: 'หมวดเนื้อหาจะปรากฏเมื่อมีช่องที่ให้คะแนนแล้ว',
+    emptyWatch: 'กด “ติดตาม” ที่ช่องเพื่อดูที่นี่ ในโหมดสด ช่องที่ติดตามจะถูกตรวจซ้ำทุกชั่วโมง', emptyPicks: 'ไม่มีช่องแนะนำในไฟล์นี้',
+    nicheLead: 'หมวดเนื้อหาเรียงตามจำนวนช่องที่แข็งแรง (คะแนน 55+) ที่พบ กดเพื่อกรอง', nicheStats: 'แข็งแรง {s} · เฉลี่ยท็อป {a} · พบ {n}',
+    dTrack: 'ติดตามช่องที่ต้องการ', dTrackD: 'วาง @handle หรือลิงก์ช่อง ระบบจะให้คะแนนทันทีและเพิ่มในรายการติดตาม', dTrackPh: '@handle หรือ https://www.youtube.com/@...',
+    dTrackBtn: 'ติดตาม', dReading: 'กำลังอ่านข้อมูลช่อง…', dAdded: 'เพิ่มแล้ว ช่องนี้อยู่ในรายการติดตามของคุณ', dFail: 'เพิ่มช่องนี้ไม่ได้',
+    dNiches: 'หมวดที่กำลังสแกน', dNichesD: 'แต่ละหมวดจะถูกค้นหาวิดีโอสั้นล่าสุดที่ยอดดูสูง ตัวเลขคือจำนวนที่พบในรอบล่าสุด หมวดที่จางลงคือไม่พบอะไรเลย ควรลบหรือเปลี่ยนคำค้น',
+    dNichePh: 'เพิ่มหมวด เช่น "cooking animation"', dAdd: 'เพิ่มและสแกน', dLog: 'บันทึกกิจกรรม', dNone: 'ยังไม่มี', dClose: 'ปิด', remove: 'ลบ',
+    nLive: 'ฟีดสด', searchPhLive: 'ค้นหาบน YouTube สด: พิมพ์หัวข้อแล้วกด Enter',
+    liveLead: 'คลิปใหม่ที่สแกนเนอร์เพิ่งพบในช่วง 3 วันที่ผ่านมา เรียงจากใหม่สุด ป้าย × แสดงว่าคลิปนั้นเกินค่ากลางของช่องกี่เท่า',
+    emptyLive: 'ยังไม่พบคลิปใหม่ สแกนเนอร์ตรวจช่องซ้ำราวทุกชั่วโมง คลิปที่อัปโหลดใหม่จะขึ้นที่นี่', spotted: 'พบ {ago}',
+    sTitle: 'ผลค้นหาสด: “{q}”', sSearching: 'กำลังค้นหาบน YouTube…', sChecking: 'กำลังตรวจสอบช่อง {a}/{b}', sDone: 'เสร็จแล้ว · ให้คะแนน {n} ช่อง',
+    sEmpty: 'ไม่พบช่องที่มีข้อมูลวิดีโอสั้นพอ ลองใช้คำที่เฉพาะเจาะจงขึ้นหรือเปลี่ยนคำค้น',
+    sBusy: 'มีการค้นหาที่กำลังทำงานอยู่แล้ว 2 รายการ ลองใหม่อีกครั้งในอีกไม่กี่วินาที', sTrack: 'ติดตามหัวข้อนี้', sTracked: 'กำลังติดตามหัวข้อนี้',
+    sBack: '← กลับ', sErr: 'ค้นหาไม่สำเร็จ ลองอีกครั้ง',
+    stUpdated: 'อัปเดตล่าสุด {ago}', uploaded: 'อัปโหลด {ago}',
+    kTitle: 'ค้นหาสดต้องใช้คีย์ YouTube API (ฟรี)',
+    kBody: 'สร้างได้ใน Google Cloud: เปิดใช้ “YouTube Data API v3” แล้วไปที่ Credentials → Create credentials → API key จากนั้นวางคีย์ที่นี่',
+    kPh: 'คีย์ API ของคุณ', kSave: 'บันทึกและค้นหา', kChange: 'เปลี่ยนคีย์ API',
+    kPrivacy: 'คีย์จะอยู่ในเบราว์เซอร์นี้เท่านั้นและถูกส่งไปที่ Google เท่านั้น โควตาฟรีของ YouTube คือประมาณ 100 ครั้งการค้นหาต่อวันต่อโปรเจกต์ และการค้นหาแต่ละครั้งที่นี่ใช้ไป 1 ครั้ง',
+    kQuota: 'YouTube แจ้งว่าโควตารายวันของคีย์นี้หมดแล้ว จะรีเซ็ตตอนเที่ยงคืนตามเวลาแปซิฟิก',
+    kBad: 'YouTube ไม่ยอมรับคีย์นี้ ตรวจสอบว่าเป็นคีย์ API ที่เปิดใช้ YouTube Data API v3 และอนุญาตให้ใช้กับเว็บไซต์นี้',
+    kNet: 'เชื่อมต่อ YouTube ไม่ได้ ตรวจสอบอินเทอร์เน็ต'
+  }
+};
+const TAGS = {
+  'Consistent engine': {en: 'Consistent engine', th: 'ผลงานสม่ำเสมอ', cls: 'good'},
+  'Tiny & huge': {en: 'Tiny & huge', th: 'ช่องเล็ก ยอดดูใหญ่', cls: 'good'},
+  'Rising': {en: 'Rising', th: 'กำลังมาแรง', cls: 'good'},
+  'One-hit': {en: 'One-hit', th: 'ฮิตครั้งเดียว', cls: 'bad'},
+  'Fading': {en: 'Fading', th: 'กำลังซา', cls: 'warn'}
+};
+const LN = {
+  en: ['English', 'อังกฤษ'], th: ['Thai', 'ไทย'], es: ['Spanish', 'สเปน'], pt: ['Portuguese', 'โปรตุเกส'],
+  id: ['Indonesian', 'อินโดนีเซีย'], tr: ['Turkish', 'ตุรกี'], fr: ['French', 'ฝรั่งเศส'], de: ['German', 'เยอรมัน'],
+  it: ['Italian', 'อิตาลี'], ru: ['Russian', 'รัสเซีย'], ar: ['Arabic', 'อาหรับ'], hi: ['Hindi', 'ฮินดี'],
+  bn: ['Bengali', 'เบงกาลี'], ko: ['Korean', 'เกาหลี'], ja: ['Japanese', 'ญี่ปุ่น'], zh: ['Chinese', 'จีน'],
+  ta: ['Tamil', 'ทมิฬ'], te: ['Telugu', 'เตลูกู'], he: ['Hebrew', 'ฮีบรู'], el: ['Greek', 'กรีก']
+};
+let UI = LS.get('radar.ui', (navigator.language || '').toLowerCase().startsWith('th') ? 'th' : 'en');
+const t = (k, v) => {
+  let s = (T[UI] && T[UI][k]) || T.en[k] || k;
+  if (v) for (const [a, b] of Object.entries(v)) s = s.split('{' + a + '}').join(b);
+  return s;
+};
+const tagName = k => (TAGS[k] ? TAGS[k][UI] : k);
+const langName = c => (LN[c] ? LN[c][UI === 'th' ? 1 : 0] : c.toUpperCase());
+
+/* ---------- state ---------- */
+const S = Object.assign({tab: 'picks', q: '', minScore: 45, maxSubs: 250000, minMed: 0, lang: 'en', hideOne: true, tag: '', niche: '', sort: 'score', minX: 5, vsort: 'x', shelf: 'new'}, LS.get('radar.state2', {}));
+const shown = {channels: 15, videos: 60};
+const watchLocal = new Set(LS.get('radar.watch', []));
+if (S.tab === 'search') S.tab = 'channels';
+S.q = '';   // a remembered search phrase would silently filter the lists on the next visit
+const saveState = () => LS.set('radar.state2', Object.assign({}, S, {q: '', tab: S.tab === 'search' ? 'channels' : S.tab}));
+let SEARCH = null, PREV_TAB = 'channels', searchTimer = null;
+const canLive = () => SERVER && !!DATA && !DATA.readonly;   // owner of the local app: scan, track, change settings
+const canSearch = () => canLive() || STATIC;                 // live search: local app, or hosted site with an API key
+
+/* ---------- helpers ---------- */
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const vidOk = id => /^[\w-]{11}$/.test(id || '');
+const chOk = id => /^UC[\w-]{22}$/.test(id || '');
+const vidUrl = id => vidOk(id) ? `https://www.youtube.com/shorts/${id}` : '#';
+const chUrl = id => chOk(id) ? `https://www.youtube.com/channel/${id}/shorts` : '#';
+const thumb = id => vidOk(id) ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : '';
+// Profile pictures are cached by the app and served locally (or embedded in a snapshot), so a failed one just falls back to the letter.
+document.addEventListener('error', e => {
+  const im = e.target;
+  if (im && im.tagName === 'IMG' && im.closest && im.closest('.av')) im.remove();
+}, true);
+const trUrl = text => `https://translate.google.com/?sl=auto&tl=${UI === 'th' ? 'th' : 'en'}&text=${encodeURIComponent(String(text).slice(0, 900))}&op=translate`;
+const fmt = n => {
+  n = +n || 0;
+  const f = (x, d) => x.toFixed(d).replace(/\.0$/, '');
+  if (n >= 1e9) return f(n / 1e9, 1) + 'B';
+  if (n >= 1e6) return f(n / 1e6, n >= 1e7 ? 0 : 1) + 'M';
+  if (n >= 1e3) return f(n / 1e3, n >= 1e5 ? 0 : 1) + 'K';
+  return String(Math.round(n));
+};
+const ago = ts => {
+  if (!ts) return t('never');
+  const s = Math.max(0, Date.now() / 1000 - ts);
+  if (s < 90) return t('now');
+  if (s < 5400) return t('min', {n: Math.round(s / 60)});
+  if (s < 172800) return t('hr', {n: Math.round(s / 3600)});
+  return t('day', {n: Math.round(s / 86400)});
+};
+const scoreColor = s => s >= 75 ? 'var(--good)' : s >= 60 ? 'var(--accent)' : s >= 45 ? 'var(--warn)' : 'var(--muted)';
+const isWatched = c => LIVE && !DATA.readonly ? c.watch : watchLocal.has(c.ch_id);
+const foreign = c => c.lang && c.lang !== 'en' && c.lang !== 'und';
+const ICON = {
+  picks: '<svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>',
+  channels: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>',
+  videos: '<svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="3.5"/><path d="M10.5 9l4 3-4 3z"/></svg>',
+  niches: '<svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>',
+  watch: '<svg viewBox="0 0 24 24"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg>',
+  live: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"/><path d="M7.7 7.7a6 6 0 0 0 0 8.6M16.3 7.7a6 6 0 0 1 0 8.6M4.7 4.7a10.2 10.2 0 0 0 0 14.6M19.3 4.7a10.2 10.2 0 0 1 0 14.6"/></svg>'
+};
+
+async function api(path, body) {
+  const r = await fetch(path, {method: 'POST', headers: {'Content-Type': 'application/json', 'X-Radar': '1'}, body: JSON.stringify(body || {})});
+  return r.json().catch(() => ({}));
+}
+
+/* ---------- filtering ---------- */
+function langOk(c) {
+  if (S.lang === 'all') return true;
+  if (S.lang === 'en') return c.english;
+  if (S.lang === 'th') return c.lang === 'th';
+  return !c.english;
+}
+function channelsFiltered(ignoreScore) {
+  const q = S.q.trim().toLowerCase();
+  const list = DATA.channels.filter(c =>
+    (ignoreScore || c.score >= S.minScore) && (!S.maxSubs || c.subs <= S.maxSubs) && c.med_recent >= S.minMed && langOk(c) &&
+    (!S.hideOne || !c.tags.includes('One-hit')) && (!S.tag || c.tags.includes(S.tag)) && (!S.niche || c.queries.includes(S.niche)) &&
+    (!q || (c.name + ' ' + (c.handle || '') + ' ' + c.queries.join(' ') + ' ' + (c.descr || '') + ' ' + c.series.map(s => s.t).join(' ')).toLowerCase().includes(q)));
+  const key = {score: c => c.score, med: c => c.med_recent, ratio: c => c.ratio, best: c => c.max_views, small: c => -c.subs, trend: c => c.trend}[S.sort] || (c => c.score);
+  return list.sort((a, b) => key(b) - key(a));
+}
+
+/* ---------- pieces ---------- */
+function avatarEl(c, size) {
+  const hue = [...(c.ch_id || '')].reduce((a, ch) => a + ch.charCodeAt(0), 0) % 360;
+  const letter = esc(([...(c.name || '?')][0] || '?').toUpperCase());
+  const remote = STATIC && /^https:\/\/(yt3\.ggpht\.com|yt3\.googleusercontent\.com)\//.test(c.avatar_url || '') ? c.avatar_url : '';
+  const local = c.avatar_ok && chOk(c.ch_id) ? (SERVER ? `/avatar/${c.ch_id}` : STATIC ? `avatars/${c.ch_id}.jpg` : '') : '';
+  const src = c.avatar_data || local || remote;
+  const img = src ? `<img src="${esc(src)}" alt="" decoding="async">` : '';
+  return `<span class="av" style="width:${size}px;height:${size}px;background:hsl(${hue} 38% 36%);font-size:${Math.round(size * 0.42)}px"><b>${letter}</b>${img}</span>`;
+}
+function langChip(c) {
+  if (!c.lang || c.lang === 'und') return '';
+  return `<span class="lang" title="${esc(langName(c.lang))}">${esc(c.lang.toUpperCase())} · ${esc(langName(c.lang))}</span>`;
+}
+function badgeClass(x) { return x >= 10 ? 'hi' : x >= 3 ? 'mid' : ''; }
+function overlay(v) {
+  const vel = v.g && v.h ? `<span class="g" title="${esc(t('gain', {h: v.h}))}">+${fmt(v.g / v.h)}/h</span>` : '';
+  return `<img loading="lazy" src="${thumb(v.id)}" alt=""><span class="x ${badgeClass(v.x)}">${v.x}×</span>${vel}<span class="views">▶ ${fmt(v.v)}</span>`;
+}
+function shortCard(v) {
+  return `<div class="short"><a class="th" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer">${overlay(v)}</a>
+    <a class="t" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" title="${esc(v.t)}">${esc(v.t)}</a></div>`;
+}
+function vCard(v, c, showSpotted) {
+  return `<div class="vcard"><a class="th" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer">${overlay(v)}</a>
+    <div class="vmeta"><a href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${avatarEl(c, 36)}</a>
+    <div class="vtxt"><a class="vt" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" title="${esc(v.t)}">${esc(v.t)}</a>
+    <div class="vch"><a href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${esc(c.name)}</a>${foreign(c) ? `<a class="tr" href="${trUrl(v.t)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}</div>
+    <div class="vst">${fmt(v.v)} ${esc(t('views'))} · ${v.x}× ${esc(t('ofMedian'))}</div>
+    ${showSpotted && (v.p || v.s) ? `<div class="vst" style="color:var(--accent)">${esc(t(v.p ? 'uploaded' : 'spotted', {ago: ago(v.p || v.s)}))}</div>` : ''}</div></div></div>`;
+}
+function channelRow(c) {
+  const star = isWatched(c);
+  const pick = c.pick;
+  const tier = pick ? (UI === 'th' && pick.tier_th ? pick.tier_th : pick.tier) : '';
+  const note = pick ? (UI === 'th' && pick.note_th ? pick.note_th : pick.note) : '';
+  const top = c.series.slice().sort((a, b) => b.v - a.v)[0];
+  const vids = S.shelf === 'top' ? c.series.slice().sort((a, b) => b.v - a.v) : c.series;
+  const tags = c.tags.map(k => `<span class="tag ${TAGS[k] ? TAGS[k].cls : ''}">${esc(tagName(k))}</span>`).join('');
+  return `<section class="ch" data-id="${esc(c.ch_id)}">
+    <div class="chhead">
+      <a href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${avatarEl(c, 84)}</a>
+      <div class="chinfo">
+        <div class="chname"><a href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${esc(c.name)}</a>${pick ? `<span class="tag pick">${esc(tier)}</span>` : ''}</div>
+        <div class="chsub"><span>${esc(c.handle || '')}</span><span>·</span><span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span><span>·</span><span>${esc(t('analyzed', {n: c.series.length}))}</span>${langChip(c)}</div>
+        ${c.descr ? `<div class="chdesc">${esc(c.descr)}</div>` : ''}
+        <div class="chstats">
+          <span class="stat"><b>${fmt(c.med_recent)}</b><span>${esc(t('median'))}</span></span>
+          <span class="stat"><b>${fmt(top ? top.v : c.max_views)}</b><span>${esc(t('best'))}</span></span>
+          <span class="stat"><b>${c.ratio >= 100 ? Math.round(c.ratio) : c.ratio}×</b><span>${esc(t('vps'))}</span></span>
+          <span class="tags">${tags}</span>
+          ${foreign(c) && c.descr ? `<a class="tr" href="${trUrl(c.descr)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}
+        </div>
+      </div>
+      <div class="right">
+        <div class="ring" style="--p:${c.score};--c:${scoreColor(c.score)}" title="${esc(t('scoreTip', {n: c.score}))}"><span>${Math.round(c.score)}</span></div>
+        <button class="watchbtn ${star ? 'on' : ''}" data-star="${esc(c.ch_id)}" aria-pressed="${star}">${esc(star ? t('watching') : t('watch'))}</button>
+      </div>
+    </div>
+    ${note ? `<div class="note"><b>${esc(t('why'))}</b>${esc(note)}</div>` : ''}
+    <div class="shelf">${vids.map(shortCard).join('')}</div>
+  </section>`;
+}
+
+/* ---------- views ---------- */
+function channelsView(list, empty) {
+  if (!list.length) return `<div class="empty">${esc(empty || t('emptyCh'))}</div>`;
+  const lim = shown.channels;
+  return list.slice(0, lim).map(channelRow).join('') +
+    (list.length > lim ? `<button class="more" data-more="channels">${esc(t('more', {n: list.length - lim}))}</button>` : '');
+}
+function videosView() {
+  const vids = [];
+  for (const c of channelsFiltered(false)) for (const v of c.series) if (v.x >= S.minX) vids.push([v, c]);
+  const key = {x: ([v]) => v.x, v: ([v]) => v.v, g: ([v]) => (v.g && v.h ? v.g / v.h : -1)}[S.vsort];
+  vids.sort((a, b) => key(b) - key(a));
+  if (!vids.length) return `<div class="empty">${esc(t('emptyVid'))}</div>`;
+  const lim = shown.videos;
+  return `<div class="vgrid">${vids.slice(0, lim).map(([v, c]) => vCard(v, c)).join('')}</div>` +
+    (vids.length > lim ? `<button class="more" data-more="videos">${esc(t('more', {n: vids.length - lim}))}</button>` : '');
+}
+function nichesView() {
+  const map = new Map();
+  for (const c of channelsFiltered(true)) for (const nq of c.queries) {
+    const m = map.get(nq) || {n: 0, strong: 0, scores: []};
+    m.n++; m.scores.push(c.score); if (c.score >= 55) m.strong++;
+    map.set(nq, m);
+  }
+  const rows = [...map.entries()].map(([k, m]) => {
+    const top = m.scores.sort((a, b) => b - a).slice(0, 5);
+    return {k, ...m, avg: top.reduce((a, b) => a + b, 0) / top.length};
+  }).sort((a, b) => b.strong - a.strong || b.avg - a.avg).slice(0, 60);
+  if (!rows.length) return `<div class="empty">${esc(t('emptyNiche'))}</div>`;
+  const mx = Math.max(1, ...rows.map(r => r.strong));
+  return `<p class="lead">${esc(t('nicheLead'))}</p><div class="tiles">` + rows.map(r =>
+    `<button class="tile" data-niche="${esc(r.k)}"><b>${esc(r.k)}</b><div class="bar2"><i style="width:${(r.strong / mx) * 100}%"></i></div><small>${esc(t('nicheStats', {s: r.strong, a: Math.round(r.avg), n: r.n}))}</small></button>`).join('') + '</div>';
+}
+function liveVideos() {
+  const ref = DATA.snapshot ? DATA.generated : Date.now() / 1000;
+  const cutoff = ref - 72 * 3600, out = [];
+  const when = v => v.p || v.s;   // real upload time on the hosted site, first-seen time in the local app
+  for (const c of channelsFiltered(false)) for (const v of c.series) if (when(v) && when(v) >= cutoff) out.push([v, c]);
+  return out.sort((a, b) => when(b[0]) - when(a[0]));
+}
+function liveView() {
+  const vids = liveVideos();
+  if (!vids.length) return `<p class="lead">${esc(t('liveLead'))}</p><div class="empty">${esc(t('emptyLive'))}</div>`;
+  return `<p class="lead">${esc(t('liveLead'))}</p><div class="vgrid">${vids.slice(0, 120).map(([v, c]) => vCard(v, c, true)).join('')}</div>`;
+}
+function searchView() {
+  const s = SEARCH;
+  if (!s) return `<div class="empty">${esc(t('searchPhLive'))}</div>`;
+  let status;
+  if (s.state === 'error') status = s.msg || t('sErr');
+  else if (s.state === 'running') status = s.phase === 'searching' ? t('sSearching') : t('sChecking', {a: s.done, b: s.total});
+  else status = t('sDone', {n: s.channels.length});
+  const head = `<p class="lead"><b style="color:var(--text)">${esc(t('sTitle', {q: s.query}))}</b> · ${esc(status)}</p>`;
+  if (!s.channels.length) {
+    if (s.state === 'done') return head + `<div class="empty">${esc(t('sEmpty'))}</div>`;
+    return head + (s.state === 'running' ? '<div class="empty"><span class="dot live"></span></div>' : '');
+  }
+  return head + s.channels.map(channelRow).join('');
+}
+async function startSearch(query) {
+  query = String(query || '').trim();
+  if (query.length < 2 || !canSearch()) return;
+  if (STATIC) return staticSearch(query);
+  if (S.tab !== 'search') PREV_TAB = S.tab;
+  S.tab = 'search';
+  SEARCH = {query, id: null, state: 'running', phase: 'searching', done: 0, total: 0, found: 0, channels: [], error: null, tracked: false, msg: ''};
+  render(); window.scrollTo(0, 0);
+  const r = await api('/api/search', {query});
+  if (!r.ok) { SEARCH.state = 'error'; SEARCH.msg = r.error === 'busy' ? t('sBusy') : t('sErr'); render(); return; }
+  SEARCH.id = r.id;
+  pollSearch();
+}
+async function pollSearch() {
+  clearTimeout(searchTimer);
+  if (!SEARCH || !SEARCH.id) return;
+  try {
+    const r = await fetch('/api/search?id=' + encodeURIComponent(SEARCH.id), {cache: 'no-store'});
+    const d = await r.json();
+    if (r.ok) Object.assign(SEARCH, {state: d.state, phase: d.phase, done: d.done, total: d.total, found: d.found, channels: d.channels, error: d.error});
+    else { SEARCH.state = 'error'; SEARCH.msg = t('sErr'); }
+  } catch (e) { SEARCH.state = 'error'; SEARCH.msg = t('sErr'); }
+  if (S.tab === 'search') renderContent();
+  if (SEARCH.state === 'running') searchTimer = setTimeout(pollSearch, 1200);
+}
+function picksList() {
+  const rank = c => { const tt = c.pick.tier || '', m = /#(\d+)/.exec(tt); return m ? +m[1] : /strong/i.test(tt) ? 20 : 30; };
+  return DATA.channels.filter(c => c.pick).sort((a, b) => rank(a) - rank(b) || b.score - a.score);
+}
+
+/* ---------- chrome ---------- */
+function applyStaticText() {
+  document.documentElement.lang = UI;
+  $('#fq').placeholder = canSearch() ? t('searchPhLive') : t('search');
+  $('#fq').value = S.q;
+  $('#scanLbl').textContent = $('#btnScan').disabled ? t('scanning') : t('scan');
+  $('#exportLbl').textContent = t('export');
+  $('#btnExport').title = t('exportTip');
+  $('#settingsLbl').textContent = t('settings');
+  $('#btnMenu').setAttribute('aria-label', t('menu'));
+  $('#howSum').textContent = t('howSum');
+  $('#howBody').textContent = t('howBody');
+  $('#foot').textContent = t('foot');
+  document.querySelectorAll('#langSeg [data-ui]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ui === UI)));
+}
+function renderStatus() {
+  const st = DATA.status, el = $('#status');
+  if (DATA.snapshot) {
+    el.innerHTML = `<span class="dot snap"></span><span>${esc(t('snap', {d: new Date(DATA.generated * 1000).toLocaleString(UI === 'th' ? 'th-TH' : 'en-US'), n: DATA.channels.length}))}</span>`;
+    return;
+  }
+  let dot = 'dot', txt;
+  if (st.state === 'scanning') { dot += ' live'; txt = t(st.phase === 'discovery' ? 'stDisc' : 'stProbe', {a: st.done, b: st.total}); }
+  else if (st.state === 'starting') txt = t('stStart');
+  else if (STATIC) txt = t('stUpdated', {ago: ago(st.last_cycle_end)});
+  else txt = t('stIdle', {ago: ago(st.last_cycle_end)}) + (st.next_scan ? t('stNext', {n: Math.max(1, Math.round((st.next_scan - Date.now() / 1000) / 60))}) : '');
+  el.innerHTML = `<span class="${dot}"></span><span>${esc(txt)} · ${esc(t('stCounts', {s: st.scored, t: st.tracked}))}</span>`;
+  el.title = txt;
+}
+function renderNav() {
+  const watched = DATA.channels.filter(isWatched).length, picks = DATA.channels.filter(c => c.pick).length;
+  const fresh = liveVideos().length;
+  const defs = [['picks', 'nPicks', picks], ['live', 'nLive', fresh], ['channels', 'nChannels'], ['videos', 'nShorts'], ['niches', 'nNiches'], ['watch', 'nWatch', watched]];
+  $('#side').innerHTML = defs.map(([id, key, n]) =>
+    `<button class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(key))}</span>${n != null ? `<span class="n">${n}</span>` : ''}</button>`).join('');
+}
+function renderChips() {
+  const opt = (v, cur, label) => `<option value="${v}" ${String(cur) === String(v) ? 'selected' : ''}>${esc(label)}</option>`;
+  if (S.tab === 'search') {
+    $('#chips').innerHTML = `<button class="chip" data-searchback>${esc(t('sBack'))}</button>` +
+      (SEARCH && canLive() ? `<button class="chip" data-tracktopic aria-pressed="${!!SEARCH.tracked}">${esc(SEARCH.tracked ? t('sTracked') : t('sTrack'))}</button>` : '') +
+      (STATIC ? `<button class="chip" data-changekey>${esc(t('kChange'))}</button>` : '');
+    return;
+  }
+  const vid = S.tab === 'videos';
+  const anyFilter = S.tag || S.niche || S.q;
+  const tags = Object.keys(TAGS);
+  const n = k => fmt(k);
+  $('#chips').innerHTML =
+    `<button class="chip" data-reset aria-pressed="${!anyFilter}">${esc(t('all'))}</button>` +
+    tags.map(k => `<button class="chip" data-tag="${esc(k)}" aria-pressed="${S.tag === k}">${esc(tagName(k))}</button>`).join('') +
+    (S.niche ? `<button class="chip" data-niche="" aria-pressed="true">${esc(t('nicheChip', {x: S.niche}))}</button>` : '') +
+    '<span class="sep"></span>' +
+    `<select id="fScore">${[0, 30, 45, 60, 75].map(v => opt(v, S.minScore, t('score', {n: v}))).join('')}</select>` +
+    `<select id="fSubs">${[[0, t('anySize')]].concat([10000, 50000, 100000, 250000].map(v => [v, t('subsLe', {n: n(v)})])).map(([v, l]) => opt(v, S.maxSubs, l)).join('')}</select>` +
+    `<select id="fMed">${[[0, t('anyViews')]].concat([50000, 100000, 250000, 500000, 1000000].map(v => [v, t('medGe', {n: n(v)})])).map(([v, l]) => opt(v, S.minMed, l)).join('')}</select>` +
+    `<select id="fLang">${[['en', t('langEn')], ['th', t('langTh')], ['all', t('langAll')], ['other', t('langOther')]].map(([v, l]) => opt(v, S.lang, l)).join('')}</select>` +
+    (vid
+      ? `<select id="fX">${[2, 5, 10, 20, 50].map(v => opt(v, S.minX, t('xGe', {n: v}))).join('')}</select><select id="fVSort">${[['x', t('vX')], ['v', t('vV')], ['g', t('vG')]].map(([v, l]) => opt(v, S.vsort, l)).join('')}</select>`
+      : `<select id="fSort">${[['score', t('sScore')], ['med', t('sMed')], ['ratio', t('sRatio')], ['best', t('sBest')], ['small', t('sSmall')], ['trend', t('sTrend')]].map(([v, l]) => opt(v, S.sort, l)).join('')}</select>` +
+        `<select id="fShelf">${[['new', t('shNew')], ['top', t('shTop')]].map(([v, l]) => opt(v, S.shelf, l)).join('')}</select>`) +
+    `<button class="chip" id="fOne" aria-pressed="${S.hideOne}">${esc(t('hideOne'))}</button>`;
+}
+function renderContent() {
+  const el = $('#content');
+  let tab = S.tab;
+  if (tab === 'picks' && !DATA.channels.some(c => c.pick)) tab = 'channels';
+  if (tab === 'search') el.innerHTML = searchView();
+  else if (tab === 'live') el.innerHTML = liveView();
+  else if (tab === 'videos') el.innerHTML = videosView();
+  else if (tab === 'niches') el.innerHTML = nichesView();
+  else if (tab === 'watch') el.innerHTML = channelsView(DATA.channels.filter(isWatched).sort((a, b) => b.score - a.score), t('emptyWatch'));
+  else if (tab === 'picks') el.innerHTML = channelsView(picksList(), t('emptyPicks'));
+  else el.innerHTML = channelsView(channelsFiltered(false), DATA.channels.length ? null : t('emptyFirst'));
+}
+function renderButtons() {
+  const live = LIVE && !DATA.readonly;
+  $('#btnScan').style.display = live ? '' : 'none';
+  $('#btnSettings').style.display = live ? '' : 'none';
+  $('#btnExport').style.display = SERVER ? '' : 'none';
+  const scanning = DATA.status && DATA.status.state === 'scanning';
+  $('#btnScan').disabled = !!scanning;
+  $('#scanLbl').textContent = scanning ? t('scanning') : t('scan');
+}
+function render(keepChips) {
+  if (!DATA) return;
+  applyStaticText(); renderStatus(); renderNav();
+  if (!keepChips) renderChips();
+  renderContent(); renderButtons();
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', async e => {
+  const x = e.target;
+  const ui = x.closest('[data-ui]');
+  if (ui) { UI = ui.dataset.ui; LS.set('radar.ui', UI); render(); return; }
+  const tab = x.closest('[data-tab]');
+  if (tab) { S.tab = tab.dataset.tab; saveState(); render(); window.scrollTo(0, 0); return; }
+  if (x.closest('[data-changekey]')) { openKeyDialog(); return; }
+  if (x.closest('[data-searchback]')) { S.tab = PREV_TAB; saveState(); render(); window.scrollTo(0, 0); return; }
+  if (x.closest('[data-tracktopic]')) {
+    if (SEARCH && !SEARCH.tracked && canLive()) { SEARCH.tracked = true; api('/api/queries', {add: [SEARCH.query]}); renderChips(); }
+    return;
+  }
+  if (x.closest('[data-reset]')) { S.tag = ''; S.niche = ''; S.q = ''; saveState(); render(); return; }
+  const tag = x.closest('[data-tag]');
+  if (tag) { S.tag = S.tag === tag.dataset.tag ? '' : tag.dataset.tag; if (S.tag === 'One-hit') S.hideOne = false; saveState(); render(); return; }
+  const niche = x.closest('[data-niche]');
+  if (niche) { S.niche = niche.dataset.niche; if (S.niche) S.tab = 'channels'; saveState(); render(); window.scrollTo(0, 0); return; }
+  const more = x.closest('[data-more]');
+  if (more) { shown[more.dataset.more] += more.dataset.more === 'channels' ? 15 : 60; render(true); return; }
+  const star = x.closest('[data-star]');
+  if (star) {
+    const id = star.dataset.star, c = DATA.channels.find(z => z.ch_id === id) || (SEARCH && SEARCH.channels.find(z => z.ch_id === id));
+    if (!c) return;
+    const next = !isWatched(c);
+    if (LIVE && !DATA.readonly) { c.watch = next; api('/api/watch', {ch_id: id, watch: next}); }
+    else { next ? watchLocal.add(id) : watchLocal.delete(id); LS.set('radar.watch', [...watchLocal]); }
+    render(true); return;
+  }
+  if (x.closest('#fOne')) { S.hideOne = !S.hideOne; saveState(); render(); }
+});
+$('#btnMenu').addEventListener('click', () => { document.body.classList.toggle('mini'); });
+$('#searchForm').addEventListener('submit', e => { e.preventDefault(); if (canSearch()) startSearch(S.q); });
+$('#fq').addEventListener('input', e => { S.q = e.target.value; shown.channels = 15; shown.videos = 60; saveState(); renderChips(); renderContent(); });
+document.addEventListener('change', e => {
+  const id = e.target.id, v = e.target.value;
+  const map = {fScore: ['minScore', +v], fSubs: ['maxSubs', +v], fMed: ['minMed', +v], fSort: ['sort', v], fX: ['minX', +v], fVSort: ['vsort', v], fLang: ['lang', v], fShelf: ['shelf', v]};
+  if (!map[id]) return;
+  S[map[id][0]] = map[id][1]; shown.channels = 15; shown.videos = 60; saveState(); render();
+});
+$('#btnScan').addEventListener('click', async () => { await api('/api/scan'); setTimeout(refresh, 800); });
+$('#btnExport').addEventListener('click', () => { location.href = '/api/export'; });
+$('#btnSettings').addEventListener('click', openSettings);
+
+/* ---------- settings dialog ---------- */
+function openSettings() {
+  const dlg = $('#dlg'), body = $('#dlgBody'), st = DATA.status;
+  body.innerHTML = `
+    <h3>${esc(t('dTrack'))}</h3><p>${esc(t('dTrackD'))}</p>
+    <div class="row"><input id="trackIn" placeholder="${esc(t('dTrackPh'))}"><button class="pillbtn primary" id="trackBtn">${esc(t('dTrackBtn'))}</button></div>
+    <div id="trackMsg" style="color:var(--muted);min-height:20px;margin:-6px 0 12px"></div>
+    <h3>${esc(t('dNiches'))} (${DATA.queries.length || ''})</h3><p>${esc(t('dNichesD'))}</p>
+    <div class="row"><input id="nicheIn" placeholder="${esc(t('dNichePh'))}"><button class="pillbtn" id="nicheBtn">${esc(t('dAdd'))}</button></div>
+    <div class="qlist" id="qlist"></div>
+    <h3>${esc(t('dLog'))}</h3><pre class="log">${esc((st.log || []).join('\n') || t('dNone'))}</pre>
+    <div style="text-align:right;margin-top:14px"><button class="pillbtn" id="dlgClose">${esc(t('dClose'))}</button></div>`;
+  const drawQ = () => {
+    $('#qlist').innerHTML = DATA.queries.map(x =>
+      `<span class="q ${x.runs && !x.total_rows ? 'dead' : ''}">${esc(x.query)}<small>${x.runs ? x.last_rows : '–'}</small><button data-rm="${esc(x.query)}" title="${esc(t('remove'))}">×</button></span>`).join('');
+  };
+  drawQ();
+  body.onclick = async e => {
+    const rm = e.target.closest('[data-rm]');
+    if (rm) { await api('/api/queries', {remove: [rm.dataset.rm]}); DATA.queries = DATA.queries.filter(x => x.query !== rm.dataset.rm); drawQ(); }
+  };
+  $('#nicheBtn').onclick = async () => {
+    const v = $('#nicheIn').value.trim(); if (!v) return;
+    await api('/api/queries', {add: [v]}); $('#nicheIn').value = ''; DATA.queries.push({query: v, runs: 0, last_rows: 0, total_rows: 0}); drawQ(); setTimeout(refresh, 1000);
+  };
+  $('#trackBtn').onclick = async () => {
+    const v = $('#trackIn').value.trim(); if (!v) return;
+    const msg = $('#trackMsg'); msg.textContent = t('dReading');
+    const r = await api('/api/track', {channel: v});
+    msg.textContent = r.ok ? t('dAdded') : (r.error || t('dFail'));
+    if (r.ok) { $('#trackIn').value = ''; refresh(); }
+  };
+  $('#dlgClose').onclick = () => dlg.close();
+  dlg.showModal();
+}
+
+/* ---------- hosted site: live search with the visitor's own YouTube API key ---------- */
+const getKey = () => { try { return (localStorage.getItem('radar.key') || CFG.browserKey || '').trim(); } catch (e) { return (CFG.browserKey || '').trim(); } };
+const setKey = k => { try { localStorage.setItem('radar.key', k.trim()); } catch (e) {} };
+const median = a => { const s = a.slice().sort((x, y) => x - y), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; };
+const clip = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
+const r1 = x => Math.round(x * 10) / 10, r2 = x => Math.round(x * 100) / 100;
+// Same scoring as the Python scanner (kept in step with compute_metrics in app.py).
+function computeMetrics(vids, subs) {
+  const views = vids.map(v => v.v), n = views.length;
+  if (n < 6) return null;
+  const medRecent = median(views.slice(0, 12)), medAll = median(views), mx = Math.max(...views);
+  const s100 = views.filter(v => v >= 1e5).length / n, s1m = views.filter(v => v >= 1e6).length / n;
+  const mid = views.slice(3, 12), old = views.slice(12);
+  const trend = (median(mid.length ? mid : views) + 1) / (median(old.length ? old : views) + 1);
+  const peak = mx / Math.max(medAll, 1), ratio = medRecent / Math.max(subs || 0, 1000);
+  const engine = 30 * clip((Math.log10(Math.max(medRecent, 1)) - 4.7) / (6.0 - 4.7), 0, 1);
+  const leverage = 35 * clip(Math.log10(Math.max(ratio, 1)) / Math.log10(30), 0, 1);
+  const consistency = 15 * s100 + 10 * clip(s1m / 0.25, 0, 1);
+  const trendS = 10 * clip((Math.log2(Math.max(trend, 0.05)) + 1) / 2, 0, 1);
+  const fluke = peak > 30 ? -15 : peak > 15 ? -8 : 0;
+  const score = clip(engine + leverage + consistency + trendS + fluke, 0, 100);
+  const tags = [];
+  if (s100 >= 0.6 && peak <= 15 && medRecent >= 150000) tags.push('Consistent engine');
+  if (peak > 30 || (s100 < 0.2 && mx >= 1e6)) tags.push('One-hit');
+  if (subs && subs < 25000 && medRecent >= 200000) tags.push('Tiny & huge');
+  if (trend >= 1.4) tags.push('Rising'); else if (trend <= 0.6) tags.push('Fading');
+  vids.forEach(v => { v.x = r1(v.v / Math.max(medAll, 1000)); });
+  return {n, med_recent: medRecent, med_all: medAll, max_views: mx, share_100k: r2(s100), share_1m: r2(s1m), trend: r2(trend),
+          peak_vs_med: r1(peak), ratio: r1(ratio), score: r1(score), tags};
+}
+const SCRIPTS = [['ru', /[Ѐ-ӿ]/g], ['ar', /[؀-ۿ]/g], ['hi', /[ऀ-ॿ]/g], ['bn', /[ঀ-৿]/g], ['th', /[฀-๿]/g],
+  ['ko', /[가-힯]/g], ['ja', /[぀-ヿ]/g], ['zh', /[一-鿿]/g], ['ta', /[஀-௿]/g], ['te', /[ఀ-౿]/g],
+  ['he', /[֐-׿]/g], ['el', /[Ͱ-Ͽ]/g]];
+const STOP = Object.fromEntries(Object.entries({
+  en: 'the a an and of to in is it you your for with this that what if can how why who when are was be but not on at from i my we they he she his her one all will would could just do did so out up about into than then there their them our over',
+  es: 'el la los las un una y de del que en es por con para su sus como pero se lo al muy más mi tu qué cómo cuando porque este esta eso son era fue hay si ya',
+  pt: 'o os as um uma e do da dos das que em é por com para seu sua como mas se não muito mais meu você porque este esta isso são foi tem na no nos nas ele ela eu',
+  id: 'yang dan di ke dari ini itu untuk dengan pada adalah tidak ada akan juga saya kamu dia mereka kami apa bagaimana kenapa kalau bisa lebih sangat sudah belum atau karena fakta',
+  tr: 've bir bu için ile çok de da ne gibi ama daha en mi var yok ben sen biz siz',
+  fr: 'le la les un une et du des que est pour avec sur dans pas ce cette il elle je tu nous vous qui mais plus très',
+  de: 'der die das und ist zu den mit für auf nicht ein eine er sie ich du wir von dem auch aber wie was',
+  it: 'il lo gli le un una e di del della che è per con su non si come ma più molto anche'
+}).map(([k, v]) => [k, new Set(v.split(' '))]));
+function detectLang(texts) {
+  const text = texts.filter(Boolean).join(' ').replace(/#\w+|https?:\/\/\S+/g, ' ');
+  const letters = [...text].filter(c => /\p{L}/u.test(c)).length;
+  if (!letters) return 'und';
+  const counts = SCRIPTS.map(([code, rx]) => [code, (text.match(rx) || []).length]);
+  if ((counts.find(c => c[0] === 'ja') || [0, 0])[1] >= 0.1 * letters) return 'ja';
+  const top = counts.reduce((a, b) => (b[1] > a[1] ? b : a));
+  if (top[1] >= 0.3 * letters) return top[0];
+  const words = text.toLowerCase().match(/[a-zà-ÿ']+/g) || [];
+  let best = 'und', bs = 0;
+  for (const [k, set] of Object.entries(STOP)) { const s = words.filter(w => set.has(w)).length; if (s > bs) { best = k; bs = s; } }
+  return bs >= 2 ? best : 'und';
+}
+function parseDur(iso) {
+  const m = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.exec(iso || '');
+  return m ? (+m[1] || 0) * 86400 + (+m[2] || 0) * 3600 + (+m[3] || 0) * 60 + (+m[4] || 0) : 1e6;
+}
+async function ytApi(path, params) {
+  const u = new URL('https://www.googleapis.com/youtube/v3/' + path);
+  Object.entries(params).forEach(([k, v]) => u.searchParams.set(k, v));
+  u.searchParams.set('key', getKey());
+  let r;
+  try { r = await fetch(u.toString()); } catch (e) { throw {net: true}; }
+  if (!r.ok) {
+    let body = {}; try { body = await r.json(); } catch (e) {}
+    if (r.status === 403 && /quota/i.test(JSON.stringify(body))) throw {quota: true};
+    if (r.status === 400 || r.status === 403) throw {badKey: true};
+    throw {http: r.status};
+  }
+  return r.json();
+}
+const parseVideo = it => ({
+  id: it.id, t: (it.snippet || {}).title || '', ch: (it.snippet || {}).channelId,
+  v: it.statistics && it.statistics.viewCount != null ? +it.statistics.viewCount : null,
+  dur: parseDur(it.contentDetails && it.contentDetails.duration), p: (it.snippet || {}).publishedAt ? Date.parse(it.snippet.publishedAt) / 1000 : null
+});
+async function probeStatic(chId, info, query) {
+  const pl = await ytApi('playlistItems', {part: 'contentDetails', playlistId: 'UU' + chId.slice(2), maxResults: 50});
+  const ids = (pl.items || []).map(i => i.contentDetails && i.contentDetails.videoId).filter(Boolean);
+  if (!ids.length) return null;
+  const vr = await ytApi('videos', {part: 'snippet,statistics,contentDetails', id: ids.join(',')});
+  const byId = new Map((vr.items || []).map(it => [it.id, parseVideo(it)]));
+  const vids = ids.map(i => byId.get(i)).filter(v => v && v.v != null && v.dur <= 180).slice(0, 24)
+    .map(v => ({id: v.id, t: v.t, v: v.v, ...(v.p ? {p: Math.round(v.p)} : {})}));
+  const sn = (info && info.snippet) || {}, st = (info && info.statistics) || {}, th = sn.thumbnails || {};
+  const subs = st.hiddenSubscriberCount ? 0 : +(st.subscriberCount || 0);
+  const m = computeMetrics(vids, subs);
+  if (!m) return null;
+  const descr = (sn.description || '').replace(/\s+/g, ' ').trim().slice(0, 400);
+  const lang = detectLang(vids.map(v => v.t).concat([descr]));
+  return Object.assign({ch_id: chId, name: sn.title || chId, handle: sn.customUrl || '', subs, lang, english: lang === 'en' || lang === 'und',
+    queries: [query], series: vids, watch: false, descr, avatar_url: (th.medium || th.default || {}).url || '', pick: null}, m);
+}
+async function staticSearch(query) {
+  if (!getKey()) { openKeyDialog(); return; }
+  if (S.tab !== 'search') PREV_TAB = S.tab;
+  S.tab = 'search';
+  const mine = SEARCH = {query, id: 'web', state: 'running', phase: 'searching', done: 0, total: 0, found: 0, channels: [], error: null, tracked: false, msg: ''};
+  render(); window.scrollTo(0, 0);
+  const paint = () => { if (S.tab === 'search' && SEARCH === mine) renderContent(); };
+  try {
+    const thai = /[฀-๿]/.test(query);
+    const sr = await ytApi('search', Object.assign({part: 'id', type: 'video', order: 'viewCount', videoDuration: 'short', maxResults: 50, q: query,
+      publishedAfter: new Date(Date.now() - 30 * 864e5).toISOString()}, thai ? {relevanceLanguage: 'th', regionCode: 'TH'} : {}));
+    const ids = (sr.items || []).map(i => i.id && i.id.videoId).filter(Boolean);
+    const vr = ids.length ? await ytApi('videos', {part: 'snippet,statistics,contentDetails', id: ids.join(',')}) : {items: []};
+    const rows = (vr.items || []).map(parseVideo).filter(v => v.v != null && v.dur <= 180 && v.ch);
+    mine.found = rows.length; mine.phase = 'checking';
+    const best = new Map();
+    rows.forEach(r => best.set(r.ch, Math.max(best.get(r.ch) || 0, r.v)));
+    const chIds = [...best.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12).map(e => e[0]);
+    mine.total = chIds.length; paint();
+    const cr = chIds.length ? await ytApi('channels', {part: 'snippet,statistics', id: chIds.join(',')}) : {items: []};
+    const info = new Map((cr.items || []).map(c => [c.id, c]));
+    let next = 0;
+    const worker = async () => {
+      while (next < chIds.length) {
+        const id = chIds[next++];
+        try {
+          const ch = await probeStatic(id, info.get(id), query);
+          if (ch) { mine.channels.push(ch); mine.channels.sort((a, b) => b.score - a.score); }
+        } catch (e) { if (e && (e.quota || e.badKey)) throw e; }
+        mine.done++; paint();
+      }
+    };
+    await Promise.all([worker(), worker(), worker(), worker()]);
+    mine.state = 'done';
+  } catch (e) {
+    mine.state = 'error';
+    mine.msg = e && e.quota ? t('kQuota') : e && e.badKey ? t('kBad') : e && e.net ? t('kNet') : t('sErr');
+  }
+  if (S.tab === 'search' && SEARCH === mine) { renderChips(); renderContent(); }
+}
+function openKeyDialog() {
+  const dlg = $('#dlg'), body = $('#dlgBody');
+  body.onclick = null;
+  body.innerHTML = `<h3>${esc(t('kTitle'))}</h3><p>${esc(t('kBody'))}</p>
+    <div class="row"><input id="keyIn" type="password" autocomplete="off" spellcheck="false" placeholder="${esc(t('kPh'))}"><button class="pillbtn primary" id="keySave">${esc(t('kSave'))}</button></div>
+    <p>${esc(t('kPrivacy'))}</p>
+    <div style="text-align:right;margin-top:14px"><button class="pillbtn" id="dlgClose">${esc(t('dClose'))}</button></div>`;
+  $('#keySave').onclick = () => { const v = $('#keyIn').value.trim(); if (!v) return; setKey(v); dlg.close(); if (S.q.trim().length >= 2) staticSearch(S.q.trim()); };
+  $('#dlgClose').onclick = () => dlg.close();
+  dlg.showModal();
+}
+
+/* ---------- data loop ---------- */
+async function refresh() {
+  if (!LIVE) return;
+  try {
+    const r = await fetch(STATIC ? 'data.json' : '/api/data', {cache: STATIC ? 'no-cache' : 'no-store'});
+    DATA = await r.json();
+    if (!$('#dlg').open) render(true); else renderStatus();
+  } catch (e) {
+    $('#status').innerHTML = `<span class="dot"></span><span>${esc(t('offline'))}</span>`;
+  }
+}
+applyStaticText();
+if (LIVE) { refresh().then(() => render()); setInterval(refresh, STATIC ? 60000 : 15000); } else { render(); }
+</script>
+</body>
+</html>
