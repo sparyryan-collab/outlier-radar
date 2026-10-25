@@ -7,6 +7,7 @@
 <meta name="description" content="Find YouTube Shorts channels that are blowing up: small channels with huge views, viral videos and new uploads, in English and Thai.">
 <title>Viral Radar</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ff0033'/%3E%3Cpath d='M16 5c1.3 4.6 7.5 7.4 7.5 14.5a7.5 7.5 0 0 1-15 0c0-4 2.5-6.4 3.8-7.6 0 2.6 1.1 4.1 2.6 4.1 0-3.9-1.1-7.6 1.1-11z' fill='white'/%3E%3C/svg%3E">
+<script>try{var m=JSON.parse(localStorage.getItem('radar.theme'));if(m==='light'||m==='dark')document.documentElement.setAttribute('data-theme',m)}catch(e){}</script>
 <style>
 :root{
   --bg:#ffffff; --bg2:#f9f9f9; --surface:#f2f2f2; --surface2:#e5e5e5; --text:#0f0f0f; --muted:#606060; --line:#e5e5e5;
@@ -15,10 +16,14 @@
   --hot3:#ff0033; --hot2:#f05a00; --hot1bg:#fff1d6; --hot1:#8a4b00; --tip:#fff8e1; --tipline:#f3d48a; --series-1:#2a78d6;
 }
 @media (prefers-color-scheme:dark){
-  :root{--bg:#0f0f0f; --bg2:#151515; --surface:#272727; --surface2:#3f3f3f; --text:#f1f1f1; --muted:#aaaaaa; --line:#303030;
+  :root:not([data-theme=light]){color-scheme:dark;--bg:#0f0f0f; --bg2:#151515; --surface:#272727; --surface2:#3f3f3f; --text:#f1f1f1; --muted:#aaaaaa; --line:#303030;
     --on-bg:#f1f1f1; --on-fg:#0f0f0f; --accent:#3ea6ff; --good:#4cc36f; --warn:#f2a33a; --bad:#ff6b61; --hover:rgba(255,255,255,.08);
     --card:#1c1c1c; --shadow:0 6px 28px rgba(0,0,0,.5); --hot1bg:#3a2a10; --hot1:#ffc66b; --tip:#2a2412; --tipline:#5c4b1d; --series-1:#3987e5;}
 }
+:root[data-theme=dark]{color-scheme:dark;--bg:#0f0f0f; --bg2:#151515; --surface:#272727; --surface2:#3f3f3f; --text:#f1f1f1; --muted:#aaaaaa; --line:#303030;
+    --on-bg:#f1f1f1; --on-fg:#0f0f0f; --accent:#3ea6ff; --good:#4cc36f; --warn:#f2a33a; --bad:#ff6b61; --hover:rgba(255,255,255,.08);
+    --card:#1c1c1c; --shadow:0 6px 28px rgba(0,0,0,.5); --hot1bg:#3a2a10; --hot1:#ffc66b; --tip:#2a2412; --tipline:#5c4b1d; --series-1:#3987e5;}
+:root{color-scheme:light}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--text);font:14px/1.45 Roboto,"Noto Sans Thai","Leelawadee UI","Segoe UI",Arial,Tahoma,sans-serif;-webkit-font-smoothing:antialiased}
@@ -737,6 +742,7 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
     <button class="pillbtn" id="btnExport"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span class="lbl" id="exportLbl"></span></button>
     <button class="pillbtn" id="btnSettings"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span class="lbl" id="settingsLbl"></span></button>
     <button class="icon" id="btnSearchM" type="button"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+    <button class="icon" id="btnTheme" type="button"></button>
     <span id="acct"></span>
     <button class="icon" id="btnHelp" data-tab="help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.8M12 17.2h.01"/></svg></button>
     <div class="seg" id="langSeg" role="group" aria-label="Language"><button data-ui="en" aria-pressed="true">EN</button><button data-ui="th" aria-pressed="false">ไทย</button></div>
@@ -1310,6 +1316,8 @@ Object.assign(T.th, {
   signErr: 'เข้าสู่ระบบไม่สำเร็จ: {m}', signWhy: 'เข้าสู่ระบบเพื่อเก็บช่องที่บันทึกไว้และคู่มือไว้ในทุกอุปกรณ์',
   syncPriv: 'มีแค่คุณที่อ่านข้อมูลที่ซิงค์ได้ การเข้าสู่ระบบจัดการโดย Google และเว็บนี้ไม่เคยเห็นรหัสผ่านของคุณ'
 });
+Object.assign(T.en, {themeT: 'Appearance', themeAuto: 'Device', themeLight: 'Light', themeDark: 'Dark', themeToDark: 'Dark mode', themeToLight: 'Light mode'});
+Object.assign(T.th, {themeT: 'ธีม', themeAuto: 'ตามเครื่อง', themeLight: 'สว่าง', themeDark: 'มืด', themeToDark: 'โหมดมืด', themeToLight: 'โหมดสว่าง'});
 Object.assign(T.en, {nTutorial: 'Video tutorial', nTour: 'Hands-on tour', sYou: 'You', mLearn: 'Learn', mExplore: 'Explore', langT: 'Language', searchT: 'Search', backT: 'Back'});
 Object.assign(T.th, {nTutorial: 'วิดีโอสอนใช้งาน', nTour: 'ลองใช้จริงทีละขั้น', sYou: 'ของคุณ', mLearn: 'เรียนรู้', mExplore: 'สำรวจ', langT: 'ภาษา', searchT: 'ค้นหา', backT: 'กลับ'});
 Object.assign(T.en, {
@@ -1521,6 +1529,8 @@ const ICON = {
   mine: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 15l3-4 3 2 4-5"/></svg>',
   tutorial: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z"/></svg>',
   tour: '<svg viewBox="0 0 24 24"><path d="M5 3.5l13 6.8-5.6 1.7-2 5.6z"/><path d="M12.5 12.2l5 5"/></svg>',
+  moon: '<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>',
+  sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M2.5 12h2M19.5 12h2M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>',
   lang: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>'
 };
 
@@ -2658,7 +2668,7 @@ function openMore() {
     `<div class="mrow">${ICON.lang}<span>${esc(t('langT'))}</span><div class="seg"><button type="button" data-ui="en" aria-pressed="${UI === 'en'}">EN</button><button type="button" data-ui="th" aria-pressed="${UI === 'th'}">ไทย</button></div></div>` +
     `<h4 class="navh">${esc(t('mLearn'))}</h4>` + row('data-intro', ICON.tutorial, t('nTutorial')) + row('data-tour', ICON.tour, t('nTour')) + [['playbook', 'nPlaybook'], ['help', 'nHelp']].map(tab).join('') +
     `<h4 class="navh">${esc(t('mExplore'))}</h4>` + [['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['mine', 'nMine'], ['compare', 'nCompare']].map(tab).join('') +
-    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + (canInstall() ? `<div class="sidesec">${installBtn()}</div>` : '') +
+    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + themeSec() + (canInstall() ? `<div class="sidesec">${installBtn()}</div>` : '') +
     `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div></div>`;
   if (!dlg.open) dlg.showModal();
 }
@@ -3271,6 +3281,24 @@ function acctClick(x) {
 }
 $('#dlg').addEventListener('close', () => { $('#dlgBody').dataset.mode = ''; });
 
+/* ---------- appearance: follow the device, or always light / dark (kept on this device only) ---------- */
+const themeMode = () => LS.get('radar.theme', 'auto');
+const isDark = () => themeMode() === 'dark' || (themeMode() === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+function setTheme(m) {
+  LS.set('radar.theme', m);
+  if (m === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', m);
+  renderThemeBtn();
+  if (DATA) renderSide();
+  if ($('#dlg').open && $('#dlgBody').dataset.mode === 'more') openMore();
+}
+function renderThemeBtn() {
+  const b = $('#btnTheme'), label = t(isDark() ? 'themeToLight' : 'themeToDark');
+  b.innerHTML = isDark() ? ICON.sun : ICON.moon; b.title = label; b.setAttribute('aria-label', label);
+}
+const themeSec = () => `<div class="sidesec"><h4>${esc(t('themeT'))}</h4><div class="seg">${[['auto', 'themeAuto'], ['light', 'themeLight'], ['dark', 'themeDark']]
+  .map(([m, k]) => `<button type="button" data-theme-set="${m}" aria-pressed="${themeMode() === m}">${esc(t(k))}</button>`).join('')}</div></div>`;
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderThemeBtn);
+
 /* ---------- chrome ---------- */
 function applyStaticText() {
   document.documentElement.lang = UI;
@@ -3283,6 +3311,7 @@ function applyStaticText() {
   $('#btnExport').title = t('exportTip');
   $('#settingsLbl').textContent = t('settings');
   $('#btnMenu').setAttribute('aria-label', t('menu'));
+  renderThemeBtn();
   $('#btnSearchM').setAttribute('aria-label', t('searchT')); $('#btnSearchBack').setAttribute('aria-label', t('backT'));
   document.body.classList.toggle('hasq', !!S.q.trim() || S.tab === 'search');   // phones keep the search bar open while a search is showing
   $('#btnHelp').title = t('help'); $('#btnHelp').setAttribute('aria-label', t('help'));
@@ -3297,7 +3326,7 @@ function renderSide() {
     nav('ideas', 'nIdeas') + nav('topics', 'nTopics') + '<hr class="navsep">' + navh('sYou') + nav('saved', 'nSaved', saved) + nav('mine', 'nMine') + nav('compare', 'nCompare', S.cmp.length) +
     '<hr class="navsep">' + navh('nMore') + nav('playbook', 'nPlaybook', PB_STEPS.length - Object.values(PB.done).filter(Boolean).length || null) +
     `<button type="button" class="nav" data-intro>${ICON.tutorial}<span class="lbl">${esc(t('nTutorial'))}</span></button>` + nav('help', 'nHelp') + nav('more', 'nMore') +
-    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` +
+    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + themeSec() +
     `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div>${canInstall() ? `<div style="margin:10px 12px 0">${installBtn()}</div>` : ''}</div>` + syncBlock();
 }
 function renderChips() {
@@ -3419,6 +3448,8 @@ document.addEventListener('click', async e => {
   if (x.closest('[data-closeplayer]')) $('#player').close();
   const och = x.closest('[data-open-ch]');
   if (och) { openChannel(och.dataset.openCh); return; }
+  const th = x.closest('[data-theme-set]');
+  if (th) { setTheme(th.dataset.themeSet); return; }
   const ui = x.closest('[data-ui]');
   if (ui) { setUI(ui.dataset.ui); return; }
   const det = x.closest('[data-detail]');
@@ -3515,6 +3546,7 @@ for (const d of ['dlg', 'sheet', 'player']) $('#' + d).addEventListener('close',
 $('#btnScan').addEventListener('click', async () => { await api('/api/scan'); setTimeout(refresh, 800); });
 $('#btnExport').addEventListener('click', () => { location.href = '/api/export'; });
 $('#btnSettings').addEventListener('click', openSettings);
+$('#btnTheme').addEventListener('click', () => setTheme(isDark() ? 'light' : 'dark'));
 
 /* ---------- settings dialog (local app owner) ---------- */
 function openSettings() {
