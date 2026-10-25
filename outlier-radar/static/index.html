@@ -628,7 +628,7 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .syncrow b{display:block;font-size:12.5px;line-height:1.3;overflow:hidden;text-overflow:ellipsis}
 .syncrow small{color:var(--muted);font-size:11.5px}
 /* ---- heating up ---- */
-.heatstrip{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 18px;max-width:960px}
+.heatstrip{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:-8px 0 26px;max-width:960px}
 .heatstrip b{font-size:13px}
 .heatup{color:var(--good)!important;font-weight:600}
 /* ---- growth curve inside the dark video player ---- */
@@ -674,9 +674,9 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
   #chips{top:48px;margin:0 -12px;padding:6px 12px 10px;gap:8px}
   #chips .chip{height:32px;padding:0 12px;font-size:13.5px}
   main{padding:0 12px 76px}
-  .sumline{font-size:12px;gap:2px 12px;margin:0 0 10px}
-  .sumline .smhide,.homeinstall{display:none}
-  .heatstrip{flex-wrap:nowrap;overflow-x:auto;margin:0 -12px 16px;padding:0 12px;scrollbar-width:none}
+  .sumline,.homeinstall{display:none}
+  .pcard .pnote{-webkit-line-clamp:2}
+  .heatstrip{flex-wrap:nowrap;overflow-x:auto;margin:-10px -12px 24px;padding:0 12px;scrollbar-width:none}
   .heatstrip::-webkit-scrollbar{display:none}
   .heatstrip>*{flex:none}
   .shelfsec{margin:4px 0 24px}
@@ -1738,8 +1738,11 @@ function homeView() {
   const st = statusInfo();
   h += `<div class="sumline"><span>${t('sumTracked', {n: DATA.channels.length})}</span><span class="smhide">${t('sumHot', {n: DATA.channels.filter(c => c.score >= 65).length})}</span>` +
     `<span class="smhide">${t('sumNew', {n: liveVideos(DATA.channels).length})}</span><span class="livebox" style="margin:0"><span class="${st.cls}"></span>${esc(st.txt)}</span></div>`;
-  h += heatStrip() + (canInstall() ? `<div class="homeinstall" style="margin:-6px 0 16px">${installBtn()}</div>` : '');
-  const add = (title, desc, items, see) => { if (items.length) { h += shelf(title, desc, items, see); n++; } };
+  const add = (title, desc, items, see) => {
+    if (!items.length) return;
+    h += shelf(title, desc, items, see);
+    if (++n === 2) h += heatStrip() + (canInstall() ? `<div class="homeinstall" style="margin:-6px 0 22px">${installBtn()}</div>` : '');
+  };
   const byScore = (a, b) => b.score - a.score;
   add('shPicks', 'shPicksD', picksList().filter(baseOk).map(pickCard), '');
   add('shViral', 'shViralD', viralVideos(chs).slice(0, 24).map(([v, c]) => vCard(v, c)), 'videos');
@@ -2576,13 +2579,15 @@ function tourClick(x) {
 function openMore() {
   const dlg = $('#dlg'), body = $('#dlgBody');
   body.onclick = null; body.dataset.mode = 'more';
+  const st = statusInfo();
   const row = (attrs, icon, label) => `<button type="button" class="nav" ${attrs}>${icon}<span class="lbl">${esc(label)}</span></button>`;
   const tab = ([id, k]) => row(`data-tab="${id}" aria-current="${S.tab === id}"`, ICON[id], t(k));
   body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('nMore'))}</h3>` + syncBlock() +
     `<div class="mrow">${ICON.lang}<span>${esc(t('langT'))}</span><div class="seg"><button type="button" data-ui="en" aria-pressed="${UI === 'en'}">EN</button><button type="button" data-ui="th" aria-pressed="${UI === 'th'}">ไทย</button></div></div>` +
     `<h4 class="navh">${esc(t('mLearn'))}</h4>` + row('data-intro', ICON.tutorial, t('nTutorial')) + row('data-tour', ICON.tour, t('nTour')) + [['playbook', 'nPlaybook'], ['help', 'nHelp']].map(tab).join('') +
     `<h4 class="navh">${esc(t('mExplore'))}</h4>` + [['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['mine', 'nMine'], ['compare', 'nCompare']].map(tab).join('') +
-    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + (canInstall() ? `<div class="sidesec">${installBtn()}</div>` : '');
+    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + (canInstall() ? `<div class="sidesec">${installBtn()}</div>` : '') +
+    `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div></div>`;
   if (!dlg.open) dlg.showModal();
 }
 
@@ -3012,7 +3017,7 @@ function heatSection() {
 }
 function heatStrip() {
   const hot = topicHeat().filter(r => r.growth != null && r.growth > 0).slice(0, 4);
-  return hot.length ? `<div class="heatstrip"><b>${esc(t('heatShort'))}</b>${hot.map(r => `<button type="button" class="chip" data-topic="${r.tp[0]}">${r.tp[1]} ${esc(topicName(r.tp))} <span class="heatup">${esc(signedPct(r.growth))}</span></button>`).join('')}</div>` : '';
+  return hot.length ? `<div class="heatstrip"><b>${esc(t('heatShort'))}</b>${hot.map(r => `<button type="button" class="chip" data-topic="${r.tp[0]}">${r.tp[1]} ${esc(topicName(r.tp))} <span class="heatup">${esc(signedPct(r.growth))}</span></button>`).join('')}<button type="button" class="seeall" data-tab="topics">${esc(t('seeAll'))}</button></div>` : '';
 }
 
 /* ---------- faster first screen: the hottest 300 channels load first, everything else right after ---------- */
@@ -3042,6 +3047,10 @@ async function doInstall(btn) {
 }
 if (STATIC && 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+  const hadSW = !!navigator.serviceWorker.controller;   // the first install also changes the controller: no reload then
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (hadSW && !document.querySelector('dialog[open]') && !(document.activeElement && document.activeElement.matches('input, textarea'))) location.reload();
+  });
 }
 
 /* ---------- Google sign-in + sync (Firebase Auth + Cloud Firestore on the free plan) ---------- */

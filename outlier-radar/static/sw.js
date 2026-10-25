@@ -1,5 +1,5 @@
 // Offline support for the installed app. Only same-origin files are handled; YouTube, Google and Firebase go straight to the network.
-const CACHE = 'viral-radar-v1';
+const CACHE = 'viral-radar-v2';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -12,7 +12,7 @@ self.addEventListener('activate', e => {
 async function networkFirst(req) {   // fresh when online, the last copy when offline
   const cache = await caches.open(CACHE);
   try {
-    const res = await fetch(req);
+    const res = await fetch(req.mode === 'navigate' ? req.url : req, {cache: 'no-cache', credentials: 'same-origin'});   // skip the browser's 10-minute copy
     if (res.ok) cache.put(req, res.clone());
     return res;
   } catch (e) {
