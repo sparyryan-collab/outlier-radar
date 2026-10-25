@@ -3,177 +3,356 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://i.ytimg.com data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'">
-<title>Outlier Radar</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://i.ytimg.com data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; frame-src https://www.youtube-nocookie.com">
+<meta name="description" content="Find YouTube Shorts channels that are blowing up: small channels with huge views, viral videos and new uploads, in English and Thai.">
+<title>Viral Radar</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ff0033'/%3E%3Cpath d='M16 5c1.3 4.6 7.5 7.4 7.5 14.5a7.5 7.5 0 0 1-15 0c0-4 2.5-6.4 3.8-7.6 0 2.6 1.1 4.1 2.6 4.1 0-3.9-1.1-7.6 1.1-11z' fill='white'/%3E%3C/svg%3E">
 <style>
 :root{
-  --bg:#ffffff; --surface:#f2f2f2; --surface2:#e5e5e5; --text:#0f0f0f; --muted:#606060; --line:#e5e5e5;
-  --on-bg:#0f0f0f; --on-fg:#ffffff; --accent:#065fd4; --good:#188038; --warn:#c26a00; --bad:#d93025; --hover:rgba(0,0,0,.06);
+  --bg:#ffffff; --bg2:#f9f9f9; --surface:#f2f2f2; --surface2:#e5e5e5; --text:#0f0f0f; --muted:#606060; --line:#e5e5e5;
+  --on-bg:#0f0f0f; --on-fg:#ffffff; --accent:#065fd4; --red:#ff0033; --good:#188038; --warn:#b05a00; --bad:#d93025;
+  --hover:rgba(0,0,0,.05); --card:#ffffff; --shadow:0 6px 28px rgba(0,0,0,.10);
+  --hot3:#ff0033; --hot2:#f05a00; --hot1bg:#fff1d6; --hot1:#8a4b00; --tip:#fff8e1; --tipline:#f3d48a;
 }
 @media (prefers-color-scheme:dark){
-  :root{--bg:#0f0f0f; --surface:#272727; --surface2:#3f3f3f; --text:#f1f1f1; --muted:#aaaaaa; --line:#303030;
-    --on-bg:#f1f1f1; --on-fg:#0f0f0f; --accent:#3ea6ff; --good:#4cc36f; --warn:#f2a33a; --bad:#ff6b61; --hover:rgba(255,255,255,.1);}
+  :root{--bg:#0f0f0f; --bg2:#151515; --surface:#272727; --surface2:#3f3f3f; --text:#f1f1f1; --muted:#aaaaaa; --line:#303030;
+    --on-bg:#f1f1f1; --on-fg:#0f0f0f; --accent:#3ea6ff; --good:#4cc36f; --warn:#f2a33a; --bad:#ff6b61; --hover:rgba(255,255,255,.08);
+    --card:#1c1c1c; --shadow:0 6px 28px rgba(0,0,0,.5); --hot1bg:#3a2a10; --hot1:#ffc66b; --tip:#2a2412; --tipline:#5c4b1d;}
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--text);font:14px/20px Roboto,Arial,"Leelawadee UI","Noto Sans Thai",Tahoma,sans-serif;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font:14px/1.45 Roboto,"Noto Sans Thai","Leelawadee UI","Segoe UI",Arial,Tahoma,sans-serif;-webkit-font-smoothing:antialiased}
+html[lang=th] body{line-height:1.6}
 a{color:inherit;text-decoration:none}
 button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
 svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-/* top bar */
-#top{position:sticky;top:0;z-index:20;height:56px;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--bg)}
-.icon{border:0;background:transparent;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;cursor:pointer}
+/* ---- top bar ---- */
+#top{position:sticky;top:0;z-index:40;height:56px;display:flex;align-items:center;gap:8px;padding:0 16px;background:var(--bg)}
+.icon{border:0;background:transparent;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none}
 .icon:hover{background:var(--hover)}
-.brand{display:flex;align-items:center;gap:6px;font-weight:700;font-size:18px;letter-spacing:-.02em;white-space:nowrap}
-.brand svg{color:var(--accent);width:26px;height:26px}
-.search{flex:1 1 auto;max-width:640px;margin:0 auto;display:flex;min-width:0}
-.search input{flex:1;min-width:0;height:40px;padding:0 16px;border:1px solid var(--line);border-right:0;border-radius:40px 0 0 40px;background:var(--bg);outline:none}
+.brand{display:flex;align-items:center;gap:6px;font-weight:700;font-size:19px;letter-spacing:-.04em;white-space:nowrap;padding:0 6px 0 2px}
+.brand .logo{width:30px;height:22px;border-radius:7px;background:var(--red);display:grid;place-items:center}
+.brand .logo svg{width:16px;height:16px;fill:#fff;stroke:none}
+.search{flex:1 1 auto;max-width:600px;margin:0 auto;display:flex;min-width:0}
+.search input{flex:1;min-width:0;height:40px;padding:0 16px;border:1px solid var(--line);border-right:0;border-radius:40px 0 0 40px;background:var(--bg);outline:none;box-shadow:inset 0 1px 2px rgba(0,0,0,.06)}
 .search input:focus{border-color:var(--accent)}
-.search button{width:64px;height:40px;border:1px solid var(--line);border-radius:0 40px 40px 0;background:var(--surface);cursor:pointer;display:grid;place-items:center}
-.actions{display:flex;align-items:center;gap:8px;margin-left:auto}
-.status{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;max-width:290px;line-height:16px}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
-.dot.live{background:var(--good);animation:pulse 1.6s infinite}
-.dot.snap{background:var(--warn)}
-@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--good) 60%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
-.pillbtn{height:36px;border:0;border-radius:18px;padding:0 14px;background:var(--surface);cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:500;white-space:nowrap}
+.search button{width:64px;height:40px;border:1px solid var(--line);border-radius:0 40px 40px 0;background:var(--surface);display:grid;place-items:center}
+.search button:hover{background:var(--surface2)}
+.actions{display:flex;align-items:center;gap:6px}
+.pillbtn{height:36px;border:0;border-radius:18px;padding:0 14px;background:var(--surface);display:inline-flex;align-items:center;gap:6px;font-weight:500;white-space:nowrap}
 .pillbtn:hover{background:var(--surface2)}
 .pillbtn svg{width:20px;height:20px}
 .pillbtn.primary{background:var(--on-bg);color:var(--on-fg)}
+.pillbtn.primary:hover{opacity:.88}
+.pillbtn.red{background:var(--red);color:#fff}
+.pillbtn.red:hover{opacity:.9}
 .pillbtn[disabled]{opacity:.6;cursor:default}
-.seg{display:inline-flex;background:var(--surface);border-radius:18px;padding:3px}
-.seg button{border:0;background:transparent;height:30px;min-width:44px;padding:0 12px;border-radius:15px;cursor:pointer;font-weight:500;color:var(--muted)}
+.pillbtn.big{height:44px;border-radius:22px;padding:0 22px;font-size:15px}
+.seg{display:inline-flex;background:var(--surface);border-radius:18px;padding:3px;flex:none}
+.seg button{border:0;background:transparent;height:30px;min-width:44px;padding:0 12px;border-radius:15px;font-weight:500;color:var(--muted)}
 .seg button[aria-pressed=true]{background:var(--on-bg);color:var(--on-fg)}
 
-/* layout */
+/* ---- layout + sidebar ---- */
 #layout{display:flex}
-#side{position:sticky;top:56px;align-self:flex-start;height:calc(100vh - 56px);width:220px;flex:none;padding:6px 12px;overflow:auto}
-.nav{display:flex;align-items:center;gap:20px;width:100%;height:40px;padding:0 12px;border:0;border-radius:10px;background:transparent;cursor:pointer;text-align:left;font-size:14px}
+#side{position:sticky;top:56px;align-self:flex-start;height:calc(100vh - 56px);width:236px;flex:none;padding:4px 12px 16px;overflow-y:auto;scrollbar-width:thin}
+.nav{display:flex;align-items:center;gap:22px;width:100%;height:42px;padding:0 12px;border:0;border-radius:10px;background:transparent;text-align:left;font-size:14px}
 .nav:hover{background:var(--hover)}
 .nav[aria-current=true]{background:var(--surface);font-weight:600}
-.nav .n{margin-left:auto;color:var(--muted);font-size:12px}
-.mini #side{width:72px}
-.mini .nav{flex-direction:column;gap:4px;height:64px;justify-content:center;padding:0;font-size:10px;text-align:center}
-.mini .nav .n,.mini .nav span.lbl small{display:none}
-main{flex:1;min-width:0;padding:0 24px 40px}
-#chips{position:sticky;top:56px;z-index:10;background:var(--bg);display:flex;gap:10px;align-items:center;overflow-x:auto;padding:10px 0 12px;scrollbar-width:none}
-#chips::-webkit-scrollbar{display:none}
-.chip,#chips select{flex:none;height:32px;border:0;border-radius:8px;padding:0 12px;background:var(--surface);cursor:pointer;font-weight:500;white-space:nowrap}
-#chips select{padding:0 8px}
-.chip:hover,#chips select:hover{background:var(--surface2)}
-.chip[aria-pressed=true]{background:var(--on-bg);color:var(--on-fg)}
-.sep{width:1px;height:24px;background:var(--line);flex:none}
-details.how{margin:0 0 6px;color:var(--muted);font-size:13px}
-details.how summary{cursor:pointer;width:max-content}
-details.how p{margin:6px 0 10px;max-width:880px}
+.nav .n{margin-left:auto;color:var(--muted);font-size:12px;font-weight:400}
+.nav .n.hot{background:var(--red);color:#fff;border-radius:9px;padding:0 6px;line-height:18px;font-weight:600}
+.sidesec{border-top:1px solid var(--line);margin:10px 0;padding-top:12px}
+.sidesec h4{margin:0 12px 8px;font-size:14px;font-weight:600}
+.sidesec p{margin:8px 12px 0;color:var(--muted);font-size:12px;line-height:1.5}
+.sidesec .seg{margin:0 12px}
+.livebox{display:flex;gap:8px;align-items:flex-start;margin:0 12px;color:var(--muted);font-size:12px;line-height:1.5}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none;margin-top:5px}
+.dot.live{background:var(--good);animation:pulse 1.8s infinite}
+.dot.snap{background:var(--warn)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--good) 60%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.sidefoot{margin:12px;color:var(--muted);font-size:11px;line-height:1.5}
+body.mini #side{width:76px;padding:4px}
+body.mini .nav{flex-direction:column;gap:4px;height:68px;justify-content:center;padding:0;font-size:10px;text-align:center}
+body.mini .nav .n,body.mini .sidesec,body.mini .sidefoot{display:none}
+main{flex:1;min-width:0;padding:0 24px 48px}
 
-/* avatars, chips */
+/* ---- topic chips + filters ---- */
+#chips{position:sticky;top:56px;z-index:30;background:var(--bg);display:flex;gap:10px;align-items:center;overflow-x:auto;padding:8px 0 12px;scrollbar-width:none}
+#chips:empty{display:none}
+#chips::-webkit-scrollbar{display:none}
+.chip{flex:none;height:32px;border:0;border-radius:8px;padding:0 12px;background:var(--surface);font-weight:500;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.chip:hover{background:var(--surface2)}
+.chip[aria-pressed=true]{background:var(--on-bg);color:var(--on-fg)}
+.chip.x::after{content:"✕";font-size:11px;opacity:.75}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:2px 0 14px}
+.filters select{height:34px;border:1px solid var(--line);border-radius:18px;padding:0 10px;background:var(--bg);max-width:100%}
+.filters select:hover{background:var(--hover)}
+.filters .chip{height:34px;border-radius:18px}
+.phead{margin:6px 0 10px}
+.phead h1{margin:0;font-size:22px;line-height:1.3;font-weight:700;letter-spacing:-.01em}
+.phead p{margin:4px 0 0;color:var(--muted);max-width:860px}
+.banner{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-radius:12px;background:var(--surface);margin:0 0 14px}
+
+/* ---- avatars, pills ---- */
 .av{position:relative;display:inline-grid;place-items:center;border-radius:50%;overflow:hidden;color:#fff;flex:none;font-weight:600}
 .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.tag,.lang{display:inline-block;border-radius:6px;padding:0 8px;font-size:12px;line-height:20px;background:var(--surface);color:var(--muted);white-space:nowrap}
-.tag.good{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}
+.vd{display:inline-flex;align-items:center;gap:3px;border-radius:999px;padding:0 9px;font-size:12px;line-height:22px;font-weight:600;white-space:nowrap;border:0}
+.vd.v3{background:var(--hot3);color:#fff}
+.vd.v2{background:var(--hot2);color:#fff}
+.vd.v1{background:var(--hot1bg);color:var(--hot1)}
+.vd.v0{background:var(--surface);color:var(--muted);font-weight:500}
+.tag,.lang{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:0 9px;font-size:12px;line-height:22px;background:var(--surface);color:var(--muted);white-space:nowrap;border:0}
+.tag.good{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good)}
 .tag.warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
-.tag.bad{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+.tag.bad{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
 .tag.pick{background:var(--on-bg);color:var(--on-fg);font-weight:600}
-.tr{color:var(--accent);font-size:12px;white-space:nowrap}
+.tag.new{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good);font-weight:600}
+button.tag,button.vd{cursor:help}
+.tr{color:var(--accent);font-size:12px;white-space:nowrap;font-weight:500}
 .tr:hover{text-decoration:underline}
+.qm{width:18px;height:18px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:11px;line-height:16px;font-weight:700;padding:0;display:inline-grid;place-items:center;vertical-align:middle;flex:none}
+.qm:hover{background:var(--surface);color:var(--text)}
 
-/* channel rows (like YouTube channel results + Shorts shelf) */
-.ch{padding:18px 0 14px;border-bottom:1px solid var(--line)}
-.chhead{display:flex;gap:18px;align-items:flex-start}
-.chinfo{flex:1;min-width:0}
-.chname{font-size:18px;line-height:26px;font-weight:500;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.chname a:hover{text-decoration:underline}
-.chsub{color:var(--muted);font-size:13px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.chdesc{color:var(--muted);font-size:13px;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:760px}
-.chstats{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px;align-items:center}
-.stat b{font-size:15px;font-variant-numeric:tabular-nums;font-weight:600}
-.stat span{color:var(--muted);font-size:12px;margin-left:4px}
-.tags{display:flex;gap:6px;flex-wrap:wrap}
-.right{display:flex;flex-direction:column;align-items:center;gap:10px;flex:none}
-.ring{--p:0;--c:var(--muted);width:52px;height:52px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--surface2) 0);display:grid;place-items:center}
-.ring span{width:42px;height:42px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-weight:700;font-size:15px}
-.watchbtn{height:36px;border:0;border-radius:18px;padding:0 16px;background:var(--on-bg);color:var(--on-fg);font-weight:500;cursor:pointer;white-space:nowrap}
-.watchbtn.on{background:var(--surface);color:var(--text)}
-.note{margin:12px 0 0;padding:12px 14px;border-radius:12px;background:var(--surface);max-width:900px}
-.note b{display:block;margin-bottom:2px}
-.shelf{display:flex;gap:12px;overflow-x:auto;padding:14px 0 6px;scroll-snap-type:x proximity;scrollbar-width:thin}
-.short{flex:0 0 148px;scroll-snap-align:start}
+/* ---- home ---- */
+.hero{position:relative;display:flex;gap:22px;align-items:center;padding:22px 24px;margin:4px 0 18px;border-radius:18px;background:linear-gradient(120deg,color-mix(in srgb,var(--red) 13%,var(--bg)),color-mix(in srgb,#ffb000 15%,var(--bg)))}
+.hero .emo{font-size:46px;line-height:1}
+.hero h2{margin:0 0 6px;font-size:22px;line-height:1.3;padding-right:30px}
+.hero p{margin:0 0 14px;max-width:720px}
+.hero .btns{display:flex;gap:8px;flex-wrap:wrap}
+.hero .closex{position:absolute;right:10px;top:10px}
+.sumline{display:flex;gap:8px 18px;flex-wrap:wrap;align-items:center;color:var(--muted);margin:0 0 6px;font-size:13px}
+.sumline b{color:var(--text);font-weight:600}
+.shelfsec{margin:12px 0 28px}
+.shhead{display:flex;align-items:flex-end;gap:12px;margin-bottom:10px}
+.shhead h2{margin:0;font-size:20px;line-height:1.3;font-weight:700}
+.shhead p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.shhead .shnav{margin-left:auto;display:flex;gap:4px;align-items:center;flex:none}
+.seeall{border:0;background:transparent;color:var(--accent);font-weight:600;height:36px;padding:0 12px;border-radius:18px;white-space:nowrap}
+.seeall:hover{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;padding:2px 2px 8px;scroll-behavior:smooth}
+.rail::-webkit-scrollbar{display:none}
+.rail>*{scroll-snap-align:start}
+.rail .vcard{flex:0 0 190px}
+.rail .ccard{flex:0 0 220px}
+.rail .pcard{flex:0 0 340px}
+
+/* ---- cards ---- */
 .th{position:relative;display:block;aspect-ratio:9/16;border-radius:12px;overflow:hidden;background:var(--surface)}
-.th img{width:100%;height:100%;object-fit:cover;display:block}
-.th::after{content:"";position:absolute;inset:auto 0 0 0;height:46%;background:linear-gradient(transparent,rgba(0,0,0,.72));pointer-events:none}
-.th .views{position:absolute;left:9px;bottom:8px;z-index:1;color:#fff;font-size:12px;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-.th .x{position:absolute;left:8px;top:8px;z-index:1;background:rgba(0,0,0,.72);color:#fff;border-radius:6px;padding:0 7px;font-size:12px;font-weight:700;line-height:20px}
-.th .x.mid{background:#c26a00}
-.th .x.hi{background:#188038}
-.th .g{position:absolute;right:8px;top:8px;z-index:1;background:#065fd4;color:#fff;border-radius:6px;padding:0 6px;font-size:11px;font-weight:700;line-height:18px}
-.short .t{margin-top:8px;font-size:14px;line-height:20px;font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:40px}
-.short .m{color:var(--muted);font-size:12px}
-
-/* shorts grid */
-.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:22px 14px;padding-top:6px}
+.th img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}
+a.th:hover img{transform:scale(1.03)}
+.th::after{content:"";position:absolute;inset:auto 0 0 0;height:42%;background:linear-gradient(transparent,rgba(0,0,0,.75));pointer-events:none}
+.th .views{position:absolute;left:8px;bottom:8px;z-index:1;color:#fff;font-size:12px;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.th .dur{position:absolute;right:8px;bottom:8px;z-index:1;background:rgba(0,0,0,.8);color:#fff;border-radius:4px;padding:0 4px;font-size:12px;font-weight:600;line-height:18px}
+.th .x{position:absolute;left:8px;top:8px;z-index:1;background:rgba(0,0,0,.72);color:#fff;border-radius:6px;padding:0 7px;font-size:12px;font-weight:700;line-height:21px}
+.th .x.mid{background:var(--hot2)}
+.th .x.hi{background:var(--hot3)}
+.th .g{position:absolute;right:8px;top:8px;z-index:1;background:#065fd4;color:#fff;border-radius:6px;padding:0 6px;font-size:11px;font-weight:700;line-height:19px}
+.th .play{position:absolute;inset:0;margin:auto;width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,.55);display:grid;place-items:center;opacity:0;transition:opacity .2s;z-index:1}
+.th .play svg{fill:#fff;stroke:none;width:22px;height:22px;margin-left:3px}
+a.th:hover .play{opacity:1}
 .vmeta{display:flex;gap:10px;margin-top:10px}
 .vtxt{min-width:0;flex:1}
-.vt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:500;font-size:14px;line-height:20px}
-.vch{color:var(--muted);font-size:12px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:2px}
-.vch a:hover{color:var(--text)}
+.vt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:500;font-size:14px;line-height:1.45}
+.vch{color:var(--muted);font-size:12px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:3px}
+.vch button,.avlink{border:0;background:none;padding:0;color:inherit;font:inherit;text-align:left}
+.vch button:hover{color:var(--text)}
+.avlink{border-radius:50%;height:max-content}
 .vst{color:var(--muted);font-size:12px}
+.vst .hotx{color:var(--hot2);font-weight:600}
+.vst.when{color:var(--accent)}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:24px 14px;padding-top:4px}
+.ccard,.pcard{border:0;text-align:left;border-radius:16px;background:var(--card);box-shadow:0 0 0 1px var(--line);padding:0;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s,transform .2s}
+.ccard:hover,.pcard:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;aspect-ratio:16/9.5;background:var(--surface);overflow:hidden;width:100%}
+.trio img{width:100%;height:100%;object-fit:cover;display:block}
+.ccard .cbody{padding:0 14px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;width:100%}
+.ccard .cbody .av{margin-top:-32px;box-shadow:0 0 0 3px var(--card)}
+.ccard b{font-size:15px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.ccard small{color:var(--muted);font-size:12px;line-height:1.45}
+.pcard .pbody{padding:12px 14px 14px;display:flex;flex-direction:column;gap:7px}
+.pcard .ptop{display:flex;gap:10px;align-items:center}
+.pcard .ptop b{font-size:15px;line-height:1.3;display:block}
+.pcard .pnote{color:var(--muted);font-size:13px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 
-/* niches */
-.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;padding-top:6px}
-.tile{border:0;text-align:left;border-radius:14px;padding:16px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;gap:8px}
+/* ---- channel rows ---- */
+.ch{padding:18px 0 14px;border-bottom:1px solid var(--line)}
+.chhead{display:flex;gap:20px;align-items:flex-start}
+.chinfo{flex:1;min-width:0}
+.chname{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chname>button:first-child{border:0;background:none;padding:0;font-size:18px;line-height:1.35;font-weight:600;text-align:left}
+.chname>button:first-child:hover{text-decoration:underline}
+.chsub{color:var(--muted);font-size:13px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.why{margin-top:8px;padding:9px 12px;border-radius:10px;background:var(--tip);border:1px solid var(--tipline);max-width:820px;font-size:13.5px}
+.why div+div{margin-top:3px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.st{display:inline-flex;gap:6px;align-items:center;background:var(--surface);border-radius:10px;padding:5px 10px;font-size:13px}
+.st b{font-variant-numeric:tabular-nums;font-weight:700}
+.st span{color:var(--muted)}
+.right{display:flex;flex-direction:column;align-items:stretch;gap:8px;flex:none;min-width:124px}
+.ring{--p:0;--c:var(--muted);width:50px;height:50px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--surface2) 0);display:grid;place-items:center;align-self:center}
+.ring span{width:40px;height:40px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-weight:700;font-size:14px}
+.savebtn{height:36px;border:0;border-radius:18px;padding:0 16px;background:var(--on-bg);color:var(--on-fg);font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.savebtn svg{width:18px;height:18px}
+.savebtn.on{background:var(--surface);color:var(--text)}
+.ghost{height:36px;border:0;border-radius:18px;padding:0 14px;background:transparent;font-weight:500;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.ghost:hover{background:var(--hover)}
+.ghost svg{width:18px;height:18px}
+.note{margin:12px 0 0;padding:12px 14px;border-radius:12px;background:var(--surface);max-width:900px;font-size:13.5px}
+.note b{display:block;margin-bottom:2px}
+.shelf{display:flex;gap:12px;overflow-x:auto;padding:14px 0 6px;scroll-snap-type:x proximity;scrollbar-width:thin}
+.short{flex:0 0 150px;scroll-snap-align:start}
+.short .t{margin-top:8px;font-size:13.5px;line-height:1.45;font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ---- topics ---- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;padding-top:4px}
+.tile{border:0;text-align:left;border-radius:16px;padding:16px;background:var(--surface);display:flex;flex-direction:column;gap:10px;transition:background .15s}
 .tile:hover{background:var(--surface2)}
-.tile b{font-size:16px;line-height:22px}
-.tile small{color:var(--muted);font-size:12px}
+.tile .em{font-size:30px;line-height:1}
+.tile b{font-size:17px;line-height:1.3}
+.tile small{color:var(--muted);font-size:12.5px}
+.stack{display:flex}
+.stack .av{box-shadow:0 0 0 2px var(--surface)}
+.stack .av+.av{margin-left:-10px}
 .tile .bar2{height:6px;border-radius:99px;background:var(--surface2);overflow:hidden}
-.tile .bar2 i{display:block;height:100%;background:var(--accent);border-radius:99px}
-.lead{color:var(--muted);margin:2px 0 12px}
-.empty{padding:56px 16px;text-align:center;color:var(--muted)}
-.more{display:block;margin:18px auto;height:36px;border:0;border-radius:18px;padding:0 20px;background:var(--surface);cursor:pointer;font-weight:500}
-.more:hover{background:var(--surface2)}
-footer{margin-top:28px;color:var(--muted);font-size:12px;max-width:820px}
+.tile .bar2 i{display:block;height:100%;background:var(--red);border-radius:99px}
+.subhead{margin:30px 0 4px;font-size:17px}
 
-/* dialog */
-dialog{border:0;background:var(--bg);color:var(--text);border-radius:16px;padding:0;width:min(660px,94vw);max-height:88vh;box-shadow:0 12px 48px rgba(0,0,0,.35)}
-dialog::backdrop{background:rgba(0,0,0,.55)}
-.dlg{padding:20px 22px;overflow:auto;max-height:86vh}
-.dlg h3{margin:0 0 4px;font-size:18px}
-.dlg p{margin:0;color:var(--muted)}
+/* ---- help ---- */
+.help{max-width:880px}
+.hsec{background:var(--card);box-shadow:0 0 0 1px var(--line);border-radius:16px;padding:18px 22px;margin:0 0 14px;scroll-margin-top:70px}
+.hsec h2{margin:0 0 8px;font-size:19px;line-height:1.35;display:flex;gap:10px;align-items:center}
+.hsec h2 .em{font-size:24px}
+.hsec p{margin:0 0 8px}
+.hsec ol,.hsec ul{margin:4px 0 8px;padding-left:22px}
+.hsec li{margin:6px 0}
+.gl{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:12px 18px;margin:6px 0 0}
+.gl dt{font-weight:600;display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap}
+.gl dd{margin:0;color:var(--muted)}
+.qa summary{cursor:pointer;font-weight:600;padding:8px 0}
+.qa p{margin:0 0 10px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 16px}
+
+/* ---- misc ---- */
+.empty{padding:56px 16px;text-align:center;color:var(--muted)}
+.empty .em{font-size:40px;display:block;margin-bottom:8px}
+.more{display:block;margin:18px auto;height:38px;border:0;border-radius:19px;padding:0 22px;background:var(--surface);font-weight:600}
+.more:hover{background:var(--surface2)}
+footer{margin-top:32px;color:var(--muted);font-size:12px;max-width:860px;line-height:1.6}
+#pop{position:fixed;z-index:90;max-width:300px;padding:10px 12px;border-radius:10px;background:var(--on-bg);color:var(--on-fg);font-size:13px;line-height:1.5;box-shadow:var(--shadow);display:none}
+#pop b{display:block;margin-bottom:2px}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);opacity:0;z-index:100;background:var(--on-bg);color:var(--on-fg);padding:10px 18px;border-radius:10px;font-weight:500;transition:all .25s;pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---- dialogs ---- */
+dialog{border:0;background:var(--bg);color:var(--text);border-radius:18px;padding:0;width:min(680px,94vw);max-height:90vh;box-shadow:0 16px 60px rgba(0,0,0,.4)}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+.dlg{position:relative;padding:22px 24px;overflow:auto;max-height:90vh}
+.dlg h3{margin:0 0 6px;font-size:19px}
+.dlg p{margin:0 0 8px;color:var(--muted)}
+.dlg ol{margin:6px 0 12px;padding-left:22px}
+.dlg li{margin:4px 0}
+.dlg a.link{color:var(--accent);font-weight:500}
 .row{display:flex;gap:8px;margin:10px 0 14px}
-.row input{flex:1;height:38px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);outline:none}
+.row input{flex:1;min-width:0;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);outline:none}
 .row input:focus{border-color:var(--accent)}
 .qlist{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
 .q{display:inline-flex;gap:6px;align-items:center;background:var(--surface);border-radius:8px;padding:0 4px 0 10px;line-height:28px;font-size:13px}
 .q.dead{opacity:.5}
 .q small{color:var(--muted)}
-.q button{border:0;background:transparent;cursor:pointer;color:var(--muted);padding:0 6px;font-size:15px}
+.q button{border:0;background:transparent;color:var(--muted);padding:0 6px;font-size:15px}
 pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size:12px;max-height:160px;overflow:auto;white-space:pre-wrap;margin:6px 0 0}
+.dlgclose{position:absolute;right:12px;top:12px;z-index:2;background:var(--bg)}
+#sheet{width:min(1040px,96vw)}
+#sheet .dlg{padding:0}
+.shtop{padding:26px 64px 18px 28px;display:flex;gap:22px;align-items:center;background:linear-gradient(180deg,var(--surface),var(--bg))}
+.shtop h2{margin:0;font-size:26px;line-height:1.25;letter-spacing:-.01em;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.shtop .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.shbody{padding:4px 28px 26px}
+.cards4{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:14px 0}
+.scard{background:var(--surface);border-radius:12px;padding:12px 14px}
+.scard .lbl{color:var(--muted);font-size:12.5px;display:flex;gap:6px;align-items:center}
+.scard b{display:block;font-size:22px;line-height:1.3;margin-top:2px;font-variant-numeric:tabular-nums}
+.scard small{color:var(--muted);font-size:12px;display:block;line-height:1.4}
+.shbody h3{margin:22px 0 8px;font-size:17px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.descr{color:var(--muted);font-size:13px;max-width:860px}
+.taglist{display:flex;flex-direction:column;gap:8px}
+.taglist div{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.taglist small{color:var(--muted);font-size:13px}
+#player{width:auto;max-width:96vw;background:#0f0f0f;color:#f1f1f1}
+#player .pwrap{position:relative;display:flex;max-height:90vh}
+#player .pvid{height:min(84vh,780px);aspect-ratio:9/16;background:#000;flex:none}
+#player iframe{width:100%;height:100%;border:0;display:block}
+#player .pside{width:340px;padding:22px 22px 18px;overflow:auto;display:flex;flex-direction:column;gap:12px}
+#player .pside h3{margin:0;font-size:17px;line-height:1.4;padding-right:34px}
+#player .pfacts{display:flex;flex-direction:column;gap:8px;font-size:14px}
+#player .pfacts div{display:flex;gap:10px}
+#player .pfacts .em{width:22px;text-align:center;flex:none}
+#player .pch{display:flex;gap:10px;align-items:center;border:0;background:#272727;color:#f1f1f1;border-radius:12px;padding:10px;text-align:left}
+#player .pch:hover{background:#3a3a3a}
+#player .pch small{display:block;color:#aaa;font-size:12px}
+#player .pillbtn{background:#272727;color:#f1f1f1}
+#player .pillbtn:hover{background:#3f3f3f}
+#player .pillbtn.red{background:var(--red);color:#fff}
+#player .hint{color:#aaa;font-size:12px}
+#player .dlgclose{background:#272727;color:#fff}
+#player .btns{display:flex;gap:8px;flex-wrap:wrap}
+.welcome{text-align:center;padding:30px 28px 26px}
+.welcome .emo{font-size:52px;line-height:1}
+.welcome h3{font-size:24px;margin:10px 0 6px}
+.welcome .langs{display:flex;gap:10px;justify-content:center;margin:14px 0 18px}
+.welcome .langs button{min-width:130px;height:52px;border-radius:14px;border:2px solid var(--line);background:var(--bg);font-size:17px;font-weight:600}
+.welcome .langs button[aria-pressed=true]{border-color:var(--red);background:color-mix(in srgb,var(--red) 8%,var(--bg))}
+.welcome ul{list-style:none;padding:0;margin:0 auto 20px;max-width:480px;text-align:left;display:flex;flex-direction:column;gap:10px}
+.welcome li{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border-radius:12px;padding:10px 14px}
+.welcome li .em{font-size:20px}
+.welcome .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 
-@media (max-width:1100px){.pillbtn .lbl{display:none}.pillbtn{padding:0 10px}#side{width:72px}#side .nav{flex-direction:column;gap:4px;height:64px;justify-content:center;padding:0;font-size:10px;text-align:center}#side .nav .n{display:none}.status{display:none}}
+@media (max-width:1180px){.pillbtn .lbl{display:none}.pillbtn{padding:0 10px}}
+@media (max-width:1000px){
+  #side{width:76px;padding:4px}
+  #side .nav{flex-direction:column;gap:4px;height:68px;justify-content:center;padding:0;font-size:10px;text-align:center}
+  #side .nav .n,#side .sidesec,#side .sidefoot{display:none}
+  #player .pwrap{flex-direction:column;overflow:auto}
+  #player .pvid{height:min(66vh,640px);margin:0 auto}
+  #player .pside{width:auto;max-width:520px}
+}
 @media (max-width:760px){
-  #top{flex-wrap:wrap;height:auto;padding:8px 12px;gap:8px}
+  #top{flex-wrap:wrap;height:auto;padding:8px 12px;gap:6px}
+  #btnMenu{display:none}
   .search{order:5;flex:1 1 100%;max-width:none}
-  .actions{gap:6px}.pillbtn .lbl{display:none}.pillbtn{padding:0 10px}
-  #chips{top:0;position:static}
-  #side{position:fixed;inset:auto 0 0 0;top:auto;z-index:30;width:auto;height:58px;display:flex;padding:0 4px;background:var(--bg);border-top:1px solid var(--line)}
-  #side .nav{height:56px;flex:1}
-  main{padding:0 12px 80px}
-  .chhead{flex-wrap:wrap}.right{flex-direction:row;width:100%;justify-content:space-between}
-  .brand span{display:none}
+  .actions{margin-left:auto}
+  #chips{top:0;position:static;padding-top:4px}
+  #side{position:fixed;inset:auto 0 0 0;top:auto;z-index:45;width:auto;height:60px;display:flex;padding:0 2px;background:var(--bg);border-top:1px solid var(--line);overflow:hidden}
+  #side .nav{height:58px;flex:1;min-width:0;border-radius:0}
+  #side .nav[data-tab=topics],#side .nav[data-tab=help]{display:none}
+  #side .nav[aria-current=true]{background:transparent;color:var(--red)}
+  main{padding:0 12px 84px}
+  .hero{flex-direction:column;align-items:flex-start;padding:18px;gap:10px}
+  .hero .emo{font-size:36px}
+  .chhead{flex-wrap:wrap;gap:14px}
+  .right{flex-direction:row;width:100%;justify-content:flex-start;flex-wrap:wrap}
+  .rail .vcard{flex-basis:150px}
+  .rail .pcard{flex-basis:280px}
+  .shtop{flex-direction:column;align-items:flex-start;padding:22px 56px 14px 18px;gap:12px}
+  .shbody{padding:4px 18px 22px}
+  .gl{grid-template-columns:1fr;gap:2px}
+  .gl dd{margin-bottom:10px}
+  .hsec{padding:16px}
 }
 </style>
 </head>
 <body>
 <header id="top">
   <button class="icon" id="btnMenu" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
-  <div class="brand"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12l6-5"/></svg><span>Outlier Radar</span></div>
-  <form class="search" id="searchForm" role="search"><input id="fq" type="search" autocomplete="off"><button type="submit" id="searchBtn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form>
+  <a class="brand" href="#home" data-tab="home"><span class="logo"><svg viewBox="0 0 24 24"><path d="M12 2c1 4 6.5 6.5 6.5 13a6.5 6.5 0 0 1-13 0c0-3.5 2.2-5.6 3.3-6.6 0 2.3 1 3.6 2.3 3.6 0-3.4-1-6.6.9-10z"/></svg></span><span>Viral Radar</span></a>
+  <form class="search" id="searchForm" role="search"><input id="fq" type="search" autocomplete="off" enterkeyhint="search"><button type="submit" id="searchBtn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form>
   <div class="actions">
-    <div class="status" id="status"></div>
     <button class="pillbtn primary" id="btnScan"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg><span class="lbl" id="scanLbl"></span></button>
     <button class="pillbtn" id="btnExport"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span class="lbl" id="exportLbl"></span></button>
     <button class="pillbtn" id="btnSettings"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span class="lbl" id="settingsLbl"></span></button>
+    <button class="icon" id="btnHelp" data-tab="help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.8M12 17.2h.01"/></svg></button>
     <div class="seg" id="langSeg" role="group" aria-label="Language"><button data-ui="en" aria-pressed="true">EN</button><button data-ui="th" aria-pressed="false">ไทย</button></div>
   </div>
 </header>
@@ -181,12 +360,15 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
   <nav id="side" aria-label="Sections"></nav>
   <main>
     <div id="chips"></div>
-    <details class="how"><summary id="howSum"></summary><p id="howBody"></p></details>
     <div id="content"></div>
     <footer id="foot"></footer>
   </main>
 </div>
 <dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
+<dialog id="sheet"><div class="dlg" id="sheetBody"></div></dialog>
+<dialog id="player"><div id="playerBody"></div></dialog>
+<div id="pop" role="tooltip"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>window.RADAR_STATIC = false/*__STATIC__*/; window.RADAR_CFG = {}/*__CFG__*/;</script>
 <script>
@@ -205,97 +387,227 @@ const LS = {
 /* ---------- translations ---------- */
 const T = {
   en: {
-    search: 'Search channels, titles, niches', scan: 'Scan now', scanning: 'Scanning…', export: 'Export snapshot', settings: 'Niches & tracking',
-    exportTip: 'Download one HTML file with the current results to send to someone', menu: 'Menu',
-    nPicks: 'Top picks', nChannels: 'Channels', nShorts: 'Shorts', nNiches: 'Niches', nWatch: 'Watchlist',
-    all: 'All', anySize: 'Any size', anyViews: 'Any views', score: 'Score {n}+', subsLe: '≤ {n} subs', medGe: 'Median {n}+',
-    xGe: '{n}× channel median+', hideOne: 'Hide one-hit flukes', nicheChip: 'niche: {x} ×',
-    langEn: 'English only', langTh: 'Thai only', langAll: 'All languages', langOther: 'Not English',
-    sScore: 'Sort: score', sMed: 'Sort: median views', sRatio: 'Sort: views per sub', sBest: 'Sort: best video', sSmall: 'Sort: smallest channel', sTrend: 'Sort: trend',
-    vX: 'Sort: outlier ×', vV: 'Sort: views', vG: 'Sort: growing now', shNew: 'Videos: newest first', shTop: 'Videos: top first',
-    howSum: 'How is the score calculated?',
-    howBody: '0–100 per channel, built from its last ~24 Shorts: leverage (views per subscriber, up to 35) + demand (median recent views, up to 30) + consistency (share of Shorts above 100K and 1M, up to 25) + trend (newer vs older uploads, up to 10), minus a penalty when one viral video is carrying the channel. The × badge on a video is its views divided by that channel’s median. It ranks patterns of demand; it can’t promise results.',
-    foot: 'Public YouTube data via yt-dlp (unofficial; can break or be rate-limited). View counts lag. Use this to find formats to study and improve, not channels to copy.',
+    menu: 'Menu', help: 'How to use', helpLead: 'Everything you need, in plain words. It takes about 2 minutes to read.', scan: 'Scan now', scanning: 'Scanning…', export: 'Export snapshot', settings: 'Niches & tracking',
+    exportTip: 'Download one HTML file with the current results to send to someone',
+    searchPh: 'Search a topic, e.g. "cat animation"', searchPhList: 'Search channels and videos in this list',
+    nHome: 'Home', nVideos: 'Viral Shorts', nChannels: 'Channels', nLive: 'New uploads', nTopics: 'Topics', nSaved: 'Saved', nHelp: 'How to use',
+    dispTitle: 'Display', simple: 'Simple', detailed: 'Detailed', dispHint: 'Detailed view shows every number, score and filter.',
     snap: 'Snapshot from {d} · {n} channels', stDisc: 'Scanning · finding breakout Shorts {a}/{b}', stProbe: 'Scanning · checking channels {a}/{b}',
-    stStart: 'Starting…', stIdle: 'Idle · last scan {ago}', stNext: ' · next in {n} min', stCounts: '{s} scored of {t} tracked', offline: 'Can’t reach the app. Is it still running?',
+    stStart: 'Starting…', stIdle: 'Last scan {ago}', stNext: ' · next in {n} min', stUpdated: 'Live · updated {ago}', stCounts: '{s} channels scored',
+    offline: 'Can’t reach the app. Is it still running?',
     now: 'just now', min: '{n} min ago', hr: '{n} h ago', day: '{n} d ago', never: 'never',
-    subscribers: '{n} subscribers', analyzed: '{n} Shorts analyzed', median: 'median', best: 'best', vps: 'views/sub',
-    watch: 'Watch', watching: 'Watching', scoreTip: 'Score {n}', why: 'Why it’s on the list', translate: 'Translate', views: 'views', ofMedian: 'channel median',
-    gain: 'gained since {h}h ago', more: 'Show more ({n} left)',
-    emptyCh: 'No channels match these filters yet. Loosen the filters or wait for the scan to finish.', emptyFirst: 'First scan in progress. Channels show up here as they are checked (a few minutes).',
-    emptyVid: 'No videos match. Lower the outlier multiple or the score filter.', emptyNiche: 'Niches appear once channels are scored.',
-    emptyWatch: 'Press Watch on a channel to track it here. In live mode, watched channels are re-checked every hour.', emptyPicks: 'No curated picks in this file.',
-    nicheLead: 'Niches ranked by how many strong channels (score 55+) they surfaced. Click one to filter.', nicheStats: '{s} strong · top avg {a} · {n} found',
-    dTrack: 'Track a specific channel', dTrackD: 'Paste a @handle or channel link. It gets scored right away and added to your watchlist.', dTrackPh: '@channelhandle or https://www.youtube.com/@...',
-    dTrackBtn: 'Track', dReading: 'Reading channel…', dAdded: 'Added. It now shows in your Watchlist.', dFail: 'Could not add that channel',
+    heroTitle: 'Find YouTube Shorts channels that are blowing up',
+    heroBody: 'We keep checking hundreds of channels and show you the ones getting far more views than their size. Tap a video to watch it, tap a channel to see why it stands out.',
+    heroHow: 'How to use (2 min)', heroHide: 'Got it',
+    sumTracked: '<b>{n}</b> channels tracked', sumHot: '<b>{n}</b> hot right now', sumNew: '<b>{n}</b> new uploads (3 days)', sumUpd: 'updated {ago}',
+    shPicks: '⭐ Our top picks', shPicksD: 'Hand-checked channels with an idea worth learning from',
+    shViral: '🔥 Blowing up right now', shViralD: 'Shorts getting many times more views than their channel usually gets',
+    shNew: '🆕 New and taking off', shNewD: 'Uploaded in the last 3 days, fastest-growing first',
+    shSmall: '🚀 Small channels, huge views', shSmallD: 'Under 50K subscribers, yet their videos reach hundreds of thousands or millions',
+    shRising: '⚡ Growing fast', shRisingD: 'Their newest videos are doing much better than older ones',
+    shSteady: '📈 Steady hit-makers', shSteadyD: 'Most of their recent Shorts pass 100K views, not just one lucky hit',
+    shThai: '🐘 Thai channels', shThaiD: 'The best Thai-language channels we found',
+    seeAll: 'See all', prev: 'Previous', next: 'Next',
+    topicAll: 'All', emptyHome: 'Nothing here for this topic yet. Try another topic or language.',
+    lvlAll: 'All levels', lvl1: '🔥 Worth a look and up', lvl2: '🔥🔥 Hot and up', lvl3: '🔥🔥🔥 Super hot only', lvlScore: ' (score {n}+)',
+    anySize: 'Any channel size', subsLe: 'Under {n} subscribers',
+    langAll: 'All languages', langTh: 'Thai channels', langEn: 'English channels', langOther: 'Other languages',
+    sScore: 'Sort: hottest', sMed: 'Sort: most views', sSmall: 'Sort: smallest channel', sTrend: 'Sort: growing fastest', sRatio: 'Sort: views per subscriber', sBest: 'Sort: best video',
+    vX: 'Sort: biggest surprise', vV: 'Sort: most views', vG: 'Sort: growing fastest now', vNew: 'Sort: newest',
+    xAny: 'Any video', xGe: 'At least {n}× usual views',
+    medGe: 'Typical views {n}+', anyViews: 'Any typical views', hideOne: 'Hide one-hit wonders',
+    shNewF: 'Videos: newest first', shTopF: 'Videos: most viewed first', detailOn: '📊 Detailed view',
+    nicheChip: 'Search phrase: {x}', tagChip: 'Label: {x}', clearAll: 'Clear filters',
+    qBanner: 'Channels in our list matching “{q}”', qLive: '🔎 Search all of YouTube for “{q}”',
+    pVideosT: 'Viral Shorts', pVideosD: 'Shorts that got many times more views than their channel usually gets. A big number means the idea itself spread, not the channel’s size.',
+    pChannelsT: 'Channels', pChannelsD: 'Channels whose Shorts do far better than their size, hottest first. Tap a name to see the details.',
+    pLiveT: 'New uploads', pLiveD: 'The newest Shorts from the channels we track (last 3 days), newest first. Spot a hit early.',
+    pTopicsT: 'Topics', pTopicsD: 'Pick a topic to see its hottest channels and videos.',
+    pSavedT: 'Saved', pSavedD: 'Channels you saved, kept in this browser on this device.', pSavedDLive: 'Channels you saved. The app re-checks them every hour.',
+    topicStats: '{h} hot · {n} channels', pNichesT: 'Search phrases the scanner uses', nicheStats: '{s} strong · top avg {a} · {n} found',
+    subscribers: '{n} subscribers', views: '{n} views', typicalViews: '{n} typical views',
+    lVerdict: 'Hotness', lSubs: 'Subscribers', lTypical: 'Typical views', lBest: 'Best video', lRatio: 'Views per subscriber', lX: '× usual',
+    lHits: 'Hit rate', lGrow: 'Views per hour', lNew: 'New channel', lScore: 'Score', lTrend: 'Trend', lFreq: 'Posting', lLast: 'Last upload',
+    gVerdict: 'How hot the channel is right now, judged from its recent Shorts.',
+    gSubs: 'How many people follow the channel.',
+    gTypical: 'The middle value of the channel’s recent Shorts: half got more, half got less. One lucky video can’t inflate it, so it shows what the channel normally gets.',
+    gBest: 'The most-viewed of its recent Shorts.',
+    gRatio: 'Typical views divided by subscribers. 10× means a normal video reaches 10 times more people than follow the channel, so YouTube is showing it to lots of new viewers.',
+    gX: 'A video’s views divided by its channel’s typical views. 10× means ten times better than normal for that channel. High numbers mean the idea spread, not the channel’s size.',
+    gHits: 'How many of the recent Shorts passed 100K views. It shows whether the success repeats.',
+    gGrow: 'Views gained per hour since our previous check: the video is spreading right now.',
+    gNew: 'All the Shorts we can see on this channel were posted recently.',
+    gScore: '0–100, built from views per subscriber (up to 35), typical views (up to 30), hit rate (up to 25) and trend (up to 10), minus a penalty when one video carries the channel. It ranks patterns; it can’t promise results.',
+    gTrend: 'Typical views of newer videos divided by older ones. Above 1× means the channel is growing.',
+    gFreq: 'How often the channel posts, worked out from upload dates.',
+    hitsVal: '{k} of {n}', hitsSub: 'recent Shorts passed 100K',
+    vSuper: 'Super hot', vHot: 'Hot', vWatch: 'Worth a look', vNormal: 'Normal',
+    vSuperD: 'Top ~5% of the channels we track: huge views for its size, again and again.', vHotD: 'Clearly better than most channels.', vWatchD: 'Doing well and worth studying.', vNormalD: 'Nothing special right now.',
+    wRatioBig: 'Only {subs} subscribers, but a typical video gets {med} views, about {r}× its subscriber count.',
+    wRatio: 'A typical video gets {med} views, {r}× its {subs} subscribers.',
+    wTypical: 'A typical video gets {med} views.',
+    wHits: '{k} of its last {n} Shorts passed 1 million views.',
+    wHits100: '{k} of its last {n} Shorts passed 100K views.',
+    wRising: 'Its newest videos get {r}× more views than older ones: it is growing.',
+    wFading: 'Newer videos are getting fewer views than older ones.',
+    wOneHit: 'Careful: one viral video makes up most of its views.',
+    wNew: 'New channel: all {n} Shorts were posted in the last {d} days.',
+    save: 'Save', saved: 'Saved', details: 'Details', openYt: 'Open on YouTube', translate: 'Translate', newBadge: '🌱 New',
+    why: 'Why it stands out', ourNote: 'Our note', recent: 'Recent Shorts', labels: 'Labels', about: 'About this channel',
+    copyLink: 'Copy link', copied: 'Link copied', savedToast: 'Saved. Find it under “Saved”.', unsavedToast: 'Removed from Saved',
+    speed: '{n} views/hour', lFast: 'Sort: fastest start',
+    xMore: '{x}× more than usual', xAbout: 'about usual', xLess: 'below usual', gainH: '+{n} views/hour',
+    freqDay: 'about {n} a day', freqWeek: 'about {n} a week', freqEvery: 'about every {n} days',
+    uploaded: 'uploaded {ago}', spotted: 'spotted {ago}', more: 'Show more ({n} left)', newestFirst: 'Newest first', topFirst: 'Most viewed first',
+    pX: '{x}× more views than this channel’s usual video', pXlow: 'Fewer views than this channel’s usual video', pLen: 'Length {d}', pUp: 'Uploaded {ago}',
+    pGrow: '+{n} views per hour lately', pSeeCh: 'See this channel', pNoEmbed: 'If the video doesn’t play here, open it on YouTube.',
+    emptyCh: 'No channels match these filters. Try “All levels” or another topic.', emptyFirst: 'First scan in progress. Channels show up here as they are checked (a few minutes).',
+    emptyVid: 'No videos match. Try a lower “× usual” filter or another topic.', emptyLive: 'Nothing new in the last 3 days for these filters. New uploads appear here as channels are re-checked.',
+    emptySaved: 'Nothing saved yet. Press “Save” on a channel you like and it will appear here.', emptyNiche: 'Topics appear once channels are scored.',
+    footWeb: 'Numbers come from YouTube’s official data and refresh by themselves all day; YouTube’s own counts can lag a little. Use this to learn what works, then make something original. Don’t copy or re-upload other people’s videos.',
+    footLocal: 'Public YouTube data via yt-dlp (unofficial; can break or be rate-limited). View counts lag. Use this to find formats to study and improve, not channels to copy.',
+    footSnap: 'A saved copy of the results. Numbers are frozen at the time shown in the menu.',
+    dTrack: 'Track a specific channel', dTrackD: 'Paste a @handle or channel link. It gets scored right away and added to Saved.', dTrackPh: '@channelhandle or https://www.youtube.com/@...',
+    dTrackBtn: 'Track', dReading: 'Reading channel…', dAdded: 'Added. It now shows in Saved.', dFail: 'Could not add that channel',
     dNiches: 'Niches being scanned', dNichesD: 'Each niche is searched for recent, high-view Shorts. The number is how many it found last run; faded ones keep returning nothing, so remove or reword them.',
     dNichePh: 'Add a niche, e.g. "cooking animation"', dAdd: 'Add & scan', dLog: 'Activity', dNone: 'Nothing yet', dClose: 'Close', remove: 'Remove',
-    nLive: 'Live feed', searchPhLive: 'Search YouTube live: type a topic and press Enter',
-    liveLead: 'New uploads the scanner spotted in the last 3 days, newest first. The × badge shows how far a video beats its channel’s median.',
-    emptyLive: 'Nothing new spotted yet. The scanner re-checks channels about hourly, and new uploads appear here.', spotted: 'spotted {ago}',
-    sTitle: 'Live search: “{q}”', sSearching: 'Searching YouTube…', sChecking: 'Checking channels {a}/{b}', sDone: 'Done · {n} channels scored',
-    sEmpty: 'No channels with enough Shorts data came back. Try a more specific phrase or a different one.',
+    sTitle: 'YouTube results for “{q}”', sLead: 'Live from YouTube, scored the same way as our list.', sSearching: 'Searching YouTube…', sChecking: 'Checking channels {a}/{b}', sDone: '{n} channels scored',
+    sEmpty: 'No channels with enough Shorts came back. Try a more specific phrase or a different one.',
     sBusy: 'Two searches are already running. Try again in a few seconds.', sTrack: 'Track this topic', sTracked: 'Tracking this topic',
     sBack: '← Back', sErr: 'Search failed. Try again.',
-    stUpdated: 'Updated {ago}', uploaded: 'uploaded {ago}',
-    kTitle: 'Live search needs a free YouTube API key',
-    kBody: 'Create one in Google Cloud: enable “YouTube Data API v3”, then go to Credentials → Create credentials → API key, and paste it here.',
+    kTitle: 'Search all of YouTube (optional)',
+    kWhy: 'Each search uses a little of YouTube’s free daily allowance, so it runs on your own free API key. Without a key, the search box still finds channels already in our list.',
+    kS1: 'Open Google Cloud and sign in with any Google account.', kS2: 'Create a project, search for “YouTube Data API v3” and press Enable.',
+    kS3: 'Go to Credentials → Create credentials → API key, and copy the key.', kS4: 'Paste it below.',
+    kNoCard: 'You never need to add a credit card for this. If Google asks for one, stop.', kOpen: 'Open Google Cloud',
     kPh: 'Your API key', kSave: 'Save and search', kChange: 'Change API key',
-    kPrivacy: 'The key stays in this browser and is only sent to Google. YouTube’s free allowance is about 100 searches a day per project, and each search here uses one.',
+    kPrivacy: 'The key stays in this browser and is only sent to Google. YouTube’s free allowance is about 100 searches a day per project.',
     kQuota: 'YouTube says this key’s daily quota is used up. It resets at midnight Pacific time.',
     kBad: 'YouTube refused this key. Check that it is an API key with YouTube Data API v3 enabled and that it is allowed on this website.',
-    kNet: 'Couldn’t reach YouTube. Check your connection.'
+    kNet: 'Couldn’t reach YouTube. Check your connection.',
+    wTitle: 'Welcome to Viral Radar 👋', wPick: 'Choose your language',
+    w1: 'We keep checking YouTube Shorts and pick out channels that are growing unusually fast.',
+    w2: 'More fire = hotter channel. Tap any video to watch it right here.',
+    w3: 'Save channels you like and use them as ideas for your own videos.',
+    wStart: 'Start exploring', wHow: 'Show me how it works'
   },
   th: {
-    search: 'ค้นหาช่อง ชื่อวิดีโอ หรือหมวดเนื้อหา',
-    scan: 'สแกนเลย', scanning: 'กำลังสแกน…', export: 'ส่งออกไฟล์แชร์', settings: 'หมวดและการติดตาม',
-    exportTip: 'ดาวน์โหลดไฟล์ HTML ไฟล์เดียวที่มีผลลัพธ์ปัจจุบัน เพื่อส่งให้คนอื่น', menu: 'เมนู',
-    nPicks: 'ช่องแนะนำ', nChannels: 'ช่อง', nShorts: 'วิดีโอสั้น', nNiches: 'หมวดเนื้อหา', nWatch: 'รายการติดตาม',
-    all: 'ทั้งหมด', anySize: 'ทุกขนาด', anyViews: 'ยอดดูทุกระดับ', score: 'คะแนน {n}+', subsLe: 'ผู้ติดตาม ≤ {n}', medGe: 'ค่ากลาง {n}+',
-    xGe: 'สูงกว่าค่ากลางช่อง {n}× ขึ้นไป', hideOne: 'ซ่อนช่องที่ฮิตครั้งเดียว', nicheChip: 'หมวด: {x} ×',
-    langEn: 'เฉพาะภาษาอังกฤษ', langTh: 'เฉพาะภาษาไทย', langAll: 'ทุกภาษา', langOther: 'ไม่ใช่ภาษาอังกฤษ',
-    sScore: 'เรียง: คะแนน', sMed: 'เรียง: ยอดดูค่ากลาง', sRatio: 'เรียง: ยอดดูต่อผู้ติดตาม', sBest: 'เรียง: วิดีโอที่ดีที่สุด', sSmall: 'เรียง: ช่องเล็กสุด', sTrend: 'เรียง: แนวโน้ม',
-    vX: 'เรียง: ความโดดเด่น ×', vV: 'เรียง: ยอดดู', vG: 'เรียง: กำลังโตตอนนี้', shNew: 'วิดีโอ: ใหม่สุดก่อน', shTop: 'วิดีโอ: ยอดดูสูงสุดก่อน',
-    howSum: 'คำนวณคะแนนยังไง?',
-    howBody: 'คะแนน 0–100 ต่อช่อง คำนวณจากวิดีโอสั้นล่าสุดประมาณ 24 คลิป: ประสิทธิภาพเทียบผู้ติดตาม (ยอดดูต่อผู้ติดตาม สูงสุด 35) + ความต้องการ (ยอดดูค่ากลางล่าสุด สูงสุด 30) + ความสม่ำเสมอ (สัดส่วนคลิปที่เกิน 100K และ 1M สูงสุด 25) + แนวโน้ม (คลิปใหม่เทียบคลิปเก่า สูงสุด 10) แล้วหักคะแนนเมื่อมีคลิปไวรัลเพียงคลิปเดียวแบกทั้งช่อง ป้าย × บนวิดีโอคือยอดดูหารด้วยค่ากลางของช่องนั้น คะแนนนี้จัดอันดับรูปแบบของความต้องการ ไม่ได้รับประกันผลลัพธ์',
-    foot: 'ข้อมูลสาธารณะของ YouTube ผ่าน yt-dlp (ไม่เป็นทางการ อาจใช้ไม่ได้หรือถูกจำกัดความเร็ว) ยอดวิวอัปเดตช้ากว่าจริง ใช้เพื่อหารูปแบบที่ควรศึกษาและทำให้ดีกว่า ไม่ใช่เพื่อลอกช่อง',
-    snap: 'สแน็ปช็อตเมื่อ {d} · {n} ช่อง', stDisc: 'กำลังสแกน · ค้นหาวิดีโอสั้นที่ทะลุเป้า {a}/{b}', stProbe: 'กำลังสแกน · ตรวจสอบช่อง {a}/{b}',
-    stStart: 'กำลังเริ่มต้น…', stIdle: 'ว่าง · สแกนล่าสุด {ago}', stNext: ' · ครั้งถัดไปใน {n} นาที', stCounts: 'ให้คะแนนแล้ว {s} จาก {t} ช่องที่ติดตาม', offline: 'เชื่อมต่อแอปไม่ได้ แอปยังทำงานอยู่หรือเปล่า?',
+    menu: 'เมนู', help: 'วิธีใช้งาน', helpLead: 'ทุกอย่างที่ต้องรู้ อธิบายแบบง่าย ใช้เวลาอ่านประมาณ 2 นาที', scan: 'สแกนเลย', scanning: 'กำลังสแกน…', export: 'ส่งออกไฟล์แชร์', settings: 'หมวดและการติดตาม',
+    exportTip: 'ดาวน์โหลดไฟล์ HTML ไฟล์เดียวที่มีผลลัพธ์ปัจจุบัน เพื่อส่งให้คนอื่น',
+    searchPh: 'ค้นหาหัวข้อ เช่น "แมว" หรือ "cat animation"', searchPhList: 'ค้นหาช่องและคลิปในรายการนี้',
+    nHome: 'หน้าแรก', nVideos: 'คลิปไวรัล', nChannels: 'ช่องทั้งหมด', nLive: 'คลิปใหม่', nTopics: 'หมวดหมู่', nSaved: 'ที่บันทึกไว้', nHelp: 'วิธีใช้งาน',
+    dispTitle: 'การแสดงผล', simple: 'แบบง่าย', detailed: 'แบบละเอียด', dispHint: 'แบบละเอียดจะแสดงตัวเลข คะแนน และตัวกรองทั้งหมด',
+    snap: 'ข้อมูลบันทึกไว้เมื่อ {d} · {n} ช่อง', stDisc: 'กำลังสแกน · ค้นหาคลิปสั้นที่มาแรง {a}/{b}', stProbe: 'กำลังสแกน · ตรวจสอบช่อง {a}/{b}',
+    stStart: 'กำลังเริ่มต้น…', stIdle: 'สแกนล่าสุด {ago}', stNext: ' · ครั้งถัดไปใน {n} นาที', stUpdated: 'สด · อัปเดต {ago}', stCounts: 'ให้คะแนนแล้ว {s} ช่อง',
+    offline: 'เชื่อมต่อแอปไม่ได้ แอปยังทำงานอยู่หรือเปล่า?',
     now: 'เมื่อสักครู่', min: '{n} นาทีที่แล้ว', hr: '{n} ชม.ที่แล้ว', day: '{n} วันที่แล้ว', never: 'ยังไม่เคย',
-    subscribers: 'ผู้ติดตาม {n}', analyzed: 'วิเคราะห์ {n} วิดีโอสั้น', median: 'ค่ากลาง', best: 'สูงสุด', vps: 'ยอดดู/ผู้ติดตาม',
-    watch: 'ติดตาม', watching: 'กำลังติดตาม', scoreTip: 'คะแนน {n}', why: 'ทำไมถึงอยู่ในรายการ', translate: 'แปล', views: 'วิว', ofMedian: 'ของค่ากลางช่อง',
-    gain: 'เพิ่มขึ้นใน {h} ชม.ที่ผ่านมา', more: 'แสดงเพิ่ม (เหลือ {n})',
-    emptyCh: 'ยังไม่มีช่องที่ตรงกับตัวกรอง ลองผ่อนตัวกรองหรือรอให้สแกนเสร็จ', emptyFirst: 'กำลังสแกนครั้งแรก ช่องจะทยอยแสดงที่นี่เมื่อตรวจเสร็จ (ใช้เวลาไม่กี่นาที)',
-    emptyVid: 'ไม่พบวิดีโอที่ตรงกัน ลองลดตัวคูณหรือคะแนนขั้นต่ำ', emptyNiche: 'หมวดเนื้อหาจะปรากฏเมื่อมีช่องที่ให้คะแนนแล้ว',
-    emptyWatch: 'กด “ติดตาม” ที่ช่องเพื่อดูที่นี่ ในโหมดสด ช่องที่ติดตามจะถูกตรวจซ้ำทุกชั่วโมง', emptyPicks: 'ไม่มีช่องแนะนำในไฟล์นี้',
-    nicheLead: 'หมวดเนื้อหาเรียงตามจำนวนช่องที่แข็งแรง (คะแนน 55+) ที่พบ กดเพื่อกรอง', nicheStats: 'แข็งแรง {s} · เฉลี่ยท็อป {a} · พบ {n}',
-    dTrack: 'ติดตามช่องที่ต้องการ', dTrackD: 'วาง @handle หรือลิงก์ช่อง ระบบจะให้คะแนนทันทีและเพิ่มในรายการติดตาม', dTrackPh: '@handle หรือ https://www.youtube.com/@...',
-    dTrackBtn: 'ติดตาม', dReading: 'กำลังอ่านข้อมูลช่อง…', dAdded: 'เพิ่มแล้ว ช่องนี้อยู่ในรายการติดตามของคุณ', dFail: 'เพิ่มช่องนี้ไม่ได้',
-    dNiches: 'หมวดที่กำลังสแกน', dNichesD: 'แต่ละหมวดจะถูกค้นหาวิดีโอสั้นล่าสุดที่ยอดดูสูง ตัวเลขคือจำนวนที่พบในรอบล่าสุด หมวดที่จางลงคือไม่พบอะไรเลย ควรลบหรือเปลี่ยนคำค้น',
+    heroTitle: 'ค้นหาช่อง YouTube Shorts ที่กำลังมาแรง',
+    heroBody: 'เราคอยตรวจช่องหลายร้อยช่องอยู่ตลอด แล้วคัดช่องที่ได้ยอดวิวมากเกินขนาดช่องมาให้ดู กดที่คลิปเพื่อดูคลิป หรือกดที่ช่องเพื่อดูว่าทำไมช่องนั้นถึงน่าสนใจ',
+    heroHow: 'วิธีใช้งาน (2 นาที)', heroHide: 'เข้าใจแล้ว',
+    sumTracked: 'ติดตาม <b>{n}</b> ช่อง', sumHot: 'มาแรงตอนนี้ <b>{n}</b> ช่อง', sumNew: 'คลิปใหม่ <b>{n}</b> คลิป (3 วัน)', sumUpd: 'อัปเดต {ago}',
+    shPicks: '⭐ ช่องที่เราแนะนำ', shPicksD: 'ช่องที่เราตรวจดูเองแล้ว มีไอเดียที่น่าเรียนรู้',
+    shViral: '🔥 กำลังไวรัลตอนนี้', shViralD: 'คลิปสั้นที่ได้ยอดวิวมากกว่าปกติของช่องหลายเท่า',
+    shNew: '🆕 คลิปใหม่ที่กำลังพุ่ง', shNewD: 'อัปโหลดใน 3 วันล่าสุด เรียงจากยอดวิวพุ่งเร็วที่สุด',
+    shSmall: '🚀 ช่องเล็ก แต่ยอดวิวมหาศาล', shSmallD: 'ผู้ติดตามไม่ถึง 50K แต่คลิปมีคนดูหลักแสนถึงหลักล้าน',
+    shRising: '⚡ กำลังโตเร็ว', shRisingD: 'คลิปใหม่ ๆ ทำยอดวิวได้ดีกว่าคลิปเก่ามาก',
+    shSteady: '📈 ช่องที่ทำคลิปฮิตได้สม่ำเสมอ', shSteadyD: 'คลิปสั้นล่าสุดส่วนใหญ่มียอดวิวเกิน 100K ไม่ได้ฮิตแค่คลิปเดียว',
+    shThai: '🐘 ช่องไทย', shThaiD: 'ช่องภาษาไทยที่ดีที่สุดที่เราพบ',
+    seeAll: 'ดูทั้งหมด', prev: 'ก่อนหน้า', next: 'ถัดไป',
+    topicAll: 'ทั้งหมด', emptyHome: 'หมวดนี้ยังไม่มีข้อมูล ลองเลือกหมวดหรือภาษาอื่น',
+    lvlAll: 'ทุกระดับ', lvl1: '🔥 น่าจับตาขึ้นไป', lvl2: '🔥🔥 มาแรงขึ้นไป', lvl3: '🔥🔥🔥 มาแรงสุด ๆ เท่านั้น', lvlScore: ' (คะแนน {n}+)',
+    anySize: 'ทุกขนาดช่อง', subsLe: 'ผู้ติดตามไม่เกิน {n}',
+    langAll: 'ทุกภาษา', langTh: 'ช่องภาษาไทย', langEn: 'ช่องภาษาอังกฤษ', langOther: 'ภาษาอื่น ๆ',
+    sScore: 'เรียง: มาแรงที่สุด', sMed: 'เรียง: ยอดวิวสูงสุด', sSmall: 'เรียง: ช่องเล็กสุด', sTrend: 'เรียง: โตเร็วที่สุด', sRatio: 'เรียง: ยอดวิวต่อผู้ติดตาม', sBest: 'เรียง: คลิปที่ดีที่สุด',
+    vX: 'เรียง: เกินปกติมากที่สุด', vV: 'เรียง: ยอดวิวสูงสุด', vG: 'เรียง: ยอดวิวพุ่งเร็วที่สุดตอนนี้', vNew: 'เรียง: ใหม่ล่าสุด',
+    xAny: 'ทุกคลิป', xGe: 'ยอดวิวอย่างน้อย {n} เท่าของปกติ',
+    medGe: 'ยอดวิวปกติ {n} ขึ้นไป', anyViews: 'ยอดวิวปกติทุกระดับ', hideOne: 'ซ่อนช่องที่ฮิตแค่คลิปเดียว',
+    shNewF: 'คลิป: ใหม่สุดก่อน', shTopF: 'คลิป: ยอดวิวสูงสุดก่อน', detailOn: '📊 แบบละเอียด',
+    nicheChip: 'คำค้น: {x}', tagChip: 'ป้าย: {x}', clearAll: 'ล้างตัวกรอง',
+    qBanner: 'ช่องในรายการของเราที่ตรงกับ “{q}”', qLive: '🔎 ค้นหา “{q}” บน YouTube ทั้งหมด',
+    pVideosT: 'คลิปไวรัล', pVideosD: 'คลิปสั้นที่ได้ยอดวิวมากกว่าปกติของช่องหลายเท่า ตัวเลขยิ่งสูง แปลว่าตัวไอเดียเองที่ทำให้คลิปแพร่ไปไกล ไม่ใช่เพราะช่องใหญ่',
+    pChannelsT: 'ช่องทั้งหมด', pChannelsD: 'ช่องที่คลิปสั้นทำผลงานได้ดีเกินขนาดช่อง เรียงจากมาแรงที่สุด กดที่ชื่อช่องเพื่อดูรายละเอียด',
+    pLiveT: 'คลิปใหม่', pLiveD: 'คลิปสั้นใหม่ล่าสุดจากช่องที่เราติดตาม (3 วันล่าสุด) เรียงจากใหม่สุด เห็นคลิปที่กำลังจะฮิตได้ก่อนใคร',
+    pTopicsT: 'หมวดหมู่', pTopicsD: 'เลือกหมวดเพื่อดูช่องและคลิปที่มาแรงที่สุดในหมวดนั้น',
+    pSavedT: 'ที่บันทึกไว้', pSavedD: 'ช่องที่คุณบันทึกไว้ เก็บอยู่ในเบราว์เซอร์นี้บนอุปกรณ์นี้', pSavedDLive: 'ช่องที่คุณบันทึกไว้ แอปจะตรวจช่องเหล่านี้ซ้ำทุกชั่วโมง',
+    topicStats: 'มาแรง {h} · ทั้งหมด {n} ช่อง', pNichesT: 'คำค้นที่ระบบใช้สแกน', nicheStats: 'แข็งแรง {s} · เฉลี่ยท็อป {a} · พบ {n}',
+    subscribers: 'ผู้ติดตาม {n} คน', views: '{n} วิว', typicalViews: 'ยอดวิวปกติ {n}',
+    lVerdict: 'ความแรง', lSubs: 'ผู้ติดตาม', lTypical: 'ยอดวิวปกติ', lBest: 'คลิปที่ดีที่สุด', lRatio: 'ยอดวิวต่อผู้ติดตาม', lX: 'เท่าของปกติ (×)',
+    lHits: 'อัตราคลิปฮิต', lGrow: 'ยอดวิวต่อชั่วโมง', lNew: 'ช่องใหม่', lScore: 'คะแนน', lTrend: 'แนวโน้ม', lFreq: 'ความถี่การลงคลิป', lLast: 'ลงคลิปล่าสุด',
+    gVerdict: 'ช่องนี้มาแรงแค่ไหนตอนนี้ ดูจากคลิปสั้นล่าสุดของช่อง',
+    gSubs: 'จำนวนคนที่กดติดตามช่อง',
+    gTypical: 'ค่ากลางของยอดวิวคลิปสั้นล่าสุดของช่อง ครึ่งหนึ่งได้มากกว่านี้ อีกครึ่งได้น้อยกว่า คลิปที่ฟลุกปังคลิปเดียวดันตัวเลขนี้ไม่ได้ ตัวเลขนี้จึงบอกว่าปกติช่องได้ยอดวิวเท่าไร',
+    gBest: 'คลิปสั้นล่าสุดที่มียอดวิวสูงที่สุดของช่อง',
+    gRatio: 'ยอดวิวปกติหารด้วยจำนวนผู้ติดตาม ถ้าเป็น 10 เท่า แปลว่าคลิปทั่วไปเข้าถึงคนมากกว่าจำนวนผู้ติดตาม 10 เท่า คือ YouTube กำลังดันคลิปไปให้คนใหม่ ๆ ดูเยอะมาก',
+    gX: 'ยอดวิวของคลิปหารด้วยยอดวิวปกติของช่อง 10× คือดีกว่าปกติของช่องนั้น 10 เท่า ตัวเลขยิ่งสูง แปลว่าตัวไอเดียทำให้คลิปแพร่ไปไกล ไม่ใช่เพราะช่องใหญ่',
+    gHits: 'จำนวนคลิปสั้นล่าสุดที่มียอดวิวเกิน 100K บอกว่าช่องทำคลิปฮิตซ้ำได้หรือไม่',
+    gGrow: 'ยอดวิวที่เพิ่มขึ้นต่อชั่วโมงนับจากการตรวจครั้งก่อน แปลว่าคลิปกำลังแพร่กระจายอยู่ตอนนี้',
+    gNew: 'คลิปสั้นทั้งหมดที่เราเห็นในช่องนี้เพิ่งลงไม่นาน',
+    gScore: 'คะแนน 0–100 คิดจากยอดวิวต่อผู้ติดตาม (สูงสุด 35) ยอดวิวปกติ (สูงสุด 30) อัตราคลิปฮิต (สูงสุด 25) และแนวโน้ม (สูงสุด 10) แล้วหักคะแนนถ้ามีคลิปเดียวแบกทั้งช่อง คะแนนนี้จัดอันดับรูปแบบที่ได้ผล ไม่ได้รับประกันผลลัพธ์',
+    gTrend: 'ยอดวิวปกติของคลิปใหม่หารด้วยของคลิปเก่า มากกว่า 1 เท่า แปลว่าช่องกำลังโต',
+    gFreq: 'ช่องลงคลิปบ่อยแค่ไหน คำนวณจากวันที่อัปโหลด',
+    hitsVal: '{k} จาก {n}', hitsSub: 'คลิปล่าสุดที่เกิน 100K',
+    vSuper: 'มาแรงสุด ๆ', vHot: 'มาแรง', vWatch: 'น่าจับตา', vNormal: 'ทั่วไป',
+    vSuperD: 'ติดกลุ่มประมาณ 5% แรกของช่องที่เราติดตาม ยอดวิวสูงมากเมื่อเทียบกับขนาดช่อง และทำได้ซ้ำ ๆ', vHotD: 'ดีกว่าช่องส่วนใหญ่อย่างชัดเจน', vWatchD: 'ผลงานดี น่าศึกษา', vNormalD: 'ตอนนี้ยังไม่มีอะไรโดดเด่น',
+    wRatioBig: 'มีผู้ติดตามแค่ {subs} คน แต่คลิปทั่วไปได้ยอดวิว {med} หรือราว {r} เท่าของจำนวนผู้ติดตาม',
+    wRatio: 'คลิปทั่วไปได้ยอดวิว {med} มากกว่าจำนวนผู้ติดตาม ({subs} คน) ราว {r} เท่า',
+    wTypical: 'คลิปทั่วไปได้ยอดวิวประมาณ {med}',
+    wHits: 'คลิปสั้น {k} จาก {n} คลิปล่าสุดมียอดวิวเกิน 1 ล้าน',
+    wHits100: 'คลิปสั้น {k} จาก {n} คลิปล่าสุดมียอดวิวเกิน 100K',
+    wRising: 'คลิปใหม่ได้ยอดวิวมากกว่าคลิปเก่า {r} เท่า แปลว่าช่องกำลังโต',
+    wFading: 'คลิปใหม่ได้ยอดวิวน้อยกว่าคลิปเก่า',
+    wOneHit: 'ระวัง: ยอดวิวส่วนใหญ่มาจากคลิปไวรัลคลิปเดียว',
+    wNew: 'ช่องใหม่: ลงคลิปสั้นทั้ง {n} คลิปในช่วง {d} วันที่ผ่านมา',
+    save: 'บันทึก', saved: 'บันทึกแล้ว', details: 'รายละเอียด', openYt: 'เปิดใน YouTube', translate: 'แปล', newBadge: '🌱 ช่องใหม่',
+    why: 'ทำไมช่องนี้ถึงน่าสนใจ', ourNote: 'โน้ตจากเรา', recent: 'คลิปสั้นล่าสุด', labels: 'ป้ายกำกับ', about: 'เกี่ยวกับช่องนี้',
+    copyLink: 'คัดลอกลิงก์', copied: 'คัดลอกลิงก์แล้ว', savedToast: 'บันทึกแล้ว ดูได้ที่เมนู “ที่บันทึกไว้”', unsavedToast: 'นำออกจากที่บันทึกไว้แล้ว',
+    speed: '{n} วิว/ชม.', lFast: 'เรียง: ยอดวิวพุ่งเร็วที่สุด',
+    xMore: 'มากกว่าปกติ {x} เท่า', xAbout: 'ประมาณปกติ', xLess: 'ต่ำกว่าปกติ', gainH: '+{n} วิว/ชม.',
+    freqDay: 'ประมาณวันละ {n} คลิป', freqWeek: 'ประมาณสัปดาห์ละ {n} คลิป', freqEvery: 'ประมาณทุก {n} วัน',
+    uploaded: 'อัปโหลด {ago}', spotted: 'พบ {ago}', more: 'แสดงเพิ่ม (เหลือ {n})', newestFirst: 'ใหม่สุดก่อน', topFirst: 'ยอดวิวสูงสุดก่อน',
+    pX: 'ยอดวิวมากกว่าคลิปปกติของช่องนี้ {x} เท่า', pXlow: 'ยอดวิวน้อยกว่าคลิปปกติของช่องนี้', pLen: 'ความยาว {d}', pUp: 'อัปโหลด {ago}',
+    pGrow: 'ช่วงนี้ยอดวิวเพิ่มชั่วโมงละ {n}', pSeeCh: 'ดูช่องนี้', pNoEmbed: 'ถ้าคลิปไม่เล่นในหน้านี้ ให้เปิดใน YouTube',
+    emptyCh: 'ไม่มีช่องที่ตรงกับตัวกรองนี้ ลองเลือก “ทุกระดับ” หรือหมวดอื่น', emptyFirst: 'กำลังสแกนครั้งแรก ช่องจะทยอยขึ้นที่นี่เมื่อตรวจเสร็จ (ใช้เวลาไม่กี่นาที)',
+    emptyVid: 'ไม่พบคลิปที่ตรงกัน ลองลดตัวกรอง “เท่าของปกติ” หรือเลือกหมวดอื่น', emptyLive: 'ไม่มีคลิปใหม่ใน 3 วันที่ผ่านมาสำหรับตัวกรองนี้ คลิปใหม่จะขึ้นที่นี่เมื่อระบบตรวจช่องซ้ำ',
+    emptySaved: 'ยังไม่ได้บันทึกช่องไหน กด “บันทึก” ที่ช่องที่ชอบ แล้วช่องจะมาอยู่ที่นี่', emptyNiche: 'หมวดหมู่จะปรากฏเมื่อมีช่องที่ให้คะแนนแล้ว',
+    footWeb: 'ตัวเลขมาจากข้อมูลทางการของ YouTube และอัปเดตเองตลอดทั้งวัน ยอดวิวบน YouTube เองอาจช้ากว่าจริงเล็กน้อย ใช้เว็บนี้เพื่อเรียนรู้ว่าอะไรได้ผล แล้วสร้างผลงานของคุณเอง อย่าก๊อปหรืออัปโหลดคลิปของคนอื่นซ้ำ',
+    footLocal: 'ข้อมูลสาธารณะของ YouTube ผ่าน yt-dlp (ไม่เป็นทางการ อาจใช้ไม่ได้หรือถูกจำกัดความเร็ว) ยอดวิวอัปเดตช้ากว่าจริง ใช้เพื่อหารูปแบบที่ควรศึกษาและทำให้ดีกว่า ไม่ใช่เพื่อลอกช่อง',
+    footSnap: 'นี่คือสำเนาผลลัพธ์ที่บันทึกไว้ ตัวเลขหยุดอยู่ที่เวลาที่แสดงในเมนู',
+    dTrack: 'ติดตามช่องที่ต้องการ', dTrackD: 'วาง @handle หรือลิงก์ช่อง ระบบจะให้คะแนนทันทีและเพิ่มไว้ในที่บันทึกไว้', dTrackPh: '@handle หรือ https://www.youtube.com/@...',
+    dTrackBtn: 'ติดตาม', dReading: 'กำลังอ่านข้อมูลช่อง…', dAdded: 'เพิ่มแล้ว ช่องนี้อยู่ในที่บันทึกไว้', dFail: 'เพิ่มช่องนี้ไม่ได้',
+    dNiches: 'หมวดที่กำลังสแกน', dNichesD: 'แต่ละหมวดจะถูกค้นหาคลิปสั้นล่าสุดที่ยอดวิวสูง ตัวเลขคือจำนวนที่พบในรอบล่าสุด หมวดที่จางลงคือไม่พบอะไรเลย ควรลบหรือเปลี่ยนคำค้น',
     dNichePh: 'เพิ่มหมวด เช่น "cooking animation"', dAdd: 'เพิ่มและสแกน', dLog: 'บันทึกกิจกรรม', dNone: 'ยังไม่มี', dClose: 'ปิด', remove: 'ลบ',
-    nLive: 'ฟีดสด', searchPhLive: 'ค้นหาบน YouTube สด: พิมพ์หัวข้อแล้วกด Enter',
-    liveLead: 'คลิปใหม่ที่สแกนเนอร์เพิ่งพบในช่วง 3 วันที่ผ่านมา เรียงจากใหม่สุด ป้าย × แสดงว่าคลิปนั้นเกินค่ากลางของช่องกี่เท่า',
-    emptyLive: 'ยังไม่พบคลิปใหม่ สแกนเนอร์ตรวจช่องซ้ำราวทุกชั่วโมง คลิปที่อัปโหลดใหม่จะขึ้นที่นี่', spotted: 'พบ {ago}',
-    sTitle: 'ผลค้นหาสด: “{q}”', sSearching: 'กำลังค้นหาบน YouTube…', sChecking: 'กำลังตรวจสอบช่อง {a}/{b}', sDone: 'เสร็จแล้ว · ให้คะแนน {n} ช่อง',
-    sEmpty: 'ไม่พบช่องที่มีข้อมูลวิดีโอสั้นพอ ลองใช้คำที่เฉพาะเจาะจงขึ้นหรือเปลี่ยนคำค้น',
+    sTitle: 'ผลค้นหา “{q}” จาก YouTube', sLead: 'ผลสดจาก YouTube ให้คะแนนแบบเดียวกับรายการของเรา', sSearching: 'กำลังค้นหาบน YouTube…', sChecking: 'กำลังตรวจสอบช่อง {a}/{b}', sDone: 'ให้คะแนนแล้ว {n} ช่อง',
+    sEmpty: 'ไม่พบช่องที่มีคลิปสั้นมากพอ ลองใช้คำที่เฉพาะเจาะจงขึ้นหรือเปลี่ยนคำค้น',
     sBusy: 'มีการค้นหาที่กำลังทำงานอยู่แล้ว 2 รายการ ลองใหม่อีกครั้งในอีกไม่กี่วินาที', sTrack: 'ติดตามหัวข้อนี้', sTracked: 'กำลังติดตามหัวข้อนี้',
     sBack: '← กลับ', sErr: 'ค้นหาไม่สำเร็จ ลองอีกครั้ง',
-    stUpdated: 'อัปเดตล่าสุด {ago}', uploaded: 'อัปโหลด {ago}',
-    kTitle: 'ค้นหาสดต้องใช้คีย์ YouTube API (ฟรี)',
-    kBody: 'สร้างได้ใน Google Cloud: เปิดใช้ “YouTube Data API v3” แล้วไปที่ Credentials → Create credentials → API key จากนั้นวางคีย์ที่นี่',
+    kTitle: 'ค้นหาจาก YouTube ทั้งหมด (ไม่บังคับ)',
+    kWhy: 'การค้นหาแต่ละครั้งใช้โควตาฟรีรายวันของ YouTube นิดหน่อย จึงต้องใช้คีย์ API ฟรีของคุณเอง ถ้าไม่มีคีย์ ช่องค้นหาก็ยังหาช่องที่อยู่ในรายการของเราได้',
+    kS1: 'เปิด Google Cloud แล้วล็อกอินด้วยบัญชี Google บัญชีไหนก็ได้', kS2: 'สร้างโปรเจกต์ ค้นหา “YouTube Data API v3” แล้วกด Enable',
+    kS3: 'ไปที่ Credentials → Create credentials → API key แล้วคัดลอกคีย์', kS4: 'วางคีย์ด้านล่าง',
+    kNoCard: 'ไม่ต้องใส่บัตรเครดิตเลย ถ้า Google ขอบัตร ให้หยุดตรงนั้น', kOpen: 'เปิด Google Cloud',
     kPh: 'คีย์ API ของคุณ', kSave: 'บันทึกและค้นหา', kChange: 'เปลี่ยนคีย์ API',
-    kPrivacy: 'คีย์จะอยู่ในเบราว์เซอร์นี้เท่านั้นและถูกส่งไปที่ Google เท่านั้น โควตาฟรีของ YouTube คือประมาณ 100 ครั้งการค้นหาต่อวันต่อโปรเจกต์ และการค้นหาแต่ละครั้งที่นี่ใช้ไป 1 ครั้ง',
-    kQuota: 'YouTube แจ้งว่าโควตารายวันของคีย์นี้หมดแล้ว จะรีเซ็ตตอนเที่ยงคืนตามเวลาแปซิฟิก',
+    kPrivacy: 'คีย์จะอยู่ในเบราว์เซอร์นี้เท่านั้นและถูกส่งไปที่ Google เท่านั้น โควตาฟรีของ YouTube คือประมาณ 100 ครั้งต่อวันต่อโปรเจกต์',
+    kQuota: 'YouTube แจ้งว่าโควตารายวันของคีย์นี้หมดแล้ว จะรีเซ็ตตอนเที่ยงคืนตามเวลาแปซิฟิก (ประมาณบ่ายสองถึงบ่ายสามโมงตามเวลาไทย)',
     kBad: 'YouTube ไม่ยอมรับคีย์นี้ ตรวจสอบว่าเป็นคีย์ API ที่เปิดใช้ YouTube Data API v3 และอนุญาตให้ใช้กับเว็บไซต์นี้',
-    kNet: 'เชื่อมต่อ YouTube ไม่ได้ ตรวจสอบอินเทอร์เน็ต'
+    kNet: 'เชื่อมต่อ YouTube ไม่ได้ ตรวจสอบอินเทอร์เน็ต',
+    wTitle: 'ยินดีต้อนรับสู่ Viral Radar 👋', wPick: 'เลือกภาษา',
+    w1: 'เราคอยตรวจคลิปสั้นบน YouTube แล้วคัดช่องที่โตเร็วผิดปกติมาให้',
+    w2: 'ยิ่งไฟเยอะ ช่องยิ่งมาแรง กดที่คลิปไหนก็ได้เพื่อดูในหน้านี้เลย',
+    w3: 'กดบันทึกช่องที่ชอบ แล้วเก็บไว้เป็นไอเดียสำหรับคลิปของคุณเอง',
+    wStart: 'เริ่มใช้งาน', wHow: 'ดูวิธีใช้งาน'
   }
 };
 const TAGS = {
-  'Consistent engine': {en: 'Consistent engine', th: 'ผลงานสม่ำเสมอ', cls: 'good'},
-  'Tiny & huge': {en: 'Tiny & huge', th: 'ช่องเล็ก ยอดดูใหญ่', cls: 'good'},
-  'Rising': {en: 'Rising', th: 'กำลังมาแรง', cls: 'good'},
-  'One-hit': {en: 'One-hit', th: 'ฮิตครั้งเดียว', cls: 'bad'},
-  'Fading': {en: 'Fading', th: 'กำลังซา', cls: 'warn'}
+  'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
+    den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
+  'Tiny & huge': {en: 'Tiny channel, huge views', th: 'ช่องเล็ก ยอดวิวใหญ่', cls: 'good',
+    den: 'Under 25K subscribers, but a typical video gets 200K+ views.', dth: 'ผู้ติดตามไม่ถึง 25K แต่คลิปทั่วไปได้ยอดวิว 200K ขึ้นไป'},
+  'Rising': {en: 'Rising', th: 'กำลังมาแรง', cls: 'good',
+    den: 'Newer videos get clearly more views than older ones.', dth: 'คลิปใหม่ได้ยอดวิวมากกว่าคลิปเก่าอย่างชัดเจน'},
+  'One-hit': {en: 'One-hit wonder', th: 'ฮิตแค่คลิปเดียว', cls: 'bad',
+    den: 'One viral video makes up most of the views and the rest are much lower, so it is harder to learn from.', dth: 'ยอดวิวส่วนใหญ่มาจากคลิปไวรัลคลิปเดียว คลิปอื่นต่ำกว่ามาก จึงเรียนรู้ได้ยากกว่า'},
+  'Fading': {en: 'Slowing down', th: 'กำลังซา', cls: 'warn',
+    den: 'Newer videos get fewer views than older ones.', dth: 'คลิปใหม่ได้ยอดวิวน้อยกว่าคลิปเก่า'}
 };
 const LN = {
   en: ['English', 'อังกฤษ'], th: ['Thai', 'ไทย'], es: ['Spanish', 'สเปน'], pt: ['Portuguese', 'โปรตุเกส'],
@@ -304,6 +616,90 @@ const LN = {
   bn: ['Bengali', 'เบงกาลี'], ko: ['Korean', 'เกาหลี'], ja: ['Japanese', 'ญี่ปุ่น'], zh: ['Chinese', 'จีน'],
   ta: ['Tamil', 'ทมิฬ'], te: ['Telugu', 'เตลูกู'], he: ['Hebrew', 'ฮีบรู'], el: ['Greek', 'กรีก']
 };
+// Topics group the scanner's search phrases (and a live search's phrase) into plain categories.
+const TOPICS = [
+  ['animals', '🐾', 'Animals', 'สัตว์', /\b(cats?|dogs?|sharks?|monkeys?|birds?|snakes?|farm|animals?|wildlife|fishing|pets?|puppy|kitten)\b|แมว|หมา|สุนัข|สัตว์/i],
+  ['animation', '🎬', 'Animation & stories', 'แอนิเมชันและเรื่องเล่า', /animat|cartoon|stickman|story|การ์ตูน|แอนิเมชัน|เรื่องเล่า/i],
+  ['ai', '🤖', 'Made with AI', 'ทำด้วย AI', /\bai\b/i],
+  ['games', '🎮', 'Games', 'เกม', /roblox|minecraft|fortnite|valorant|chess|brainrot|grow a garden|gaming|เกม/i],
+  ['satisfying', '😌', 'Satisfying', 'ดูเพลิน', /satisf|asmr|slime|restor|hydraulic|crush|factory|cutting|cleaning|giant|3d printing|woodwork/i],
+  ['facts', '🧠', 'Facts & science', 'ความรู้และวิทยาศาสตร์', /\bfacts?\b|did you know|science|chemistry|history|geograph|map anim|country|psycholog|space|ocean|what if|what would|dinosaur|illusion|riddle|ความรู้|น่ารู้/i],
+  ['funny', '😂', 'Funny', 'ตลก', /funny|comedy|prank|challenge|ตลก|ฮา/i],
+  ['food', '🍳', 'Food', 'อาหาร', /food|cook|recipe|อาหาร/i],
+  ['diy', '🛠️', 'DIY & skills', 'DIY และทักษะ', /diy|craft|life hack|drawing|magic|3d printing|woodwork|makeup|fashion|glow up|ประดิษฐ์/i],
+  ['money', '💰', 'Money & luxury', 'การเงินและความหรูหรา', /money|financ|invest|luxury|mansion|rich|ออมเงิน|การเงิน|หุ้น|ลงทุน/i],
+  ['sports', '⚽', 'Sports & fitness', 'กีฬาและฟิตเนส', /sport|nba|soccer|football|basketball|fitness|gym|ฟิตเนส|ออกกำลัง/i],
+  ['scary', '👻', 'Scary stories', 'เรื่องผีและสยองขวัญ', /scary|horror|เรื่องผี/i],
+  ['cars', '🚗', 'Cars', 'รถยนต์', /\bcars?\b|supercar|รถ/i],
+  ['travel', '✈️', 'Travel', 'ท่องเที่ยว', /travel|ท่องเที่ยว/i]
+];
+// How-to guide. **bold** is allowed; everything else is plain text.
+const HELP = {
+  en: [
+    {id: 'what', em: '👋', h: 'What is Viral Radar?', p: [
+      'Viral Radar watches YouTube Shorts and finds channels that are growing unusually fast, especially **small channels whose videos reach millions of people**. It updates by itself all day, and it is free.',
+      'Use it to find video ideas that are working right now, then make your own version.']},
+    {id: 'outlier', em: '🎯', h: 'What does “outlier” mean?', p: [
+      'An outlier is something that does **much better than normal**.',
+      'Example: a channel with **5,000 subscribers** whose Shorts get **2 million views**. Most of those viewers don’t follow the channel. YouTube keeps showing the videos to new people because they watch them to the end. That tells you the **idea** is strong, not that the channel is big.']},
+    {id: 'steps', em: '🧭', h: 'How to use it in 4 steps', ol: [
+      '**Home**: start with “Our top picks” and “Blowing up right now”.',
+      '**Tap a video** to watch it right here. You also see how much better it did than usual.',
+      '**Tap a channel name** to see why it stands out: views, how often they post, and their best videos.',
+      '**Save** channels you like. Find them later under “Saved”.'],
+     p2: ['Use the topic buttons at the top (Animals, Games, Food…) to see only what interests you, and the language menu to show Thai channels only.']},
+    {id: 'fire', em: '🔥', h: 'What the fire means', verdicts: true,
+     p2: ['The fire level comes from a 0–100 score. Switch the menu’s “Display” to **Detailed** to see the exact score and more numbers.']},
+    {id: 'words', em: '📖', h: 'Words and numbers, explained', gloss: true},
+    {id: 'ideas', em: '💡', h: 'How to turn this into your own channel', ol: [
+      'Pick **one topic** and study 3–5 hot channels in it.',
+      'Watch their best Shorts. Write down what happens in the **first 2 seconds**, how long the video is, and how the title is written.',
+      'Find the pattern they share, then make **your own original version** with your own twist.',
+      'Never re-upload or copy someone’s video. Copies get little reach and can get your channel penalized.',
+      'Post regularly (several times a week) and check which of your videos beat your own usual views.']},
+    {id: 'search', em: '🔎', h: 'Searching for any topic', p: [
+      'Typing in the search box instantly shows matching channels from our list.',
+      'Pressing **Enter** searches all of YouTube live. That needs a free YouTube API key, made in about 2 minutes in Google Cloud, with **no credit card**. The site walks you through it the first time.']},
+    {id: 'faq', em: '❓', h: 'Common questions', qa: [
+      ['Is it free? Do I need an account?', 'Yes, it is free. No account and no sign-in.'],
+      ['How fresh are the numbers?', 'Channels are re-checked all day using YouTube’s official data. View counts on YouTube itself can lag a little.'],
+      ['A channel is in another language. What now?', 'Tap “🌐 Translate” next to it. Shorts are visual, so most ideas work in any language.'],
+      ['If I copy a “Super hot” channel, will I succeed?', 'Not necessarily. It shows what viewers like right now. Your own execution decides the result.'],
+      ['Where are my saved channels kept?', 'In this browser, on this device. Nobody else can see them.']]}
+  ],
+  th: [
+    {id: 'what', em: '👋', h: 'Viral Radar คืออะไร?', p: [
+      'Viral Radar คอยติดตามคลิปสั้นบน YouTube (Shorts) แล้วคัดช่องที่โตเร็วผิดปกติมาให้ โดยเฉพาะ**ช่องเล็ก ๆ ที่คลิปมีคนดูเป็นล้าน** ระบบอัปเดตเองตลอดทั้งวัน และใช้งานฟรี',
+      'ใช้หาไอเดียคลิปที่กำลังได้ผลอยู่ตอนนี้ แล้วนำไปทำในแบบของคุณเอง']},
+    {id: 'outlier', em: '🎯', h: '“Outlier” (ช่องหรือคลิปที่โดดเด่น) หมายถึงอะไร?', p: [
+      'Outlier คือสิ่งที่ทำผลงานได้**ดีกว่าปกติมาก**',
+      'ตัวอย่าง: ช่องที่มีผู้ติดตาม **5,000 คน** แต่คลิปสั้นได้ยอดวิว **2 ล้าน** คนดูส่วนใหญ่ไม่ได้กดติดตามช่อง แต่ YouTube นำคลิปไปแนะนำให้คนใหม่ ๆ ดูเรื่อย ๆ เพราะคนดูจนจบ แปลว่า**ไอเดีย**ของคลิปนั้นแข็งแรง ไม่ใช่เพราะช่องใหญ่']},
+    {id: 'steps', em: '🧭', h: 'วิธีใช้ใน 4 ขั้นตอน', ol: [
+      '**หน้าแรก**: เริ่มจาก “ช่องที่เราแนะนำ” และ “กำลังไวรัลตอนนี้”',
+      '**กดที่คลิป** เพื่อดูในหน้านี้ได้เลย พร้อมบอกว่าคลิปนั้นได้ยอดวิวมากกว่าปกติกี่เท่า',
+      '**กดที่ชื่อช่อง** เพื่อดูว่าทำไมช่องนี้ถึงน่าสนใจ: ยอดวิว ความถี่การลงคลิป และคลิปที่ดีที่สุด',
+      '**กดบันทึก** ช่องที่ชอบ แล้วกลับมาดูได้ที่เมนู “ที่บันทึกไว้”'],
+     p2: ['ใช้ปุ่มหมวดด้านบน (สัตว์ เกม อาหาร ฯลฯ) เพื่อดูเฉพาะเรื่องที่สนใจ และเลือกภาษาเพื่อดูเฉพาะช่องไทยได้']},
+    {id: 'fire', em: '🔥', h: 'ไฟหมายถึงอะไร?', verdicts: true,
+     p2: ['ระดับไฟคำนวณจากคะแนน 0–100 ถ้าอยากเห็นคะแนนจริงและตัวเลขเพิ่มเติม ให้เปลี่ยน “การแสดงผล” ในเมนูเป็น**แบบละเอียด**']},
+    {id: 'words', em: '📖', h: 'คำศัพท์และตัวเลข อธิบายแบบง่าย', gloss: true},
+    {id: 'ideas', em: '💡', h: 'นำไปใช้กับช่องของคุณเอง', ol: [
+      'เลือก**หมวดเดียว** แล้วศึกษาช่องที่มาแรงในหมวดนั้น 3–5 ช่อง',
+      'ดูคลิปที่ดีที่สุดของเขา แล้วจดไว้ว่า**ใน 2 วินาทีแรก**เกิดอะไรขึ้น คลิปยาวเท่าไร และตั้งชื่อคลิปแบบไหน',
+      'หารูปแบบที่ช่องเหล่านั้นมีเหมือนกัน แล้วทำ**เวอร์ชันของคุณเอง**ที่มีเอกลักษณ์',
+      'ห้ามอัปโหลดซ้ำหรือก๊อปคลิปของคนอื่น คลิปที่ลอกมามักได้ยอดวิวน้อย และอาจทำให้ช่องโดนลงโทษ',
+      'ลงคลิปสม่ำเสมอ (หลายครั้งต่อสัปดาห์) แล้วสังเกตว่าคลิปไหนของคุณทำได้ดีกว่าปกติของตัวเอง']},
+    {id: 'search', em: '🔎', h: 'ค้นหาหัวข้ออะไรก็ได้', p: [
+      'พิมพ์ในช่องค้นหา ระบบจะแสดงช่องในรายการของเราที่ตรงกันทันที',
+      'กด **Enter** เพื่อค้นหาสดจาก YouTube ทั้งหมด ซึ่งต้องใช้คีย์ YouTube API ฟรี สร้างได้ใน Google Cloud ภายในประมาณ 2 นาที **ไม่ต้องใช้บัตรเครดิต** ครั้งแรกเว็บจะแนะนำวิธีทำให้']},
+    {id: 'faq', em: '❓', h: 'คำถามที่พบบ่อย', qa: [
+      ['ใช้ฟรีไหม ต้องสมัครสมาชิกหรือเปล่า?', 'ฟรี ไม่ต้องสมัครและไม่ต้องล็อกอิน'],
+      ['ตัวเลขอัปเดตบ่อยแค่ไหน?', 'ระบบตรวจช่องซ้ำตลอดทั้งวันด้วยข้อมูลทางการของ YouTube ยอดวิวบน YouTube เองอาจช้ากว่าจริงเล็กน้อย'],
+      ['ช่องเป็นภาษาอื่น ทำยังไงดี?', 'กด “🌐 แปล” ข้าง ๆ ช่องนั้น คลิปสั้นส่วนใหญ่เน้นภาพ ไอเดียจึงใช้ได้กับทุกภาษา'],
+      ['ถ้าทำตามช่องที่ “มาแรงสุด ๆ” จะประสบความสำเร็จแน่ไหม?', 'ไม่แน่นอน มันแค่บอกว่าตอนนี้คนดูชอบอะไร ผลลัพธ์ขึ้นอยู่กับการลงมือทำของคุณเอง'],
+      ['ช่องที่บันทึกไว้เก็บไว้ที่ไหน?', 'เก็บในเบราว์เซอร์นี้บนอุปกรณ์นี้ ไม่มีใครเห็นนอกจากคุณ']]}
+  ]
+};
 let UI = LS.get('radar.ui', (navigator.language || '').toLowerCase().startsWith('th') ? 'th' : 'en');
 const t = (k, v) => {
   let s = (T[UI] && T[UI][k]) || T.en[k] || k;
@@ -311,40 +707,57 @@ const t = (k, v) => {
   return s;
 };
 const tagName = k => (TAGS[k] ? TAGS[k][UI] : k);
+const tagDesc = k => (TAGS[k] ? TAGS[k][UI === 'th' ? 'dth' : 'den'] : '');
 const langName = c => (LN[c] ? LN[c][UI === 'th' ? 1 : 0] : c.toUpperCase());
+const topicName = tp => (UI === 'th' ? tp[3] : tp[2]);
 
 /* ---------- state ---------- */
-const S = Object.assign({tab: 'picks', q: '', minScore: 45, maxSubs: 250000, minMed: 0, lang: 'en', hideOne: true, tag: '', niche: '', sort: 'score', minX: 5, vsort: 'x', shelf: 'new'}, LS.get('radar.state2', {}));
-const shown = {channels: 15, videos: 60};
-const watchLocal = new Set(LS.get('radar.watch', []));
-if (S.tab === 'search') S.tab = 'channels';
+const TABS = ['home', 'videos', 'channels', 'live', 'topics', 'saved', 'help'];
+const S = Object.assign({tab: 'home', q: '', topic: '', minScore: 50, maxSubs: 0, minMed: 0, lang: 'all', hideOne: true, tag: '', niche: '',
+  sort: 'score', minX: 3, vsort: 'x', shelf: 'new', lsort: 'new', detail: false}, LS.get('radar.state3', {}));
+const hashTab = () => { const h = decodeURIComponent(location.hash.slice(1)); return TABS.includes(h) ? h : null; };
+if (hashTab()) S.tab = hashTab();
+if (!TABS.includes(S.tab)) S.tab = 'home';
 S.q = '';   // a remembered search phrase would silently filter the lists on the next visit
-const saveState = () => LS.set('radar.state2', Object.assign({}, S, {q: '', tab: S.tab === 'search' ? 'channels' : S.tab}));
-let SEARCH = null, PREV_TAB = 'channels', searchTimer = null;
+const saveState = () => LS.set('radar.state3', Object.assign({}, S, {q: '', tab: TABS.includes(S.tab) ? S.tab : 'home'}));
+const shown = {channels: 15, videos: 60, live: 60};
+const watchLocal = new Set(LS.get('radar.watch', []));
+let SEARCH = null, PREV_TAB = 'home', searchTimer = null, SHEET_ID = null, SHEET_SORT = 'new', lastTab = null;
 const canLive = () => SERVER && !!DATA && !DATA.readonly;   // owner of the local app: scan, track, change settings
 const canSearch = () => canLive() || STATIC;                 // live search: local app, or hosted site with an API key
 
 /* ---------- helpers ---------- */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const rich = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
 const vidOk = id => /^[\w-]{11}$/.test(id || '');
 const chOk = id => /^UC[\w-]{22}$/.test(id || '');
 const vidUrl = id => vidOk(id) ? `https://www.youtube.com/shorts/${id}` : '#';
 const chUrl = id => chOk(id) ? `https://www.youtube.com/channel/${id}/shorts` : '#';
 const thumb = id => vidOk(id) ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : '';
-// Profile pictures are cached by the app and served locally (or embedded in a snapshot), so a failed one just falls back to the letter.
+// Profile pictures are cached by the app (or bundled with the site, or embedded in a snapshot), so a failed one just falls back to the letter.
 document.addEventListener('error', e => {
   const im = e.target;
   if (im && im.tagName === 'IMG' && im.closest && im.closest('.av')) im.remove();
 }, true);
 const trUrl = text => `https://translate.google.com/?sl=auto&tl=${UI === 'th' ? 'th' : 'en'}&text=${encodeURIComponent(String(text).slice(0, 900))}&op=translate`;
+const NF = {};
 const fmt = n => {
   n = +n || 0;
-  const f = (x, d) => x.toFixed(d).replace(/\.0$/, '');
-  if (n >= 1e9) return f(n / 1e9, 1) + 'B';
-  if (n >= 1e6) return f(n / 1e6, n >= 1e7 ? 0 : 1) + 'M';
-  if (n >= 1e3) return f(n / 1e3, n >= 1e5 ? 0 : 1) + 'K';
-  return String(Math.round(n));
+  const loc = UI === 'th' ? 'th-TH' : 'en-US';
+  try {
+    if (!NF[loc]) NF[loc] = new Intl.NumberFormat(loc, {notation: 'compact'});
+    return NF[loc].format(n);
+  } catch (e) {
+    const f = (x, d) => x.toFixed(d).replace(/\.0$/, '');
+    if (n >= 1e9) return f(n / 1e9, 1) + 'B';
+    if (n >= 1e6) return f(n / 1e6, n >= 1e7 ? 0 : 1) + 'M';
+    if (n >= 1e3) return f(n / 1e3, n >= 1e5 ? 0 : 1) + 'K';
+    return String(Math.round(n));
+  }
 };
+const fmtX = r => (r >= 10 ? String(Math.round(r)) : String(Math.round(r * 10) / 10));
+const fmtDur = s => { s = Math.round(s); const m = Math.floor(s / 60); return m >= 60 ? `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}` : `${m}:${String(s % 60).padStart(2, '0')}`; };
+const nowTs = () => (DATA && DATA.snapshot ? DATA.generated : Date.now() / 1000);
 const ago = ts => {
   if (!ts) return t('never');
   const s = Math.max(0, Date.now() / 1000 - ts);
@@ -353,16 +766,27 @@ const ago = ts => {
   if (s < 172800) return t('hr', {n: Math.round(s / 3600)});
   return t('day', {n: Math.round(s / 86400)});
 };
-const scoreColor = s => s >= 75 ? 'var(--good)' : s >= 60 ? 'var(--accent)' : s >= 45 ? 'var(--warn)' : 'var(--muted)';
-const isWatched = c => LIVE && !DATA.readonly ? c.watch : watchLocal.has(c.ch_id);
+const scoreColor = s => s >= 80 ? 'var(--hot3)' : s >= 65 ? 'var(--hot2)' : s >= 50 ? 'var(--warn)' : 'var(--muted)';
+const isWatched = c => (LIVE && !DATA.readonly ? c.watch : watchLocal.has(c.ch_id));
 const foreign = c => c.lang && c.lang !== 'en' && c.lang !== 'und';
+const needsTr = c => (c.lang && c.lang !== 'und' ? c.lang !== UI : UI === 'th');
+const grow = v => (v.g && v.h ? v.g / v.h : 0);
+const when = v => v.p || v.s || 0;   // real upload time on the hosted site, first-seen time in the local app
+const speed = v => { const age = v.p ? nowTs() - v.p : 0; return age > 0 && age < 72 * 3600 ? v.v / Math.max(age / 3600, 1) : 0; };   // views per hour of a fresh upload
+const findCh = id => (DATA && DATA.channels.find(c => c.ch_id === id)) || (SEARCH && SEARCH.channels.find(c => c.ch_id === id)) || null;
 const ICON = {
-  picks: '<svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>',
+  home: '<svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20h-5.5v-6h-5v6H4z"/></svg>',
+  videos: '<svg viewBox="0 0 24 24"><path d="M12 3c1 3.6 5.5 5.6 5.5 11a5.5 5.5 0 0 1-11 0c0-2.9 1.9-4.7 2.8-5.6 0 2 .9 3 2 3 0-2.9-.8-5.6.7-8.4z"/></svg>',
   channels: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>',
-  videos: '<svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="3.5"/><path d="M10.5 9l4 3-4 3z"/></svg>',
-  niches: '<svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>',
-  watch: '<svg viewBox="0 0 24 24"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg>',
-  live: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"/><path d="M7.7 7.7a6 6 0 0 0 0 8.6M16.3 7.7a6 6 0 0 1 0 8.6M4.7 4.7a10.2 10.2 0 0 0 0 14.6M19.3 4.7a10.2 10.2 0 0 1 0 14.6"/></svg>'
+  live: '<svg viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="3"/><path d="M10.5 9.5l4 2.5-4 2.5z"/><path d="M8 2.5l2 3M16 2.5l-2 3"/></svg>',
+  topics: '<svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>',
+  saved: '<svg viewBox="0 0 24 24"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg>',
+  savedOn: '<svg viewBox="0 0 24 24" style="fill:currentColor"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg>',
+  help: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.8M12 17.2h.01"/></svg>',
+  close: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  left: '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
+  right: '<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>',
+  play: '<svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></svg>'
 };
 
 async function api(path, body) {
@@ -370,21 +794,108 @@ async function api(path, body) {
   return r.json().catch(() => ({}));
 }
 
-/* ---------- filtering ---------- */
+/* ---------- plain-language facts about a channel ---------- */
+const VKEY = ['vNormal', 'vWatch', 'vHot', 'vSuper'];
+const verdict = c => (c.score >= 80 ? 3 : c.score >= 65 ? 2 : c.score >= 50 ? 1 : 0);
+const fire = l => '🔥'.repeat(l);
+function vdPill(c) {
+  const l = verdict(c);
+  return `<button type="button" class="vd v${l}" data-help="verdict">${esc((l ? fire(l) + ' ' : '') + t(VKEY[l]) + (S.detail ? ' · ' + Math.round(c.score) : ''))}</button>`;
+}
+const factCache = new WeakMap();
+function chFacts(c) {
+  let f = factCache.get(c);
+  if (f) return f;
+  const ps = c.series.map(v => v.p).filter(Boolean).sort((a, b) => b - a);
+  f = {freq: null, last: ps[0] || null, isNew: false, days: null};
+  if (ps.length >= 3) f.freq = (ps.length - 1) / Math.max((ps[0] - ps[ps.length - 1]) / 86400, 0.5);   // uploads per day
+  if (ps.length >= 3 && ps.length === c.series.length && c.series.length < 20) {
+    f.days = Math.max(1, Math.ceil((nowTs() - ps[ps.length - 1]) / 86400));
+    f.isNew = f.days <= 60;
+  }
+  factCache.set(c, f);
+  return f;
+}
+function freqText(perDay) {
+  if (perDay >= 1) return t('freqDay', {n: Math.round(perDay)});
+  if (perDay * 7 >= 1) return t('freqWeek', {n: Math.round(perDay * 7)});
+  return t('freqEvery', {n: Math.round(1 / perDay)});
+}
+function whyLines(c) {
+  const out = [], n = c.series.length, r = c.ratio;
+  if (c.subs > 0 && r >= 10) out.push(t('wRatioBig', {subs: fmt(c.subs), med: fmt(c.med_recent), r: fmtX(r)}));
+  else if (c.subs > 0 && r >= 2) out.push(t('wRatio', {subs: fmt(c.subs), med: fmt(c.med_recent), r: fmtX(r)}));
+  else out.push(t('wTypical', {med: fmt(c.med_recent)}));
+  const k1 = c.series.filter(v => v.v >= 1e6).length, k100 = c.series.filter(v => v.v >= 1e5).length;
+  if (k1 >= 2) out.push(t('wHits', {k: k1, n}));
+  else if (k100 >= Math.max(3, n / 2)) out.push(t('wHits100', {k: k100, n}));
+  const f = chFacts(c);
+  if (f.isNew) out.push(t('wNew', {n, d: f.days}));
+  if (c.tags.includes('Rising')) out.push(t('wRising', {r: fmtX(c.trend)}));
+  else if (c.tags.includes('Fading')) out.push(t('wFading'));
+  if (c.tags.includes('One-hit')) out.push(t('wOneHit'));
+  return out;
+}
+const xText = x => (x >= 1.5 ? t('xMore', {x: fmtX(x)}) : x >= 0.8 ? t('xAbout') : t('xLess'));
+const HELPKEYS = {subs: ['lSubs', 'gSubs'], typical: ['lTypical', 'gTypical'], best: ['lBest', 'gBest'], ratio: ['lRatio', 'gRatio'], x: ['lX', 'gX'],
+  hits: ['lHits', 'gHits'], grow: ['lGrow', 'gGrow'], new: ['lNew', 'gNew'], score: ['lScore', 'gScore'], trend: ['lTrend', 'gTrend'], freq: ['lFreq', 'gFreq']};
+function helpHtml(key) {
+  if (key === 'verdict') return `<b>${esc(t('lVerdict'))}</b>${esc(t('gVerdict'))}` +
+    [3, 2, 1, 0].map(l => `<div style="margin-top:4px">${l ? fire(l) : '•'} <b style="display:inline">${esc(t(VKEY[l]))}</b>: ${esc(t(VKEY[l] + 'D'))}</div>`).join('');
+  if (key.startsWith('tag:')) return `<b>${esc(tagName(key.slice(4)))}</b>${esc(tagDesc(key.slice(4)))}`;
+  const k = HELPKEYS[key];
+  return k ? `<b>${esc(t(k[0]))}</b>${esc(t(k[1]))}` : '';
+}
+const qm = key => `<button type="button" class="qm" data-help="${key}" aria-label="?">?</button>`;
+
+/* ---------- topics + filtering ---------- */
+const topicCache = new WeakMap(), hayCache = new WeakMap();
+function chTopics(c) {
+  let s = topicCache.get(c);
+  if (!s) {
+    const q = (c.queries || []).join(' | ');
+    s = new Set(TOPICS.filter(tp => tp[4].test(q)).map(tp => tp[0]));
+    topicCache.set(c, s);
+  }
+  return s;
+}
+function hay(c) {
+  let h = hayCache.get(c);
+  if (h == null) { h = (c.name + ' ' + (c.handle || '') + ' ' + (c.queries || []).join(' ') + ' ' + (c.descr || '') + ' ' + c.series.map(s => s.t).join(' ')).toLowerCase(); hayCache.set(c, h); }
+  return h;
+}
 function langOk(c) {
   if (S.lang === 'all') return true;
   if (S.lang === 'en') return c.english;
   if (S.lang === 'th') return c.lang === 'th';
   return !c.english;
 }
+const baseOk = c => (!S.topic || chTopics(c).has(S.topic)) && langOk(c);
 function channelsFiltered(ignoreScore) {
-  const q = S.q.trim().toLowerCase();
-  const list = DATA.channels.filter(c =>
-    (ignoreScore || c.score >= S.minScore) && (!S.maxSubs || c.subs <= S.maxSubs) && c.med_recent >= S.minMed && langOk(c) &&
-    (!S.hideOne || !c.tags.includes('One-hit')) && (!S.tag || c.tags.includes(S.tag)) && (!S.niche || c.queries.includes(S.niche)) &&
-    (!q || (c.name + ' ' + (c.handle || '') + ' ' + c.queries.join(' ') + ' ' + (c.descr || '') + ' ' + c.series.map(s => s.t).join(' ')).toLowerCase().includes(q)));
+  const q = S.q.trim().toLowerCase(), det = S.detail;
+  const hideOne = det ? S.hideOne : S.tag !== 'One-hit';   // simple view always hides one-hit wonders unless asked for them
+  const list = DATA.channels.filter(c => baseOk(c) &&
+    (ignoreScore || c.score >= S.minScore) && (!S.maxSubs || c.subs <= S.maxSubs) && (!det || c.med_recent >= S.minMed) &&
+    (!hideOne || !c.tags.includes('One-hit')) && (!S.tag || c.tags.includes(S.tag)) && (!S.niche || (c.queries || []).includes(S.niche)) &&
+    (!q || hay(c).includes(q)));
   const key = {score: c => c.score, med: c => c.med_recent, ratio: c => c.ratio, best: c => c.max_views, small: c => -c.subs, trend: c => c.trend}[S.sort] || (c => c.score);
   return list.sort((a, b) => key(b) - key(a));
+}
+const videoPool = chs => { const out = []; for (const c of chs) for (const v of c.series) out.push([v, c]); return out; };
+function viralVideos(chs) {
+  const ref = nowTs();
+  const heat = ([v]) => Math.min(v.x, 60) * Math.log10(Math.max(v.v, 10)) * (when(v) && ref - when(v) < 14 * 86400 ? 1.5 : 1) * (grow(v) >= 1000 ? 2 : 1);
+  const seen = new Set();
+  return videoPool(chs.filter(c => !c.tags.includes('One-hit'))).filter(([v]) => v.v >= 100000 && v.x >= 3)
+    .sort((a, b) => heat(b) - heat(a)).filter(([, c]) => !seen.has(c.ch_id) && seen.add(c.ch_id));
+}
+function liveVideos(chs) {
+  const cutoff = nowTs() - 72 * 3600;
+  return videoPool(chs).filter(([v]) => when(v) >= cutoff).sort((a, b) => when(b[0]) - when(a[0]));
+}
+function picksList() {
+  const rank = c => { const tt = c.pick.tier || '', m = /#(\d+)/.exec(tt); return m ? +m[1] : /strong/i.test(tt) ? 20 : 30; };
+  return DATA.channels.filter(c => c.pick).sort((a, b) => rank(a) - rank(b) || b.score - a.score);
 }
 
 /* ---------- pieces ---------- */
@@ -399,123 +910,242 @@ function avatarEl(c, size) {
 }
 function langChip(c) {
   if (!c.lang || c.lang === 'und') return '';
-  return `<span class="lang" title="${esc(langName(c.lang))}">${esc(c.lang.toUpperCase())} · ${esc(langName(c.lang))}</span>`;
+  return `<span class="lang">${esc(langName(c.lang))}</span>`;
 }
-function badgeClass(x) { return x >= 10 ? 'hi' : x >= 3 ? 'mid' : ''; }
-function overlay(v) {
-  const vel = v.g && v.h ? `<span class="g" title="${esc(t('gain', {h: v.h}))}">+${fmt(v.g / v.h)}/h</span>` : '';
-  return `<img loading="lazy" src="${thumb(v.id)}" alt=""><span class="x ${badgeClass(v.x)}">${v.x}×</span>${vel}<span class="views">▶ ${fmt(v.v)}</span>`;
+const badgeClass = x => (x >= 10 ? 'hi' : x >= 3 ? 'mid' : '');
+function thumbBox(v, c) {
+  const g = grow(v);
+  return `<a class="th" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" data-play="${esc(v.id)}" data-c="${esc(c.ch_id)}" title="${esc(v.t)}">` +
+    `<img loading="lazy" src="${thumb(v.id)}" alt="">` +
+    (v.x >= 2 ? `<span class="x ${badgeClass(v.x)}">${fmtX(v.x)}×</span>` : '') +
+    (g ? `<span class="g">+${esc(fmt(g))}/${UI === 'th' ? 'ชม.' : 'h'}</span>` : '') +
+    `<span class="views">▶ ${esc(fmt(v.v))}</span>` + (v.d ? `<span class="dur">${fmtDur(v.d)}</span>` : '') +
+    `<span class="play">${ICON.play}</span></a>`;
 }
-function shortCard(v) {
-  return `<div class="short"><a class="th" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer">${overlay(v)}</a>
-    <a class="t" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" title="${esc(v.t)}">${esc(v.t)}</a></div>`;
+function shortCard(v, c) {
+  return `<div class="short">${thumbBox(v, c)}<a class="t" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" data-play="${esc(v.id)}" data-c="${esc(c.ch_id)}" title="${esc(v.t)}">${esc(v.t)}</a></div>`;
 }
-function vCard(v, c, showSpotted) {
-  return `<div class="vcard"><a class="th" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer">${overlay(v)}</a>
-    <div class="vmeta"><a href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${avatarEl(c, 36)}</a>
-    <div class="vtxt"><a class="vt" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" title="${esc(v.t)}">${esc(v.t)}</a>
-    <div class="vch"><a href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${esc(c.name)}</a>${foreign(c) ? `<a class="tr" href="${trUrl(v.t)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}</div>
-    <div class="vst">${fmt(v.v)} ${esc(t('views'))} · ${v.x}× ${esc(t('ofMedian'))}</div>
-    ${showSpotted && (v.p || v.s) ? `<div class="vst" style="color:var(--accent)">${esc(t(v.p ? 'uploaded' : 'spotted', {ago: ago(v.p || v.s)}))}</div>` : ''}</div></div></div>`;
+function vCard(v, c, opts = {}) {
+  const w = opts.showWhen && when(v) ? `<div class="vst when">${esc(t(v.p ? 'uploaded' : 'spotted', {ago: ago(when(v))}))}</div>` : '';
+  const chLine = opts.noCh ? '' : `<div class="vch"><button type="button" data-open-ch="${esc(c.ch_id)}">${esc(c.name)}</button>${needsTr(c) ? `<a class="tr" href="${trUrl(v.t)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}</div>`;
+  return `<div class="vcard">${thumbBox(v, c)}<div class="vmeta">` +
+    (opts.noCh ? '' : `<button type="button" class="avlink" data-open-ch="${esc(c.ch_id)}" aria-label="${esc(c.name)}">${avatarEl(c, 36)}</button>`) +
+    `<div class="vtxt"><a class="vt" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" data-play="${esc(v.id)}" data-c="${esc(c.ch_id)}" title="${esc(v.t)}">${esc(v.t)}</a>${chLine}` +
+    `<div class="vst">${esc(t('views', {n: fmt(v.v)}))}${speed(v) ? ` · <span class="hotx">${esc(t('speed', {n: fmt(speed(v))}))}</span>` : v.x ? ` · <span class="${v.x >= 1.5 ? 'hotx' : ''}">${esc(xText(v.x))}</span>` : ''}</div>${w}</div></div></div>`;
+}
+const topVids = (c, n) => c.series.slice().sort((a, b) => b.v - a.v).slice(0, n);
+const trio = c => `<div class="trio">${topVids(c, 3).map(v => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('')}</div>`;
+function chCard(c) {
+  return `<article class="ccard" data-open-ch="${esc(c.ch_id)}" tabindex="0" role="button" aria-label="${esc(c.name)}">${trio(c)}
+    <div class="cbody">${avatarEl(c, 64)}<b>${esc(c.name)}</b>${vdPill(c)}
+    <small>${esc(t('subscribers', {n: fmt(c.subs)}))}<br>${esc(t('typicalViews', {n: fmt(c.med_recent)}))}</small></div></article>`;
+}
+function pickCard(c) {
+  const p = c.pick, tier = UI === 'th' && p.tier_th ? p.tier_th : p.tier, note = UI === 'th' && p.note_th ? p.note_th : p.note;
+  return `<article class="pcard" data-open-ch="${esc(c.ch_id)}" tabindex="0" role="button" aria-label="${esc(c.name)}">${trio(c)}
+    <div class="pbody"><div class="ptop">${avatarEl(c, 44)}<div><b>${esc(c.name)}</b><span class="tag pick">${esc(tier)}</span></div></div>
+    <div class="chsub">${vdPill(c)}<span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span></div>
+    <div class="pnote">${esc(note)}</div></div></article>`;
+}
+function statPills(c, f) {
+  const top = c.series.reduce((a, b) => (b.v > a.v ? b : a), c.series[0] || {v: c.max_views});
+  const st = (icon, val, label, help) => `<span class="st">${icon} <b>${esc(val)}</b><span>${esc(label)}</span>${help ? qm(help) : ''}</span>`;
+  let h = st('👁', fmt(c.med_recent), t('lTypical'), 'typical') + st('🏆', fmt(top.v), t('lBest'), 'best');
+  if (f.freq) h += `<span class="st">📅 <span>${esc(freqText(f.freq))}</span>${qm('freq')}</span>`;
+  if (S.detail) {
+    h += st('⚡', fmtX(c.ratio) + '×', t('lRatio'), 'ratio') + st('🎯', t('hitsVal', {k: c.series.filter(v => v.v >= 1e5).length, n: c.series.length}), t('lHits'), 'hits') +
+      st('📈', fmtX(c.trend) + '×', t('lTrend'), 'trend') +
+      c.tags.map(k => `<button type="button" class="tag ${TAGS[k] ? TAGS[k].cls : ''}" data-help="tag:${esc(k)}">${esc(tagName(k))}</button>`).join('');
+  }
+  return h;
+}
+function saveBtn(c) {
+  const on = isWatched(c);
+  return `<button type="button" class="savebtn ${on ? 'on' : ''}" data-star="${esc(c.ch_id)}" aria-pressed="${on}">${on ? ICON.savedOn : ICON.saved}${esc(t(on ? 'saved' : 'save'))}</button>`;
 }
 function channelRow(c) {
-  const star = isWatched(c);
-  const pick = c.pick;
+  const pick = c.pick, f = chFacts(c), id = esc(c.ch_id);
   const tier = pick ? (UI === 'th' && pick.tier_th ? pick.tier_th : pick.tier) : '';
-  const note = pick ? (UI === 'th' && pick.note_th ? pick.note_th : pick.note) : '';
-  const top = c.series.slice().sort((a, b) => b.v - a.v)[0];
-  const vids = S.shelf === 'top' ? c.series.slice().sort((a, b) => b.v - a.v) : c.series;
-  const tags = c.tags.map(k => `<span class="tag ${TAGS[k] ? TAGS[k].cls : ''}">${esc(tagName(k))}</span>`).join('');
-  return `<section class="ch" data-id="${esc(c.ch_id)}">
+  const vids = S.detail && S.shelf === 'top' ? c.series.slice().sort((a, b) => b.v - a.v) : c.series;
+  return `<section class="ch">
     <div class="chhead">
-      <a href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${avatarEl(c, 84)}</a>
+      <button type="button" class="avlink" data-open-ch="${id}" aria-label="${esc(c.name)}">${avatarEl(c, 96)}</button>
       <div class="chinfo">
-        <div class="chname"><a href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${esc(c.name)}</a>${pick ? `<span class="tag pick">${esc(tier)}</span>` : ''}</div>
-        <div class="chsub"><span>${esc(c.handle || '')}</span><span>·</span><span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span><span>·</span><span>${esc(t('analyzed', {n: c.series.length}))}</span>${langChip(c)}</div>
-        ${c.descr ? `<div class="chdesc">${esc(c.descr)}</div>` : ''}
-        <div class="chstats">
-          <span class="stat"><b>${fmt(c.med_recent)}</b><span>${esc(t('median'))}</span></span>
-          <span class="stat"><b>${fmt(top ? top.v : c.max_views)}</b><span>${esc(t('best'))}</span></span>
-          <span class="stat"><b>${c.ratio >= 100 ? Math.round(c.ratio) : c.ratio}×</b><span>${esc(t('vps'))}</span></span>
-          <span class="tags">${tags}</span>
-          ${foreign(c) && c.descr ? `<a class="tr" href="${trUrl(c.descr)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}
-        </div>
+        <div class="chname"><button type="button" data-open-ch="${id}">${esc(c.name)}</button>${vdPill(c)}${pick ? `<span class="tag pick">${esc(tier)}</span>` : ''}${f.isNew ? `<button type="button" class="tag new" data-help="new">${esc(t('newBadge'))}</button>` : ''}</div>
+        <div class="chsub">${c.handle ? `<span>${esc(c.handle)}</span><span>·</span>` : ''}<span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span>${langChip(c)}${needsTr(c) && c.descr ? `<a class="tr" href="${trUrl(c.descr)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}</div>
+        <div class="why">${whyLines(c).slice(0, 2).map(s => `<div>${esc(s)}</div>`).join('')}</div>
+        <div class="stats">${statPills(c, f)}</div>
       </div>
       <div class="right">
-        <div class="ring" style="--p:${c.score};--c:${scoreColor(c.score)}" title="${esc(t('scoreTip', {n: c.score}))}"><span>${Math.round(c.score)}</span></div>
-        <button class="watchbtn ${star ? 'on' : ''}" data-star="${esc(c.ch_id)}" aria-pressed="${star}">${esc(star ? t('watching') : t('watch'))}</button>
+        ${S.detail ? `<div class="ring" style="--p:${c.score};--c:${scoreColor(c.score)}" data-help="score"><span>${Math.round(c.score)}</span></div>` : ''}
+        ${saveBtn(c)}
+        <button type="button" class="ghost" data-open-ch="${id}">${esc(t('details'))} ${ICON.right}</button>
       </div>
     </div>
-    ${note ? `<div class="note"><b>${esc(t('why'))}</b>${esc(note)}</div>` : ''}
-    <div class="shelf">${vids.map(shortCard).join('')}</div>
+    <div class="shelf">${vids.map(v => shortCard(v, c)).join('')}</div>
   </section>`;
 }
+function shelf(title, desc, items, see) {
+  return `<section class="shelfsec"><div class="shhead"><div><h2>${esc(t(title))}</h2><p>${esc(t(desc))}</p></div>
+    <div class="shnav">${see ? `<button type="button" class="seeall" data-see="${see}">${esc(t('seeAll'))}</button>` : ''}
+    <button type="button" class="icon" data-rail="-1" aria-label="${esc(t('prev'))}">${ICON.left}</button><button type="button" class="icon" data-rail="1" aria-label="${esc(t('next'))}">${ICON.right}</button></div></div>
+    <div class="rail">${items.join('')}</div></section>`;
+}
+const emptyBox = (msg, em = '🔍') => `<div class="empty"><span class="em">${em}</span>${esc(msg)}</div>`;
 
-/* ---------- views ---------- */
+/* ---------- pages ---------- */
+const pageHead = (tk, dk, extra = '') => `<div class="phead"><h1>${esc(t(tk))}</h1><p>${esc(t(dk))}</p></div>${extra}`;
+const moreBtn = (kind, left) => (left > 0 ? `<button type="button" class="more" data-more="${kind}">${esc(t('more', {n: left}))}</button>` : '');
+function statusInfo() {
+  const st = DATA.status || {};
+  if (DATA.snapshot) return {cls: 'dot snap', txt: t('snap', {d: new Date(DATA.generated * 1000).toLocaleString(UI === 'th' ? 'th-TH' : 'en-US'), n: DATA.channels.length})};
+  if (st.state === 'scanning') return {cls: 'dot live', txt: t(st.phase === 'discovery' ? 'stDisc' : 'stProbe', {a: st.done, b: st.total})};
+  if (st.state === 'starting') return {cls: 'dot', txt: t('stStart')};
+  if (STATIC) return {cls: 'dot live', txt: t('stUpdated', {ago: ago(DATA.generated || st.last_cycle_end)})};
+  return {cls: 'dot', txt: t('stIdle', {ago: ago(st.last_cycle_end)}) + (st.next_scan ? t('stNext', {n: Math.max(1, Math.round((st.next_scan - Date.now() / 1000) / 60))}) : '')};
+}
+function homeView() {
+  const chs = DATA.channels.filter(baseOk);
+  let h = '', n = 0;
+  if (!LS.get('radar.heroHidden', false)) {
+    h += `<section class="hero"><div class="emo">📡</div><div><h2>${esc(t('heroTitle'))}</h2><p>${esc(t('heroBody'))}</p>
+      <div class="btns"><button type="button" class="pillbtn big red" data-tab="help">${esc(t('heroHow'))}</button><button type="button" class="pillbtn big" data-herohide>${esc(t('heroHide'))}</button></div></div>
+      <button type="button" class="icon closex" data-herohide aria-label="${esc(t('dClose'))}">${ICON.close}</button></section>`;
+  }
+  const st = statusInfo();
+  h += `<div class="sumline"><span>${t('sumTracked', {n: DATA.channels.length})}</span><span>${t('sumHot', {n: DATA.channels.filter(c => c.score >= 65).length})}</span>` +
+    `<span>${t('sumNew', {n: liveVideos(DATA.channels).length})}</span><span class="livebox" style="margin:0"><span class="${st.cls}"></span>${esc(st.txt)}</span></div>`;
+  const add = (title, desc, items, see) => { if (items.length) { h += shelf(title, desc, items, see); n++; } };
+  const byScore = (a, b) => b.score - a.score;
+  add('shPicks', 'shPicksD', picksList().filter(baseOk).map(pickCard), '');
+  add('shViral', 'shViralD', viralVideos(chs).slice(0, 18).map(([v, c]) => vCard(v, c)), 'videos');
+  const fresh = liveVideos(chs), good = fresh.filter(([, c]) => c.score >= 40);
+  add('shNew', 'shNewD', (good.length >= 4 ? good : fresh).sort((a, b) => speed(b[0]) - speed(a[0])).slice(0, 18).map(([v, c]) => vCard(v, c, {showWhen: true})), 'live');
+  add('shSmall', 'shSmallD', chs.filter(c => c.subs > 0 && c.subs <= 50000 && c.score >= 50 && !c.tags.includes('One-hit')).sort((a, b) => b.med_recent - a.med_recent).slice(0, 18).map(chCard), 'small');
+  if (S.lang === 'all') add('shThai', 'shThaiD', chs.filter(c => c.lang === 'th').sort(byScore).slice(0, 18).map(chCard), 'thai');
+  add('shRising', 'shRisingD', chs.filter(c => c.tags.includes('Rising') && c.score >= 50).sort(byScore).slice(0, 18).map(chCard), 'rising');
+  add('shSteady', 'shSteadyD', chs.filter(c => c.tags.includes('Consistent engine')).sort(byScore).slice(0, 18).map(chCard), 'steady');
+  if (!n) h += emptyBox(t('emptyHome'));
+  return h;
+}
+function filtersHtml(kind) {
+  const opt = (v, cur, label) => `<option value="${esc(v)}" ${String(cur) === String(v) ? 'selected' : ''}>${esc(label)}</option>`;
+  const sel = (id, opts, cur, label) => `<select id="${id}" aria-label="${esc(label || '')}">${opts.map(([v, l]) => opt(v, cur, l)).join('')}</select>`;
+  const det = S.detail, p = [];
+  const lvl = sel('fLvl', [[0, t('lvlAll')], [50, t('lvl1')], [65, t('lvl2')], [80, t('lvl3')]].map(([v, l]) => [v, l + (det && v ? t('lvlScore', {n: v}) : '')]), S.minScore, t('lVerdict'));
+  const size = sel('fSubs', [[0, t('anySize')]].concat([10000, 50000, 100000, 250000].map(v => [v, t('subsLe', {n: fmt(v)})])), S.maxSubs, t('lSubs'));
+  if (kind === 'channels') {
+    p.push(lvl, size, sel('fSort', [['score', t('sScore')], ['med', t('sMed')], ['small', t('sSmall')], ['trend', t('sTrend')]].concat(det ? [['ratio', t('sRatio')], ['best', t('sBest')]] : []), S.sort));
+  }
+  if (kind === 'live') p.push(sel('fLSort', [['new', t('vNew')], ['fast', t('lFast')]], S.lsort));
+  if (kind === 'videos') {
+    p.push(sel('fVSort', [['x', t('vX')], ['v', t('vV')], ['g', t('vG')], ['new', t('vNew')]], S.vsort),
+      sel('fX', [[0, t('xAny')]].concat([2, 3, 5, 10, 20].map(v => [v, t('xGe', {n: v})])), S.minX, t('lX')), size);
+  }
+  if (det && (kind === 'channels' || kind === 'videos')) {
+    p.push(sel('fMed', [[0, t('anyViews')]].concat([50000, 100000, 250000, 500000, 1000000].map(v => [v, t('medGe', {n: fmt(v)})])), S.minMed, t('lTypical')));
+    if (kind === 'channels') p.push(sel('fShelf', [['new', t('shNewF')], ['top', t('shTopF')]], S.shelf));
+    p.push(`<button type="button" class="chip" id="fOne" aria-pressed="${S.hideOne}">${esc(t('hideOne'))}</button>`);
+    p.push(Object.keys(TAGS).map(k => `<button type="button" class="chip" data-tag="${esc(k)}" aria-pressed="${S.tag === k}">${esc(tagName(k))}</button>`).join(''));
+  }
+  if (S.niche) p.push(`<button type="button" class="chip x" aria-pressed="true" data-clear="niche">${esc(t('nicheChip', {x: S.niche}))}</button>`);
+  if (S.tag && !det) p.push(`<button type="button" class="chip x" aria-pressed="true" data-clear="tag">${esc(t('tagChip', {x: tagName(S.tag)}))}</button>`);
+  if (kind === 'channels' || kind === 'videos') p.push(`<button type="button" class="chip" data-detail="toggle" aria-pressed="${det}">${esc(t('detailOn'))}</button>`);
+  return p.length ? `<div class="filters">${p.join('')}</div>` : '';
+}
+function qBanner() {
+  const q = S.q.trim();
+  if (!q) return '';
+  return `<div class="banner"><span>${esc(t('qBanner', {q}))}</span>${canSearch() ? `<button type="button" class="pillbtn blue" data-livesearch>${esc(t('qLive', {q}))}</button>` : ''}<button type="button" class="chip x" data-clearq>${esc(q)}</button></div>`;
+}
 function channelsView(list, empty) {
-  if (!list.length) return `<div class="empty">${esc(empty || t('emptyCh'))}</div>`;
+  if (!list.length) return emptyBox(empty || t('emptyCh'));
   const lim = shown.channels;
-  return list.slice(0, lim).map(channelRow).join('') +
-    (list.length > lim ? `<button class="more" data-more="channels">${esc(t('more', {n: list.length - lim}))}</button>` : '');
+  return list.slice(0, lim).map(channelRow).join('') + moreBtn('channels', list.length - lim);
 }
 function videosView() {
-  const vids = [];
-  for (const c of channelsFiltered(false)) for (const v of c.series) if (v.x >= S.minX) vids.push([v, c]);
-  const key = {x: ([v]) => v.x, v: ([v]) => v.v, g: ([v]) => (v.g && v.h ? v.g / v.h : -1)}[S.vsort];
+  const vids = videoPool(channelsFiltered(true)).filter(([v]) => v.x >= S.minX);
+  const key = {x: ([v]) => v.x, v: ([v]) => v.v, g: ([v]) => grow(v) || -1, new: ([v]) => when(v)}[S.vsort] || (([v]) => v.x);
   vids.sort((a, b) => key(b) - key(a));
-  if (!vids.length) return `<div class="empty">${esc(t('emptyVid'))}</div>`;
-  const lim = shown.videos;
-  return `<div class="vgrid">${vids.slice(0, lim).map(([v, c]) => vCard(v, c)).join('')}</div>` +
-    (vids.length > lim ? `<button class="more" data-more="videos">${esc(t('more', {n: vids.length - lim}))}</button>` : '');
-}
-function nichesView() {
-  const map = new Map();
-  for (const c of channelsFiltered(true)) for (const nq of c.queries) {
-    const m = map.get(nq) || {n: 0, strong: 0, scores: []};
-    m.n++; m.scores.push(c.score); if (c.score >= 55) m.strong++;
-    map.set(nq, m);
-  }
-  const rows = [...map.entries()].map(([k, m]) => {
-    const top = m.scores.sort((a, b) => b - a).slice(0, 5);
-    return {k, ...m, avg: top.reduce((a, b) => a + b, 0) / top.length};
-  }).sort((a, b) => b.strong - a.strong || b.avg - a.avg).slice(0, 60);
-  if (!rows.length) return `<div class="empty">${esc(t('emptyNiche'))}</div>`;
-  const mx = Math.max(1, ...rows.map(r => r.strong));
-  return `<p class="lead">${esc(t('nicheLead'))}</p><div class="tiles">` + rows.map(r =>
-    `<button class="tile" data-niche="${esc(r.k)}"><b>${esc(r.k)}</b><div class="bar2"><i style="width:${(r.strong / mx) * 100}%"></i></div><small>${esc(t('nicheStats', {s: r.strong, a: Math.round(r.avg), n: r.n}))}</small></button>`).join('') + '</div>';
-}
-function liveVideos() {
-  const ref = DATA.snapshot ? DATA.generated : Date.now() / 1000;
-  const cutoff = ref - 72 * 3600, out = [];
-  const when = v => v.p || v.s;   // real upload time on the hosted site, first-seen time in the local app
-  for (const c of channelsFiltered(false)) for (const v of c.series) if (when(v) && when(v) >= cutoff) out.push([v, c]);
-  return out.sort((a, b) => when(b[0]) - when(a[0]));
+  const head = pageHead('pVideosT', 'pVideosD', filtersHtml('videos') + qBanner());
+  if (!vids.length) return head + emptyBox(t('emptyVid'));
+  return head + `<div class="vgrid">${vids.slice(0, shown.videos).map(([v, c]) => vCard(v, c, {showWhen: S.vsort === 'new'})).join('')}</div>` + moreBtn('videos', vids.length - shown.videos);
 }
 function liveView() {
-  const vids = liveVideos();
-  if (!vids.length) return `<p class="lead">${esc(t('liveLead'))}</p><div class="empty">${esc(t('emptyLive'))}</div>`;
-  return `<p class="lead">${esc(t('liveLead'))}</p><div class="vgrid">${vids.slice(0, 120).map(([v, c]) => vCard(v, c, true)).join('')}</div>`;
+  const vids = liveVideos(channelsFiltered(true));
+  if (S.lsort === 'fast') vids.sort((a, b) => speed(b[0]) - speed(a[0]));
+  const head = pageHead('pLiveT', 'pLiveD', filtersHtml('live') + qBanner());
+  if (!vids.length) return head + emptyBox(t('emptyLive'), '🕒');
+  return head + `<div class="vgrid">${vids.slice(0, shown.live).map(([v, c]) => vCard(v, c, {showWhen: true})).join('')}</div>` + moreBtn('live', vids.length - shown.live);
+}
+function topicsView() {
+  const rows = TOPICS.map(tp => {
+    const chs = DATA.channels.filter(c => chTopics(c).has(tp[0]) && langOk(c)).sort((a, b) => b.score - a.score);
+    return {tp, n: chs.length, hot: chs.filter(c => c.score >= 65).length, top: chs.slice(0, 5)};
+  }).filter(r => r.n).sort((a, b) => b.hot - a.hot || b.n - a.n);
+  let h = pageHead('pTopicsT', 'pTopicsD');
+  if (!rows.length) return h + emptyBox(t('emptyNiche'));
+  const mx = Math.max(1, ...rows.map(r => r.hot));
+  h += `<div class="tiles">` + rows.map(r => `<button type="button" class="tile" data-topic="${r.tp[0]}" data-go="home"><span class="em">${r.tp[1]}</span><b>${esc(topicName(r.tp))}</b>
+    <div class="stack">${r.top.map(c => avatarEl(c, 34)).join('')}</div><div class="bar2"><i style="width:${(r.hot / mx) * 100}%"></i></div>
+    <small>${esc(t('topicStats', {h: r.hot, n: r.n}))}</small></button>`).join('') + '</div>';
+  if (S.detail) {   // the raw search phrases behind the topics
+    const map = new Map();
+    for (const c of DATA.channels) for (const nq of c.queries || []) {
+      const m = map.get(nq) || {n: 0, strong: 0, scores: []};
+      m.n++; m.scores.push(c.score); if (c.score >= 55) m.strong++;
+      map.set(nq, m);
+    }
+    const raw = [...map.entries()].map(([k, m]) => {
+      const top = m.scores.sort((a, b) => b - a).slice(0, 5);
+      return {k, ...m, avg: top.reduce((a, b) => a + b, 0) / top.length};
+    }).sort((a, b) => b.strong - a.strong || b.avg - a.avg).slice(0, 80);
+    const mr = Math.max(1, ...raw.map(r => r.strong));
+    h += `<h2 class="subhead">${esc(t('pNichesT'))}</h2><div class="tiles">` + raw.map(r =>
+      `<button type="button" class="tile" data-niche="${esc(r.k)}"><b>${esc(r.k)}</b><div class="bar2"><i style="width:${(r.strong / mr) * 100}%"></i></div><small>${esc(t('nicheStats', {s: r.strong, a: Math.round(r.avg), n: r.n}))}</small></button>`).join('') + '</div>';
+  }
+  return h;
+}
+function helpView() {
+  const H = HELP[UI] || HELP.en;
+  const gl = (dt, dd) => `<dt>${dt}</dt><dd>${esc(dd)}</dd>`;
+  const verdicts = `<dl class="gl">${[3, 2, 1, 0].map(l => gl(`<span class="vd v${l}">${esc((l ? fire(l) + ' ' : '') + t(VKEY[l]))}</span>`, t(VKEY[l] + 'D'))).join('')}</dl>`;
+  const gloss = `<dl class="gl">` + ['subs', 'typical', 'best', 'ratio', 'x', 'hits', 'grow', 'freq', 'new', 'trend', 'score'].map(k => {
+    const [lk, gk] = HELPKEYS[k];
+    const ex = k === 'x' ? ' <span class="tag bad" style="background:var(--hot3);color:#fff">12×</span>' : k === 'new' ? ` <span class="tag new">${esc(t('newBadge'))}</span>` : '';
+    return gl(esc(t(lk)) + ex, t(gk));
+  }).join('') + Object.keys(TAGS).map(k => gl(`<span class="tag ${TAGS[k].cls}">${esc(tagName(k))}</span>`, tagDesc(k))).join('') + '</dl>';
+  return pageHead('nHelp', 'helpLead') + `<div class="help"><div class="toc">${H.map(s => `<button type="button" class="chip" data-jump="${s.id}">${s.em} ${esc(s.h)}</button>`).join('')}</div>` +
+    H.map(s => `<section class="hsec" id="h-${s.id}"><h2><span class="em">${s.em}</span>${esc(s.h)}</h2>` +
+      (s.p || []).map(x => `<p>${rich(x)}</p>`).join('') +
+      (s.ol ? `<ol>${s.ol.map(x => `<li>${rich(x)}</li>`).join('')}</ol>` : '') +
+      (s.verdicts ? verdicts : '') + (s.gloss ? gloss : '') +
+      (s.qa ? s.qa.map(([q, a]) => `<details class="qa"><summary>${esc(q)}</summary><p>${rich(a)}</p></details>`).join('') : '') +
+      (s.p2 || []).map(x => `<p>${rich(x)}</p>`).join('') + '</section>').join('') +
+    `<div style="text-align:center;margin:22px 0"><button type="button" class="pillbtn big red" data-tab="home">${esc(t('wStart'))}</button></div></div>`;
 }
 function searchView() {
   const s = SEARCH;
-  if (!s) return `<div class="empty">${esc(t('searchPhLive'))}</div>`;
   let status;
   if (s.state === 'error') status = s.msg || t('sErr');
   else if (s.state === 'running') status = s.phase === 'searching' ? t('sSearching') : t('sChecking', {a: s.done, b: s.total});
   else status = t('sDone', {n: s.channels.length});
-  const head = `<p class="lead"><b style="color:var(--text)">${esc(t('sTitle', {q: s.query}))}</b> · ${esc(status)}</p>`;
+  const head = `<div class="phead"><h1>${esc(t('sTitle', {q: s.query}))}</h1><p>${esc(t('sLead'))} · <b>${esc(status)}</b></p></div>`;
   if (!s.channels.length) {
-    if (s.state === 'done') return head + `<div class="empty">${esc(t('sEmpty'))}</div>`;
-    return head + (s.state === 'running' ? '<div class="empty"><span class="dot live"></span></div>' : '');
+    if (s.state === 'done') return head + emptyBox(t('sEmpty'));
+    return head + (s.state === 'running' ? '<div class="empty"><span class="dot live" style="display:inline-block"></span></div>' : '');
   }
   return head + s.channels.map(channelRow).join('');
+}
+function enterSearch() {
+  if (S.tab !== 'search') { PREV_TAB = S.tab; history.pushState(null, '', '#search'); }
+  S.tab = 'search';
 }
 async function startSearch(query) {
   query = String(query || '').trim();
   if (query.length < 2 || !canSearch()) return;
   if (STATIC) return staticSearch(query);
-  if (S.tab !== 'search') PREV_TAB = S.tab;
-  S.tab = 'search';
+  enterSearch();
   SEARCH = {query, id: null, state: 'running', phase: 'searching', done: 0, total: 0, found: 0, channels: [], error: null, tracked: false, msg: ''};
   render(); window.scrollTo(0, 0);
   const r = await api('/api/search', {query});
@@ -535,85 +1165,178 @@ async function pollSearch() {
   if (S.tab === 'search') renderContent();
   if (SEARCH.state === 'running') searchTimer = setTimeout(pollSearch, 1200);
 }
-function picksList() {
-  const rank = c => { const tt = c.pick.tier || '', m = /#(\d+)/.exec(tt); return m ? +m[1] : /strong/i.test(tt) ? 20 : 30; };
-  return DATA.channels.filter(c => c.pick).sort((a, b) => rank(a) - rank(b) || b.score - a.score);
+
+/* ---------- channel page (sheet) ---------- */
+function drawSheet(keepScroll) {
+  const c = findCh(SHEET_ID), body = $('#sheetBody');
+  if (!c) return;
+  const top = body.scrollTop, f = chFacts(c), pick = c.pick, id = esc(c.ch_id);
+  const best = c.series.reduce((a, b) => (b.v > a.v ? b : a), c.series[0] || {v: c.max_views});
+  const k100 = c.series.filter(v => v.v >= 1e5).length;
+  const card = (label, val, sub, help) => `<div class="scard"><div class="lbl">${esc(t(label))}${help ? qm(help) : ''}</div><b>${esc(val)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</div>`;
+  const vids = SHEET_SORT === 'top' ? c.series.slice().sort((a, b) => b.v - a.v) : c.series;
+  const tier = pick ? (UI === 'th' && pick.tier_th ? pick.tier_th : pick.tier) : '';
+  const note = pick ? (UI === 'th' && pick.note_th ? pick.note_th : pick.note) : '';
+  body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
+    <div class="shtop">${avatarEl(c, 104)}<div style="min-width:0">
+      <h2>${esc(c.name)} ${vdPill(c)}</h2>
+      <div class="chsub">${c.handle ? `<span>${esc(c.handle)}</span><span>·</span>` : ''}<span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span>${langChip(c)}${pick ? `<span class="tag pick">${esc(tier)}</span>` : ''}${f.isNew ? `<button type="button" class="tag new" data-help="new">${esc(t('newBadge'))}</button>` : ''}</div>
+      <div class="btns">${saveBtn(c)}<a class="pillbtn red" href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>
+        ${LIVE ? `<button type="button" class="pillbtn" data-copy="${id}">${esc(t('copyLink'))}</button>` : ''}</div></div></div>
+    <div class="shbody">
+      <h3>💡 ${esc(t('why'))}</h3><div class="why">${whyLines(c).map(s => `<div>${esc(s)}</div>`).join('')}</div>
+      ${note ? `<div class="note"><b>⭐ ${esc(t('ourNote'))}</b>${esc(note)}</div>` : ''}
+      <div class="cards4">
+        ${card('lTypical', fmt(c.med_recent), '', 'typical')}${card('lBest', fmt(best.v), '', 'best')}
+        ${card('lRatio', fmtX(c.ratio) + '×', '', 'ratio')}${card('lHits', t('hitsVal', {k: k100, n: c.series.length}), t('hitsSub'), 'hits')}
+        ${f.freq ? card('lFreq', freqText(f.freq), f.last ? t('lLast') + ': ' + ago(f.last) : '', 'freq') : ''}
+        ${S.detail ? card('lScore', Math.round(c.score) + ' / 100', '', 'score') + card('lTrend', fmtX(c.trend) + '×', '', 'trend') : ''}
+      </div>
+      ${c.tags.length ? `<h3>🏷️ ${esc(t('labels'))}</h3><div class="taglist">${c.tags.map(k => `<div><span class="tag ${TAGS[k] ? TAGS[k].cls : ''}">${esc(tagName(k))}</span><small>${esc(tagDesc(k))}</small></div>`).join('')}</div>` : ''}
+      <h3>🎬 ${esc(t('recent'))} <span class="seg"><button type="button" data-shsort="new" aria-pressed="${SHEET_SORT === 'new'}">${esc(t('newestFirst'))}</button><button type="button" data-shsort="top" aria-pressed="${SHEET_SORT === 'top'}">${esc(t('topFirst'))}</button></span></h3>
+      <div class="vgrid">${vids.map(v => vCard(v, c, {noCh: true, showWhen: true})).join('')}</div>
+      ${c.descr ? `<h3>ℹ️ ${esc(t('about'))}</h3><p class="descr">${esc(c.descr)}${needsTr(c) ? ` <a class="tr" href="${trUrl(c.descr)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}</p>` : ''}
+    </div>`;
+  body.scrollTop = keepScroll ? top : 0;
+}
+function openChannel(id) {
+  if (!findCh(id)) return;
+  closePop();
+  SHEET_ID = id; SHEET_SORT = 'new';
+  drawSheet(false);
+  const d = $('#sheet');
+  if (!d.open) d.showModal();
+}
+$('#sheet').addEventListener('close', () => {
+  SHEET_ID = null;
+  if (/^#ch\//.test(location.hash)) history.replaceState(null, '', '#' + (TABS.includes(S.tab) ? S.tab : 'home'));
+});
+
+/* ---------- video player ---------- */
+function openPlayer(vid, chId) {
+  if (!vidOk(vid)) return;
+  const c = findCh(chId), v = (c && c.series.find(s => s.id === vid)) || {id: vid, t: '', v: 0, x: 0};
+  closePop();
+  const g = grow(v);
+  const facts = [['👁', t('views', {n: fmt(v.v)})]];
+  if (v.x) facts.push(['🔥', v.x >= 1.5 ? t('pX', {x: fmtX(v.x)}) : v.x < 0.8 ? t('pXlow') : t('xAbout')]);
+  if (g) facts.push(['📈', t('pGrow', {n: fmt(g)})]);
+  if (v.d) facts.push(['⏱️', t('pLen', {d: fmtDur(v.d)})]);
+  if (v.p) facts.push(['📅', t('pUp', {ago: ago(v.p)})]);
+  $('#playerBody').innerHTML = `<div class="pwrap"><button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
+    <div class="pvid"><iframe src="https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&playsinline=1&rel=0" title="${esc(v.t)}"
+      allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    <div class="pside"><h3>${esc(v.t)}</h3>
+      ${c ? `<button type="button" class="pch" data-closeplayer data-open-ch="${esc(c.ch_id)}">${avatarEl(c, 42)}<span><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))} · ${esc(t('pSeeCh'))} →</small></span></button>` : ''}
+      <div class="pfacts">${facts.map(([e, s]) => `<div><span class="em">${e}</span><span>${esc(s)}</span></div>`).join('')}</div>
+      <div class="btns"><a class="pillbtn red" href="${vidUrl(vid)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>
+        ${c && needsTr(c) && v.t ? `<a class="pillbtn" href="${trUrl(v.t)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}</div>
+      <span class="hint">${esc(t('pNoEmbed'))}</span></div></div>`;
+  $('#player').showModal();
+}
+$('#player').addEventListener('close', () => { $('#playerBody').innerHTML = ''; });   // stops the video
+
+/* ---------- popovers, toasts ---------- */
+let POP_BTN = null, toastTimer = null;
+const topLayer = () => ['player', 'dlg', 'sheet'].map(id => $('#' + id)).find(d => d.open) || document.body;
+function closePop() { $('#pop').style.display = 'none'; POP_BTN = null; }
+function showPop(btn, html) {
+  const pop = $('#pop'), host = topLayer();
+  if (pop.parentNode !== host) host.appendChild(pop);
+  pop.innerHTML = html; pop.style.display = 'block';
+  const r = btn.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight;
+  pop.style.left = Math.max(8, Math.min(innerWidth - w - 8, r.left + r.width / 2 - w / 2)) + 'px';
+  pop.style.top = (r.bottom + h + 12 > innerHeight ? Math.max(8, r.top - h - 8) : r.bottom + 8) + 'px';
+  POP_BTN = btn;
+}
+function toast(msg) {
+  const el = $('#toast'), host = topLayer();
+  if (el.parentNode !== host) host.appendChild(el);
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+}
+async function copyText(s) {
+  try { await navigator.clipboard.writeText(s); return true; } catch (e) {
+    const ta = document.createElement('textarea'); ta.value = s; topLayer().appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {}
+    ta.remove(); return ok;
+  }
+}
+
+/* ---------- welcome ---------- */
+function openWelcome() {
+  const dlg = $('#dlg'), body = $('#dlgBody');
+  const draw = () => {
+    body.innerHTML = `<div class="welcome"><div class="emo">📡</div><h3>${esc(t('wTitle'))}</h3><p>${esc(t('wPick'))}</p>
+      <div class="langs"><button type="button" data-wl="th" aria-pressed="${UI === 'th'}">ไทย</button><button type="button" data-wl="en" aria-pressed="${UI === 'en'}">English</button></div>
+      <ul><li><span class="em">🔍</span><span>${esc(t('w1'))}</span></li><li><span class="em">🔥</span><span>${esc(t('w2'))}</span></li><li><span class="em">🔖</span><span>${esc(t('w3'))}</span></li></ul>
+      <div class="btns"><button type="button" class="pillbtn big red" data-wgo="home">${esc(t('wStart'))}</button><button type="button" class="pillbtn big" data-wgo="help">${esc(t('wHow'))}</button></div></div>`;
+  };
+  draw();
+  body.onclick = e => {
+    const l = e.target.closest('[data-wl]');
+    if (l) { setUI(l.dataset.wl); draw(); return; }
+    const g = e.target.closest('[data-wgo]');
+    if (g) { dlg.close(); go(g.dataset.wgo); }
+  };
+  dlg.addEventListener('close', () => LS.set('radar.welcomed', true), {once: true});
+  dlg.showModal();
 }
 
 /* ---------- chrome ---------- */
 function applyStaticText() {
   document.documentElement.lang = UI;
-  $('#fq').placeholder = canSearch() ? t('searchPhLive') : t('search');
-  $('#fq').value = S.q;
+  const fq = $('#fq');
+  fq.placeholder = canSearch() ? t('searchPh') : t('searchPhList');
+  if (fq.value !== S.q) fq.value = S.q;
   $('#scanLbl').textContent = $('#btnScan').disabled ? t('scanning') : t('scan');
   $('#exportLbl').textContent = t('export');
   $('#btnExport').title = t('exportTip');
   $('#settingsLbl').textContent = t('settings');
   $('#btnMenu').setAttribute('aria-label', t('menu'));
-  $('#howSum').textContent = t('howSum');
-  $('#howBody').textContent = t('howBody');
-  $('#foot').textContent = t('foot');
+  $('#btnHelp').title = t('help'); $('#btnHelp').setAttribute('aria-label', t('help'));
+  $('#foot').textContent = DATA && DATA.snapshot ? t('footSnap') + ' ' + t(DATA.web ? 'footWeb' : 'footLocal') : t(STATIC ? 'footWeb' : 'footLocal');
   document.querySelectorAll('#langSeg [data-ui]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ui === UI)));
 }
-function renderStatus() {
-  const st = DATA.status, el = $('#status');
-  if (DATA.snapshot) {
-    el.innerHTML = `<span class="dot snap"></span><span>${esc(t('snap', {d: new Date(DATA.generated * 1000).toLocaleString(UI === 'th' ? 'th-TH' : 'en-US'), n: DATA.channels.length}))}</span>`;
-    return;
-  }
-  let dot = 'dot', txt;
-  if (st.state === 'scanning') { dot += ' live'; txt = t(st.phase === 'discovery' ? 'stDisc' : 'stProbe', {a: st.done, b: st.total}); }
-  else if (st.state === 'starting') txt = t('stStart');
-  else if (STATIC) txt = t('stUpdated', {ago: ago(st.last_cycle_end)});
-  else txt = t('stIdle', {ago: ago(st.last_cycle_end)}) + (st.next_scan ? t('stNext', {n: Math.max(1, Math.round((st.next_scan - Date.now() / 1000) / 60))}) : '');
-  el.innerHTML = `<span class="${dot}"></span><span>${esc(txt)} · ${esc(t('stCounts', {s: st.scored, t: st.tracked}))}</span>`;
-  el.title = txt;
-}
-function renderNav() {
-  const watched = DATA.channels.filter(isWatched).length, picks = DATA.channels.filter(c => c.pick).length;
-  const fresh = liveVideos().length;
-  const defs = [['picks', 'nPicks', picks], ['live', 'nLive', fresh], ['channels', 'nChannels'], ['videos', 'nShorts'], ['niches', 'nNiches'], ['watch', 'nWatch', watched]];
-  $('#side').innerHTML = defs.map(([id, key, n]) =>
-    `<button class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(key))}</span>${n != null ? `<span class="n">${n}</span>` : ''}</button>`).join('');
+function renderSide() {
+  const saved = DATA.channels.filter(isWatched).length, fresh = liveVideos(DATA.channels).length, st = statusInfo();
+  const nav = (id, key, n, hot) => `<button type="button" class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(key))}</span>${n ? `<span class="n ${hot ? 'hot' : ''}">${n}</span>` : ''}</button>`;
+  $('#side').innerHTML = nav('home', 'nHome') + nav('videos', 'nVideos') + nav('channels', 'nChannels') + nav('live', 'nLive', fresh, true) + nav('topics', 'nTopics') +
+    nav('saved', 'nSaved', saved) + nav('help', 'nHelp') +
+    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` +
+    `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div></div>`;
 }
 function renderChips() {
-  const opt = (v, cur, label) => `<option value="${v}" ${String(cur) === String(v) ? 'selected' : ''}>${esc(label)}</option>`;
+  const el = $('#chips');
   if (S.tab === 'search') {
-    $('#chips').innerHTML = `<button class="chip" data-searchback>${esc(t('sBack'))}</button>` +
-      (SEARCH && canLive() ? `<button class="chip" data-tracktopic aria-pressed="${!!SEARCH.tracked}">${esc(SEARCH.tracked ? t('sTracked') : t('sTrack'))}</button>` : '') +
-      (STATIC ? `<button class="chip" data-changekey>${esc(t('kChange'))}</button>` : '');
+    el.innerHTML = `<button type="button" class="chip" data-searchback>${esc(t('sBack'))}</button>` +
+      (SEARCH && canLive() ? `<button type="button" class="chip" data-tracktopic aria-pressed="${!!SEARCH.tracked}">${esc(SEARCH.tracked ? t('sTracked') : t('sTrack'))}</button>` : '') +
+      (STATIC ? `<button type="button" class="chip" data-changekey>${esc(t('kChange'))}</button>` : '');
     return;
   }
-  const vid = S.tab === 'videos';
-  const anyFilter = S.tag || S.niche || S.q;
-  const tags = Object.keys(TAGS);
-  const n = k => fmt(k);
-  $('#chips').innerHTML =
-    `<button class="chip" data-reset aria-pressed="${!anyFilter}">${esc(t('all'))}</button>` +
-    tags.map(k => `<button class="chip" data-tag="${esc(k)}" aria-pressed="${S.tag === k}">${esc(tagName(k))}</button>`).join('') +
-    (S.niche ? `<button class="chip" data-niche="" aria-pressed="true">${esc(t('nicheChip', {x: S.niche}))}</button>` : '') +
-    '<span class="sep"></span>' +
-    `<select id="fScore">${[0, 30, 45, 60, 75].map(v => opt(v, S.minScore, t('score', {n: v}))).join('')}</select>` +
-    `<select id="fSubs">${[[0, t('anySize')]].concat([10000, 50000, 100000, 250000].map(v => [v, t('subsLe', {n: n(v)})])).map(([v, l]) => opt(v, S.maxSubs, l)).join('')}</select>` +
-    `<select id="fMed">${[[0, t('anyViews')]].concat([50000, 100000, 250000, 500000, 1000000].map(v => [v, t('medGe', {n: n(v)})])).map(([v, l]) => opt(v, S.minMed, l)).join('')}</select>` +
-    `<select id="fLang">${[['en', t('langEn')], ['th', t('langTh')], ['all', t('langAll')], ['other', t('langOther')]].map(([v, l]) => opt(v, S.lang, l)).join('')}</select>` +
-    (vid
-      ? `<select id="fX">${[2, 5, 10, 20, 50].map(v => opt(v, S.minX, t('xGe', {n: v}))).join('')}</select><select id="fVSort">${[['x', t('vX')], ['v', t('vV')], ['g', t('vG')]].map(([v, l]) => opt(v, S.vsort, l)).join('')}</select>`
-      : `<select id="fSort">${[['score', t('sScore')], ['med', t('sMed')], ['ratio', t('sRatio')], ['best', t('sBest')], ['small', t('sSmall')], ['trend', t('sTrend')]].map(([v, l]) => opt(v, S.sort, l)).join('')}</select>` +
-        `<select id="fShelf">${[['new', t('shNew')], ['top', t('shTop')]].map(([v, l]) => opt(v, S.shelf, l)).join('')}</select>`) +
-    `<button class="chip" id="fOne" aria-pressed="${S.hideOne}">${esc(t('hideOne'))}</button>`;
+  if (!['home', 'videos', 'channels', 'live'].includes(S.tab)) { el.innerHTML = ''; return; }
+  const present = new Set();
+  for (const c of DATA.channels) for (const k of chTopics(c)) present.add(k);
+  const langSel = `<select id="fLang" class="chip" aria-label="Language">${[['all', 'langAll'], ['th', 'langTh'], ['en', 'langEn'], ['other', 'langOther']].map(([v, k]) => `<option value="${v}" ${S.lang === v ? 'selected' : ''}>${esc(t(k))}</option>`).join('')}</select>`;
+  el.innerHTML = langSel + '<span style="width:1px;height:24px;background:var(--line);flex:none"></span>' +
+    `<button type="button" class="chip" data-topic="" aria-pressed="${!S.topic}">${esc(t('topicAll'))}</button>` +
+    TOPICS.filter(tp => present.has(tp[0])).map(tp => `<button type="button" class="chip" data-topic="${tp[0]}" aria-pressed="${S.topic === tp[0]}">${tp[1]} ${esc(topicName(tp))}</button>`).join('');
 }
 function renderContent() {
   const el = $('#content');
   let tab = S.tab;
-  if (tab === 'picks' && !DATA.channels.some(c => c.pick)) tab = 'channels';
+  if (tab === 'search' && !SEARCH) tab = 'home';
+  const rails = lastTab === tab ? [...el.querySelectorAll('.rail')].map(r => r.scrollLeft) : [];
   if (tab === 'search') el.innerHTML = searchView();
-  else if (tab === 'live') el.innerHTML = liveView();
   else if (tab === 'videos') el.innerHTML = videosView();
-  else if (tab === 'niches') el.innerHTML = nichesView();
-  else if (tab === 'watch') el.innerHTML = channelsView(DATA.channels.filter(isWatched).sort((a, b) => b.score - a.score), t('emptyWatch'));
-  else if (tab === 'picks') el.innerHTML = channelsView(picksList(), t('emptyPicks'));
-  else el.innerHTML = channelsView(channelsFiltered(false), DATA.channels.length ? null : t('emptyFirst'));
+  else if (tab === 'channels') el.innerHTML = pageHead('pChannelsT', 'pChannelsD', filtersHtml('channels') + qBanner()) + channelsView(channelsFiltered(false), DATA.channels.length ? null : t('emptyFirst'));
+  else if (tab === 'live') el.innerHTML = liveView();
+  else if (tab === 'topics') el.innerHTML = topicsView();
+  else if (tab === 'saved') el.innerHTML = pageHead('pSavedT', canLive() ? 'pSavedDLive' : 'pSavedD') + channelsView(DATA.channels.filter(isWatched).sort((a, b) => b.score - a.score), t('emptySaved'));
+  else if (tab === 'help') el.innerHTML = helpView();
+  else el.innerHTML = homeView();
+  el.querySelectorAll('.rail').forEach((r, i) => { if (rails[i]) { r.style.scrollBehavior = 'auto'; r.scrollLeft = rails[i]; r.style.scrollBehavior = ''; } });
+  lastTab = tab;
 }
 function renderButtons() {
   const live = LIVE && !DATA.readonly;
@@ -626,59 +1349,141 @@ function renderButtons() {
 }
 function render(keepChips) {
   if (!DATA) return;
-  applyStaticText(); renderStatus(); renderNav();
+  applyStaticText(); renderSide();
   if (!keepChips) renderChips();
   renderContent(); renderButtons();
 }
+function setUI(l) {
+  UI = l === 'th' ? 'th' : 'en'; LS.set('radar.ui', UI); closePop();
+  render();
+  if ($('#sheet').open) drawSheet(true);
+}
+function applyTab(tab) {
+  S.tab = tab; saveState(); closePop();
+  ['sheet', 'player'].forEach(id => { if ($('#' + id).open) $('#' + id).close(); });
+  render(); window.scrollTo(0, 0);
+}
+function go(tab) {
+  closePop();
+  if (location.hash.slice(1) !== tab) location.hash = tab;   // the hashchange handler renders it
+  else applyTab(tab);
+}
+window.addEventListener('hashchange', () => {
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (TABS.includes(h)) { if (S.tab !== h) applyTab(h); }
+  else if (h === 'search' && SEARCH) { S.tab = 'search'; render(); }
+  else if (/^ch\/UC[\w-]{22}$/.test(h)) openChannel(h.slice(3));
+});
 
 /* ---------- events ---------- */
+const PRESETS = {
+  small: {maxSubs: 50000, sort: 'med', minScore: 50, tag: ''}, rising: {sort: 'trend', minScore: 50, maxSubs: 0, tag: ''},
+  steady: {tag: 'Consistent engine', sort: 'score', minScore: 0, maxSubs: 0}, thai: {lang: 'th', minScore: 0, maxSubs: 0, tag: '', sort: 'score'}
+};
 document.addEventListener('click', async e => {
   const x = e.target;
+  const help = x.closest('[data-help]');
+  if (help) { e.preventDefault(); e.stopPropagation(); if (POP_BTN === help) closePop(); else showPop(help, helpHtml(help.dataset.help)); return; }
+  if (POP_BTN && !x.closest('#pop')) closePop();
+  for (const d of ['dlg', 'sheet', 'player']) if (x === $('#' + d)) { $('#' + d).close(); return; }   // click on the dark backdrop
+  if (x.closest('[data-close]')) { x.closest('dialog').close(); return; }
+  const play = x.closest('[data-play]');
+  if (play) {
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button || location.protocol === 'file:') return;   // new tab, or a saved file (YouTube won't play embeds there)
+    e.preventDefault(); openPlayer(play.dataset.play, play.dataset.c); return;
+  }
+  if (x.closest('[data-closeplayer]')) $('#player').close();
+  const och = x.closest('[data-open-ch]');
+  if (och) { openChannel(och.dataset.openCh); return; }
   const ui = x.closest('[data-ui]');
-  if (ui) { UI = ui.dataset.ui; LS.set('radar.ui', UI); render(); return; }
+  if (ui) { setUI(ui.dataset.ui); return; }
+  const det = x.closest('[data-detail]');
+  if (det) { S.detail = det.dataset.detail === 'toggle' ? !S.detail : det.dataset.detail === '1'; saveState(); render(); if ($('#sheet').open) drawSheet(true); return; }
+  const topic = x.closest('[data-topic]');
+  if (topic) { S.topic = topic.dataset.topic; saveState(); shown.channels = 15; shown.videos = 60; if (topic.dataset.go) go(topic.dataset.go); else render(); return; }
   const tab = x.closest('[data-tab]');
-  if (tab) { S.tab = tab.dataset.tab; saveState(); render(); window.scrollTo(0, 0); return; }
+  if (tab) { e.preventDefault(); go(tab.dataset.tab); return; }
+  const see = x.closest('[data-see]');
+  if (see) {
+    const k = see.dataset.see;
+    if (PRESETS[k]) { Object.assign(S, PRESETS[k]); go('channels'); } else go(k);
+    return;
+  }
+  const rail = x.closest('[data-rail]');
+  if (rail) { const r = rail.closest('.shelfsec').querySelector('.rail'); r.scrollBy({left: +rail.dataset.rail * r.clientWidth * 0.85}); return; }
+  if (x.closest('[data-herohide]')) { LS.set('radar.heroHidden', true); renderContent(); return; }
+  if (x.closest('[data-livesearch]')) { startSearch(S.q); return; }
+  if (x.closest('[data-clearq]')) { S.q = ''; render(); return; }
   if (x.closest('[data-changekey]')) { openKeyDialog(); return; }
-  if (x.closest('[data-searchback]')) { S.tab = PREV_TAB; saveState(); render(); window.scrollTo(0, 0); return; }
+  if (x.closest('[data-searchback]')) { go(PREV_TAB); return; }
   if (x.closest('[data-tracktopic]')) {
     if (SEARCH && !SEARCH.tracked && canLive()) { SEARCH.tracked = true; api('/api/queries', {add: [SEARCH.query]}); renderChips(); }
     return;
   }
-  if (x.closest('[data-reset]')) { S.tag = ''; S.niche = ''; S.q = ''; saveState(); render(); return; }
+  const clr = x.closest('[data-clear]');
+  if (clr) { S[clr.dataset.clear] = ''; saveState(); render(); return; }
   const tag = x.closest('[data-tag]');
   if (tag) { S.tag = S.tag === tag.dataset.tag ? '' : tag.dataset.tag; if (S.tag === 'One-hit') S.hideOne = false; saveState(); render(); return; }
   const niche = x.closest('[data-niche]');
-  if (niche) { S.niche = niche.dataset.niche; if (S.niche) S.tab = 'channels'; saveState(); render(); window.scrollTo(0, 0); return; }
+  if (niche) { S.niche = niche.dataset.niche; saveState(); go('channels'); return; }
   const more = x.closest('[data-more]');
   if (more) { shown[more.dataset.more] += more.dataset.more === 'channels' ? 15 : 60; render(true); return; }
   const star = x.closest('[data-star]');
   if (star) {
-    const id = star.dataset.star, c = DATA.channels.find(z => z.ch_id === id) || (SEARCH && SEARCH.channels.find(z => z.ch_id === id));
+    const id = star.dataset.star, c = findCh(id);
     if (!c) return;
     const next = !isWatched(c);
     if (LIVE && !DATA.readonly) { c.watch = next; api('/api/watch', {ch_id: id, watch: next}); }
     else { next ? watchLocal.add(id) : watchLocal.delete(id); LS.set('radar.watch', [...watchLocal]); }
-    render(true); return;
+    render(true);
+    if ($('#sheet').open) drawSheet(true);
+    toast(t(next ? 'savedToast' : 'unsavedToast'));
+    return;
   }
+  const cp = x.closest('[data-copy]');
+  if (cp) { if (await copyText(location.origin + location.pathname + '#ch/' + cp.dataset.copy)) toast(t('copied')); return; }
+  const ss = x.closest('[data-shsort]');
+  if (ss) { SHEET_SORT = ss.dataset.shsort; drawSheet(true); return; }
+  const jump = x.closest('[data-jump]');
+  if (jump) { const s = document.getElementById('h-' + jump.dataset.jump); if (s) s.scrollIntoView({behavior: 'smooth'}); return; }
   if (x.closest('#fOne')) { S.hideOne = !S.hideOne; saveState(); render(); }
 });
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('article[data-open-ch]')) { e.preventDefault(); openChannel(e.target.dataset.openCh); }
+  if (e.key === 'Escape') closePop();
+});
+window.addEventListener('scroll', closePop, true);
+window.addEventListener('resize', closePop);
 $('#btnMenu').addEventListener('click', () => { document.body.classList.toggle('mini'); });
-$('#searchForm').addEventListener('submit', e => { e.preventDefault(); if (canSearch()) startSearch(S.q); });
-$('#fq').addEventListener('input', e => { S.q = e.target.value; shown.channels = 15; shown.videos = 60; saveState(); renderChips(); renderContent(); });
+$('#searchForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const q = S.q.trim();
+  if (q.length < 2) return;
+  if (canSearch()) startSearch(q); else if (S.tab !== 'channels') go('channels');
+});
+let typeTimer = null;
+$('#fq').addEventListener('input', e => {
+  S.q = e.target.value; shown.channels = 15; shown.videos = 60; shown.live = 60;
+  clearTimeout(typeTimer);
+  typeTimer = setTimeout(() => {
+    if (S.q.trim() && !['channels', 'videos', 'live'].includes(S.tab)) go('channels'); else renderContent();
+  }, 180);
+});
 document.addEventListener('change', e => {
   const id = e.target.id, v = e.target.value;
-  const map = {fScore: ['minScore', +v], fSubs: ['maxSubs', +v], fMed: ['minMed', +v], fSort: ['sort', v], fX: ['minX', +v], fVSort: ['vsort', v], fLang: ['lang', v], fShelf: ['shelf', v]};
+  const map = {fLvl: ['minScore', +v], fSubs: ['maxSubs', +v], fMed: ['minMed', +v], fSort: ['sort', v], fX: ['minX', +v], fVSort: ['vsort', v], fLang: ['lang', v], fShelf: ['shelf', v], fLSort: ['lsort', v]};
   if (!map[id]) return;
-  S[map[id][0]] = map[id][1]; shown.channels = 15; shown.videos = 60; saveState(); render();
+  S[map[id][0]] = map[id][1]; shown.channels = 15; shown.videos = 60; shown.live = 60; saveState(); render();
 });
+for (const d of ['dlg', 'sheet', 'player']) $('#' + d).addEventListener('close', closePop);
 $('#btnScan').addEventListener('click', async () => { await api('/api/scan'); setTimeout(refresh, 800); });
 $('#btnExport').addEventListener('click', () => { location.href = '/api/export'; });
 $('#btnSettings').addEventListener('click', openSettings);
 
-/* ---------- settings dialog ---------- */
+/* ---------- settings dialog (local app owner) ---------- */
 function openSettings() {
   const dlg = $('#dlg'), body = $('#dlgBody'), st = DATA.status;
-  body.innerHTML = `
+  body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
     <h3>${esc(t('dTrack'))}</h3><p>${esc(t('dTrackD'))}</p>
     <div class="row"><input id="trackIn" placeholder="${esc(t('dTrackPh'))}"><button class="pillbtn primary" id="trackBtn">${esc(t('dTrackBtn'))}</button></div>
     <div id="trackMsg" style="color:var(--muted);min-height:20px;margin:-6px 0 12px"></div>
@@ -797,7 +1602,7 @@ async function probeStatic(chId, info, query) {
   const vr = await ytApi('videos', {part: 'snippet,statistics,contentDetails', id: ids.join(',')});
   const byId = new Map((vr.items || []).map(it => [it.id, parseVideo(it)]));
   const vids = ids.map(i => byId.get(i)).filter(v => v && v.v != null && v.dur <= 180).slice(0, 24)
-    .map(v => ({id: v.id, t: v.t, v: v.v, ...(v.p ? {p: Math.round(v.p)} : {})}));
+    .map(v => ({id: v.id, t: v.t, v: v.v, ...(v.p ? {p: Math.round(v.p)} : {}), ...(v.dur < 1e6 ? {d: v.dur} : {})}));
   const sn = (info && info.snippet) || {}, st = (info && info.statistics) || {}, th = sn.thumbnails || {};
   const subs = st.hiddenSubscriberCount ? 0 : +(st.subscriberCount || 0);
   const m = computeMetrics(vids, subs);
@@ -809,8 +1614,7 @@ async function probeStatic(chId, info, query) {
 }
 async function staticSearch(query) {
   if (!getKey()) { openKeyDialog(); return; }
-  if (S.tab !== 'search') PREV_TAB = S.tab;
-  S.tab = 'search';
+  enterSearch();
   const mine = SEARCH = {query, id: 'web', state: 'running', phase: 'searching', done: 0, total: 0, found: 0, channels: [], error: null, tracked: false, msg: ''};
   render(); window.scrollTo(0, 0);
   const paint = () => { if (S.tab === 'search' && SEARCH === mine) renderContent(); };
@@ -850,9 +1654,13 @@ async function staticSearch(query) {
 function openKeyDialog() {
   const dlg = $('#dlg'), body = $('#dlgBody');
   body.onclick = null;
-  body.innerHTML = `<h3>${esc(t('kTitle'))}</h3><p>${esc(t('kBody'))}</p>
-    <div class="row"><input id="keyIn" type="password" autocomplete="off" spellcheck="false" placeholder="${esc(t('kPh'))}"><button class="pillbtn primary" id="keySave">${esc(t('kSave'))}</button></div>
-    <p>${esc(t('kPrivacy'))}</p>
+  body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
+    <h3>🔎 ${esc(t('kTitle'))}</h3><p>${esc(t('kWhy'))}</p>
+    <ol><li>${esc(t('kS1'))} <a class="link" href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank" rel="noopener noreferrer">${esc(t('kOpen'))} ↗</a></li>
+      <li>${esc(t('kS2'))}</li><li>${esc(t('kS3'))}</li><li>${esc(t('kS4'))}</li></ol>
+    <p><b>💳 ${esc(t('kNoCard'))}</b></p>
+    <div class="row"><input id="keyIn" type="password" autocomplete="off" spellcheck="false" autofocus placeholder="${esc(t('kPh'))}"><button class="pillbtn red" id="keySave">${esc(t('kSave'))}</button></div>
+    <p style="font-size:12.5px">${esc(t('kPrivacy'))}</p>
     <div style="text-align:right;margin-top:14px"><button class="pillbtn" id="dlgClose">${esc(t('dClose'))}</button></div>`;
   $('#keySave').onclick = () => { const v = $('#keyIn').value.trim(); if (!v) return; setKey(v); dlg.close(); if (S.q.trim().length >= 2) staticSearch(S.q.trim()); };
   $('#dlgClose').onclick = () => dlg.close();
@@ -860,18 +1668,32 @@ function openKeyDialog() {
 }
 
 /* ---------- data loop ---------- */
+let lastSig = '';
 async function refresh() {
   if (!LIVE) return;
   try {
     const r = await fetch(STATIC ? 'data.json' : '/api/data', {cache: STATIC ? 'no-cache' : 'no-store'});
-    DATA = await r.json();
-    if (!$('#dlg').open) render(true); else renderStatus();
+    const d = await r.json();
+    const sig = STATIC ? String(d.generated) : '';   // the hosted data only changes when the scanner publishes
+    if (sig && sig === lastSig) return;
+    lastSig = sig;
+    const first = !DATA;
+    DATA = d;
+    if (first) { render(); afterFirstData(); return; }
+    if (!$('#dlg').open) render(true); else renderSide();
   } catch (e) {
-    $('#status').innerHTML = `<span class="dot"></span><span>${esc(t('offline'))}</span>`;
+    const box = $('#side .livebox');
+    if (box) box.innerHTML = `<span class="dot"></span><span>${esc(t('offline'))}</span>`;
   }
 }
+function afterFirstData() {
+  const m = /^#ch\/(UC[\w-]{22})$/.exec(location.hash);
+  if (m && findCh(m[1])) openChannel(m[1]);
+  else if (!LS.get('radar.welcomed', false)) openWelcome();
+}
+if (!hashTab() && !/^#ch\//.test(location.hash)) history.replaceState(null, '', '#' + S.tab);
 applyStaticText();
-if (LIVE) { refresh().then(() => render()); setInterval(refresh, STATIC ? 60000 : 15000); } else { render(); }
+if (LIVE) { refresh(); setInterval(refresh, STATIC ? 60000 : 15000); } else { render(); afterFirstData(); }
 </script>
 </body>
 </html>

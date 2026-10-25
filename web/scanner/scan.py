@@ -106,7 +106,7 @@ def probe(radar, yt, ch_id, rec, info, now):
     ids = yt.recent_upload_ids(ch_id, 50)
     vids = yt.videos(ids)
     shorts = [vids[i] for i in ids if i in vids and vids[i]["dur"] <= 180][:24]
-    series = [{"id": v["id"], "t": v["t"], "v": v["v"], **({"p": round(v["p"])} if v.get("p") else {})} for v in shorts]
+    series = [{"id": v["id"], "t": v["t"], "v": v["v"], "d": v["dur"], **({"p": round(v["p"])} if v.get("p") else {})} for v in shorts]
     subs = info["subs"] if info else rec.get("subs", 0)
     m = radar.compute_metrics(series, subs)
     if not m:

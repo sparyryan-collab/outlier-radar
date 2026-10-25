@@ -137,6 +137,7 @@ def main():
         assert hit["score"] > quiet["score"] + 20, (hit["score"], quiet["score"])   # small channel with huge views must outrank the big quiet one
         assert all(s["id"] != vid(1, 5) for s in hit["series"]), "12-minute video must be filtered out (not a Short)"
         assert hit["avatar_url"].startswith("https://yt3.ggpht.com/"), hit["avatar_url"]
+        assert all(s.get("d") == 45 for s in hit["series"]), "each Short keeps its length in seconds"
         assert hit["lang"] in ("en", "und") and hit["english"], hit["lang"]
         used1 = d1["_state"]["quota_used"]
         expect = 100 + 1 + 1 + 2 * 2 + 0  # search + videos(search) + channels + (playlistItems+videos) per channel
