@@ -5,6 +5,7 @@ Usage: python build_site.py [output_dir]      Optional env: BROWSER_KEY (a refer
 """
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -14,6 +15,9 @@ out.mkdir(parents=True, exist_ok=True)
 
 html = (ROOT / "outlier-radar" / "static" / "index.html").read_text(encoding="utf-8")
 cfg = {"browserKey": os.environ.get("BROWSER_KEY", "").strip()}
+if cfg["browserKey"] and not re.fullmatch(r"AIza[\w-]{30,}", cfg["browserKey"]):
+    print("WARNING: BROWSER_KEY does not look like a Google API key (they start with AIza and are 39 characters); live search stays off", file=sys.stderr)
+    cfg["browserKey"] = ""
 
 swaps = [
     ("window.RADAR_STATIC = false/*__STATIC__*/", "window.RADAR_STATIC = true"),

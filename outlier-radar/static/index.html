@@ -45,6 +45,11 @@ svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 #shint{position:absolute;top:46px;left:0;right:64px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:12.5px;color:var(--muted);box-shadow:var(--shadow);display:none;z-index:50}
 .search:focus-within #shint{display:block}
 #shint b{color:var(--text)}
+#shint .hhead{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+#shint .hhead button{border:0;background:none;color:var(--accent);font-size:12px;font-weight:600;padding:2px 4px}
+#shint .hitem{display:flex;justify-content:space-between;gap:10px;width:100%;border:0;background:transparent;padding:7px 6px;border-radius:8px;text-align:left;color:var(--text);font-size:13.5px}
+#shint .hitem:hover{background:var(--hover)}
+#shint .hitem small{color:var(--muted);white-space:nowrap}
 .apichip{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:0 10px;line-height:24px;font-size:12px;font-weight:600;cursor:help}
 .apichip.on{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good)}
 .apichip.off{background:var(--surface);color:var(--muted)}
@@ -834,6 +839,8 @@ const T = {
   }
 };
 Object.assign(T.en, {
+  histT: 'Recent searches · free to reopen', histClear: 'Clear', sRefresh: '🔄 Refresh (uses 1 search)',
+  kInvalid: 'That does not look like an API key. Keys start with “AIza” and are 39 characters long.',
   apiOn: 'YouTube search: on', apiOff: 'YouTube search: off', apiLeft: '{n} left today', apiT: 'Full YouTube search',
   apiOnD: 'Press Enter in the search box to search all of YouTube, not only our list. Each device gets {n} free searches a day.',
   apiOwnD: 'You are using your own API key on this device, so this site sets no daily limit.',
@@ -902,6 +909,8 @@ Object.assign(T.en, {
   sAddKey: 'Add my own key', sCached: 'saved results from {ago}'
 });
 Object.assign(T.th, {
+  histT: 'ค้นหาล่าสุด · เปิดดูซ้ำได้ฟรี', histClear: 'ล้าง', sRefresh: '🔄 ค้นหาใหม่ (ใช้ 1 ครั้ง)',
+  kInvalid: 'นี่ไม่ใช่คีย์ API คีย์จะขึ้นต้นด้วย “AIza” และยาว 39 ตัวอักษร',
   apiOn: 'ค้นหา YouTube: เปิด', apiOff: 'ค้นหา YouTube: ปิด', apiLeft: 'เหลือ {n} ครั้งวันนี้', apiT: 'ค้นหาจาก YouTube ทั้งหมด',
   apiOnD: 'กด Enter ในช่องค้นหาเพื่อค้นหาจาก YouTube ทั้งหมด ไม่ใช่แค่รายการของเรา แต่ละอุปกรณ์ค้นหาฟรีได้วันละ {n} ครั้ง',
   apiOwnD: 'คุณใช้คีย์ API ของคุณเองบนอุปกรณ์นี้ เว็บนี้จึงไม่จำกัดจำนวนครั้งต่อวัน',
@@ -1523,12 +1532,13 @@ function searchView() {
   else status = t('sDone', {n: s.channels.length});
   const extra = (s.cachedAt ? ' · ' + t('sCached', {ago: ago(s.cachedAt)}) : '') + (STATIC && !ownKey() && !s.limit ? ' · ' + t('sLeft', {n: freeLeft()}) : '');
   const head = `<div class="phead"><h1>${esc(t('sTitle', {q: s.query}))}</h1><p>${esc(t('sLead'))} · <b>${esc(status)}</b>${esc(extra)}</p></div>`;
+  const refresh = s.cachedAt && canSearch() ? `<div class="wkhead"><button type="button" class="pillbtn" data-research>${esc(t('sRefresh'))}</button></div>` : '';
   if (s.limit) return head + `<div class="banner"><span>${esc(t('sLimit'))}</span><button type="button" class="pillbtn" data-changekey>${esc(t('sAddKey'))}</button></div>`;
   if (!s.channels.length) {
     if (s.state === 'done') return head + emptyBox(t('sEmpty'));
     return head + (s.state === 'running' ? '<div class="empty"><span class="dot live" style="display:inline-block"></span></div>' : '');
   }
-  return head + s.channels.map(channelRow).join('');
+  return head + refresh + s.channels.map(channelRow).join('');
 }
 function enterSearch() {
   if (S.tab !== 'search') { PREV_TAB = S.tab; history.pushState(null, '', '#search'); }
@@ -1690,7 +1700,7 @@ function openWelcome() {
 
 
 /* ---------- search limits on the shared site key ---------- */
-const ownKey = () => { try { return !!(localStorage.getItem('radar.key') || '').trim(); } catch (e) { return false; } };
+const ownKey = () => { try { return keyOk((localStorage.getItem('radar.key') || '').trim()); } catch (e) { return false; } };
 const FREE_SEARCHES = 15;   // per device per day when searching with the site's shared key
 const todayStr = () => new Date().toISOString().slice(0, 10);
 const freeLeft = () => { const q = LS.get('radar.sq', {}); return Math.max(0, FREE_SEARCHES - (q.d === todayStr() ? q.n : 0)); };
@@ -1700,11 +1710,12 @@ function takeFreeSearch() {
   LS.set('radar.sq', {d: todayStr(), n: FREE_SEARCHES - left + 1});
   return true;
 }
-const searchCache = () => LS.get('radar.scache', []);
-function saveSearchCache(q, channels) {
+const HIST_MS = 7 * 86400e3;   // saved search results reopen for free for a week
+const searchCache = () => LS.get('radar.scache', []).filter(x => x && x.q && Date.now() - x.t < HIST_MS);
+function saveSearchCache(q, channels, label) {
   const list = searchCache().filter(x => x.q !== q);
-  list.unshift({q, t: Date.now(), channels});
-  for (let n = 5; n > 0; n--) { try { localStorage.setItem('radar.scache', JSON.stringify(list.slice(0, n))); return; } catch (e) {} }
+  list.unshift({q, label: label || q, t: Date.now(), channels});
+  for (let n = 15; n > 0; n--) { try { localStorage.setItem('radar.scache', JSON.stringify(list.slice(0, n))); return; } catch (e) {} }   // fewer if the browser runs out of room
 }
 const pct = x => (x >= 0.1 ? Math.round(x * 100) : Math.round(x * 1000) / 10) + '%';
 const mmss = ms => { const s = Math.round(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
@@ -1724,7 +1735,10 @@ function apiHelp() {
 function searchHint() {
   const el = $('#shint');
   if (!el) return;
-  el.textContent = !canSearch() ? t('hintOff') : limited() ? (freeLeft() ? t('hintOn', {n: freeLeft()}) : t('hintLimit')) : t('hintOnFree');
+  const msg = !canSearch() ? t('hintOff') : limited() ? (freeLeft() ? t('hintOn', {n: freeLeft()}) : t('hintLimit')) : t('hintOnFree');
+  const hist = STATIC ? searchCache().slice(0, 6) : [];
+  el.innerHTML = `<div>${esc(msg)}</div>` + (hist.length ? `<div class="hhead"><b>${esc(t('histT'))}</b><button type="button" data-histclear>${esc(t('histClear'))}</button></div>` +
+    hist.map(x => `<button type="button" class="hitem" data-hist="${esc(x.label || x.q)}"><span>🕘 ${esc(x.label || x.q)}</span><small>${esc(ago(x.t / 1000))}</small></button>`).join('') : '');
 }
 
 /* ---------- this week ---------- */
@@ -2350,6 +2364,10 @@ document.addEventListener('click', async e => {
   if (POP_BTN && !x.closest('#pop')) closePop();
   if (tourClick(x) || introClick(x, e)) return;
   for (const d of ['dlg', 'sheet', 'player', 'intro']) if (x === $('#' + d)) { $('#' + d).close(); return; }   // click on the dark backdrop
+  const hist = x.closest('[data-hist]');
+  if (hist) { S.q = hist.dataset.hist; $('#fq').value = S.q; $('#fq').blur(); staticSearch(S.q); return; }
+  if (x.closest('[data-histclear]')) { try { localStorage.removeItem('radar.scache'); } catch (err) {} searchHint(); return; }
+  if (x.closest('[data-research]')) { if (SEARCH) staticSearch(SEARCH.query, true); return; }
   if (x.closest('[data-intro]')) { openIntro(); return; }
   if (x.closest('[data-tour]')) { startTour(); return; }
   const cmp = x.closest('[data-cmp]');
@@ -2494,7 +2512,15 @@ function openSettings() {
 }
 
 /* ---------- hosted site: live search with the visitor's own YouTube API key ---------- */
-const getKey = () => { try { return (localStorage.getItem('radar.key') || CFG.browserKey || '').trim(); } catch (e) { return (CFG.browserKey || '').trim(); } };
+const keyOk = k => /^AIza[\w-]{30,}$/.test(k || '');   // Google API keys look like AIza… (39 characters); anything else is treated as no key
+let SITE_KEY_BAD = false;                              // set when YouTube refuses the site's shared key
+const getKey = () => {
+  let own = '';
+  try { own = (localStorage.getItem('radar.key') || '').trim(); } catch (e) {}
+  if (keyOk(own)) return own;
+  const site = (CFG.browserKey || '').trim();
+  return keyOk(site) && !SITE_KEY_BAD ? site : '';
+};
 const setKey = k => { try { localStorage.setItem('radar.key', k.trim()); } catch (e) {} };
 const median = a => { const s = a.slice().sort((x, y) => x - y), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; };
 const clip = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
@@ -2589,9 +2615,9 @@ async function probeStatic(chId, info, query) {
   return Object.assign({ch_id: chId, name: sn.title || chId, handle: sn.customUrl || '', subs, lang, english: lang === 'en' || lang === 'und',
     queries: [query], series: vids, watch: false, descr, avatar_url: (th.medium || th.default || {}).url || '', pick: null}, m);
 }
-async function staticSearch(query) {
-  if (!getKey()) { go('channels'); return; }   // no key: the typed words already filter our own list
-  const ck = query.toLowerCase(), hit = searchCache().find(x => x.q === ck && Date.now() - x.t < 12 * 3600e3);
+async function staticSearch(query, fresh) {
+  const ck = query.toLowerCase(), hit = fresh ? null : searchCache().find(x => x.q === ck);   // saved results reopen for free
+  if (!hit && !getKey()) { go('channels'); return; }   // no key: the typed words already filter our own list
   enterSearch();
   const base = {query, id: 'web', phase: '', done: 0, total: 0, found: 0, channels: [], error: null, tracked: false, msg: ''};
   if (hit) { SEARCH = Object.assign(base, {state: 'done', channels: hit.channels, cachedAt: hit.t / 1000}); render(); window.scrollTo(0, 0); return; }
@@ -2626,10 +2652,11 @@ async function staticSearch(query) {
     };
     await Promise.all([worker(), worker(), worker(), worker()]);
     mine.state = 'done';
-    saveSearchCache(ck, mine.channels);
+    saveSearchCache(ck, mine.channels, query);
     searchHint();
   } catch (e) {
     mine.state = 'error';
+    if (e && e.badKey && !ownKey()) { SITE_KEY_BAD = true; searchHint(); renderSide(); }   // the site's key was refused: stop offering YouTube search
     mine.msg = e && e.quota ? t('kQuota') : e && e.badKey ? t('kBad') : e && e.net ? t('kNet') : t('sErr');
   }
   if (S.tab === 'search' && SEARCH === mine) { renderChips(); renderContent(); }
@@ -2642,10 +2669,16 @@ function openKeyDialog() {
     <ol><li>${esc(t('kS1'))} <a class="link" href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank" rel="noopener noreferrer">${esc(t('kOpen'))} ↗</a></li>
       <li>${esc(t('kS2'))}</li><li>${esc(t('kS3'))}</li><li>${esc(t('kS4'))}</li></ol>
     <p><b>💳 ${esc(t('kNoCard'))}</b></p>
-    <div class="row"><input id="keyIn" type="password" autocomplete="off" spellcheck="false" autofocus placeholder="${esc(t('kPh'))}"><button class="pillbtn red" id="keySave">${esc(t('kSave'))}</button></div>
+    <div class="row"><input id="keyIn" type="password" autocomplete="off" spellcheck="false" autofocus placeholder="${esc(t('kPh'))}"><button class="pillbtn red" id="keySave">${esc(t('kSave'))}</button></div><p id="keyMsg" style="color:var(--bad);min-height:1.2em"></p>
     <p style="font-size:12.5px">${esc(t('kPrivacy'))}</p>
     <div style="text-align:right;margin-top:14px"><button class="pillbtn" id="dlgClose">${esc(t('dClose'))}</button></div>`;
-  $('#keySave').onclick = () => { const v = $('#keyIn').value.trim(); if (!v) return; setKey(v); dlg.close(); if (S.q.trim().length >= 2) staticSearch(S.q.trim()); };
+  $('#keySave').onclick = () => {
+    const v = $('#keyIn').value.trim();
+    if (!v) return;
+    if (!keyOk(v)) { $('#keyMsg').textContent = t('kInvalid'); return; }
+    setKey(v); dlg.close(); render();
+    if (S.q.trim().length >= 2) staticSearch(S.q.trim());
+  };
   $('#dlgClose').onclick = () => dlg.close();
   dlg.showModal();
 }
