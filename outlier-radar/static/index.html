@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://i.ytimg.com data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; frame-src https://www.youtube-nocookie.com">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://i.ytimg.com data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; frame-src https://www.youtube-nocookie.com; manifest-src 'self'; worker-src 'self'">
 <meta name="description" content="Find YouTube Shorts channels that are blowing up: small channels with huge views, viral videos and new uploads, in English and Thai.">
 <title>Viral Radar</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ff0033'/%3E%3Cpath d='M16 5c1.3 4.6 7.5 7.4 7.5 14.5a7.5 7.5 0 0 1-15 0c0-4 2.5-6.4 3.8-7.6 0 2.6 1.1 4.1 2.6 4.1 0-3.9-1.1-7.6 1.1-11z' fill='white'/%3E%3C/svg%3E">
@@ -620,6 +620,35 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .stage .mdots i.lit{background:#ff0033}
 @media (max-width:760px){.pbbody{padding:0 14px 16px}.loggrid{grid-template-columns:repeat(2,1fr)}.pbrow2{flex-wrap:wrap}.pbhead{padding:12px 14px}}
 
+
+/* ---- account / sync ---- */
+#acct{display:contents}
+.acctwrap{border:2px solid transparent;border-radius:50%;padding:1px;background:none;display:grid;place-items:center;flex:none}
+.acctwrap.ok{border-color:var(--good)}
+.acctwrap.syncing{border-color:var(--accent)}
+.acctwrap.err{border-color:var(--bad)}
+.acctbtn{border-radius:50%;overflow:hidden;background:var(--surface2);display:inline-grid;place-items:center;font-weight:700;flex:none}
+.acctbtn img{width:100%;height:100%;object-fit:cover;display:block}
+.acctcard{display:flex;gap:14px;align-items:center;margin:8px 0 12px}
+.syncrow{display:flex;gap:10px;align-items:center;width:calc(100% - 12px);margin:0 6px;border:0;background:transparent;border-radius:10px;padding:6px;text-align:left}
+.syncrow:hover{background:var(--hover)}
+.syncrow b{display:block;font-size:12.5px;line-height:1.3;overflow:hidden;text-overflow:ellipsis}
+.syncrow small{color:var(--muted);font-size:11.5px}
+/* ---- heating up ---- */
+.heatstrip{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:-8px 0 16px;max-width:960px}
+.heatstrip b{font-size:13px}
+.heatup{color:var(--good)!important;font-weight:600}
+/* ---- growth curve inside the dark video player ---- */
+#player .chartbox{background:#1f1f1f;color:#f1f1f1}
+#player .chartbox h4{color:#aaa}
+#player .lchart .ln{stroke:#3987e5}
+#player .lchart .dt,#player .lchart .hd{fill:#3987e5;stroke:#1f1f1f}
+#player .lchart .lb{fill:#f1f1f1}
+#player .lchart .ax{fill:#aaa}
+#player .lchart .gl{stroke:#333}
+#player .lchart .xh{stroke:#777}
+#player .lchart .tip{background:#f1f1f1;color:#0f0f0f}
+
 @media (max-width:1180px){.pillbtn .lbl{display:none}.pillbtn{padding:0 10px}}
 @media (max-width:1000px){
   #side{width:76px;padding:4px}
@@ -667,6 +696,7 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
     <button class="pillbtn primary" id="btnScan"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg><span class="lbl" id="scanLbl"></span></button>
     <button class="pillbtn" id="btnExport"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span class="lbl" id="exportLbl"></span></button>
     <button class="pillbtn" id="btnSettings"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span class="lbl" id="settingsLbl"></span></button>
+    <span id="acct"></span>
     <button class="icon" id="btnHelp" data-tab="help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.8M12 17.2h.01"/></svg></button>
     <div class="seg" id="langSeg" role="group" aria-label="Language"><button data-ui="en" aria-pressed="true">EN</button><button data-ui="th" aria-pressed="false">ไทย</button></div>
   </div>
@@ -1223,6 +1253,36 @@ Object.assign(T.th, {
   wNewAge: 'ช่องใหม่: เพิ่งเริ่มเมื่อ {a} ที่แล้ว', newAgeBadge: '🌱 ช่องใหม่ · {a}',
   tearBtn: '✂️ แยกชิ้นส่วนคลิปนี้', tearAdded: 'เพิ่มในคู่มือแล้ว (ขั้นตอนที่ 3)'
 });
+Object.assign(T.en, {
+  heatT: '🌡️ Topics heating up this week', heatD: 'Topics whose channels are gaining subscribers fastest, and how quickly their new Shorts pick up views.',
+  heatGrowth: '{p} subscribers a week (median of {n} channels)', heatSpeed: '{u} new Shorts · about {s} views a day each',
+  heatWait: 'Still collecting data. This fills in as channels are re-checked over the next day.', heatShort: '🌡️ Heating up:', allTopics: 'All topics',
+  installBtn: '📲 Install the app', installIos: 'On iPhone or iPad: tap the Share button, then “Add to Home Screen”.', installDone: 'Installed! Find Viral Radar on your home screen.',
+  offlineWeb: 'You’re offline: showing the last saved data.',
+  vidGrowth: '📈 Views over time', pAccel: 'Speeding up: gaining views faster than before',
+  signIn: 'Sign in', signInG: 'Sign in with Google', signOut: 'Sign out', acctT: 'Your account', syncedAs: 'Synced as {n}',
+  syncD: 'Your saved channels, Playbook, upload log and My channel sync to every device where you sign in.',
+  syncOk: 'Synced {ago}', syncing: 'Syncing…', syncNow: 'Sync now', syncErr: 'Sync problem: {m}',
+  signErrPopup: 'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.',
+  signErrDomain: 'This site’s address isn’t allowed yet. Add it in Firebase → Authentication → Settings → Authorized domains.',
+  signErr: 'Sign-in didn’t work: {m}', signWhy: 'Sign in to keep your saved channels and Playbook on all your devices.',
+  syncPriv: 'Only you can read your synced data. Sign-in is handled by Google; this site never sees your password.'
+});
+Object.assign(T.th, {
+  heatT: '🌡️ หมวดที่กำลังร้อนแรงสัปดาห์นี้', heatD: 'หมวดที่ช่องได้ผู้ติดตามเพิ่มเร็วที่สุด และคลิปใหม่ในหมวดได้ยอดวิวเร็วแค่ไหน',
+  heatGrowth: 'ผู้ติดตาม {p} ต่อสัปดาห์ (ค่ากลางจาก {n} ช่อง)', heatSpeed: 'คลิปใหม่ {u} คลิป · คลิปละประมาณ {s} วิวต่อวัน',
+  heatWait: 'กำลังเก็บข้อมูล จะค่อย ๆ ขึ้นเมื่อระบบตรวจช่องซ้ำภายในวันนี้', heatShort: '🌡️ กำลังร้อนแรง:', allTopics: 'หมวดทั้งหมด',
+  installBtn: '📲 ติดตั้งแอป', installIos: 'บน iPhone หรือ iPad: กดปุ่มแชร์ แล้วเลือก “เพิ่มไปยังหน้าจอโฮม”', installDone: 'ติดตั้งแล้ว! ดู Viral Radar ได้ที่หน้าจอโฮม',
+  offlineWeb: 'ตอนนี้ออฟไลน์อยู่ กำลังแสดงข้อมูลล่าสุดที่บันทึกไว้',
+  vidGrowth: '📈 ยอดวิวตามเวลา', pAccel: 'กำลังพุ่ง: ยอดวิวเพิ่มเร็วกว่าก่อนหน้า',
+  signIn: 'เข้าสู่ระบบ', signInG: 'เข้าสู่ระบบด้วย Google', signOut: 'ออกจากระบบ', acctT: 'บัญชีของคุณ', syncedAs: 'ซิงค์ในชื่อ {n}',
+  syncD: 'ช่องที่บันทึกไว้ คู่มือ บันทึกการลงคลิป และช่องของฉัน จะซิงค์ไปทุกอุปกรณ์ที่คุณเข้าสู่ระบบ',
+  syncOk: 'ซิงค์แล้ว {ago}', syncing: 'กำลังซิงค์…', syncNow: 'ซิงค์ตอนนี้', syncErr: 'ซิงค์มีปัญหา: {m}',
+  signErrPopup: 'เบราว์เซอร์บล็อกหน้าต่างเข้าสู่ระบบ อนุญาตป๊อปอัปสำหรับเว็บนี้แล้วลองอีกครั้ง',
+  signErrDomain: 'ที่อยู่เว็บนี้ยังไม่ได้รับอนุญาต ให้เพิ่มที่ Firebase → Authentication → Settings → Authorized domains',
+  signErr: 'เข้าสู่ระบบไม่สำเร็จ: {m}', signWhy: 'เข้าสู่ระบบเพื่อเก็บช่องที่บันทึกไว้และคู่มือไว้ในทุกอุปกรณ์',
+  syncPriv: 'มีแค่คุณที่อ่านข้อมูลที่ซิงค์ได้ การเข้าสู่ระบบจัดการโดย Google และเว็บนี้ไม่เคยเห็นรหัสผ่านของคุณ'
+});
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
     den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
@@ -1651,7 +1711,7 @@ function homeView() {
   const st = statusInfo();
   h += `<div class="sumline"><span>${t('sumTracked', {n: DATA.channels.length})}</span><span>${t('sumHot', {n: DATA.channels.filter(c => c.score >= 65).length})}</span>` +
     `<span>${t('sumNew', {n: liveVideos(DATA.channels).length})}</span><span class="livebox" style="margin:0"><span class="${st.cls}"></span>${esc(st.txt)}</span>${apiChip()}</div>`;
-  h += `<button type="button" class="pbpromo" data-tab="playbook"><span class="em">📘</span><span><b>${esc(t('pbCardT'))}</b><span class="d">${esc(t('pbCardD'))}</span></span><span class="go">→</span></button>`;
+  h += `<button type="button" class="pbpromo" data-tab="playbook"><span class="em">📘</span><span><b>${esc(t('pbCardT'))}</b><span class="d">${esc(t('pbCardD'))}</span></span><span class="go">→</span></button>` + heatStrip() + (canInstall() ? `<div style="margin:-6px 0 16px">${installBtn()}</div>` : '');
   const add = (title, desc, items, see) => { if (items.length) { h += shelf(title, desc, items, see); n++; } };
   const byScore = (a, b) => b.score - a.score;
   add('shPicks', 'shPicksD', picksList().filter(baseOk).map(pickCard), '');
@@ -1726,7 +1786,7 @@ function topicsView() {
     const chs = DATA.channels.filter(c => chTopics(c).has(tp[0]) && langOk(c)).sort((a, b) => b.score - a.score);
     return {tp, n: chs.length, hot: chs.filter(c => c.score >= 65).length, top: chs.slice(0, 5)};
   }).filter(r => r.n).sort((a, b) => b.hot - a.hot || b.n - a.n);
-  let h = pageHead('pTopicsT', 'pTopicsD');
+  let h = pageHead('pTopicsT', 'pTopicsD') + heatSection();
   if (!rows.length) return h + emptyBox(t('emptyNiche'));
   const mx = Math.max(1, ...rows.map(r => r.hot));
   h += `<div class="tiles">` + rows.map(r => `<button type="button" class="tile" data-topic="${r.tp[0]}" data-go="home"><span class="em">${r.tp[1]}</span><b>${esc(topicName(r.tp))}</b>
@@ -1889,16 +1949,19 @@ function openPlayer(vid, chId) {
   if (g) facts.push(['📈', t('pGrow', {n: fmt(g)})]);
   if (v.d) facts.push(['⏱️', t('pLen', {d: fmtDur(v.d)})]);
   if (v.p) facts.push(['📅', t('pUp', {ago: ago(v.p)})]);
+  if (accelerating(v)) facts.push(['🚀', t('pAccel')]);
   $('#playerBody').innerHTML = `<div class="pwrap"><button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
     <div class="pvid"><iframe src="https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&playsinline=1&rel=0" title="${esc(v.t)}"
       allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
     <div class="pside"><h3>${esc(v.t)}</h3>
       ${c ? `<button type="button" class="pch" data-closeplayer data-open-ch="${esc(c.ch_id)}">${avatarEl(c, 42)}<span><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))} · ${esc(t('pSeeCh'))} →</small></span></button>` : ''}
       <div class="pfacts">${facts.map(([e, s]) => `<div><span class="em">${e}</span><span>${esc(s)}</span></div>`).join('')}</div>
+      ${c && (v.vh || []).length >= 2 ? `<div class="chartbox"><h4>${esc(t('vidGrowth'))}</h4><div class="lchart" data-ch="${esc(c.ch_id)}" data-vid="${esc(vid)}"></div></div>` : ''}
       <div class="btns"><a class="pillbtn red" href="${vidUrl(vid)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>
         ${c && needsTr(c) && v.t ? `<a class="pillbtn" href="${trUrl(v.t)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}<button type="button" class="pillbtn" data-tear="${esc(vid)}" data-c="${esc(chId || '')}">${esc(t('tearBtn'))}</button></div>
       <span class="hint">${esc(t('pNoEmbed'))}</span></div></div>`;
   $('#player').showModal();
+  drawCharts($('#playerBody'));
   tourEvent('player');
 }
 $('#player').addEventListener('close', () => { $('#playerBody').innerHTML = ''; });   // stops the video
@@ -2165,7 +2228,8 @@ function growthHtml(c) {
 }
 function drawCharts(root) {
   root.querySelectorAll('.lchart[data-ch]').forEach(el => {
-    const c = findCh(el.dataset.ch), k = +el.dataset.k, pts = ((c && c.hist) || []).map(p => [p[0], p[k]]);
+    const c = findCh(el.dataset.ch), k = +el.dataset.k, vid = el.dataset.vid && c ? c.series.find(x => x.id === el.dataset.vid) : null;
+    const pts = vid ? (vid.vh || []) : ((c && c.hist) || []).map(p => [p[0], p[k]]);
     const W = el.clientWidth, H = el.clientHeight;
     if (!W || pts.length < 2) return;
     const pl = 4, pr = 56, pt = 10, pb = 20, t0 = pts[0][0], t1 = pts[pts.length - 1][0];
@@ -2499,7 +2563,7 @@ function openMore() {
   const items = [['home', 'nHome'], ['week', 'nWeek'], ['videos', 'nVideos'], ['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['playbook', 'nPlaybook'], ['mine', 'nMine'], ['saved', 'nSaved'], ['compare', 'nCompare'], ['help', 'nHelp']];
   body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('nMore'))}</h3>` +
     items.map(([id, k]) => `<button type="button" class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(k))}</span></button>`).join('') +
-    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div><div class="sidesec">${apiChip()}</div>`;
+    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div><div class="sidesec">${apiChip()} ${installBtn()}</div>` + syncBlock();
   dlg.showModal();
 }
 
@@ -2889,6 +2953,224 @@ function methodScenes() {
   return sc;
 }
 
+
+/* ---------- per-video growth: is a fresh Short speeding up? ---------- */
+function accelerating(v) {
+  const h = v.vh || [];
+  if (h.length < 3) return false;
+  const [a, b, c] = h.slice(-3), s0 = (b[1] - a[1]) / Math.max(1, (b[0] - a[0]) / 3600), s1 = (c[1] - b[1]) / Math.max(1, (c[0] - b[0]) / 3600);
+  return s1 >= 200 && s1 > s0 * 1.5;   // at least 200 views an hour, and 1.5× faster than the step before
+}
+
+/* ---------- topics heating up ---------- */
+let HEAT = null, HEAT_SIG = '';
+function topicHeat() {
+  const sig = DATA ? DATA.generated + ':' + DATA.channels.length : '';
+  if (sig === HEAT_SIG && HEAT) return HEAT;
+  const wk = nowTs() - 7 * 86400;
+  HEAT = TOPICS.map(tp => {
+    const chs = DATA.channels.filter(c => chTopics(c).has(tp[0]));
+    const g = chs.map(c => {   // weekly subscriber growth from the channel's own history
+      const h = (c.hist || []).filter(p => p[0] >= wk);
+      if (h.length < 2) return null;
+      const a = h[0], b = h[h.length - 1], days = (b[0] - a[0]) / 86400;
+      return days >= 0.5 && a[1] > 0 ? (b[1] - a[1]) / a[1] / days * 7 : null;
+    }).filter(x => x != null);
+    const fresh = videoPool(chs).filter(([v]) => v.p && v.p >= wk), spd = fresh.map(([v]) => v.v / Math.max(1, (nowTs() - v.p) / 86400));
+    return {tp, n: g.length, growth: g.length >= 3 ? median(g) : null, uploads: fresh.length, speed: spd.length >= 3 ? median(spd) : null};
+  }).filter(r => r.growth != null || r.speed != null).sort((a, b) => (b.growth ?? -1) - (a.growth ?? -1) || (b.speed ?? 0) - (a.speed ?? 0));
+  HEAT_SIG = sig;
+  return HEAT;
+}
+const signedPct = x => (x >= 0 ? '▲ +' : '▼ −') + pct(Math.abs(x));
+function heatSection() {
+  const rows = topicHeat().slice(0, 6);
+  return `<h2 class="subhead" style="margin-top:4px">${esc(t('heatT'))}</h2><p class="pbtip" style="margin:0 0 10px">${esc(t('heatD'))}</p>` +
+    (rows.length ? `<div class="tiles">${rows.map(r => `<button type="button" class="tile" data-topic="${r.tp[0]}" data-go="home"><span class="em">${r.tp[1]}</span><b>${esc(topicName(r.tp))}</b>` +
+      (r.growth != null ? `<small class="${r.growth > 0 ? 'heatup' : ''}">${esc(t('heatGrowth', {p: signedPct(r.growth), n: r.n}))}</small>` : '') +
+      (r.speed != null ? `<small>${esc(t('heatSpeed', {u: r.uploads, s: fmt(r.speed)}))}</small>` : '') + '</button>').join('')}</div>` : `<p class="pbmuted">${esc(t('heatWait'))}</p>`) +
+    `<h2 class="subhead">${esc(t('allTopics'))}</h2>`;
+}
+function heatStrip() {
+  const hot = topicHeat().filter(r => r.growth != null && r.growth > 0).slice(0, 4);
+  return hot.length ? `<div class="heatstrip"><b>${esc(t('heatShort'))}</b>${hot.map(r => `<button type="button" class="chip" data-topic="${r.tp[0]}">${r.tp[1]} ${esc(topicName(r.tp))} <span class="heatup">${esc(signedPct(r.growth))}</span></button>`).join('')}</div>` : '';
+}
+
+/* ---------- faster first screen: the hottest 300 channels load first, everything else right after ---------- */
+async function loadLite() {
+  try {
+    const r = await fetch('data-lite.json', {cache: 'no-cache'});
+    if (!r.ok) return;
+    const d = await r.json();
+    if (DATA) return;   // the full data won the race
+    d.lite = true;
+    DATA = d;
+    render();
+  } catch (e) {}
+}
+
+/* ---------- installable app (works offline with the last data) ---------- */
+let INSTALL_EVT = null;
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const canInstall = () => STATIC && !isStandalone() && (!!INSTALL_EVT || isIOS());
+const installBtn = () => (canInstall() ? `<button type="button" class="pillbtn" data-install>${esc(t('installBtn'))}</button>` : '');
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); INSTALL_EVT = e; if (DATA) { renderSide(); if (S.tab === 'home') renderContent(); } });
+window.addEventListener('appinstalled', () => { INSTALL_EVT = null; toast(t('installDone')); if (DATA) renderSide(); });
+async function doInstall(btn) {
+  if (INSTALL_EVT) { INSTALL_EVT.prompt(); try { await INSTALL_EVT.userChoice; } catch (e) {} INSTALL_EVT = null; if (DATA) renderSide(); }
+  else if (isIOS()) showPop(btn, `<b>${esc(t('installBtn'))}</b>${esc(t('installIos'))}`);
+}
+if (STATIC && 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+}
+
+/* ---------- Google sign-in + sync (Firebase Auth + Cloud Firestore on the free plan) ---------- */
+const FB = CFG.firebase && CFG.firebase.apiKey && CFG.firebase.projectId ? CFG.firebase : null;
+const FB_VER = '10.12.2';
+const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.heroHidden'];
+const GICON = '<svg viewBox="0 0 48 48" style="stroke:none"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.7 6c4.5-4.2 6.9-10.3 6.9-17.7z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.7-6c-2.1 1.4-4.9 2.3-8.2 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>';
+let FBX = null, USER = null, SYNC = {state: 'off', at: 0, err: ''}, syncTimer = null, applyingRemote = false, unsubSnap = null;
+const lsRaw = LS.set.bind(LS);
+LS.set = (k, v) => {   // every change to a synced setting is timestamped and pushed shortly after
+  lsRaw(k, v);
+  if (SYNC_KEYS.includes(k) && !applyingRemote) {
+    const ts = LS.get('radar.syncts', {});
+    ts[k] = Date.now();
+    lsRaw('radar.syncts', ts);
+    queuePush();
+  }
+};
+async function fbLoad() {
+  if (FBX) return FBX;
+  const base = `https://www.gstatic.com/firebasejs/${FB_VER}/`;
+  const [appMod, A, F] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-firestore.js')]);
+  const app = appMod.initializeApp({apiKey: FB.apiKey, authDomain: FB.authDomain, projectId: FB.projectId});
+  FBX = {A, F, auth: A.getAuth(app), db: F.getFirestore(app)};
+  A.onAuthStateChanged(FBX.auth, onUser);
+  return FBX;
+}
+async function signIn() {
+  try {
+    const {A, auth} = await fbLoad();
+    await A.signInWithPopup(auth, new A.GoogleAuthProvider());
+  } catch (e) {
+    const code = String((e && e.code) || '');
+    const msg = code.includes('popup-blocked') ? t('signErrPopup') : code.includes('unauthorized-domain') ? t('signErrDomain')
+      : /popup-closed|cancelled-popup/.test(code) ? '' : t('signErr', {m: code || String((e && e.message) || e).slice(0, 80)});
+    if (msg) toast(msg);
+  }
+}
+async function signOut() {
+  if (!FBX) return;
+  try { await FBX.A.signOut(FBX.auth); } catch (e) {}
+  if ($('#dlg').open) $('#dlg').close();
+}
+function onUser(u) {
+  USER = u || null;
+  try { localStorage.setItem('radar.fbuser', USER ? '1' : ''); } catch (e) {}
+  if (unsubSnap) { unsubSnap(); unsubSnap = null; }
+  if (USER) firstSync().catch(syncErr); else SYNC = {state: 'off', at: 0, err: ''};
+  renderAcct();
+  if (DATA) renderSide();
+}
+function syncErr(e) { SYNC = {state: 'err', at: Date.now(), err: String((e && (e.code || e.message)) || 'error').slice(0, 80)}; renderAcct(); }
+const userRef = () => FBX.F.doc(FBX.db, 'users', USER.uid);
+async function firstSync() {
+  SYNC.state = 'syncing'; renderAcct();
+  const snap = await FBX.F.getDoc(userRef());
+  const known = localStorage.getItem('radar.synced') === USER.uid;
+  if (snap.exists()) mergeRemote(snap.data(), !known);
+  try { localStorage.setItem('radar.synced', USER.uid); } catch (e) {}
+  await pushNow();
+  unsubSnap = FBX.F.onSnapshot(userRef(), s => { if (s.exists() && !s.metadata.hasPendingWrites) mergeRemote(s.data(), false); }, syncErr);
+}
+function mergeRemote(remote, firstTime) {   // newest change per setting wins; the first sign-in on a device keeps this device's saved channels too
+  const lt = LS.get('radar.syncts', {}), rd = remote.d || {}, rt = remote.t || {};
+  let changed = false;
+  applyingRemote = true;
+  for (const k of SYNC_KEYS) {
+    if (rd[k] == null || rd[k] === localStorage.getItem(k)) continue;
+    let take = (rt[k] || 0) > (lt[k] || 0);
+    if (firstTime) {
+      const mine = localStorage.getItem(k);
+      if (k === 'radar.watch' && mine) {
+        let both = [];
+        try { both = [...new Set([...JSON.parse(rd[k]), ...JSON.parse(mine)])]; } catch (e) {}
+        localStorage.setItem(k, JSON.stringify(both)); lt[k] = Date.now(); changed = true;
+        continue;
+      }
+      take = mine == null || (k === 'radar.pb' ? rd[k].length >= mine.length : (rt[k] || 0) >= (lt[k] || 0));
+    }
+    if (take) { try { localStorage.setItem(k, rd[k]); } catch (e) {} lt[k] = rt[k] || Date.now(); changed = true; }
+  }
+  applyingRemote = false;
+  lsRaw('radar.syncts', lt);
+  if (changed) reloadFromStorage();
+}
+async function pushNow() {
+  if (!USER || !FBX) return;
+  const lt = LS.get('radar.syncts', {}), d = {}, ts = {};
+  for (const k of SYNC_KEYS) {
+    let v = null;
+    try { v = localStorage.getItem(k); } catch (e) {}
+    if (v != null) { d[k] = v; ts[k] = lt[k] || 1; }
+  }
+  SYNC.state = 'syncing'; renderAcct();
+  await FBX.F.setDoc(userRef(), {d, t: ts, updated: FBX.F.serverTimestamp()});
+  SYNC = {state: 'ok', at: Date.now(), err: ''};
+  renderAcct();
+}
+function queuePush() { if (!USER || !FBX) return; clearTimeout(syncTimer); syncTimer = setTimeout(() => pushNow().catch(syncErr), 1500); }
+function reloadFromStorage() {   // another device changed something: refresh what this page holds in memory
+  watchLocal.clear(); LS.get('radar.watch', []).forEach(id => watchLocal.add(id));
+  Object.assign(S, LS.get('radar.state4', {}), {tab: S.tab, q: S.q});
+  Object.keys(PB).forEach(k => delete PB[k]); Object.assign(PB, PB_DEFAULT(), LS.get('radar.pb', {}));
+  MY = LS.get('radar.mych', null);
+  UI = LS.get('radar.ui', UI) === 'th' ? 'th' : 'en';
+  const a = document.activeElement, typing = a && a.closest && a.closest('#content') && /INPUT|TEXTAREA|SELECT/.test(a.tagName);
+  if (DATA && !typing) render();
+}
+const syncLine = () => (SYNC.state === 'syncing' ? t('syncing') : SYNC.state === 'err' ? t('syncErr', {m: SYNC.err}) : SYNC.at ? t('syncOk', {ago: ago(SYNC.at / 1000)}) : '');
+const userName = () => (USER && (USER.displayName || USER.email)) || '';
+function userPic(size) {
+  const ok = USER && USER.photoURL && /^https:\/\/lh\d\.googleusercontent\.com\//.test(USER.photoURL);
+  return `<span class="acctbtn" style="width:${size}px;height:${size}px">${ok ? `<img src="${esc(USER.photoURL)}" alt="" referrerpolicy="no-referrer">` : `<b>${esc((userName()[0] || '?').toUpperCase())}</b>`}</span>`;
+}
+function renderAcct() {
+  const el = $('#acct');
+  if (!el) return;
+  if (!FB) { el.innerHTML = ''; return; }
+  el.innerHTML = USER ? `<button type="button" class="acctwrap ${SYNC.state}" data-acct title="${esc(userName())}" aria-label="${esc(t('acctT'))}">${userPic(32)}</button>`
+    : `<button type="button" class="pillbtn" data-signin>${GICON}<span class="lbl">${esc(t('signIn'))}</span></button>`;
+  if ($('#dlg').open && $('#dlgBody').dataset.mode === 'acct') openAcct();
+  document.querySelectorAll('.syncrow small').forEach(el => { el.textContent = syncLine(); });   // keep the sidebar's status line current
+}
+function syncBlock() {   // for the sidebar and the phone menu
+  if (!FB) return '';
+  return USER ? `<div class="sidesec"><button type="button" class="syncrow" data-acct>${userPic(28)}<span><b>${esc(t('syncedAs', {n: userName()}))}</b><small>${esc(syncLine())}</small></span></button></div>`
+    : `<div class="sidesec"><button type="button" class="pillbtn" data-signin style="margin:0 12px">${GICON}${esc(t('signInG'))}</button><p>${esc(t('signWhy'))}</p></div>`;
+}
+function openAcct() {
+  const dlg = $('#dlg'), body = $('#dlgBody');
+  body.onclick = null; body.dataset.mode = 'acct';
+  body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('acctT'))}</h3>
+    <div class="acctcard">${userPic(56)}<div><b>${esc(USER ? USER.displayName || '' : '')}</b><div class="pbtip">${esc(USER ? USER.email || '' : '')}</div><div class="pbtip">${esc(syncLine())}</div></div></div>
+    <p>${esc(t('syncD'))}</p><p class="pbtip">${esc(t('syncPriv'))}</p>
+    <div class="pbfoot"><button type="button" class="pillbtn" data-syncnow>${esc(t('syncNow'))}</button><button type="button" class="ghost" data-signout>${esc(t('signOut'))}</button></div>`;
+  if (!dlg.open) dlg.showModal();
+}
+function acctClick(x) {
+  if (x.closest('[data-signin]')) { signIn(); return true; }
+  if (x.closest('[data-acct]')) { if (USER) openAcct(); return true; }
+  if (x.closest('[data-signout]')) { signOut(); return true; }
+  if (x.closest('[data-syncnow]')) { pushNow().catch(syncErr); return true; }
+  const ins = x.closest('[data-install]');
+  if (ins) { doInstall(ins); return true; }
+  return false;
+}
+$('#dlg').addEventListener('close', () => { $('#dlgBody').dataset.mode = ''; });
+
 /* ---------- chrome ---------- */
 function applyStaticText() {
   document.documentElement.lang = UI;
@@ -2911,7 +3193,7 @@ function renderSide() {
   $('#side').innerHTML = nav('home', 'nHome') + nav('week', 'nWeek') + nav('videos', 'nVideos') + nav('channels', 'nChannels') + nav('live', 'nLive', fresh, true) +
     nav('ideas', 'nIdeas') + nav('topics', 'nTopics') + '<hr class="navsep">' + nav('playbook', 'nPlaybook', PB_STEPS.length - Object.values(PB.done).filter(Boolean).length || null) + nav('mine', 'nMine') + nav('saved', 'nSaved', saved) + nav('compare', 'nCompare', S.cmp.length) + nav('help', 'nHelp') + nav('more', 'nMore') +
     `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` +
-    `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div><div style="margin:10px 12px 0">${apiChip()}</div></div>`;
+    `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div><div style="margin:10px 12px 0">${apiChip()}</div>${canInstall() ? `<div style="margin:10px 12px 0">${installBtn()}</div>` : ''}</div>` + syncBlock();
 }
 function renderChips() {
   const el = $('#chips');
@@ -3004,7 +3286,7 @@ document.addEventListener('click', async e => {
   const help = x.closest('[data-help]');
   if (help) { e.preventDefault(); e.stopPropagation(); if (POP_BTN === help) closePop(); else showPop(help, helpHtml(help.dataset.help)); return; }
   if (POP_BTN && !x.closest('#pop')) closePop();
-  if (tourClick(x) || introClick(x, e) || pbClick(x) || mineClick(x)) return;
+  if (tourClick(x) || introClick(x, e) || pbClick(x) || mineClick(x) || acctClick(x)) return;
   for (const d of ['dlg', 'sheet', 'player', 'intro']) if (x === $('#' + d)) { $('#' + d).close(); return; }   // click on the dark backdrop
   const hist = x.closest('[data-hist]');
   if (hist) { S.q = hist.dataset.hist; $('#fq').value = S.q; $('#fq').blur(); staticSearch(S.q); return; }
@@ -3339,13 +3621,13 @@ async function refresh() {
     const sig = STATIC ? String(d.generated) : '';   // the hosted data only changes when the scanner publishes
     if (sig && sig === lastSig) return;
     lastSig = sig;
-    const first = !DATA;
+    const first = !DATA || DATA.lite;   // the light file may have drawn the first screen
     DATA = d;
     if (first) { render(); afterFirstData(); return; }
     if (!$('#dlg').open && !['playbook', 'mine'].includes(S.tab)) render(true); else renderSide();
   } catch (e) {
     const box = $('#side .livebox');
-    if (box) box.innerHTML = `<span class="dot"></span><span>${esc(t('offline'))}</span>`;
+    if (box) box.innerHTML = `<span class="dot"></span><span>${esc(t(STATIC ? 'offlineWeb' : 'offline'))}</span>`;
   }
 }
 function afterFirstData() {
@@ -3356,7 +3638,9 @@ function afterFirstData() {
 }
 if (!hashTab() && !/^#(ch|compare)\//.test(location.hash)) history.replaceState(null, '', '#' + S.tab);
 applyStaticText();
-if (LIVE) { refresh(); setInterval(refresh, STATIC ? 60000 : 15000); } else { render(); afterFirstData(); }
+if (LIVE) { if (STATIC) loadLite(); refresh(); setInterval(refresh, STATIC ? 60000 : 15000); } else { render(); afterFirstData(); }
+renderAcct();
+if (FB && LS.get('radar.fbuser', 0)) fbLoad().catch(() => {});   // signed in before on this device: restore the session and sync
 </script>
 </body>
 </html>

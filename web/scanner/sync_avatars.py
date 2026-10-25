@@ -51,6 +51,9 @@ def main():
             time.sleep(0.4)
         ch["avatar_ok"] = bool(f and f.exists())
     data_path.write_text(json.dumps(data, separators=(",", ":")), encoding="utf-8")
+    lite = {k: v for k, v in data.items() if k not in ("channels", "_state", "queries")}   # the hottest channels only, for a fast first screen
+    lite["channels"] = [{k: v for k, v in c.items() if k not in ("hist", "descr")} for c in sorted(data.get("channels", []), key=lambda c: -(c.get("score") or 0))[:300]]
+    (data_path.parent / "data-lite.json").write_text(json.dumps(lite, separators=(",", ":")), encoding="utf-8")
     have = sum(1 for c in data.get("channels", []) if c.get("avatar_ok"))
     print(f"profile pictures: {have}/{len(data.get('channels', []))} available, {got} downloaded this run" + (" (stopped early: rate limited)" if rate else ""))
 

@@ -119,6 +119,35 @@ How the quota is protected: each device gets 15 searches a day with the site's k
 
 Anyone who wants more can still add their own key from the How to use page; it stays in their browser.
 
+## Google sign-in and sync (free, about 10 minutes, once)
+
+Signing in with Google keeps your saved channels, Playbook, upload log and My channel the same on every device. It uses Google's Firebase on the free "Spark" plan: no card, and no server for you to run. Until it is set up, the site simply shows no sign-in button.
+
+1. Open https://console.firebase.google.com/ with your Google account and click **Create a project** (or add Firebase to the Google Cloud project you already use for the API key). You can turn Google Analytics off.
+2. **Build → Authentication → Get started → Sign-in method → Google → Enable**, choose your email as the support email, **Save**.
+3. Still in Authentication: **Settings → Authorized domains → Add domain**: `sparyryan-collab.github.io`, and later your custom domain (for example `viralradar.foo.ng`).
+4. **Build → Firestore Database → Create database**, pick a location near you (for example `asia-southeast1`), start in **production mode**, create.
+5. In Firestore, open **Rules**, replace everything with the rules below, and click **Publish**:
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /users/{uid} {
+         allow read, write: if request.auth != null && request.auth.uid == uid;
+       }
+     }
+   }
+   ```
+   This means each signed-in person can read and write only their own data.
+6. **Project settings (the gear) → General → Your apps → the `</>` (Web) button**, give it any name, skip Hosting, **Register app**. It shows a `firebaseConfig` with `apiKey: "AIza..."` and `projectId: "..."`.
+7. In a terminal: `gh variable set FIREBASE_PROJECT_ID --body "<projectId>"`, then `gh variable set FIREBASE_API_KEY` (paste the apiKey when asked), then `gh workflow run "Refresh site"`.
+
+The Firebase apiKey is meant to be in the web page (it only identifies the project); the rules in step 5 are what protect the data.
+
+## Install it as an app
+
+On Android and desktop Chrome or Edge, the site offers "📲 Install the app" in the menu. On iPhone or iPad: Share, then "Add to Home Screen". The installed app opens full screen and still shows the last data when offline.
+
 ## Changing things
 
 - **Niches to scan:** edit `web/queries.json` (each entry has `q`, and optionally `lang` and `region`, for example `th` and `TH`). Push the change and the next run picks it up.

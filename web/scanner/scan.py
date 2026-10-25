@@ -29,7 +29,8 @@ FEATURED_PER_RUN = int(os.environ.get("FEATURED_PER_RUN", "3"))  # top channels 
 RUN_BUDGET = int(os.environ.get("RUN_BUDGET", "400"))
 WINDOW_DAYS = int(os.environ.get("SEARCH_WINDOW_DAYS", "30"))
 KEEP_CHANNELS = int(os.environ.get("KEEP_CHANNELS", "1500"))
-HIST_POINTS = int(os.environ.get("HIST_POINTS", "48"))         # growth history kept per channel (at most one point per 6 hours)
+HIST_POINTS = int(os.environ.get("HIST_POINTS", "48"))
+VH_DAYS, VH_POINTS = 10, 8                                       # views-over-time curve for Shorts younger than 10 days         # growth history kept per channel (at most one point per 6 hours)
 
 
 def load_radar():
@@ -69,6 +70,22 @@ def day_fraction(ts):
     except Exception:
         t = dt.datetime.fromtimestamp(ts - 8 * 3600, dt.timezone.utc)
     return (t.hour * 3600 + t.minute * 60 + t.second) / 86400
+
+
+def add_vh(item, prev_item, prev_ts, now):
+    """Views over time for one young Short: [[time, views], ...], starting at [upload time, 0]; points at least 3 hours apart (plus the newest)."""
+    if prev_item and prev_item.get("vh"):
+        vh = [list(x) for x in prev_item["vh"]]
+    else:
+        vh = [[int(item["p"]), 0]] if item.get("p") else []
+        if prev_item and prev_ts and (not vh or prev_ts > vh[-1][0]):
+            vh.append([int(prev_ts), prev_item["v"]])
+    point = [int(now), item["v"]]
+    if len(vh) >= 2 and vh[-1][0] - vh[-2][0] < 3 * 3600:
+        vh[-1] = point
+    else:
+        vh.append(point)
+    return vh if len(vh) <= VH_POINTS else [vh[0]] + vh[-(VH_POINTS - 1):]   # keep the upload point and the newest ones
 
 
 def merge_extra(path, channels, st, log):
@@ -193,6 +210,9 @@ def probe(radar, yt, ch_id, rec, info, now, is_new=False):
         for s in series:
             if s["id"] in prev:
                 s["g"], s["h"] = max(0, s["v"] - prev[s["id"]]["v"]), round(h, 1)
+    for s in series:
+        if s.get("p") and now - s["p"] < VH_DAYS * 86400:
+            s["vh"] = add_vh(s, prev.get(s["id"]), prev_ts, now)
     descr = (info or {}).get("descr") or rec.get("descr", "")
     lang = radar.detect_lang([s["t"] for s in series] + [descr])
     return {

@@ -170,6 +170,9 @@ def main():
         newest = hit2["series"][0]
         assert newest["id"] == vid(1, 14) and "g" not in newest, newest                                                       # the new upload is first, with no growth baseline yet
         assert newest["p"] > NOW.timestamp() - 2 * 3600, "publish time of the new upload should be kept"
+        assert newest["vh"][0][1] == 0 and newest["vh"][-1][1] == newest["v"], newest.get("vh")   # growth curve starts at the upload with 0 views
+        older = next(s for s in hit2["series"] if s.get("g") and len(s.get("vh") or []) == 3)   # upload, previous check, this check
+        assert older["vh"][0][1] == 0 and older["vh"][1][1] < older["vh"][2][1] == older["v"], older["vh"]
         assert d2["_state"]["runs"] == 2 and d2["_state"]["quota_used"] > 0
         assert len(hit2["hist"]) == 2 and hit2["hist"][0][0] < hit2["hist"][1][0], hit2["hist"]                              # one growth point per check
         assert hit2["found"] == hit["found"] and abs(hit["found"] - NOW.timestamp()) < 120, (hit.get("found"), hit2.get("found"))   # first-seen time is kept
