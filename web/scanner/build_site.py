@@ -18,12 +18,18 @@ out = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "_site"
 out.mkdir(parents=True, exist_ok=True)
 KEY = re.compile(r"AIza[\w-]{30,}")
 
+
+def find_key(text):
+    """The API key inside whatever was pasted (a bare key, or a line like apiKey: \"AIza...\",)."""
+    m = re.search(r"AIza[0-9A-Za-z_-]{35}", text or "")
+    return m.group(0) if m else (text or "").strip()
+
 html = (STATIC / "index.html").read_text(encoding="utf-8")
-cfg = {"browserKey": os.environ.get("BROWSER_KEY", "").strip()}
+cfg = {"browserKey": find_key(os.environ.get("BROWSER_KEY", ""))}
 if cfg["browserKey"] and not KEY.fullmatch(cfg["browserKey"]):
     print("WARNING: BROWSER_KEY does not look like a Google API key (they start with AIza and are 39 characters); live search stays off", file=sys.stderr)
     cfg["browserKey"] = ""
-fb_key, fb_project = os.environ.get("FIREBASE_API_KEY", "").strip(), os.environ.get("FIREBASE_PROJECT_ID", "").strip()
+fb_key, fb_project = find_key(os.environ.get("FIREBASE_API_KEY", "")), os.environ.get("FIREBASE_PROJECT_ID", "").strip()
 if fb_key or fb_project:
     if KEY.fullmatch(fb_key) and re.fullmatch(r"[a-z0-9-]{4,40}", fb_project):
         cfg["firebase"] = {"apiKey": fb_key, "projectId": fb_project,
