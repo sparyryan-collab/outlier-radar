@@ -394,6 +394,50 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .chartbox .delta{font-size:12.5px;font-weight:600;margin-left:6px;color:var(--muted)}
 .chartbox .delta.up{color:var(--good)}
 .lchart{position:relative;width:100%;height:140px;margin-top:6px;touch-action:pan-y}
+.antitle{margin:6px 0 0;font-size:15px}
+.anote{color:var(--muted);font-size:12px;line-height:1.5;margin:2px 0 0}
+.chartbox small.cap{display:block;color:var(--muted);font-size:12px;line-height:1.45;margin-top:6px}
+.mcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.mcard{background:var(--surface);border-radius:12px;padding:10px 12px;min-width:0}
+.mcard span{display:block;color:var(--muted);font-size:12px}
+.mcard b{display:block;font-size:19px;line-height:1.3;font-variant-numeric:tabular-nums}
+.mcard small{display:block;color:var(--muted);font-size:11.5px;line-height:1.35}
+.perf{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.perfpill{border-radius:999px;padding:0 10px;line-height:24px;font-weight:600;font-size:12.5px;background:var(--surface);color:var(--text)}
+.perfpill.up{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}
+.perfpill.down{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+.bchart{position:relative;width:100%;height:150px;margin-top:8px;touch-action:pan-y}
+.bchart svg{display:block;width:100%;height:100%;overflow:visible;stroke:none;fill:none}
+.bchart .bar{fill:var(--series-1)}
+.bchart.hasHl .bar{fill:color-mix(in srgb,var(--muted) 40%,transparent)}
+.bchart.hasHl .bar.hl{fill:var(--series-1)}
+.bchart .bar.on{opacity:.75}
+.bchart .med{stroke:var(--muted);stroke-width:1;stroke-dasharray:4 3}
+.bchart .lb{fill:var(--muted);font-size:11px}
+.bchart .hit{fill:transparent;cursor:pointer}
+.bchart .tip{position:absolute;pointer-events:none;background:var(--on-bg);color:var(--on-fg);font-size:12px;padding:5px 8px;border-radius:8px;width:max-content;max-width:220px;transform:translate(-50%,calc(-100% - 8px));display:none;z-index:2;line-height:1.4}
+.hmap{display:grid;grid-template-columns:auto repeat(6,1fr);gap:3px;margin-top:8px;font-size:11px;color:var(--muted);align-items:center}
+.hmap i{display:block;height:20px;border-radius:4px;background:color-mix(in srgb,var(--muted) 14%,transparent)}
+.hmap i.l1{background:color-mix(in srgb,var(--series-1) 30%,transparent)}
+.hmap i.l2{background:color-mix(in srgb,var(--series-1) 55%,transparent)}
+.hmap i.l3{background:color-mix(in srgb,var(--series-1) 78%,transparent)}
+.hmap i.l4{background:var(--series-1)}
+.hmap .hd{text-align:center;white-space:nowrap;overflow:hidden}
+.hmap .dy{padding-right:6px;white-space:nowrap}
+.hbars{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.hbar{display:grid;grid-template-columns:minmax(64px,auto) 1fr auto;gap:10px;align-items:center;font-size:12.5px}
+.hbar span{color:var(--muted);white-space:nowrap}
+.hbar .trk{height:12px;display:block}
+.hbar .trk i{display:block;height:100%;border-radius:0 4px 4px 0;background:var(--series-1);min-width:3px}
+.hbar b{font-variant-numeric:tabular-nums;font-size:12.5px}
+.bul{margin-top:8px}
+.bulh{display:flex;gap:8px;align-items:baseline;font-size:12.5px}
+.bulh span{color:var(--muted);min-width:70px}
+.bulh small{color:var(--muted);margin-left:auto;font-size:11.5px}
+.bult{position:relative;height:10px;margin-top:4px;border-radius:0 4px 4px 0}
+.bult i{display:block;height:100%;border-radius:0 4px 4px 0;background:var(--series-1);min-width:3px}
+.bult em{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--text);border-radius:1px}
+.ancharts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
 .lchart svg{display:block;width:100%;height:100%;stroke:none;fill:none;overflow:visible}
 .lchart .ln,.spark .ln{fill:none;stroke:var(--series-1);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
 .lchart .gl{stroke:var(--line);stroke-width:1}
@@ -646,6 +690,18 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 #player .lchart .gl{stroke:#333}
 #player .lchart .xh{stroke:#777}
 #player .lchart .tip{background:#f1f1f1;color:#0f0f0f}
+#player .mcard{background:#1f1f1f}
+#player .mcard span,#player .mcard small,#player .anote,#player .chartbox small.cap,#player .perf,#player .bulh span,#player .bulh small,#player .hbar span{color:#aaa}
+#player .perfpill{background:#272727;color:#f1f1f1}
+#player .perfpill.up{background:rgba(76,195,111,.16);color:#4cc36f}
+#player .perfpill.down{background:rgba(255,107,97,.14);color:#ff6b61}
+#player .bchart .bar,#player .bchart.hasHl .bar.hl,#player .bult i{fill:#3987e5;background:#3987e5}
+#player .bchart.hasHl .bar{fill:#4a4a4a}
+#player .bchart .med{stroke:#aaa}
+#player .bchart .lb{fill:#aaa}
+#player .bchart .tip{background:#f1f1f1;color:#0f0f0f}
+#player .bult em{background:#f1f1f1}
+#player .antitle{color:#f1f1f1}
 
 @media (max-width:1180px){.pillbtn .lbl{display:none}.pillbtn{padding:0 10px}}
 @media (max-width:1000px){
@@ -1330,6 +1386,30 @@ Object.assign(T.th, {
   hintRest: 'วันนี้ทั้งเว็บใช้การค้นหา YouTube ครบแล้ว จะกลับมาค้นหาได้ตอน {time} หัวข้อที่มีคนค้นไว้แล้วยังเปิดดูได้ฟรี และพิมพ์เพื่อหาช่องในรายการของเราได้',
   kRest: 'วันนี้ทั้งเว็บใช้การค้นหา YouTube ครบแล้ว จะกลับมาค้นหาได้ตอน {time} หัวข้อที่มีคนค้นไว้แล้ววันนี้ยังเปิดดูได้ฟรี'
 });
+Object.assign(T.en, {
+  anT: 'Analytics', mViews: 'Views', mLikes: 'Likes', mComments: 'Comments', mRank: 'Rank', mSpeed: 'Views per hour',
+  mVsUsual: '{x}× the usual', mPerK: '{n} per 1K views', rankV: '#{r} of {n}', rankSub: 'by views', mNow: 'right now',
+  perfWay: 'Way above typical', perfAbove: 'Above typical', perfTypical: 'Typical', perfBelow: 'Below typical', perfWhy: 'Compared with this channel’s last {n} Shorts',
+  barsT: 'Views on this channel’s latest Shorts', barsHl: 'This video is the highlighted bar. The dashed line is the channel’s typical views. Tap a bar to watch that Short.',
+  barsCh: 'Oldest to newest. The dashed line is the channel’s typical views. Tap a bar to watch that Short.', typLine: 'typical',
+  engT: 'Engagement per 1,000 views', bulAvg: 'channel usually {n}',
+  timesT: 'When they upload', timesD: 'In your time zone, from their last {n} Shorts.', timesBest: 'Most often: {d}, {h}', uploadsN: '{n} uploads',
+  lenT: 'Views by video length', lenD: 'Median views for each length.', lenBest: '{l} works best on this channel.',
+  lenB1: 'Under 20s', lenB2: '20–40s', lenB3: '40–60s', lenB4: '1–3 min', lLikeRate: 'Likes per 1K views',
+  privNote: 'Watch time, retention, impressions, traffic sources and audience details are private to the channel’s owner, so YouTube doesn’t share them with anyone else.'
+});
+Object.assign(T.th, {
+  anT: 'สถิติ', mViews: 'ยอดวิว', mLikes: 'ยอดไลก์', mComments: 'คอมเมนต์', mRank: 'อันดับ', mSpeed: 'วิวต่อชั่วโมง',
+  mVsUsual: '{x} เท่าของปกติ', mPerK: '{n} ต่อ 1,000 วิว', rankV: 'ที่ {r} จาก {n}', rankSub: 'ตามยอดวิว', mNow: 'ตอนนี้',
+  perfWay: 'สูงกว่าปกติมาก', perfAbove: 'สูงกว่าปกติ', perfTypical: 'ปกติ', perfBelow: 'ต่ำกว่าปกติ', perfWhy: 'เทียบกับ {n} คลิปล่าสุดของช่องนี้',
+  barsT: 'ยอดวิวของคลิปล่าสุดในช่องนี้', barsHl: 'คลิปนี้คือแท่งที่ไฮไลต์ เส้นประคือยอดวิวปกติของช่อง แตะแท่งเพื่อดูคลิปนั้น',
+  barsCh: 'จากเก่าไปใหม่ เส้นประคือยอดวิวปกติของช่อง แตะแท่งเพื่อดูคลิปนั้น', typLine: 'ปกติ',
+  engT: 'การมีส่วนร่วมต่อ 1,000 วิว', bulAvg: 'ปกติช่องนี้ {n}',
+  timesT: 'ช่วงเวลาที่ลงคลิป', timesD: 'ตามเวลาของคุณ จาก {n} คลิปล่าสุด', timesBest: 'ลงบ่อยที่สุด: {d} {h}', uploadsN: 'ลง {n} คลิป',
+  lenT: 'ยอดวิวตามความยาวคลิป', lenD: 'ค่ากลางยอดวิวของแต่ละความยาว', lenBest: 'คลิปยาว {l} ได้ผลดีที่สุดในช่องนี้',
+  lenB1: 'ต่ำกว่า 20 วิ', lenB2: '20–40 วิ', lenB3: '40–60 วิ', lenB4: '1–3 นาที', lLikeRate: 'ไลก์ต่อ 1,000 วิว',
+  privNote: 'เวลารับชม อัตราการดูจนจบ จำนวนการแสดงผล แหล่งที่มาของผู้ชม และข้อมูลผู้ชม เป็นข้อมูลส่วนตัวของเจ้าของช่อง YouTube จึงไม่เปิดให้คนอื่นดู'
+});
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
     den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
@@ -1961,8 +2041,10 @@ function drawSheet(keepScroll) {
         ${card('lRatio', fmtX(c.ratio) + '×', '', 'ratio')}${card('lHits', t('hitsVal', {k: k100, n: c.series.length}), t('hitsSub'), 'hits')}
         ${f.freq ? card('lFreq', freqText(f.freq), f.last ? t('lLast') + ': ' + ago(f.last) : '', 'freq') : ''}
         ${chTalk(c) != null ? card('lTalk', fmtTalk(chTalk(c)), talkNorm() ? t('talkAvg', {n: fmtTalk(talkNorm())}) : '', 'talk') : ''}${c.created ? card('lAge', ageText(chAgeDays(c)), '', 'age') : ''}
+        ${(lr => lr != null ? card('lLikeRate', fmtRate(lr), '', '') : '')(chRates(c).likes)}
         ${S.detail ? card('lScore', Math.round(c.score) + ' / 100', '', 'score') + card('lTrend', fmtX(c.trend) + '×', '', 'trend') : ''}
       </div>
+      ${(an => an ? `<h3>📊 ${esc(t('anT'))}</h3>${an}` : '')(chStats(c))}
       <h3>📈 ${esc(t('chGrowth'))}</h3>${growthHtml(c)}
       ${c.tags.length ? `<h3>🏷️ ${esc(t('labels'))}</h3><div class="taglist">${c.tags.map(k => `<div><span class="tag ${TAGS[k] ? TAGS[k].cls : ''}">${esc(tagName(k))}</span><small>${esc(tagDesc(k))}</small></div>`).join('')}</div>` : ''}
       <h3>🎬 ${esc(t('recent'))} <span class="seg"><button type="button" data-shsort="new" aria-pressed="${SHEET_SORT === 'new'}">${esc(t('newestFirst'))}</button><button type="button" data-shsort="top" aria-pressed="${SHEET_SORT === 'top'}">${esc(t('topFirst'))}</button></span></h3>
@@ -2006,11 +2088,12 @@ function openPlayer(vid, chId) {
     <div class="pside"><h3>${esc(v.t)}</h3>
       ${c ? `<button type="button" class="pch" data-closeplayer data-open-ch="${esc(c.ch_id)}">${avatarEl(c, 42)}<span><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))} · ${esc(t('pSeeCh'))} →</small></span></button>` : ''}
       <div class="pfacts">${facts.map(([e, s]) => `<div><span class="em">${e}</span><span>${esc(s)}</span></div>`).join('')}</div>
-      ${c && (v.vh || []).length >= 2 ? `<div class="chartbox"><h4>${esc(t('vidGrowth'))}</h4><div class="lchart" data-ch="${esc(c.ch_id)}" data-vid="${esc(vid)}"></div></div>` : ''}
       <div class="btns"><a class="pillbtn red" href="${vidUrl(vid)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>
         ${c && needsTr(c) && v.t ? `<a class="pillbtn" href="${trUrl(v.t)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}<button type="button" class="pillbtn" data-tear="${esc(vid)}" data-c="${esc(chId || '')}">${esc(t('tearBtn'))}</button></div>
+      ${vidStats(v, c)}
       <span class="hint">${esc(t('pNoEmbed'))}</span></div></div>`;
-  $('#player').showModal();
+  if (!$('#player').open) $('#player').showModal();
+  $('#playerBody .pside').scrollTop = 0;
   drawCharts($('#playerBody'));
   tourEvent('player');
 }
@@ -2328,6 +2411,7 @@ function growthHtml(c) {
   return `<div class="charts2">${box(1, 'chSubs')}${box(2, 'chViews')}</div><details class="ctbl"><summary>${esc(t('chTable'))}</summary><table class="tbl"><tr><th>${esc(t('chDate'))}</th><th>${esc(t('chSubs'))}</th><th>${esc(t('chViews'))}</th></tr>${rows}</table></details>`;
 }
 function drawCharts(root) {
+  drawBars(root);
   root.querySelectorAll('.lchart[data-ch]').forEach(el => {
     const c = findCh(el.dataset.ch), k = +el.dataset.k, vid = el.dataset.vid && c ? c.series.find(x => x.id === el.dataset.vid) : null;
     const pts = vid ? (vid.vh || []) : ((c && c.hist) || []).map(p => [p[0], p[k]]);
@@ -2357,8 +2441,98 @@ function drawCharts(root) {
     el.onpointerleave = () => { xh.setAttribute('visibility', 'hidden'); hd.setAttribute('visibility', 'hidden'); tip.style.display = 'none'; };
   });
 }
+/* ---------- Studio-style analytics from public numbers ---------- */
+const perK = (n, v) => (n != null && v > 0 ? n / v * 1000 : null);   // per 1,000 views
+const fmtRate = x => (x == null ? '–' : x >= 10 ? String(Math.round(x)) : String(Math.round(x * 10) / 10));
+function chRates(c) {   // the channel's typical likes and comments per 1,000 views
+  const lk = c.series.map(v => perK(v.l, v.v)).filter(x => x != null), cm = c.series.map(v => perK(v.c, v.v)).filter(x => x != null);
+  return {likes: lk.length >= 3 ? median(lk) : null, comments: cm.length >= 3 ? median(cm) : null};
+}
+const mcard = (label, val, sub) => `<div class="mcard"><span>${esc(label)}</span><b>${esc(val)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</div>`;
+function bullet(label, val, avg) {
+  const mx = Math.max(val || 0, avg || 0) * 1.2 || 1;
+  return `<div class="bul"><div class="bulh"><span>${esc(label)}</span><b>${esc(fmtRate(val))}</b>${avg != null ? `<small>${esc(t('bulAvg', {n: fmtRate(avg)}))}</small>` : ''}</div>` +
+    `<div class="bult"><i style="width:${(100 * (val || 0) / mx).toFixed(1)}%"></i>${avg != null ? `<em style="left:${(100 * avg / mx).toFixed(1)}%"></em>` : ''}</div></div>`;
+}
+const privNote = () => `<p class="anote">🔒 ${esc(t('privNote'))}</p>`;
+function vidStats(v, c) {   // the video panel: headline numbers, how it ranks, views over time, engagement
+  if (!c || !c.series.length) return '';
+  const r = chRates(c), lk = perK(v.l, v.v), cm = perK(v.c, v.v), n = c.series.length, rank = 1 + c.series.filter(x => x.v > v.v).length;
+  const cards = [mcard(t('mViews'), fmt(v.v), v.x ? t('mVsUsual', {x: fmtX(v.x)}) : '')];
+  if (v.l != null) cards.push(mcard(t('mLikes'), fmt(v.l), lk != null ? t('mPerK', {n: fmtRate(lk)}) : ''));
+  if (v.c != null) cards.push(mcard(t('mComments'), fmt(v.c), cm != null ? t('mPerK', {n: fmtRate(cm)}) : ''));
+  if (speed(v)) cards.push(mcard(t('mSpeed'), fmt(speed(v)), t('mNow')));
+  else if (c.series.includes(v)) cards.push(mcard(t('mRank'), t('rankV', {r: rank, n}), t('rankSub')));
+  const perf = !v.x ? null : v.x >= 3 ? ['up', '▲ ' + t('perfWay')] : v.x >= 1.3 ? ['up', '▲ ' + t('perfAbove')] : v.x >= 0.7 ? ['', t('perfTypical')] : ['down', '▼ ' + t('perfBelow')];
+  let h = `<h4 class="antitle">📊 ${esc(t('anT'))}</h4><div class="mcards">${cards.join('')}</div>`;
+  if (perf) h += `<div class="perf"><span class="perfpill ${perf[0]}">${esc(perf[1])}</span><span>${esc(t('perfWhy', {n}))}</span></div>`;
+  if ((v.vh || []).length >= 2) h += `<div class="chartbox"><h4>${esc(t('vidGrowth'))}</h4><div class="lchart" data-ch="${esc(c.ch_id)}" data-vid="${esc(v.id)}"></div></div>`;
+  if (n >= 3 && c.series.includes(v)) h += `<div class="chartbox"><h4>${esc(t('barsT'))}</h4><div class="bchart hasHl" data-ch="${esc(c.ch_id)}" data-hl="${esc(v.id)}"></div><small class="cap">${esc(t('barsHl'))}</small></div>`;
+  if (lk != null || cm != null) h += `<div class="chartbox"><h4>${esc(t('engT'))}</h4>${lk != null ? bullet(t('mLikes'), lk, r.likes) : ''}${cm != null ? bullet(t('mComments'), cm, r.comments) : ''}</div>`;
+  return h + privNote();
+}
+function postTimes(c) {   // a week grid of when the channel uploads, in the viewer's own time zone
+  const ps = c.series.map(v => v.p).filter(Boolean);
+  if (ps.length < 4) return '';
+  const g = Array.from({length: 7}, () => Array(6).fill(0));
+  ps.forEach(p => { const d = new Date(p * 1000); g[(d.getDay() + 6) % 7][Math.floor(d.getHours() / 4)]++; });
+  const mx = Math.max(...g.flat()), loc = UI === 'th' ? 'th-TH' : 'en-US';
+  const day = i => new Intl.DateTimeFormat(loc, {weekday: 'short'}).format(new Date(2024, 0, 1 + i));   // 1 Jan 2024 was a Monday
+  const hr = h => new Intl.DateTimeFormat(loc, {hour: 'numeric'}).format(new Date(2024, 0, 1, h % 24));
+  let best = [0, 0];
+  g.forEach((row, d) => row.forEach((n, b) => { if (n > g[best[0]][best[1]]) best = [d, b]; }));
+  const lvl = n => (!n ? '' : 'l' + Math.max(1, Math.ceil(4 * n / mx)));
+  const cells = g.map((row, d) => `<span class="dy">${esc(day(d))}</span>` + row.map((n, b) => `<i class="${lvl(n)}" title="${esc(`${day(d)} ${hr(b * 4)}–${hr(b * 4 + 4)} · ${t('uploadsN', {n})}`)}"></i>`).join('')).join('');
+  return `<div class="chartbox"><h4>${esc(t('timesT'))}</h4><div class="hmap" role="img" aria-label="${esc(t('timesT'))}"><span></span>${[0, 1, 2, 3, 4, 5].map(b => `<span class="hd">${esc(hr(b * 4))}</span>`).join('')}${cells}</div>` +
+    `<small class="cap">${esc(t('timesBest', {d: day(best[0]), h: `${hr(best[1] * 4)}–${hr(best[1] * 4 + 4)}`}))} · ${esc(t('timesD', {n: ps.length}))}</small></div>`;
+}
+function lenBars(c) {   // median views for each video length
+  const rows = [[0, 20, 'lenB1'], [20, 40, 'lenB2'], [40, 60, 'lenB3'], [60, 1e9, 'lenB4']].map(([a, b, k]) => {
+    const vs = c.series.filter(v => v.d != null && v.d >= a && v.d < b).map(v => v.v);
+    return {lab: t(k), n: vs.length, med: vs.length >= 2 ? median(vs) : null};
+  }).filter(r => r.med != null);
+  if (rows.length < 2) return '';
+  const mx = Math.max(...rows.map(r => r.med)), best = rows.find(r => r.med === mx);
+  return `<div class="chartbox"><h4>${esc(t('lenT'))}</h4><div class="hbars">${rows.map(r => `<div class="hbar" title="${esc(t('uploadsN', {n: r.n}))}"><span>${esc(r.lab)}</span><span class="trk"><i style="width:${(100 * r.med / mx).toFixed(1)}%"></i></span><b>${esc(fmt(r.med))}</b></div>`).join('')}</div>` +
+    `<small class="cap">${esc(t('lenBest', {l: best.lab}))} ${esc(t('lenD'))}</small></div>`;
+}
+function chStats(c) {   // the channel page: recent views, upload times, best length
+  if (c.series.length < 3) return '';
+  return `<div class="ancharts"><div class="chartbox"><h4>${esc(t('barsT'))}</h4><div class="bchart" data-ch="${esc(c.ch_id)}"></div><small class="cap">${esc(t('barsCh'))}</small></div>${postTimes(c)}${lenBars(c)}</div>` + privNote();
+}
+function drawBars(root) {
+  root.querySelectorAll('.bchart[data-ch]').forEach(el => {
+    const c = findCh(el.dataset.ch), hl = el.dataset.hl;
+    const vids = c ? c.series.filter(v => v.v != null).slice(0, 30).reverse() : [];   // oldest on the left
+    const W = el.clientWidth, H = el.clientHeight;
+    if (!W || vids.length < 2) return;
+    const pl = 0, pr = 46, pt = 8, pb = 18, gap = vids.length > 20 ? 2 : 3, n = vids.length;
+    const bw = Math.max(2, (W - pl - pr - gap * (n - 1)) / n), hi = Math.max(...vids.map(v => v.v)) * 1.06 || 1, base = H - pb;
+    const X = i => pl + i * (bw + gap), Y = val => pt + (1 - val / hi) * (base - pt), med = c.med_all || median(vids.map(v => v.v));
+    const bar = (v, i) => {
+      const x = X(i), y = Math.min(Y(v.v), base - 2), r = Math.min(4, bw / 2, base - y);
+      return `<path class="bar${v.id === hl ? ' hl' : ''}" d="M${x.toFixed(1)} ${base}V${(y + r).toFixed(1)}Q${x.toFixed(1)} ${y.toFixed(1)} ${(x + r).toFixed(1)} ${y.toFixed(1)}H${(x + bw - r).toFixed(1)}Q${(x + bw).toFixed(1)} ${y.toFixed(1)} ${(x + bw).toFixed(1)} ${(y + r).toFixed(1)}V${base}Z"/>`;
+    };
+    const my = Y(med).toFixed(1), first = vids[0].p, last = vids[n - 1].p;
+    el.innerHTML = `<svg width="${W}" height="${H}" role="img" aria-label="${esc(el.closest('.chartbox').querySelector('h4').textContent)}">${vids.map(bar).join('')}` +
+      `<line class="med" x1="${pl}" x2="${W - pr + 4}" y1="${my}" y2="${my}"/><text class="lb" x="${W - pr + 8}" y="${(+my + 4).toFixed(1)}">${esc(fmt(med))}</text>` +
+      (first ? `<text class="lb" x="${pl}" y="${H - 4}">${esc(shortDate(first))}</text>` : '') + (last ? `<text class="lb" x="${X(n - 1) + bw}" y="${H - 4}" text-anchor="end">${esc(shortDate(last))}</text>` : '') +
+      vids.map((v, i) => `<rect class="hit" x="${(X(i) - gap / 2).toFixed(1)}" y="${pt}" width="${(bw + gap).toFixed(1)}" height="${base - pt}" data-i="${i}"/>`).join('') + `</svg><div class="tip"></div>`;
+    const tip = el.querySelector('.tip'), bars = el.querySelectorAll('.bar');
+    const show = i => {
+      const v = vids[i];
+      bars.forEach((b, j) => b.classList.toggle('on', j === i));
+      tip.innerHTML = `<b>${esc(fmt(v.v))}</b> · ${esc(v.t.length > 60 ? v.t.slice(0, 58) + '…' : v.t)}${v.p ? `<br>${esc(shortDate(v.p))}` : ''}`;
+      tip.style.display = 'block'; tip.style.left = Math.min(Math.max(X(i) + bw / 2, 90), W - 90) + 'px'; tip.style.top = Math.max(Y(v.v), pt + 20) + 'px';
+    };
+    el.onpointermove = e => { const h = e.target.closest('.hit'); if (h) show(+h.dataset.i); };
+    el.onpointerleave = () => { tip.style.display = 'none'; bars.forEach(b => b.classList.remove('on')); };
+    el.onclick = e => { const h = e.target.closest('.hit'); if (h) openPlayer(vids[+h.dataset.i].id, c.ch_id); };
+  });
+}
+
 let chartTimer = null;
-window.addEventListener('resize', () => { clearTimeout(chartTimer); chartTimer = setTimeout(() => { if ($('#sheet').open) drawCharts($('#sheetBody')); if ($('#intro').open) fitIntro(); }, 150); });
+window.addEventListener('resize', () => { clearTimeout(chartTimer); chartTimer = setTimeout(() => { if ($('#sheet').open) drawCharts($('#sheetBody')); if ($('#player').open) drawCharts($('#playerBody')); if ($('#content .bchart')) drawCharts($('#content')); if ($('#intro').open) fitIntro(); }, 150); });
 
 /* ---------- video-style intro: a scripted walkthrough of a mock phone screen, with real channels ---------- */
 const I = {open: false, playing: false, t: 0, last: 0, raf: 0, scene: -1, fired: new Set(), voice: false, scenes: [], total: 0, cur: [400, 700], btn: ''};
@@ -2976,6 +3150,8 @@ function mineView() {
       <button type="button" class="ghost" data-minedrop>${esc(t('mineDisconnect'))}</button></div></div></div>`;
   h += `<div class="cards4"><div class="scard"><div class="lbl">${esc(t('mineUsual'))}</div><b>${usual ? esc(fmt(usual)) : '–'}</b></div><div class="scard"><div class="lbl">${esc(t('lBest'))}</div><b>${esc(fmt(best))}</b></div>
       <div class="scard"><div class="lbl">${esc(t('mineShorts'))}</div><b>${vs.length}</b></div>${chTalk(c) != null ? `<div class="scard"><div class="lbl">${esc(t('lTalk'))}</div><b>${esc(fmtTalk(chTalk(c)))}</b></div>` : ''}</div>`;
+  const an = chStats(c);
+  if (an) h += `<h3 class="subhead">📊 ${esc(t('anT'))}</h3>${an}`;
   h += `<h3 class="subhead">${esc(t('mineYpp'))}</h3><div class="ypp">${bar(t('mineSubs'), d.subs, 1000)}${bar(t('mineViews90'), v90, target)}<p class="pbtip">${esc(t('mineYppNote'))}</p></div>`;
   if (due.length) h += `<h3 class="subhead">${esc(t('mineDue'))}</h3><div class="rlist">${due.map(r => `<div class="rrow" style="cursor:default"><img class="tdthumb" src="${thumb(r.v.id)}" alt=""><div class="meta"><b>${esc(r.v.t)}</b><small>${esc(r.msg)}</small></div></div>`).join('')}</div>`;
   if (!usual) h += `<p class="pbmuted" style="margin-top:16px">${esc(t('mineFew'))}</p>`;
@@ -3365,6 +3541,7 @@ function renderContent() {
   else if (tab === 'help') el.innerHTML = helpView();
   else el.innerHTML = homeView();
   el.querySelectorAll('.rail').forEach((r, i) => { if (rails[i]) { r.style.scrollBehavior = 'auto'; r.scrollLeft = rails[i]; r.style.scrollBehavior = ''; } });
+  if (el.querySelector('.bchart')) drawCharts(el);
   lastTab = tab;
 }
 function renderButtons() {
