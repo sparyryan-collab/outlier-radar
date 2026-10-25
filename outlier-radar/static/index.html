@@ -37,8 +37,15 @@ svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .brand .logo{width:30px;height:22px;border-radius:7px;background:var(--red);display:grid;place-items:center}
 .brand .logo svg{width:16px;height:16px;fill:#fff;stroke:none}
 .search{flex:1 1 auto;max-width:600px;margin:0 auto;display:flex;min-width:0}
-.search input{flex:1;min-width:0;height:40px;padding:0 16px;border:1px solid var(--line);border-right:0;border-radius:40px 0 0 40px;background:var(--bg);outline:none;box-shadow:inset 0 1px 2px rgba(0,0,0,.06)}
-.search input:focus{border-color:var(--accent)}
+.qbox{flex:1;min-width:0;display:flex;align-items:center;height:40px;border:1px solid var(--line);border-right:0;border-radius:40px 0 0 40px;background:var(--bg);box-shadow:inset 0 1px 2px rgba(0,0,0,.06);padding-right:7px}
+.qbox:focus-within{border-color:var(--accent)}
+.search input{flex:1;min-width:0;height:38px;padding:0 10px 0 16px;border:0;background:transparent;outline:none}
+.qbadge{flex:none;display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:13px;background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;white-space:nowrap;cursor:text;user-select:none}
+.qbadge:empty{display:none}
+.qbadge i{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.qbadge.on i{background:var(--good);box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 22%,transparent)}
+.qbadge.out i{background:var(--bad)}
+.qbadge b{color:var(--text);font-weight:600}
 .search button{width:64px;height:40px;border:1px solid var(--line);border-radius:0 40px 40px 0;background:var(--surface);display:grid;place-items:center}
 .search button:hover{background:var(--surface2)}
 .search{position:relative}
@@ -662,6 +669,7 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
   #top{flex-wrap:wrap;height:auto;padding:8px 12px;gap:6px}
   #btnMenu{display:none}
   .search{order:5;flex:1 1 100%;max-width:none}
+  .qbadge .qbw{display:none}
   .actions{margin-left:auto}
   #chips{top:0;position:static;padding-top:4px}
   #side{position:fixed;inset:auto 0 0 0;top:auto;z-index:45;width:auto;height:60px;display:flex;padding:0 2px;background:var(--bg);border-top:1px solid var(--line);overflow:hidden}
@@ -691,7 +699,7 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 <header id="top">
   <button class="icon" id="btnMenu" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
   <a class="brand" href="#home" data-tab="home"><span class="logo"><svg viewBox="0 0 24 24"><path d="M12 2c1 4 6.5 6.5 6.5 13a6.5 6.5 0 0 1-13 0c0-3.5 2.2-5.6 3.3-6.6 0 2.3 1 3.6 2.3 3.6 0-3.4-1-6.6.9-10z"/></svg></span><span>Viral Radar</span></a>
-  <form class="search" id="searchForm" role="search"><input id="fq" type="search" autocomplete="off" enterkeyhint="search"><div id="shint" aria-live="polite"></div><button type="submit" id="searchBtn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form>
+  <form class="search" id="searchForm" role="search"><div class="qbox"><input id="fq" type="search" autocomplete="off" enterkeyhint="search"><span class="qbadge" id="qbadge"></span></div><div id="shint" aria-live="polite"></div><button type="submit" id="searchBtn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form>
   <div class="actions">
     <button class="pillbtn primary" id="btnScan"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg><span class="lbl" id="scanLbl"></span></button>
     <button class="pillbtn" id="btnExport"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span class="lbl" id="exportLbl"></span></button>
@@ -947,7 +955,7 @@ const T = {
 Object.assign(T.en, {
   histT: 'Recent searches · free to reopen', histClear: 'Clear', sRefresh: '🔄 Refresh (uses 1 search)',
   kInvalid: 'That does not look like an API key. Keys start with “AIza” and are 39 characters long.',
-  apiOn: 'YouTube search: on', apiOff: 'YouTube search: off', apiLeft: '{n} left today', apiT: 'Full YouTube search',
+  apiOn: 'YouTube search: on', qbOff: 'Our list only', qbLeft: '{n} left', apiOff: 'YouTube search: off', apiLeft: '{n} left today', apiT: 'Full YouTube search',
   apiOnD: 'Press Enter in the search box to search all of YouTube, not only our list. Each device gets {n} free searches a day.',
   apiOwnD: 'You are using your own API key on this device, so this site sets no daily limit.',
   apiOffD: 'Full YouTube search is not switched on for this site yet. The search box still finds channels and videos in our list.',
@@ -1017,7 +1025,7 @@ Object.assign(T.en, {
 Object.assign(T.th, {
   histT: 'ค้นหาล่าสุด · เปิดดูซ้ำได้ฟรี', histClear: 'ล้าง', sRefresh: '🔄 ค้นหาใหม่ (ใช้ 1 ครั้ง)',
   kInvalid: 'นี่ไม่ใช่คีย์ API คีย์จะขึ้นต้นด้วย “AIza” และยาว 39 ตัวอักษร',
-  apiOn: 'ค้นหา YouTube: เปิด', apiOff: 'ค้นหา YouTube: ปิด', apiLeft: 'เหลือ {n} ครั้งวันนี้', apiT: 'ค้นหาจาก YouTube ทั้งหมด',
+  apiOn: 'ค้นหา YouTube: เปิด', qbOff: 'เฉพาะรายการของเรา', qbLeft: 'เหลือ {n}', apiOff: 'ค้นหา YouTube: ปิด', apiLeft: 'เหลือ {n} ครั้งวันนี้', apiT: 'ค้นหาจาก YouTube ทั้งหมด',
   apiOnD: 'กด Enter ในช่องค้นหาเพื่อค้นหาจาก YouTube ทั้งหมด ไม่ใช่แค่รายการของเรา แต่ละอุปกรณ์ค้นหาฟรีได้วันละ {n} ครั้ง',
   apiOwnD: 'คุณใช้คีย์ API ของคุณเองบนอุปกรณ์นี้ เว็บนี้จึงไม่จำกัดจำนวนครั้งต่อวัน',
   apiOffD: 'เว็บนี้ยังไม่ได้เปิดการค้นหาจาก YouTube ทั้งหมด ช่องค้นหายังหาช่องและคลิปในรายการของเราได้',
@@ -1710,7 +1718,7 @@ function homeView() {
   }
   const st = statusInfo();
   h += `<div class="sumline"><span>${t('sumTracked', {n: DATA.channels.length})}</span><span>${t('sumHot', {n: DATA.channels.filter(c => c.score >= 65).length})}</span>` +
-    `<span>${t('sumNew', {n: liveVideos(DATA.channels).length})}</span><span class="livebox" style="margin:0"><span class="${st.cls}"></span>${esc(st.txt)}</span>${apiChip()}</div>`;
+    `<span>${t('sumNew', {n: liveVideos(DATA.channels).length})}</span><span class="livebox" style="margin:0"><span class="${st.cls}"></span>${esc(st.txt)}</span></div>`;
   h += `<button type="button" class="pbpromo" data-tab="playbook"><span class="em">📘</span><span><b>${esc(t('pbCardT'))}</b><span class="d">${esc(t('pbCardD'))}</span></span><span class="go">→</span></button>` + heatStrip() + (canInstall() ? `<div style="margin:-6px 0 16px">${installBtn()}</div>` : '');
   const add = (title, desc, items, see) => { if (items.length) { h += shelf(title, desc, items, see); n++; } };
   const byScore = (a, b) => b.score - a.score;
@@ -2048,7 +2056,16 @@ function apiHelp() {
   const d = !canSearch() ? t('apiOffD') : SERVER ? t('apiLocalD') : ownKey() ? t('apiOwnD') : t('apiOnD', {n: FREE_SEARCHES});
   return `<b>${esc(t('apiT'))}</b>${esc(d)}`;
 }
+function searchBadge() {
+  const el = $('#qbadge');
+  if (!el) return;
+  const on = canSearch(), lim = on && limited(), n = lim ? freeLeft() : 0;
+  el.className = 'qbadge ' + (!on ? 'off' : lim && !n ? 'out' : 'on');
+  el.title = t(on ? 'apiOn' : 'apiOff') + (lim ? ' · ' + t('apiLeft', {n}) : '');
+  el.innerHTML = '<i></i>' + (!on ? esc(t('qbOff')) : lim ? `<span class="qbw"><b>YouTube</b> ·</span><span>${esc(t('qbLeft', {n}))}</span>` : '<b>YouTube</b>');
+}
 function searchHint() {
+  searchBadge();
   const el = $('#shint');
   if (!el) return;
   const msg = !canSearch() ? t('hintOff') : limited() ? (freeLeft() ? t('hintOn', {n: freeLeft()}) : t('hintLimit')) : t('hintOnFree');
@@ -2563,7 +2580,7 @@ function openMore() {
   const items = [['home', 'nHome'], ['week', 'nWeek'], ['videos', 'nVideos'], ['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['playbook', 'nPlaybook'], ['mine', 'nMine'], ['saved', 'nSaved'], ['compare', 'nCompare'], ['help', 'nHelp']];
   body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('nMore'))}</h3>` +
     items.map(([id, k]) => `<button type="button" class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(k))}</span></button>`).join('') +
-    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div><div class="sidesec">${apiChip()} ${installBtn()}</div>` + syncBlock();
+    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + (canInstall() ? `<div class="sidesec">${installBtn()}</div>` : '') + syncBlock();
   dlg.showModal();
 }
 
@@ -3193,7 +3210,7 @@ function renderSide() {
   $('#side').innerHTML = nav('home', 'nHome') + nav('week', 'nWeek') + nav('videos', 'nVideos') + nav('channels', 'nChannels') + nav('live', 'nLive', fresh, true) +
     nav('ideas', 'nIdeas') + nav('topics', 'nTopics') + '<hr class="navsep">' + nav('playbook', 'nPlaybook', PB_STEPS.length - Object.values(PB.done).filter(Boolean).length || null) + nav('mine', 'nMine') + nav('saved', 'nSaved', saved) + nav('compare', 'nCompare', S.cmp.length) + nav('help', 'nHelp') + nav('more', 'nMore') +
     `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` +
-    `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div><div style="margin:10px 12px 0">${apiChip()}</div>${canInstall() ? `<div style="margin:10px 12px 0">${installBtn()}</div>` : ''}</div>` + syncBlock();
+    `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div>${canInstall() ? `<div style="margin:10px 12px 0">${installBtn()}</div>` : ''}</div>` + syncBlock();
 }
 function renderChips() {
   const el = $('#chips');
@@ -3383,6 +3400,7 @@ $('#searchForm').addEventListener('submit', e => {
   if (canSearch()) startSearch(q); else if (S.tab !== 'channels') go('channels');
 });
 let typeTimer = null;
+$('#qbadge').addEventListener('mousedown', e => { e.preventDefault(); $('#fq').focus(); });
 $('#fq').addEventListener('input', e => {
   S.q = e.target.value; shown.channels = 15; shown.videos = 60; shown.live = 60;
   clearTimeout(typeTimer);
