@@ -7,7 +7,7 @@
 <meta name="description" content="Find YouTube Shorts channels that are blowing up: small channels with huge views, viral videos and new uploads, in English and Thai.">
 <title>Viral Radar</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ff0033'/%3E%3Cpath d='M16 5c1.3 4.6 7.5 7.4 7.5 14.5a7.5 7.5 0 0 1-15 0c0-4 2.5-6.4 3.8-7.6 0 2.6 1.1 4.1 2.6 4.1 0-3.9-1.1-7.6 1.1-11z' fill='white'/%3E%3C/svg%3E">
-<script>try{var m=JSON.parse(localStorage.getItem('radar.theme'));if(m==='light'||m==='dark')document.documentElement.setAttribute('data-theme',m)}catch(e){}</script>
+<script>try{var m=JSON.parse(localStorage.getItem('radar.theme'));if(m==null&&matchMedia('(max-width: 760px), (pointer: coarse) and (max-width: 1024px)').matches)m='dark';if(m==='light'||m==='dark')document.documentElement.setAttribute('data-theme',m)}catch(e){}</script>
 <style>
 :root{
   --bg:#ffffff; --bg2:#f9f9f9; --surface:#f2f2f2; --surface2:#e5e5e5; --text:#0f0f0f; --muted:#606060; --line:#e5e5e5;
@@ -3282,7 +3282,8 @@ function acctClick(x) {
 $('#dlg').addEventListener('close', () => { $('#dlgBody').dataset.mode = ''; });
 
 /* ---------- appearance: follow the device, or always light / dark (kept on this device only) ---------- */
-const themeMode = () => LS.get('radar.theme', 'auto');
+const PHONE_Q = '(max-width: 760px), (pointer: coarse) and (max-width: 1024px)';   // phones and tablets start in dark mode until something else is picked
+const themeMode = () => LS.get('radar.theme', matchMedia(PHONE_Q).matches ? 'dark' : 'auto');
 const isDark = () => themeMode() === 'dark' || (themeMode() === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
 function setTheme(m) {
   LS.set('radar.theme', m);
