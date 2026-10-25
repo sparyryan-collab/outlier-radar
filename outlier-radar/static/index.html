@@ -41,6 +41,14 @@ svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .search input:focus{border-color:var(--accent)}
 .search button{width:64px;height:40px;border:1px solid var(--line);border-radius:0 40px 40px 0;background:var(--surface);display:grid;place-items:center}
 .search button:hover{background:var(--surface2)}
+.search{position:relative}
+#shint{position:absolute;top:46px;left:0;right:64px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:12.5px;color:var(--muted);box-shadow:var(--shadow);display:none;z-index:50}
+.search:focus-within #shint{display:block}
+#shint b{color:var(--text)}
+.apichip{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:0 10px;line-height:24px;font-size:12px;font-weight:600;cursor:help}
+.apichip.on{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good)}
+.apichip.off{background:var(--surface);color:var(--muted)}
+.apichip i{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
 .actions{display:flex;align-items:center;gap:6px}
 .pillbtn{height:36px;border:0;border-radius:18px;padding:0 14px;background:var(--surface);display:inline-flex;align-items:center;gap:6px;font-weight:500;white-space:nowrap}
 .pillbtn:hover{background:var(--surface2)}
@@ -573,7 +581,7 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 <header id="top">
   <button class="icon" id="btnMenu" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
   <a class="brand" href="#home" data-tab="home"><span class="logo"><svg viewBox="0 0 24 24"><path d="M12 2c1 4 6.5 6.5 6.5 13a6.5 6.5 0 0 1-13 0c0-3.5 2.2-5.6 3.3-6.6 0 2.3 1 3.6 2.3 3.6 0-3.4-1-6.6.9-10z"/></svg></span><span>Viral Radar</span></a>
-  <form class="search" id="searchForm" role="search"><input id="fq" type="search" autocomplete="off" enterkeyhint="search"><button type="submit" id="searchBtn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form>
+  <form class="search" id="searchForm" role="search"><input id="fq" type="search" autocomplete="off" enterkeyhint="search"><div id="shint" aria-live="polite"></div><button type="submit" id="searchBtn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form>
   <div class="actions">
     <button class="pillbtn primary" id="btnScan"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg><span class="lbl" id="scanLbl"></span></button>
     <button class="pillbtn" id="btnExport"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span class="lbl" id="exportLbl"></span></button>
@@ -826,6 +834,14 @@ const T = {
   }
 };
 Object.assign(T.en, {
+  apiOn: 'YouTube search: on', apiOff: 'YouTube search: off', apiLeft: '{n} left today', apiT: 'Full YouTube search',
+  apiOnD: 'Press Enter in the search box to search all of YouTube, not only our list. Each device gets {n} free searches a day.',
+  apiOwnD: 'You are using your own API key on this device, so this site sets no daily limit.',
+  apiOffD: 'Full YouTube search is not switched on for this site yet. The search box still finds channels and videos in our list.',
+  apiLocalD: 'This is your PC app: searches run on your computer, with no daily limit.',
+  hintOn: 'Enter = search all of YouTube · {n} left today on this device', hintOnFree: 'Enter = search all of YouTube',
+  hintOff: 'Typing finds channels in our list. Full YouTube search is off.', hintLimit: 'Today\'s free YouTube searches are used up on this device. Typing still finds channels in our list.',
+  similar: 'Similar channels', shTopicD: 'The hottest Shorts in this topic right now',
   nWeek: 'This week', nIdeas: 'Idea lab', nCompare: 'Compare', nMore: 'More',
   searchPhList: 'Search our channels and videos',
   pWeekT: 'This week’s Top 10', pWeekD: 'The biggest Shorts and channels of the last 7 days. Copy the list and send it to a friend.',
@@ -886,6 +902,14 @@ Object.assign(T.en, {
   sAddKey: 'Add my own key', sCached: 'saved results from {ago}'
 });
 Object.assign(T.th, {
+  apiOn: 'ค้นหา YouTube: เปิด', apiOff: 'ค้นหา YouTube: ปิด', apiLeft: 'เหลือ {n} ครั้งวันนี้', apiT: 'ค้นหาจาก YouTube ทั้งหมด',
+  apiOnD: 'กด Enter ในช่องค้นหาเพื่อค้นหาจาก YouTube ทั้งหมด ไม่ใช่แค่รายการของเรา แต่ละอุปกรณ์ค้นหาฟรีได้วันละ {n} ครั้ง',
+  apiOwnD: 'คุณใช้คีย์ API ของคุณเองบนอุปกรณ์นี้ เว็บนี้จึงไม่จำกัดจำนวนครั้งต่อวัน',
+  apiOffD: 'เว็บนี้ยังไม่ได้เปิดการค้นหาจาก YouTube ทั้งหมด ช่องค้นหายังหาช่องและคลิปในรายการของเราได้',
+  apiLocalD: 'นี่คือแอปบนคอมพิวเตอร์ของคุณ ค้นหาบนเครื่องของคุณได้ไม่จำกัด',
+  hintOn: 'Enter = ค้นหาจาก YouTube ทั้งหมด · วันนี้เหลือ {n} ครั้งบนอุปกรณ์นี้', hintOnFree: 'Enter = ค้นหาจาก YouTube ทั้งหมด',
+  hintOff: 'พิมพ์เพื่อหาช่องในรายการของเรา การค้นหาจาก YouTube ทั้งหมดปิดอยู่', hintLimit: 'วันนี้ใช้สิทธิ์ค้นหา YouTube ฟรีบนอุปกรณ์นี้ครบแล้ว พิมพ์เพื่อหาช่องในรายการของเราได้',
+  similar: 'ช่องที่คล้ายกัน', shTopicD: 'คลิปสั้นที่มาแรงที่สุดในหมวดนี้ตอนนี้',
   nWeek: 'สัปดาห์นี้', nIdeas: 'ห้องไอเดีย', nCompare: 'เปรียบเทียบ', nMore: 'เพิ่มเติม',
   searchPhList: 'ค้นหาช่องและคลิปในรายการของเรา',
   pWeekT: 'ท็อป 10 ประจำสัปดาห์', pWeekD: 'คลิปสั้นและช่องที่ดังที่สุดใน 7 วันที่ผ่านมา คัดลอกรายการแล้วส่งให้เพื่อนได้เลย',
@@ -1061,13 +1085,13 @@ const topicName = tp => (UI === 'th' ? tp[3] : tp[2]);
 
 /* ---------- state ---------- */
 const TABS = ['home', 'week', 'videos', 'channels', 'live', 'ideas', 'topics', 'saved', 'compare', 'help'];
-const S = Object.assign({tab: 'home', q: '', topic: '', minScore: 50, maxSubs: 0, minMed: 0, lang: 'all', hideOne: true, tag: '', niche: '',
-  sort: 'score', minX: 3, vsort: 'x', shelf: 'new', lsort: 'new', detail: false, cmp: []}, LS.get('radar.state3', {}));
+const S = Object.assign({tab: 'home', q: '', topic: '', minScore: 0, maxSubs: 0, minMed: 0, lang: 'all', hideOne: true, tag: '', niche: '',
+  sort: 'score', minX: 2, vsort: 'x', shelf: 'new', lsort: 'new', detail: false, cmp: []}, LS.get('radar.state4', {}));
 const hashTab = () => { const h = decodeURIComponent(location.hash.slice(1)); return TABS.includes(h) ? h : null; };
 if (hashTab()) S.tab = hashTab();
 if (!TABS.includes(S.tab)) S.tab = 'home';
 S.q = '';   // a remembered search phrase would silently filter the lists on the next visit
-const saveState = () => LS.set('radar.state3', Object.assign({}, S, {q: '', tab: TABS.includes(S.tab) ? S.tab : 'home'}));
+const saveState = () => LS.set('radar.state4', Object.assign({}, S, {q: '', tab: TABS.includes(S.tab) ? S.tab : 'home'}));
 const shown = {channels: 15, videos: 60, live: 60};
 const watchLocal = new Set(LS.get('radar.watch', []));
 let SEARCH = null, PREV_TAB = 'home', searchTimer = null, SHEET_ID = null, SHEET_SORT = 'new', lastTab = null;
@@ -1192,6 +1216,7 @@ const xText = x => (x >= 1.5 ? t('xMore', {x: fmtX(x)}) : x >= 0.8 ? t('xAbout')
 const HELPKEYS = {subs: ['lSubs', 'gSubs'], typical: ['lTypical', 'gTypical'], best: ['lBest', 'gBest'], ratio: ['lRatio', 'gRatio'], x: ['lX', 'gX'],
   hits: ['lHits', 'gHits'], grow: ['lGrow', 'gGrow'], new: ['lNew', 'gNew'], score: ['lScore', 'gScore'], trend: ['lTrend', 'gTrend'], freq: ['lFreq', 'gFreq']};
 function helpHtml(key) {
+  if (key === 'api') return apiHelp();
   if (key === 'verdict') return `<b>${esc(t('lVerdict'))}</b>${esc(t('gVerdict'))}` +
     [3, 2, 1, 0].map(l => `<div style="margin-top:4px">${l ? fire(l) : '•'} <b style="display:inline">${esc(t(VKEY[l]))}</b>: ${esc(t(VKEY[l] + 'D'))}</div>`).join('');
   if (key.startsWith('tag:')) return `<b>${esc(tagName(key.slice(4)))}</b>${esc(tagDesc(key.slice(4)))}`;
@@ -1367,17 +1392,22 @@ function homeView() {
   }
   const st = statusInfo();
   h += `<div class="sumline"><span>${t('sumTracked', {n: DATA.channels.length})}</span><span>${t('sumHot', {n: DATA.channels.filter(c => c.score >= 65).length})}</span>` +
-    `<span>${t('sumNew', {n: liveVideos(DATA.channels).length})}</span><span class="livebox" style="margin:0"><span class="${st.cls}"></span>${esc(st.txt)}</span></div>`;
+    `<span>${t('sumNew', {n: liveVideos(DATA.channels).length})}</span><span class="livebox" style="margin:0"><span class="${st.cls}"></span>${esc(st.txt)}</span>${apiChip()}</div>`;
   const add = (title, desc, items, see) => { if (items.length) { h += shelf(title, desc, items, see); n++; } };
   const byScore = (a, b) => b.score - a.score;
   add('shPicks', 'shPicksD', picksList().filter(baseOk).map(pickCard), '');
-  add('shViral', 'shViralD', viralVideos(chs).slice(0, 18).map(([v, c]) => vCard(v, c)), 'videos');
+  add('shViral', 'shViralD', viralVideos(chs).slice(0, 24).map(([v, c]) => vCard(v, c)), 'videos');
   const fresh = liveVideos(chs), good = fresh.filter(([, c]) => c.score >= 40);
-  add('shNew', 'shNewD', (good.length >= 4 ? good : fresh).sort((a, b) => speed(b[0]) - speed(a[0])).slice(0, 18).map(([v, c]) => vCard(v, c, {showWhen: true})), 'live');
-  add('shSmall', 'shSmallD', chs.filter(c => c.subs > 0 && c.subs <= 50000 && c.score >= 50 && !c.tags.includes('One-hit')).sort((a, b) => b.med_recent - a.med_recent).slice(0, 18).map(chCard), 'small');
-  if (S.lang === 'all') add('shThai', 'shThaiD', chs.filter(c => c.lang === 'th').sort(byScore).slice(0, 18).map(chCard), 'thai');
-  add('shRising', 'shRisingD', chs.filter(c => c.tags.includes('Rising') && c.score >= 50).sort(byScore).slice(0, 18).map(chCard), 'rising');
-  add('shSteady', 'shSteadyD', chs.filter(c => c.tags.includes('Consistent engine')).sort(byScore).slice(0, 18).map(chCard), 'steady');
+  add('shNew', 'shNewD', (good.length >= 4 ? good : fresh).sort((a, b) => speed(b[0]) - speed(a[0])).slice(0, 24).map(([v, c]) => vCard(v, c, {showWhen: true})), 'live');
+  add('shSmall', 'shSmallD', chs.filter(c => c.subs > 0 && c.subs <= 50000 && c.score >= 50 && !c.tags.includes('One-hit')).sort((a, b) => b.med_recent - a.med_recent).slice(0, 24).map(chCard), 'small');
+  if (!S.topic) {   // a shelf for each of the hottest topics
+    TOPICS.map(tp => { const list = chs.filter(c => chTopics(c).has(tp[0])); return {tp, list, hot: list.filter(c => c.score >= 65).length}; })
+      .filter(r => r.list.length >= 6).sort((a, b) => b.hot - a.hot).slice(0, 4)
+      .forEach(r => { const vids = viralVideos(r.list).slice(0, 24); if (vids.length >= 4) add(`${r.tp[1]} ${topicName(r.tp)}`, 'shTopicD', vids.map(([v, c]) => vCard(v, c)), 'topic:' + r.tp[0]); });
+  }
+  if (S.lang === 'all') add('shThai', 'shThaiD', chs.filter(c => c.lang === 'th').sort(byScore).slice(0, 24).map(chCard), 'thai');
+  add('shRising', 'shRisingD', chs.filter(c => c.tags.includes('Rising') && c.score >= 50).sort(byScore).slice(0, 24).map(chCard), 'rising');
+  add('shSteady', 'shSteadyD', chs.filter(c => c.tags.includes('Consistent engine')).sort(byScore).slice(0, 24).map(chCard), 'steady');
   if (!n) h += emptyBox(t('emptyHome'));
   return h;
 }
@@ -1481,7 +1511,7 @@ function helpView() {
     <div class="acc">
       <details><summary>${esc(t('helpWords'))}</summary><div>${verdicts}${gloss}</div></details>
       <details><summary>${ideas.em} ${esc(ideas.h)}</summary><div><ol>${(ideas.ol || []).map(x => `<li>${rich(x)}</li>`).join('')}</ol></div></details>
-      <details><summary>${srch.em} ${esc(srch.h)}</summary><div>${(srch.p || []).map(x => `<p>${rich(x)}</p>`).join('')}${STATIC && !canSearch() ? `<button type="button" class="pillbtn" data-changekey>${esc(t('helpSetup'))}</button>` : ''}</div></details>
+      <details><summary>${srch.em} ${esc(srch.h)}</summary><div><p>${apiChip()}</p>${(srch.p || []).map(x => `<p>${rich(x)}</p>`).join('')}${STATIC && !canSearch() ? `<button type="button" class="pillbtn" data-changekey>${esc(t('helpSetup'))}</button>` : ''}</div></details>
       <details><summary>${faq.em} ${esc(faq.h)}</summary><div>${(faq.qa || []).map(([q, a]) => `<details class="qa"><summary>${esc(q)}</summary><p>${rich(a)}</p></details>`).join('')}</div></details>
     </div>`;
 }
@@ -1530,6 +1560,11 @@ async function pollSearch() {
 }
 
 /* ---------- channel page (sheet) ---------- */
+function similarChannels(c, n) {   // channels found by the same searches, then the same topics; hottest first
+  const qs = new Set(c.queries || []), tps = chTopics(c);
+  return DATA.channels.filter(o => o.ch_id !== c.ch_id).map(o => ({o, k: (o.queries || []).filter(x => qs.has(x)).length * 3 + [...chTopics(o)].filter(x => tps.has(x)).length}))
+    .filter(r => r.k > 0).sort((a, b) => b.k - a.k || b.o.score - a.o.score).slice(0, n).map(r => r.o);
+}
 function drawSheet(keepScroll) {
   const c = findCh(SHEET_ID), body = $('#sheetBody');
   if (!c) return;
@@ -1559,6 +1594,7 @@ function drawSheet(keepScroll) {
       ${c.tags.length ? `<h3>🏷️ ${esc(t('labels'))}</h3><div class="taglist">${c.tags.map(k => `<div><span class="tag ${TAGS[k] ? TAGS[k].cls : ''}">${esc(tagName(k))}</span><small>${esc(tagDesc(k))}</small></div>`).join('')}</div>` : ''}
       <h3>🎬 ${esc(t('recent'))} <span class="seg"><button type="button" data-shsort="new" aria-pressed="${SHEET_SORT === 'new'}">${esc(t('newestFirst'))}</button><button type="button" data-shsort="top" aria-pressed="${SHEET_SORT === 'top'}">${esc(t('topFirst'))}</button></span></h3>
       <div class="vgrid">${vids.map(v => vCard(v, c, {noCh: true, showWhen: true})).join('')}</div>
+      ${(sim => sim.length ? `<h3>🧭 ${esc(t('similar'))}</h3><div class="rail">${sim.map(chCard).join('')}</div>` : '')(similarChannels(c, 12))}
       ${c.descr ? `<h3>ℹ️ ${esc(t('about'))}</h3><p class="descr">${esc(c.descr)}${needsTr(c) ? ` <a class="tr" href="${trUrl(c.descr)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}</p>` : ''}
     </div>`;
   body.scrollTop = keepScroll ? top : 0;
@@ -1674,6 +1710,22 @@ const pct = x => (x >= 0.1 ? Math.round(x * 100) : Math.round(x * 1000) / 10) + 
 const mmss = ms => { const s = Math.round(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
 const shortDate = ts => new Date(ts * 1000).toLocaleDateString(UI === 'th' ? 'th-TH' : 'en-US', {month: 'short', day: 'numeric'});
 const longTime = ts => new Date(ts * 1000).toLocaleString(UI === 'th' ? 'th-TH' : 'en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
+
+/* ---------- is full YouTube search available here? ---------- */
+const limited = () => STATIC && canSearch() && !ownKey();   // the site's shared key: a daily allowance per device
+function apiChip() {
+  const on = canSearch(), extra = on && limited() ? ' · ' + t('apiLeft', {n: freeLeft()}) : '';
+  return `<button type="button" class="apichip ${on ? 'on' : 'off'}" data-help="api"><i></i>🔎 ${esc(t(on ? 'apiOn' : 'apiOff') + extra)}</button>`;
+}
+function apiHelp() {
+  const d = !canSearch() ? t('apiOffD') : SERVER ? t('apiLocalD') : ownKey() ? t('apiOwnD') : t('apiOnD', {n: FREE_SEARCHES});
+  return `<b>${esc(t('apiT'))}</b>${esc(d)}`;
+}
+function searchHint() {
+  const el = $('#shint');
+  if (!el) return;
+  el.textContent = !canSearch() ? t('hintOff') : limited() ? (freeLeft() ? t('hintOn', {n: freeLeft()}) : t('hintLimit')) : t('hintOnFree');
+}
 
 /* ---------- this week ---------- */
 function weekData() {
@@ -2179,7 +2231,7 @@ function openMore() {
   const items = [['home', 'nHome'], ['week', 'nWeek'], ['videos', 'nVideos'], ['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['saved', 'nSaved'], ['compare', 'nCompare'], ['help', 'nHelp']];
   body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('nMore'))}</h3>` +
     items.map(([id, k]) => `<button type="button" class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(k))}</span></button>`).join('') +
-    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>`;
+    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div><div class="sidesec">${apiChip()}</div>`;
   dlg.showModal();
 }
 
@@ -2189,6 +2241,7 @@ function applyStaticText() {
   const fq = $('#fq');
   fq.placeholder = canSearch() ? t('searchPh') : t('searchPhList');
   if (fq.value !== S.q) fq.value = S.q;
+  searchHint();
   $('#scanLbl').textContent = $('#btnScan').disabled ? t('scanning') : t('scan');
   $('#exportLbl').textContent = t('export');
   $('#btnExport').title = t('exportTip');
@@ -2204,7 +2257,7 @@ function renderSide() {
   $('#side').innerHTML = nav('home', 'nHome') + nav('week', 'nWeek') + nav('videos', 'nVideos') + nav('channels', 'nChannels') + nav('live', 'nLive', fresh, true) +
     nav('ideas', 'nIdeas') + nav('topics', 'nTopics') + '<hr class="navsep">' + nav('saved', 'nSaved', saved) + nav('compare', 'nCompare', S.cmp.length) + nav('help', 'nHelp') + nav('more', 'nMore') +
     `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` +
-    `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div></div>`;
+    `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div><div style="margin:10px 12px 0">${apiChip()}</div></div>`;
 }
 function renderChips() {
   const el = $('#chips');
@@ -2328,7 +2381,8 @@ document.addEventListener('click', async e => {
   const see = x.closest('[data-see]');
   if (see) {
     const k = see.dataset.see;
-    if (PRESETS[k]) { Object.assign(S, PRESETS[k]); go('channels'); } else go(k);
+    if (k.startsWith('topic:')) { S.topic = k.slice(6); saveState(); go('videos'); }
+    else if (PRESETS[k]) { Object.assign(S, PRESETS[k]); go('channels'); } else go(k);
     return;
   }
   const rail = x.closest('[data-rail]');
@@ -2573,6 +2627,7 @@ async function staticSearch(query) {
     await Promise.all([worker(), worker(), worker(), worker()]);
     mine.state = 'done';
     saveSearchCache(ck, mine.channels);
+    searchHint();
   } catch (e) {
     mine.state = 'error';
     mine.msg = e && e.quota ? t('kQuota') : e && e.badKey ? t('kBad') : e && e.net ? t('kNet') : t('sErr');

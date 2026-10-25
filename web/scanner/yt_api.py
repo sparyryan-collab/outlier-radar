@@ -1,8 +1,7 @@
 """Minimal YouTube Data API v3 client (standard library only) with quota accounting.
 
-Google's published default (updated 2026-10): 100 search.list calls a day, plus 10,000 units a day for all other endpoints.
-Older documentation charged 100 units per search, so this client counts a search as 100 units to stay safe either way
-(and the scanner also keeps its own cap on the number of searches).
+Google's published default: 100 search.list calls a day (a bucket of their own), plus 10,000 units a day for all other endpoints.
+So a search costs nothing from the units budget here; the scanner caps its number of searches separately.
 The API key is sent as a query parameter, so error messages here never include the request URL.
 """
 import json
@@ -14,7 +13,7 @@ import urllib.parse
 import urllib.request
 
 BASE = os.environ.get("YT_API_BASE", "https://www.googleapis.com/youtube/v3")
-COST = {"search": 100}
+COST = {"search": 0}   # search.list has its own daily bucket of 100 calls
 
 
 class QuotaExceeded(Exception):
@@ -124,6 +123,11 @@ class YouTube:
                     "descr": re.sub(r"\s+", " ", sn.get("description", "")).strip()[:400], "avatar": avatar,
                 }
         return out
+
+    def featured_channels(self, ch_id):
+        """Channels a creator features on their own channel page (1 unit). Often similar channels in the same niche."""
+        data = self.call("channelSections", part="contentDetails", channelId=ch_id)
+        return [c for it in data.get("items", []) for c in (it.get("contentDetails") or {}).get("channels", []) if isinstance(c, str)]
 
     def recent_upload_ids(self, ch_id, n=50):
         """A channel's newest uploads (the uploads playlist id is the channel id with UC replaced by UU). 1 unit."""

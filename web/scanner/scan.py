@@ -7,9 +7,11 @@ The previous data.json (downloaded from the live site, or the seed file the firs
 """
 import argparse
 import datetime as dt
+import hashlib
 import importlib.util
 import json
 import os
+import re
 import sys
 import time
 import urllib.request
@@ -19,13 +21,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))   # works however Pytho
 from yt_api import ApiError, QuotaExceeded, YouTube  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
-SEARCH_EVERY = int(os.environ.get("SEARCH_EVERY", "2"))          # one discovery search every N runs (100 units each)
-PROBES_PER_RUN = int(os.environ.get("PROBES_PER_RUN", "28"))      # channels re-checked per run (about 2 units each)
-DAILY_BUDGET = int(os.environ.get("DAILY_BUDGET", "6500"))        # units this scanner may use per day (a search is counted as 100); the rest is left for live searches
-SEARCH_DAILY_CAP = int(os.environ.get("SEARCH_DAILY_CAP", "30"))  # Google allows about 100 searches a day per project; keep the rest for visitors
+SEARCH_EVERY = int(os.environ.get("SEARCH_EVERY", "1"))          # a discovery search every N runs (searches are paced across the day)
+PROBES_PER_RUN = int(os.environ.get("PROBES_PER_RUN", "40"))      # channels re-checked per run (about 2 units each)
+DAILY_BUDGET = int(os.environ.get("DAILY_BUDGET", "8000"))        # of the 10,000 daily units; the rest is left for visitors' live searches
+SEARCH_DAILY_CAP = int(os.environ.get("SEARCH_DAILY_CAP", "45"))  # Google allows 100 searches a day per project; the rest is left for visitors
+FEATURED_PER_RUN = int(os.environ.get("FEATURED_PER_RUN", "3"))  # top channels whose featured channels are looked up per run (1 unit each)
 RUN_BUDGET = int(os.environ.get("RUN_BUDGET", "400"))
 WINDOW_DAYS = int(os.environ.get("SEARCH_WINDOW_DAYS", "30"))
-KEEP_CHANNELS = int(os.environ.get("KEEP_CHANNELS", "700"))
+KEEP_CHANNELS = int(os.environ.get("KEEP_CHANNELS", "1500"))
 HIST_POINTS = int(os.environ.get("HIST_POINTS", "48"))         # growth history kept per channel (at most one point per 6 hours)
 
 
@@ -56,6 +59,56 @@ def load_prev(url, seed):
     if seed and Path(seed).exists():
         return json.loads(Path(seed).read_text(encoding="utf-8")), "seed file"
     return {"channels": [], "_state": {}}, "empty"
+
+
+def day_fraction(ts):
+    """How far through Google's quota day (Pacific time) we are, 0..1."""
+    try:
+        from zoneinfo import ZoneInfo
+        t = dt.datetime.fromtimestamp(ts, ZoneInfo("America/Los_Angeles"))
+    except Exception:
+        t = dt.datetime.fromtimestamp(ts - 8 * 3600, dt.timezone.utc)
+    return (t.hour * 3600 + t.minute * 60 + t.second) / 86400
+
+
+def merge_extra(path, channels, st, log):
+    """Adds channels scored by the PC app (web/seed/extra.json) once per version of that file. The API re-checks them when due."""
+    p = Path(path) if path else None
+    if not p or not p.exists():
+        return
+    raw = p.read_bytes()
+    digest = hashlib.sha1(raw).hexdigest()[:16]
+    if st.get("extra_hash") == digest:
+        return
+    added = 0
+    for c in json.loads(raw.decode("utf-8")):
+        if not isinstance(c, dict) or c.get("ch_id") in channels or not re.fullmatch(r"UC[\w-]{22}", c.get("ch_id", "")) or len(c.get("series") or []) < 6:
+            continue
+        channels[c["ch_id"]] = dict(c, watch=False, pick=None)
+        added += 1
+    st["extra_hash"] = digest
+    log.append(f"Added {added} channels found by the PC scanner")
+
+
+def crawl_featured(yt, st, channels, pending, now, log, limit):
+    """Looks up the channels top creators feature on their pages; unknown ones become candidates and inherit the source's topics."""
+    done = st.setdefault("featured", {})
+    picks = sorted((c for c in channels.values() if (c.get("score") or 0) >= 55 and now - done.get(c["ch_id"], 0) > 7 * 86400),
+                   key=lambda c: -(c.get("score") or 0))[:limit]
+    found = 0
+    for c in picks:
+        done[c["ch_id"]] = int(now)
+        try:
+            ids = yt.featured_channels(c["ch_id"])
+        except ApiError:
+            continue
+        for fid in ids:
+            if fid in channels or fid in pending or not re.fullmatch(r"UC[\w-]{22}", fid):
+                continue
+            pending[fid] = {"ch_id": fid, "name": "", "hit_views": 0, "hit_title": "", "queries": list(c.get("queries", []))[:3], "via": c["ch_id"]}
+            found += 1
+    if picks:
+        log.append(f"Related channels: {found} new candidates from {len(picks)} top channels")
 
 
 def pick_targets(channels, pending, st, picks, now, limit):
@@ -158,6 +211,7 @@ def main():
     ap.add_argument("--seed", default=str(ROOT / "web" / "seed" / "data.json"))
     ap.add_argument("--queries", default=str(ROOT / "web" / "queries.json"))
     ap.add_argument("--picks", default=str(ROOT / "outlier-radar" / "picks.json"))
+    ap.add_argument("--extra", default=str(ROOT / "web" / "seed" / "extra.json"))
     ap.add_argument("--out", default=str(ROOT / "_site" / "data.json"))
     args = ap.parse_args()
 
@@ -179,6 +233,7 @@ def main():
         picks = {}
 
     log = list((prev.get("status") or {}).get("log", []))[-18:]
+    merge_extra(args.extra, channels, st, log)
     stamp = time.strftime("%H:%M", time.gmtime(now)) + " UTC"
     errors = 0
     key = os.environ.get("YT_API_KEY", "")
@@ -192,7 +247,8 @@ def main():
     else:
         yt = YouTube(key, budget)
         try:
-            if queries and st["runs"] % SEARCH_EVERY == 0 and budget >= 130 and st["searches_used"] < SEARCH_DAILY_CAP:
+            paced = min(SEARCH_DAILY_CAP, int(SEARCH_DAILY_CAP * day_fraction(now)) + 2)   # spread the day's searches out
+            if queries and st["runs"] % SEARCH_EVERY == 0 and budget >= 60 and st["searches_used"] < paced:
                 discover(yt, st, queries, channels, pending, now, log)
             targets = pick_targets(channels, pending, st, picks, now, PROBES_PER_RUN)
             infos = yt.channels(targets) if targets else {}
@@ -215,6 +271,7 @@ def main():
                 channels[ch_id] = new
                 pending.pop(ch_id, None)
                 done += 1
+            crawl_featured(yt, st, channels, pending, now, log, FEATURED_PER_RUN)
             log.append(f"{stamp}  Re-checked {done}/{len(targets)} channels using {yt.used} units")
         except QuotaExceeded as e:
             log.append(f"{stamp}  Stopped early: {e}")
@@ -242,6 +299,7 @@ def main():
                     for k, v in sorted(st["qstats"].items())],
         "config": {},
         "_state": {**{k: st[k] for k in ("quota_day", "quota_used", "searches_used", "runs", "cursor", "failed", "qstats")},
+                   "extra_hash": st.get("extra_hash", ""), "featured": {k: v for k, v in st.get("featured", {}).items() if now - v < 8 * 86400},
                    "pending": dict(list(pending.items())[:3000])},
     }
     # forget channels that fell off the ranked list (they would only be re-discovered by searches)

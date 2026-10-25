@@ -1,13 +1,13 @@
 name: Refresh site
 
-# Every 30 minutes: re-check channels with the YouTube Data API and publish the updated site.
+# About every 15 minutes (at off-peak minutes, which GitHub delays and drops less): re-check channels with the YouTube Data API and publish the updated site.
 # Needs a repository secret named YT_API_KEY (see web/README.md). Optional repository variables:
 #   CUSTOM_DOMAIN  your domain, e.g. radar.example.com   (the domain itself is set in Settings > Pages)
 #   BROWSER_KEY    a referrer-restricted API key that lets every visitor use live search
 #   SITE_URL       only if your site address is not https://<you>.github.io/<repo>
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "4,19,34,49 * * * *"
   workflow_dispatch:
   push:
     branches: [main]
@@ -67,7 +67,7 @@ jobs:
         run: test -f _site/data.json || cp web/seed/data.json _site/data.json
 
       - name: Download any new profile pictures
-        run: python web/scanner/sync_avatars.py _site/data.json _site/avatars 60
+        run: python web/scanner/sync_avatars.py _site/data.json _site/avatars 150
 
       - uses: actions/configure-pages@v5
 

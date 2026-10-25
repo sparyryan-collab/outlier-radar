@@ -88,6 +88,9 @@ class Fake(BaseHTTPRequestHandler):
                                                        "description": "A test channel about cats", "thumbnails": {"medium": {"url": "https://yt3.ggpht.com/test=s240"}}},
                                   "statistics": {"subscriberCount": str(CHANNELS[c]["subs"])}})
             return self.reply(200, {"items": items})
+        if path == "channelSections":   # channel 1 features channel 2 (already known, so nothing new is added)
+            ch = q["channelId"][0]
+            return self.reply(200, {"items": [{"snippet": {"type": "multiplechannels"}, "contentDetails": {"channels": [cid(2)]}}] if ch == cid(1) else []})
         if path == "playlistItems":
             n = int(q["playlistId"][0][2:])
             if cid(n) not in CHANNELS:
@@ -115,7 +118,12 @@ def run_scan(tmp, offset, prev=None, port=0):
     queries.write_text(json.dumps([{"q": "cats what if"}]), encoding="utf-8")
     picks = Path(tmp) / "picks.json"
     picks.write_text("[]", encoding="utf-8")
-    cmd = [sys.executable, str(HERE / "scan.py"), "--seed", str(seed), "--queries", str(queries), "--picks", str(picks), "--out", str(out)]
+    extra = Path(tmp) / "extra.json"
+    if not extra.exists():   # one channel scored by the PC app, merged once
+        extra.write_text(json.dumps([{"ch_id": cid(9), "name": "PC Found Channel", "subs": 1000, "score": 91.0, "tags": [], "queries": ["cats"], "lang": "en",
+                                      "english": True, "series": [{"id": vid(9, i), "t": "x", "v": 500000} for i in range(8)],
+                                      "last_probe": NOW.timestamp(), "med_recent": 500000}]), encoding="utf-8")
+    cmd = [sys.executable, str(HERE / "scan.py"), "--seed", str(seed), "--queries", str(queries), "--picks", str(picks), "--out", str(out), "--extra", str(extra)]
     if prev:
         cmd += ["--prev-url", Path(prev).resolve().as_uri()]
     r = subprocess.run(cmd, env=env, capture_output=True, text=True, encoding="utf-8", cwd=tmp)
@@ -131,7 +139,7 @@ def main():
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     with tempfile.TemporaryDirectory() as tmp:
         d1, out1 = run_scan(tmp, 0, port=port)
-        ch = {c["name"]: c for c in d1["channels"]}
+        ch = {c["name"]: c for c in d1["channels"] if c["name"] != "PC Found Channel"}
         assert len(ch) == 2, f"expected 2 scored channels, got {list(ch)}"
         hit, quiet = ch["Small Hit Channel"], ch["Big Quiet Channel"]
         assert hit["score"] > quiet["score"] + 20, (hit["score"], quiet["score"])   # small channel with huge views must outrank the big quiet one
@@ -140,10 +148,12 @@ def main():
         assert all(s.get("d") == 45 for s in hit["series"]), "each Short keeps its length in seconds"
         assert hit["lang"] in ("en", "und") and hit["english"], hit["lang"]
         used1 = d1["_state"]["quota_used"]
-        expect = 100 + 1 + 1 + 2 * 2 + 0  # search + videos(search) + channels + (playlistItems+videos) per channel
+        expect = 0 + 1 + 1 + 2 * 2 + 2  # search (own bucket) + videos(search) + channels + (playlistItems+videos) per channel + featured lookups for the 2 top channels
         assert used1 == expect, f"quota accounting: used {used1}, expected {expect} ({Fake.calls})"
         assert d1["status"]["quota"]["used_today"] == used1
         assert d1["_state"]["searches_used"] == 1 and d1["status"]["quota"]["searches_today"] == 1, d1["status"]["quota"]
+        assert "PC Found Channel" in [c["name"] for c in d1["channels"]] and d1["_state"]["extra_hash"], "PC-found channels are merged"
+        assert cid(1) in d1["_state"]["featured"], "featured channels of a top channel were looked up"
         print(f"run 1 OK: scored {len(ch)} channels, hit={hit['score']} quiet={quiet['score']}, quota {used1} units")
 
         WORLD.update(extra=True, bump=5000)               # more views, plus one new upload on channel 1
@@ -169,7 +179,7 @@ def main():
                            env=env, capture_output=True, text=True, encoding="utf-8", cwd=tmp)
         assert out3.exists() and r.returncode == 1, (r.returncode, r.stdout, r.stderr)
         assert "wrong" not in (r.stdout + r.stderr), "the API key must never be printed"
-        assert len(json.loads(out3.read_text(encoding="utf-8"))["channels"]) == 2
+        assert len(json.loads(out3.read_text(encoding="utf-8"))["channels"]) == 3
         print("bad-key run OK: data kept, non-zero exit, key not leaked")
     print("ALL CHECKS PASSED")
 

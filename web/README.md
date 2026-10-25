@@ -2,7 +2,7 @@
 
 This puts the dashboard on the internet at an address you choose, updating by itself while your PC is off.
 
-How it works: a static website on **GitHub Pages**, refreshed every 30 minutes by a **GitHub Actions** job that asks YouTube's **official Data API** for fresh numbers. There is no server to keep running and nothing sleeps. The PC app stays as it is; this is a second, hosted edition of the same dashboard.
+How it works: a static website on **GitHub Pages**, refreshed about every 15 minutes by a **GitHub Actions** job that asks YouTube's **official Data API** for fresh numbers. There is no server to keep running and nothing sleeps. The PC app stays as it is; this is a second, hosted edition of the same dashboard.
 
 ## Cost and billing details
 
@@ -24,12 +24,12 @@ Running out of YouTube quota never bills you. YouTube just refuses further calls
 | Anyone can open it by link | no | **yes** (public, read-only) |
 | Custom domain with HTTPS | no | **yes** |
 | Data source | yt-dlp scraping, no quota | official YouTube Data API: free, with Google's default of about **100 searches and 10,000 other units a day** (it can change) |
-| How fresh | every 20 min, most channels hourly | every 30 min; each run re-checks 28 channels, so a good channel is re-checked about every 3 hours and every channel at least daily; a new search niche every hour |
+| How fresh | every 20 min, most channels hourly | about every 15 min (GitHub sometimes skips scheduled runs at busy times); each run re-checks up to 40 channels, looks up related channels of 3 top creators, and runs one discovery search (up to 45 a day, spread out) |
 | Live search for any topic | yes, for you | yes, with an API key (see "Live search" below) |
 | Real upload times in the Live feed | no (first-seen time) | **yes** |
 | Cost | free | free (plus your domain, about 10-15 USD a year) |
 
-Be aware: because of the API quota, the hosted site covers fewer channels and refreshes less often than the PC app. It starts with the 700 best channels the PC app found, and grows from there.
+Be aware: because of the API quota, the hosted site refreshes each channel less often than the PC app. It keeps the best 1,500 channels. To give it a big boost at any time, let the PC app scan for a while, then run `python web/scanner/export_extra.py` and push: the website merges those channels once and keeps them fresh from then on.
 
 ## Setup (about 15 minutes)
 
@@ -64,7 +64,7 @@ gh api -X POST repos/{owner}/{repo}/pages -f build_type=workflow
 gh secret set YT_API_KEY
 gh workflow run "Refresh site"
 ```
-`gh secret set` asks you to paste the key (you will not see it as you paste). After about two minutes your site is live at `https://<your-github-name>.github.io/outlier-radar/`. From then on it refreshes every 30 minutes by itself.
+`gh secret set` asks you to paste the key (you will not see it as you paste). After about two minutes your site is live at `https://<your-github-name>.github.io/outlier-radar/`. From then on it refreshes by itself, about every 15 minutes.
 
 If the first run shows a red cross under the repository's Actions tab, open it: the log says what failed (the most common cause is a wrong or not yet enabled API key). The site still publishes the starter data meanwhile.
 
@@ -123,13 +123,14 @@ Anyone who wants more can still add their own key from the How to use page; it s
 
 - **Niches to scan:** edit `web/queries.json` (each entry has `q`, and optionally `lang` and `region`, for example `th` and `TH`). Push the change and the next run picks it up.
 - **Your notes on top channels:** edit `outlier-radar/picks.json` (English and Thai fields), push.
-- **How fast it spends quota:** environment values in the workflow, defaults in `web/scanner/scan.py` (`PROBES_PER_RUN`, `SEARCH_EVERY`, `DAILY_BUDGET`).
+- **How fast it spends quota:** environment values in the workflow, defaults in `web/scanner/scan.py` (`PROBES_PER_RUN`, `SEARCH_DAILY_CAP`, `DAILY_BUDGET`, `FEATURED_PER_RUN`, `KEEP_CHANNELS`).
+- **Add the PC app's finds:** `python web/scanner/export_extra.py` writes `web/seed/extra.json` (channels the site does not have yet) and copies their profile pictures; push it and the next run merges them.
 - **Check the scanner logic without any key or network:** `python web/scanner/selftest.py` (it runs against a fake YouTube API).
 
 ## Things to know
 
 - Scheduled GitHub jobs can start a few minutes late, and GitHub switches scheduled jobs off after 60 days without repository activity. The workflow ends each run by asking GitHub to keep it enabled, which is meant to prevent that. I could not confirm that here, so if you ever see the schedule stopped, open Actions and click Enable (or push any small change).
-- Google's limits reset at midnight Pacific time. The scanner keeps itself well inside them (at most 30 searches and 6,500 counted units a day by default, leaving the rest for visitors); if YouTube refuses a call it stops and the site keeps showing the last good data. Google's published numbers are described as subject to change, so if searches start failing early, lower `SEARCH_DAILY_CAP`.
+- Google's limits reset at midnight Pacific time. The scanner keeps itself well inside them (searches have their own bucket of 100 calls a day; the scanner uses at most 45 of them and 8,000 of the 10,000 daily units, leaving the rest for visitors); if YouTube refuses a call it stops and the site keeps showing the last good data. Google's published numbers are described as subject to change, so if searches start failing early, lower `SEARCH_DAILY_CAP`.
 - The profile pictures are stored on the site itself (downloaded slowly and cached), because hot-linking Google's image server gets rate limited.
 - Channel numbers come from the official API, so a few things differ from the PC app: the API cannot tell a Short from a short regular video, so any upload of 3 minutes or less counts; subscriber counts are rounded by YouTube.
 - Scores rank patterns of demand. They do not predict results. Study the formats, then make something original.
