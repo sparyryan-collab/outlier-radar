@@ -82,7 +82,15 @@ svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .nav:hover{background:var(--hover)}
 .nav[aria-current=true]{background:var(--surface);font-weight:600}
 .nav .n{margin-left:auto;color:var(--muted);font-size:12px;font-weight:400}
+.nav .lbl{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .navsep{border:0;border-top:1px solid var(--line);margin:8px 0}
+.navh{margin:12px 12px 4px;font-size:15px;font-weight:600}
+.mrow{display:flex;align-items:center;gap:22px;height:48px;padding:0 12px}
+.mrow>span{flex:1}
+#btnSearchM,#btnSearchBack{display:none}
+#acct .pillbtn{background:transparent;box-shadow:inset 0 0 0 1px var(--line);color:var(--accent);font-weight:600}
+#acct .pillbtn:hover{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+@keyframes sheetup{from{transform:translateY(30%);opacity:.3}}
 #side .nav[data-tab=more]{display:none}
 .nav .n.hot{background:var(--red);color:#fff;border-radius:9px;padding:0 6px;line-height:18px;font-weight:600}
 .sidesec{border-top:1px solid var(--line);margin:10px 0;padding-top:12px}
@@ -97,7 +105,7 @@ svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .sidefoot{margin:12px;color:var(--muted);font-size:11px;line-height:1.5}
 body.mini #side{width:76px;padding:4px}
 body.mini .nav{flex-direction:column;gap:4px;height:68px;justify-content:center;padding:0;font-size:10px;text-align:center}
-body.mini .nav .n,body.mini .sidesec,body.mini .sidefoot{display:none}
+body.mini .nav .n,body.mini .sidesec,body.mini .sidefoot,body.mini .navh{display:none}
 main{flex:1;min-width:0;padding:0 24px 48px}
 
 /* ---- topic chips + filters ---- */
@@ -138,13 +146,7 @@ button.tag,button.vd{cursor:help}
 .qm:hover{background:var(--surface);color:var(--text)}
 
 /* ---- home ---- */
-.hero{position:relative;display:flex;gap:22px;align-items:center;padding:22px 24px;margin:4px 0 18px;border-radius:18px;background:linear-gradient(120deg,color-mix(in srgb,var(--red) 13%,var(--bg)),color-mix(in srgb,#ffb000 15%,var(--bg)))}
-.hero .emo{font-size:46px;line-height:1}
-.hero h2{margin:0 0 6px;font-size:22px;line-height:1.3;padding-right:30px}
-.hero p{margin:0 0 14px;max-width:720px}
-.hero .btns{display:flex;gap:8px;flex-wrap:wrap}
-.hero .closex{position:absolute;right:10px;top:10px}
-.sumline{display:flex;gap:8px 18px;flex-wrap:wrap;align-items:center;color:var(--muted);margin:0 0 6px;font-size:13px}
+.sumline{display:flex;gap:8px 18px;flex-wrap:wrap;align-items:center;color:var(--muted);margin:0 0 12px;font-size:13px}
 .sumline b{color:var(--text);font-weight:600}
 .shelfsec{margin:12px 0 28px}
 .shhead{display:flex;align-items:flex-end;gap:12px;margin-bottom:10px}
@@ -320,16 +322,6 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 #player .hint{color:#aaa;font-size:12px}
 #player .dlgclose{background:#272727;color:#fff}
 #player .btns{display:flex;gap:8px;flex-wrap:wrap}
-.welcome{text-align:center;padding:30px 28px 26px}
-.welcome .emo{font-size:52px;line-height:1}
-.welcome h3{font-size:24px;margin:10px 0 6px}
-.welcome .langs{display:flex;gap:10px;justify-content:center;margin:14px 0 18px}
-.welcome .langs button{min-width:130px;height:52px;border-radius:14px;border:2px solid var(--line);background:var(--bg);font-size:17px;font-weight:600}
-.welcome .langs button[aria-pressed=true]{border-color:var(--red);background:color-mix(in srgb,var(--red) 8%,var(--bg))}
-.welcome ul{list-style:none;padding:0;margin:0 auto 20px;max-width:480px;text-align:left;display:flex;flex-direction:column;gap:10px}
-.welcome li{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border-radius:12px;padding:10px 14px}
-.welcome li .em{font-size:20px}
-.welcome .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 
 
 /* ---- this week ---- */
@@ -606,12 +598,6 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .pbsrc{max-width:960px;color:var(--muted);font-size:12.5px;margin:18px 0}
 .pbsrc ul{margin:6px 0 10px;padding-left:18px}
 .pbsrc a{color:var(--accent)}
-.pbpromo{display:flex;align-items:center;gap:14px;width:100%;max-width:960px;border:0;text-align:left;background:linear-gradient(120deg,color-mix(in srgb,var(--accent) 15%,var(--bg)),color-mix(in srgb,#8a5cff 13%,var(--bg)));border-radius:16px;padding:14px 18px;margin:8px 0 18px}
-.pbpromo:hover{filter:brightness(1.05)}
-.pbpromo .em{font-size:32px;line-height:1}
-.pbpromo b{display:block;font-size:16px}
-.pbpromo .d{color:var(--muted);font-size:13px}
-.pbpromo .go{margin-left:auto;font-size:22px;color:var(--accent)}
 .ypp{display:flex;flex-direction:column;gap:12px;max-width:640px}
 .yrow{font-size:13.5px;display:flex;flex-direction:column;gap:5px}
 .ytrack{height:12px;border-radius:99px;background:var(--surface2);overflow:hidden}
@@ -642,7 +628,7 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .syncrow b{display:block;font-size:12.5px;line-height:1.3;overflow:hidden;text-overflow:ellipsis}
 .syncrow small{color:var(--muted);font-size:11.5px}
 /* ---- heating up ---- */
-.heatstrip{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:-8px 0 16px;max-width:960px}
+.heatstrip{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 18px;max-width:960px}
 .heatstrip b{font-size:13px}
 .heatup{color:var(--good)!important;font-weight:600}
 /* ---- growth curve inside the dark video player ---- */
@@ -660,33 +646,78 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 @media (max-width:1000px){
   #side{width:76px;padding:4px}
   #side .nav{flex-direction:column;gap:4px;height:68px;justify-content:center;padding:0;font-size:10px;text-align:center}
-  #side .nav .n,#side .sidesec,#side .sidefoot{display:none}
+  #side .nav .n,#side .sidesec,#side .sidefoot,#side .navh{display:none}
   #player .pwrap{flex-direction:column;overflow:auto}
   #player .pvid{height:min(66vh,640px);margin:0 auto}
   #player .pside{width:auto;max-width:520px}
 }
 @media (max-width:760px){
-  #top{flex-wrap:wrap;height:auto;padding:8px 12px;gap:6px}
-  #btnMenu{display:none}
-  .search{order:5;flex:1 1 100%;max-width:none}
+  #top{height:48px;padding:0 4px 0 12px;gap:4px}
+  #btnMenu,#btnHelp,#langSeg,.search,#searchBtn{display:none}
+  .brand{font-size:18px;padding:0;gap:5px}
+  .brand .logo{width:28px;height:20px;border-radius:6px}
+  .brand .logo svg{width:14px;height:14px}
+  #btnSearchM{display:grid}
+  .actions{margin-left:auto;gap:2px}
+  #acct .pillbtn{height:34px;padding:0 11px 0 9px;font-size:13px}
+  #acct .pillbtn .lbl{display:inline}
+  body.msearch .brand,body.msearch .actions,body.hasq .brand,body.hasq .actions{display:none}
+  body.msearch #btnSearchBack,body.hasq #btnSearchBack{display:grid}
+  body.msearch .search,body.hasq .search{display:flex;max-width:none;margin:0 8px 0 0}
+  .qbox{height:36px;border:1px solid transparent;border-radius:18px;background:var(--surface);box-shadow:none;padding-right:5px}
+  .qbox:focus-within{border-color:var(--accent);background:var(--bg)}
+  .search input{height:34px;padding:0 8px 0 14px}
+  .qbadge{height:24px;padding:0 8px;background:var(--bg)}
+  .qbox:focus-within .qbadge{background:var(--surface)}
   .qbadge .qbw{display:none}
-  .actions{margin-left:auto}
-  #chips{top:0;position:static;padding-top:4px}
-  #side{position:fixed;inset:auto 0 0 0;top:auto;z-index:45;width:auto;height:60px;display:flex;padding:0 2px;background:var(--bg);border-top:1px solid var(--line);overflow:hidden}
-  #side .nav{height:58px;flex:1;min-width:0;border-radius:0}
-  #side .nav[data-tab=channels],#side .nav[data-tab=live],#side .nav[data-tab=ideas],#side .nav[data-tab=topics],#side .nav[data-tab=compare],#side .nav[data-tab=help],#side .nav[data-tab=playbook],#side .nav[data-tab=mine],#side .navsep{display:none}
-  #side .nav[data-tab=more]{display:flex}
-  #tray{bottom:72px}
+  #shint{position:fixed;top:48px;left:0;right:0;border-radius:0;border-width:0 0 1px;padding:10px 16px;font-size:13px}
+  #chips{top:48px;margin:0 -12px;padding:6px 12px 10px;gap:8px}
+  #chips .chip{height:32px;padding:0 12px;font-size:13.5px}
+  main{padding:0 12px 76px}
+  .sumline{font-size:12px;gap:2px 12px;margin:0 0 10px}
+  .sumline .smhide,.homeinstall{display:none}
+  .heatstrip{flex-wrap:nowrap;overflow-x:auto;margin:0 -12px 16px;padding:0 12px;scrollbar-width:none}
+  .heatstrip::-webkit-scrollbar{display:none}
+  .heatstrip>*{flex:none}
+  .shelfsec{margin:4px 0 24px}
+  .shhead{align-items:center;gap:8px;margin-bottom:10px}
+  .shhead h2{font-size:18px}
+  .shhead p{font-size:12px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+  .shhead [data-rail]{display:none}
+  .seeall{height:32px;padding:0 10px;font-size:13px}
+  .rail{margin:0 -12px;padding:0 12px 4px;gap:10px;scroll-padding:0 12px}
+  .rail .vcard{flex-basis:calc((100vw - 44px) / 2.3)}
+  .rail .ccard{flex-basis:calc((100vw - 44px) / 1.8)}
+  .rail .pcard{flex-basis:calc(100vw - 60px)}
+  .rail .vcard .avlink,.vgrid .vcard .avlink{display:none}
+  .vmeta{margin-top:8px}
+  .vt{font-size:13.5px;line-height:1.35}
+  .th{border-radius:10px}
+  .vgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 10px}
+  .phead h1{font-size:20px}
+  .phead p{font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .filters{flex-wrap:nowrap;overflow-x:auto;margin:2px -12px 12px;padding:0 12px;scrollbar-width:none}
+  .filters::-webkit-scrollbar{display:none}
+  .filters>*{flex:none}
+  #side,body.mini #side{position:fixed;inset:auto 0 0 0;top:auto;z-index:45;width:auto;height:56px;display:flex;padding:0;background:var(--bg);border-top:1px solid var(--line);overflow:hidden}
+  #side>*{display:none}
+  #side>.nav[data-tab=home],#side>.nav[data-tab=week],#side>.nav[data-tab=videos],#side>.nav[data-tab=saved],#side>.nav[data-tab=more]{display:flex}
+  #side .nav{height:56px;flex:1;min-width:0;border-radius:0;gap:2px;padding:0 2px;font-size:10px}
+  #side .nav:hover{background:transparent}
+  #side .nav .lbl{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #side .nav[aria-current=true]{background:transparent;font-weight:600}
+  #side .nav[aria-current=true] svg{stroke-width:2.4}
+  #side .nav[aria-current=true][data-tab=home] svg,#side .nav[aria-current=true][data-tab=videos] svg,#side .nav[aria-current=true][data-tab=saved] svg{fill:currentColor}
+  #tray{bottom:68px}
+  #dlg{margin:auto 0 0;width:100%;max-width:100%;max-height:88vh;border-radius:16px 16px 0 0;animation:sheetup .22s ease-out}
+  #dlg .dlg{padding:8px 16px 20px;max-height:88vh}
+  #dlg .dlg::before{content:"";display:block;width:36px;height:4px;border-radius:2px;background:var(--surface2);margin:0 auto 14px}
   .wkgrid{grid-template-columns:1fr 1fr;gap:18px 8px}
   .rk .num{font-size:54px;margin-right:-12px;-webkit-text-stroke:2px var(--text)}
-  #side .nav[aria-current=true]{background:transparent;color:var(--red)}
-  main{padding:0 12px 84px}
-  .hero{flex-direction:column;align-items:flex-start;padding:18px;gap:10px}
-  .hero .emo{font-size:36px}
-  .chhead{flex-wrap:wrap;gap:14px}
+  .chhead{flex-wrap:wrap;gap:12px}
+  .ch .chhead>.avlink .av{width:56px!important;height:56px!important;font-size:22px!important}
+  .chname>button:first-child{font-size:16px}
   .right{flex-direction:row;width:100%;justify-content:flex-start;flex-wrap:wrap}
-  .rail .vcard{flex-basis:150px}
-  .rail .pcard{flex-basis:280px}
   .shtop{flex-direction:column;align-items:flex-start;padding:22px 56px 14px 18px;gap:12px}
   .shbody{padding:4px 18px 22px}
   .gl{grid-template-columns:1fr;gap:2px}
@@ -699,11 +730,13 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 <header id="top">
   <button class="icon" id="btnMenu" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
   <a class="brand" href="#home" data-tab="home"><span class="logo"><svg viewBox="0 0 24 24"><path d="M12 2c1 4 6.5 6.5 6.5 13a6.5 6.5 0 0 1-13 0c0-3.5 2.2-5.6 3.3-6.6 0 2.3 1 3.6 2.3 3.6 0-3.4-1-6.6.9-10z"/></svg></span><span>Viral Radar</span></a>
+  <button class="icon" id="btnSearchBack" type="button"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
   <form class="search" id="searchForm" role="search"><div class="qbox"><input id="fq" type="search" autocomplete="off" enterkeyhint="search"><span class="qbadge" id="qbadge"></span></div><div id="shint" aria-live="polite"></div><button type="submit" id="searchBtn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form>
   <div class="actions">
     <button class="pillbtn primary" id="btnScan"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg><span class="lbl" id="scanLbl"></span></button>
     <button class="pillbtn" id="btnExport"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span class="lbl" id="exportLbl"></span></button>
     <button class="pillbtn" id="btnSettings"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span class="lbl" id="settingsLbl"></span></button>
+    <button class="icon" id="btnSearchM" type="button"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
     <span id="acct"></span>
     <button class="icon" id="btnHelp" data-tab="help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.8M12 17.2h.01"/></svg></button>
     <div class="seg" id="langSeg" role="group" aria-label="Language"><button data-ui="en" aria-pressed="true">EN</button><button data-ui="th" aria-pressed="false">ไทย</button></div>
@@ -751,9 +784,7 @@ const T = {
     stStart: 'Starting…', stIdle: 'Last scan {ago}', stNext: ' · next in {n} min', stUpdated: 'Live · updated {ago}', stCounts: '{s} channels scored',
     offline: 'Can’t reach the app. Is it still running?',
     now: 'just now', min: '{n} min ago', hr: '{n} h ago', day: '{n} d ago', never: 'never',
-    heroTitle: 'Find YouTube Shorts channels that are blowing up',
-    heroBody: 'We keep checking hundreds of channels and show you the ones getting far more views than their size. Tap a video to watch it, tap a channel to see why it stands out.',
-    heroHow: 'How to use (2 min)', heroHide: 'Got it',
+    heroHow: 'How to use (2 min)',
     sumTracked: '<b>{n}</b> channels tracked', sumHot: '<b>{n}</b> hot right now', sumNew: '<b>{n}</b> new uploads (3 days)', sumUpd: 'updated {ago}',
     shPicks: '⭐ Our top picks', shPicksD: 'Hand-checked channels with an idea worth learning from',
     shViral: '🔥 Blowing up right now', shViralD: 'Shorts getting many times more views than their channel usually gets',
@@ -840,10 +871,6 @@ const T = {
     kQuota: 'YouTube says this key’s daily quota is used up. It resets at midnight Pacific time.',
     kBad: 'YouTube refused this key. Check that it is an API key with YouTube Data API v3 enabled and that it is allowed on this website.',
     kNet: 'Couldn’t reach YouTube. Check your connection.',
-    wTitle: 'Welcome to Viral Radar 👋', wPick: 'Choose your language',
-    w1: 'We keep checking YouTube Shorts and pick out channels that are growing unusually fast.',
-    w2: 'More fire = hotter channel. Tap any video to watch it right here.',
-    w3: 'Save channels you like and use them as ideas for your own videos.',
     wStart: 'Start exploring', wHow: 'Show me how it works'
   },
   th: {
@@ -856,9 +883,7 @@ const T = {
     stStart: 'กำลังเริ่มต้น…', stIdle: 'สแกนล่าสุด {ago}', stNext: ' · ครั้งถัดไปใน {n} นาที', stUpdated: 'สด · อัปเดต {ago}', stCounts: 'ให้คะแนนแล้ว {s} ช่อง',
     offline: 'เชื่อมต่อแอปไม่ได้ แอปยังทำงานอยู่หรือเปล่า?',
     now: 'เมื่อสักครู่', min: '{n} นาทีที่แล้ว', hr: '{n} ชม.ที่แล้ว', day: '{n} วันที่แล้ว', never: 'ยังไม่เคย',
-    heroTitle: 'ค้นหาช่อง YouTube Shorts ที่กำลังมาแรง',
-    heroBody: 'เราคอยตรวจช่องหลายร้อยช่องอยู่ตลอด แล้วคัดช่องที่ได้ยอดวิวมากเกินขนาดช่องมาให้ดู กดที่คลิปเพื่อดูคลิป หรือกดที่ช่องเพื่อดูว่าทำไมช่องนั้นถึงน่าสนใจ',
-    heroHow: 'วิธีใช้งาน (2 นาที)', heroHide: 'เข้าใจแล้ว',
+    heroHow: 'วิธีใช้งาน (2 นาที)',
     sumTracked: 'ติดตาม <b>{n}</b> ช่อง', sumHot: 'มาแรงตอนนี้ <b>{n}</b> ช่อง', sumNew: 'คลิปใหม่ <b>{n}</b> คลิป (3 วัน)', sumUpd: 'อัปเดต {ago}',
     shPicks: '⭐ ช่องที่เราแนะนำ', shPicksD: 'ช่องที่เราตรวจดูเองแล้ว มีไอเดียที่น่าเรียนรู้',
     shViral: '🔥 กำลังไวรัลตอนนี้', shViralD: 'คลิปสั้นที่ได้ยอดวิวมากกว่าปกติของช่องหลายเท่า',
@@ -945,10 +970,6 @@ const T = {
     kQuota: 'YouTube แจ้งว่าโควตารายวันของคีย์นี้หมดแล้ว จะรีเซ็ตตอนเที่ยงคืนตามเวลาแปซิฟิก (ประมาณบ่ายสองถึงบ่ายสามโมงตามเวลาไทย)',
     kBad: 'YouTube ไม่ยอมรับคีย์นี้ ตรวจสอบว่าเป็นคีย์ API ที่เปิดใช้ YouTube Data API v3 และอนุญาตให้ใช้กับเว็บไซต์นี้',
     kNet: 'เชื่อมต่อ YouTube ไม่ได้ ตรวจสอบอินเทอร์เน็ต',
-    wTitle: 'ยินดีต้อนรับสู่ Viral Radar 👋', wPick: 'เลือกภาษา',
-    w1: 'เราคอยตรวจคลิปสั้นบน YouTube แล้วคัดช่องที่โตเร็วผิดปกติมาให้',
-    w2: 'ยิ่งไฟเยอะ ช่องยิ่งมาแรง กดที่คลิปไหนก็ได้เพื่อดูในหน้านี้เลย',
-    w3: 'กดบันทึกช่องที่ชอบ แล้วเก็บไว้เป็นไอเดียสำหรับคลิปของคุณเอง',
     wStart: 'เริ่มใช้งาน', wHow: 'ดูวิธีใช้งาน'
   }
 };
@@ -1094,10 +1115,9 @@ Object.assign(T.th, {
 });
 Object.assign(T.en, {
   nPlaybook: 'Playbook', nMine: 'My channel',
-  pbT: 'The Viral Shorts Playbook', pbD: 'The whole method from Jack Craig’s channel-growth experiments, checked against YouTube’s own rules and turned into 8 steps with tools. Your progress is saved on this device.',
+  pbT: 'The Viral Shorts Playbook', pbCardD: 'Go from zero to your first viral Short in 8 guided steps, with tools for each one.', pbD: 'The whole method from Jack Craig’s channel-growth experiments, checked against YouTube’s own rules and turned into 8 steps with tools. Your progress is saved on this device.',
   pbProgress: '{a} of {b} steps done', pbDone: 'Mark this step as done', pbUndone: 'Done ✓ (tap to undo)', pbStep: 'Step {n}', pbReset: 'Start over',
   pbResetQ: 'Clear all your playbook notes on this device?', pbSources: 'Where this comes from', pbBackup: '💾 Backup / move to another device', pbAdd: '＋ Add', pbRemove: 'Remove',
-  pbCardT: 'New: the Viral Shorts Playbook', pbCardD: 'Go from zero to your first viral Short in 8 guided steps, with tools for each one.',
   methodT: 'The method in 60 seconds', methodBtn: '▶ Watch the method in 60 seconds', methodEnd: 'Your turn: open the Playbook', openPlaybook: '📘 Open the Playbook',
   pbS1T: 'Set your goal and the deadline', pbS2T: 'Find an outlier niche', pbS3T: 'Tear down 3–5 winning Shorts', pbS4T: 'Set up your channel in under an hour',
   pbS5T: 'Write 5 Shorts before you post any', pbS6T: 'Publish and read the numbers', pbS7T: 'Double down on what works', pbS8T: 'Grow beyond Shorts, safely',
@@ -1179,10 +1199,9 @@ Object.assign(T.en, {
 });
 Object.assign(T.th, {
   nPlaybook: 'คู่มือสร้างช่อง', nMine: 'ช่องของฉัน',
-  pbT: 'คู่มือทำช่อง Shorts ให้ปัง', pbD: 'วิธีทั้งหมดจากการทดลองปั้นช่องของ Jack Craig ตรวจสอบกับกฎของ YouTube แล้ว จัดเป็น 8 ขั้นตอนพร้อมเครื่องมือ ความคืบหน้าบันทึกไว้ในอุปกรณ์นี้',
+  pbT: 'คู่มือทำช่อง Shorts ให้ปัง', pbCardD: 'จากศูนย์สู่คลิปไวรัลคลิปแรกใน 8 ขั้นตอน พร้อมเครื่องมือในทุกขั้น', pbD: 'วิธีทั้งหมดจากการทดลองปั้นช่องของ Jack Craig ตรวจสอบกับกฎของ YouTube แล้ว จัดเป็น 8 ขั้นตอนพร้อมเครื่องมือ ความคืบหน้าบันทึกไว้ในอุปกรณ์นี้',
   pbProgress: 'ทำแล้ว {a} จาก {b} ขั้นตอน', pbDone: 'ทำขั้นตอนนี้เสร็จแล้ว', pbUndone: 'เสร็จแล้ว ✓ (กดเพื่อยกเลิก)', pbStep: 'ขั้นตอนที่ {n}', pbReset: 'เริ่มใหม่',
   pbResetQ: 'ล้างโน้ตในคู่มือทั้งหมดบนอุปกรณ์นี้?', pbSources: 'ข้อมูลนี้มาจากไหน', pbBackup: '💾 สำรองข้อมูล / ย้ายไปอุปกรณ์อื่น', pbAdd: '＋ เพิ่ม', pbRemove: 'ลบ',
-  pbCardT: 'ใหม่: คู่มือทำช่อง Shorts ให้ปัง', pbCardD: 'จากศูนย์สู่คลิปไวรัลคลิปแรกใน 8 ขั้นตอน พร้อมเครื่องมือในทุกขั้น',
   methodT: 'วิธีทั้งหมดใน 60 วินาที', methodBtn: '▶ ดูวิธีทั้งหมดใน 60 วินาที', methodEnd: 'ตาคุณแล้ว: เปิดคู่มือเลย', openPlaybook: '📘 เปิดคู่มือ',
   pbS1T: 'ตั้งเป้าหมายและเส้นตาย', pbS2T: 'หาหมวดที่มีช่องโดดเด่น', pbS3T: 'แยกชิ้นส่วนคลิปที่ปัง 3–5 คลิป', pbS4T: 'ตั้งค่าช่องภายในหนึ่งชั่วโมง',
   pbS5T: 'เขียนสคริปต์ 5 คลิปก่อนลงคลิปแรก', pbS6T: 'ลงคลิปแล้วอ่านตัวเลข', pbS7T: 'ต่อยอดสิ่งที่ได้ผล', pbS8T: 'โตไปไกลกว่า Shorts อย่างปลอดภัย',
@@ -1291,6 +1310,8 @@ Object.assign(T.th, {
   signErr: 'เข้าสู่ระบบไม่สำเร็จ: {m}', signWhy: 'เข้าสู่ระบบเพื่อเก็บช่องที่บันทึกไว้และคู่มือไว้ในทุกอุปกรณ์',
   syncPriv: 'มีแค่คุณที่อ่านข้อมูลที่ซิงค์ได้ การเข้าสู่ระบบจัดการโดย Google และเว็บนี้ไม่เคยเห็นรหัสผ่านของคุณ'
 });
+Object.assign(T.en, {nTutorial: 'Video tutorial', nTour: 'Hands-on tour', sYou: 'You', mLearn: 'Learn', mExplore: 'Explore', langT: 'Language', searchT: 'Search', backT: 'Back'});
+Object.assign(T.th, {nTutorial: 'วิดีโอสอนใช้งาน', nTour: 'ลองใช้จริงทีละขั้น', sYou: 'ของคุณ', mLearn: 'เรียนรู้', mExplore: 'สำรวจ', langT: 'ภาษา', searchT: 'ค้นหา', backT: 'กลับ'});
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
     den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
@@ -1487,7 +1508,10 @@ const ICON = {
   compare: '<svg viewBox="0 0 24 24"><path d="M12 4v16M8 20h8M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0z"/></svg>',
   more: '<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>',
   playbook: '<svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5M8 7h8M8 11h6"/></svg>',
-  mine: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 15l3-4 3 2 4-5"/></svg>'
+  mine: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 15l3-4 3 2 4-5"/></svg>',
+  tutorial: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z"/></svg>',
+  tour: '<svg viewBox="0 0 24 24"><path d="M5 3.5l13 6.8-5.6 1.7-2 5.6z"/><path d="M12.5 12.2l5 5"/></svg>',
+  lang: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>'
 };
 
 async function api(path, body) {
@@ -1711,15 +1735,10 @@ function statusInfo() {
 function homeView() {
   const chs = DATA.channels.filter(baseOk);
   let h = '', n = 0;
-  if (!LS.get('radar.heroHidden', false)) {
-    h += `<section class="hero"><div class="emo">📡</div><div><h2>${esc(t('heroTitle'))}</h2><p>${esc(t('heroBody'))}</p>
-      <div class="btns"><button type="button" class="pillbtn big red" data-intro>${esc(t('introBtn'))}</button><button type="button" class="pillbtn big" data-herohide>${esc(t('heroHide'))}</button></div></div>
-      <button type="button" class="icon closex" data-herohide aria-label="${esc(t('dClose'))}">${ICON.close}</button></section>`;
-  }
   const st = statusInfo();
-  h += `<div class="sumline"><span>${t('sumTracked', {n: DATA.channels.length})}</span><span>${t('sumHot', {n: DATA.channels.filter(c => c.score >= 65).length})}</span>` +
-    `<span>${t('sumNew', {n: liveVideos(DATA.channels).length})}</span><span class="livebox" style="margin:0"><span class="${st.cls}"></span>${esc(st.txt)}</span></div>`;
-  h += `<button type="button" class="pbpromo" data-tab="playbook"><span class="em">📘</span><span><b>${esc(t('pbCardT'))}</b><span class="d">${esc(t('pbCardD'))}</span></span><span class="go">→</span></button>` + heatStrip() + (canInstall() ? `<div style="margin:-6px 0 16px">${installBtn()}</div>` : '');
+  h += `<div class="sumline"><span>${t('sumTracked', {n: DATA.channels.length})}</span><span class="smhide">${t('sumHot', {n: DATA.channels.filter(c => c.score >= 65).length})}</span>` +
+    `<span class="smhide">${t('sumNew', {n: liveVideos(DATA.channels).length})}</span><span class="livebox" style="margin:0"><span class="${st.cls}"></span>${esc(st.txt)}</span></div>`;
+  h += heatStrip() + (canInstall() ? `<div class="homeinstall" style="margin:-6px 0 16px">${installBtn()}</div>` : '');
   const add = (title, desc, items, see) => { if (items.length) { h += shelf(title, desc, items, see); n++; } };
   const byScore = (a, b) => b.score - a.score;
   add('shPicks', 'shPicksD', picksList().filter(baseOk).map(pickCard), '');
@@ -2001,26 +2020,6 @@ async function copyText(s) {
   }
 }
 
-/* ---------- welcome ---------- */
-function openWelcome() {
-  const dlg = $('#dlg'), body = $('#dlgBody');
-  const draw = () => {
-    body.innerHTML = `<div class="welcome"><div class="emo">📡</div><h3>${esc(t('wTitle'))}</h3><p>${esc(t('wPick'))}</p>
-      <div class="langs"><button type="button" data-wl="th" aria-pressed="${UI === 'th'}">ไทย</button><button type="button" data-wl="en" aria-pressed="${UI === 'en'}">English</button></div>
-      <ul><li><span class="em">🔍</span><span>${esc(t('w1'))}</span></li><li><span class="em">🔥</span><span>${esc(t('w2'))}</span></li><li><span class="em">🔖</span><span>${esc(t('w3'))}</span></li></ul>
-      <div class="btns"><button type="button" class="pillbtn big red" data-wgo="intro">${esc(t('introBtn'))}</button><button type="button" class="pillbtn big" data-wgo="tour">${esc(t('tourBtn'))}</button></div>
-      <button type="button" class="ghost" data-wgo="skip" style="margin-top:10px">${esc(t('skip'))}</button></div>`;
-  };
-  draw();
-  body.onclick = e => {
-    const l = e.target.closest('[data-wl]');
-    if (l) { setUI(l.dataset.wl); draw(); return; }
-    const g = e.target.closest('[data-wgo]');
-    if (g) { dlg.close(); if (g.dataset.wgo === 'intro') openIntro(); else if (g.dataset.wgo === 'tour') startTour(); }
-  };
-  dlg.addEventListener('close', () => LS.set('radar.welcomed', true), {once: true});
-  dlg.showModal();
-}
 
 
 /* ---------- search limits on the shared site key ---------- */
@@ -2576,12 +2575,15 @@ function tourClick(x) {
 /* ---------- phone menu ---------- */
 function openMore() {
   const dlg = $('#dlg'), body = $('#dlgBody');
-  body.onclick = null;
-  const items = [['home', 'nHome'], ['week', 'nWeek'], ['videos', 'nVideos'], ['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['playbook', 'nPlaybook'], ['mine', 'nMine'], ['saved', 'nSaved'], ['compare', 'nCompare'], ['help', 'nHelp']];
-  body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('nMore'))}</h3>` +
-    items.map(([id, k]) => `<button type="button" class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(k))}</span></button>`).join('') +
-    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + (canInstall() ? `<div class="sidesec">${installBtn()}</div>` : '') + syncBlock();
-  dlg.showModal();
+  body.onclick = null; body.dataset.mode = 'more';
+  const row = (attrs, icon, label) => `<button type="button" class="nav" ${attrs}>${icon}<span class="lbl">${esc(label)}</span></button>`;
+  const tab = ([id, k]) => row(`data-tab="${id}" aria-current="${S.tab === id}"`, ICON[id], t(k));
+  body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('nMore'))}</h3>` + syncBlock() +
+    `<div class="mrow">${ICON.lang}<span>${esc(t('langT'))}</span><div class="seg"><button type="button" data-ui="en" aria-pressed="${UI === 'en'}">EN</button><button type="button" data-ui="th" aria-pressed="${UI === 'th'}">ไทย</button></div></div>` +
+    `<h4 class="navh">${esc(t('mLearn'))}</h4>` + row('data-intro', ICON.tutorial, t('nTutorial')) + row('data-tour', ICON.tour, t('nTour')) + [['playbook', 'nPlaybook'], ['help', 'nHelp']].map(tab).join('') +
+    `<h4 class="navh">${esc(t('mExplore'))}</h4>` + [['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['mine', 'nMine'], ['compare', 'nCompare']].map(tab).join('') +
+    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + (canInstall() ? `<div class="sidesec">${installBtn()}</div>` : '');
+  if (!dlg.open) dlg.showModal();
 }
 
 
@@ -2907,7 +2909,7 @@ function mineClick(x) {
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target && e.target.id === 'mineIn') connectMine(e.target.value); });
 
 /* ---------- backup / move to another device ---------- */
-const BK_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.welcomed', 'radar.toured', 'radar.heroHidden', 'radar.scache'];
+const BK_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.scache'];
 function toB64(str) {
   const bytes = new TextEncoder().encode(str);
   let bin = '';
@@ -3045,7 +3047,7 @@ if (STATIC && 'serviceWorker' in navigator && (location.protocol === 'https:' ||
 /* ---------- Google sign-in + sync (Firebase Auth + Cloud Firestore on the free plan) ---------- */
 const FB = CFG.firebase && CFG.firebase.apiKey && CFG.firebase.projectId ? CFG.firebase : null;
 const FB_VER = '10.12.2';
-const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.heroHidden'];
+const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured'];
 const GICON = '<svg viewBox="0 0 48 48" style="stroke:none"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.7 6c4.5-4.2 6.9-10.3 6.9-17.7z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.7-6c-2.1 1.4-4.9 2.3-8.2 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>';
 let FBX = null, USER = null, SYNC = {state: 'off', at: 0, err: ''}, syncTimer = null, applyingRemote = false, unsubSnap = null;
 const lsRaw = LS.set.bind(LS);
@@ -3200,15 +3202,20 @@ function applyStaticText() {
   $('#btnExport').title = t('exportTip');
   $('#settingsLbl').textContent = t('settings');
   $('#btnMenu').setAttribute('aria-label', t('menu'));
+  $('#btnSearchM').setAttribute('aria-label', t('searchT')); $('#btnSearchBack').setAttribute('aria-label', t('backT'));
+  document.body.classList.toggle('hasq', !!S.q.trim() || S.tab === 'search');   // phones keep the search bar open while a search is showing
   $('#btnHelp').title = t('help'); $('#btnHelp').setAttribute('aria-label', t('help'));
   $('#foot').textContent = DATA && DATA.snapshot ? t('footSnap') + ' ' + t(DATA.web ? 'footWeb' : 'footLocal') : t(STATIC ? 'footWeb' : 'footLocal');
   document.querySelectorAll('#langSeg [data-ui]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ui === UI)));
 }
 function renderSide() {
   const saved = DATA.channels.filter(isWatched).length, fresh = liveVideos(DATA.channels).length, st = statusInfo();
-  const nav = (id, key, n, hot) => `<button type="button" class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(key))}</span>${n ? `<span class="n ${hot ? 'hot' : ''}">${n}</span>` : ''}</button>`;
+  const nav = (id, key, n, hot) => `<button type="button" class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(key))}</span>${n ? `<span class="n ${hot ? 'hot' : ''}">${n > 999 ? fmt(n) : n}</span>` : ''}</button>`;
+  const navh = k => `<h4 class="navh">${esc(t(k))}</h4>`;
   $('#side').innerHTML = nav('home', 'nHome') + nav('week', 'nWeek') + nav('videos', 'nVideos') + nav('channels', 'nChannels') + nav('live', 'nLive', fresh, true) +
-    nav('ideas', 'nIdeas') + nav('topics', 'nTopics') + '<hr class="navsep">' + nav('playbook', 'nPlaybook', PB_STEPS.length - Object.values(PB.done).filter(Boolean).length || null) + nav('mine', 'nMine') + nav('saved', 'nSaved', saved) + nav('compare', 'nCompare', S.cmp.length) + nav('help', 'nHelp') + nav('more', 'nMore') +
+    nav('ideas', 'nIdeas') + nav('topics', 'nTopics') + '<hr class="navsep">' + navh('sYou') + nav('saved', 'nSaved', saved) + nav('mine', 'nMine') + nav('compare', 'nCompare', S.cmp.length) +
+    '<hr class="navsep">' + navh('nMore') + nav('playbook', 'nPlaybook', PB_STEPS.length - Object.values(PB.done).filter(Boolean).length || null) +
+    `<button type="button" class="nav" data-intro>${ICON.tutorial}<span class="lbl">${esc(t('nTutorial'))}</span></button>` + nav('help', 'nHelp') + nav('more', 'nMore') +
     `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` +
     `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div>${canInstall() ? `<div style="margin:10px 12px 0">${installBtn()}</div>` : ''}</div>` + syncBlock();
 }
@@ -3266,8 +3273,9 @@ function render(keepChips) {
 }
 function setUI(l) {
   UI = l === 'th' ? 'th' : 'en'; LS.set('radar.ui', UI); closePop();
-  render();
+  render(); renderAcct();
   if ($('#sheet').open) drawSheet(true);
+  if ($('#dlg').open && $('#dlgBody').dataset.mode === 'more') openMore();
 }
 function applyTab(tab) {
   S.tab = tab; saveState(); closePop();
@@ -3310,8 +3318,8 @@ document.addEventListener('click', async e => {
   if (x.closest('[data-histclear]')) { try { localStorage.removeItem('radar.scache'); } catch (err) {} searchHint(); return; }
   if (x.closest('[data-research]')) { if (SEARCH) staticSearch(SEARCH.query, true); return; }
   const intr = x.closest('[data-intro]');
-  if (intr) { openIntro(intr.dataset.intro || 'site'); return; }
-  if (x.closest('[data-tour]')) { startTour(); return; }
+  if (intr) { if ($('#dlg').open) $('#dlg').close(); openIntro(intr.dataset.intro || 'site'); return; }
+  if (x.closest('[data-tour]')) { if ($('#dlg').open) $('#dlg').close(); startTour(); return; }
   const cmp = x.closest('[data-cmp]');
   if (cmp) { toggleCmp(cmp.dataset.cmp); render(true); if ($('#sheet').open) drawSheet(true); return; }
   const cmprm = x.closest('[data-cmprm]');
@@ -3348,7 +3356,6 @@ document.addEventListener('click', async e => {
   }
   const rail = x.closest('[data-rail]');
   if (rail) { const r = rail.closest('.shelfsec').querySelector('.rail'); r.scrollBy({left: +rail.dataset.rail * r.clientWidth * 0.85}); return; }
-  if (x.closest('[data-herohide]')) { LS.set('radar.heroHidden', true); renderContent(); return; }
   if (x.closest('[data-livesearch]')) { startSearch(S.q); return; }
   if (x.closest('[data-clearq]')) { S.q = ''; render(); return; }
   if (x.closest('[data-changekey]')) { openKeyDialog(); return; }
@@ -3397,9 +3404,18 @@ $('#searchForm').addEventListener('submit', e => {
   e.preventDefault();
   const q = S.q.trim();
   if (q.length < 2) return;
+  $('#fq').blur();
   if (canSearch()) startSearch(q); else if (S.tab !== 'channels') go('channels');
 });
 let typeTimer = null;
+let QFROM = null;   // the page a phone search was opened from, to return to on Back
+$('#btnSearchM').addEventListener('click', () => { QFROM = S.tab; document.body.classList.add('msearch'); $('#fq').focus(); });
+$('#btnSearchBack').addEventListener('click', () => {
+  document.body.classList.remove('msearch');
+  const had = S.q.trim(), back = S.tab === 'search' ? PREV_TAB : QFROM;
+  S.q = ''; QFROM = null;
+  if (back && back !== S.tab) go(back); else if (had) render(); else applyStaticText();
+});
 $('#qbadge').addEventListener('mousedown', e => { e.preventDefault(); $('#fq').focus(); });
 $('#fq').addEventListener('input', e => {
   S.q = e.target.value; shown.channels = 15; shown.videos = 60; shown.live = 60;
@@ -3652,7 +3668,6 @@ function afterFirstData() {
   const m = /^#ch\/(UC[\w-]{22})$/.exec(location.hash);
   if (m && findCh(m[1])) openChannel(m[1]);
   else if (/^#compare\/[\w,-]+$/.test(location.hash)) openCompareLink(location.hash.slice(1));
-  else if (!LS.get('radar.welcomed', false)) openWelcome();
 }
 if (!hashTab() && !/^#(ch|compare)\//.test(location.hash)) history.replaceState(null, '', '#' + S.tab);
 applyStaticText();
