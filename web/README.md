@@ -115,7 +115,7 @@ Typing in the search box always filters the channels already on the site. Search
 
 After that run, everyone gets a "Search all of YouTube" button and Enter searches YouTube directly.
 
-How the quota is protected: each device gets 15 searches a day with the site's key, and repeated searches reuse results saved in that browser for 12 hours. The scanner keeps at most 30 of the project's roughly 100 daily searches for itself, so the rest is free for visitors. If you would rather keep visitors completely separate from the scanner, create the key in a second Google Cloud project instead (also free, no card).
+How the quota is protected: each device gets 15 searches a day with the site's key; a device's own searches reopen free for a week, and any topic someone searched in the last 24 hours opens free for everyone (shared through Firestore, see the rules below). When the project's roughly 100 daily searches run out, the search bar says when they come back (midnight Pacific time) and everything else keeps working. Keep this key in a different Google Cloud project from the scanner's key, so visitors can never use up the scanner's quota.
 
 Anyone who wants more can still add their own key from the How to use page; it stays in their browser.
 
@@ -135,10 +135,24 @@ Signing in with Google keeps your saved channels, Playbook, upload log and My ch
        match /users/{uid} {
          allow read, write: if request.auth != null && request.auth.uid == uid;
        }
+       match /searches/{id} {
+         function valid() {
+           let d = request.resource.data;
+           return id.matches('q[0-9a-f]{40}')
+             && d.keys().hasOnly(['q', 'c', 'n', 't'])
+             && d.q is string && d.q.size() > 0 && d.q.size() <= 120
+             && d.c is string && d.c.size() <= 800000
+             && d.n is int && d.n >= 1 && d.n <= 15
+             && d.t == request.time;
+         }
+         allow get: if true;
+         allow create: if valid();
+         allow update: if valid() && resource.data.t < request.time - duration.value(20, 'h');
+       }
      }
    }
    ```
-   This means each signed-in person can read and write only their own data.
+   This means each signed-in person can read and write only their own data, and anyone can read shared search results. A shared result can only be written in the expected shape, and can't be replaced until it is 20 hours old. The page also re-checks every shared result before showing it.
 6. **Project settings (the gear) → General → Your apps → the `</>` (Web) button**, give it any name, skip Hosting, **Register app**. It shows a `firebaseConfig` with `apiKey: "AIza..."` and `projectId: "..."`.
 7. In a terminal: `gh variable set FIREBASE_PROJECT_ID --body "<projectId>"`, then `gh variable set FIREBASE_API_KEY` (paste the apiKey when asked), then `gh workflow run "Refresh site"`.
 

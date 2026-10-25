@@ -977,7 +977,7 @@ Object.assign(T.en, {
   histT: 'Recent searches · free to reopen', histClear: 'Clear', sRefresh: '🔄 Refresh (uses 1 search)',
   kInvalid: 'That does not look like an API key. Keys start with “AIza” and are 39 characters long.',
   apiOn: 'YouTube search: on', qbOff: 'Our list only', qbLeft: '{n} left', apiOff: 'YouTube search: off', apiLeft: '{n} left today', apiT: 'Full YouTube search',
-  apiOnD: 'Press Enter in the search box to search all of YouTube, not only our list. Each device gets {n} free searches a day.',
+  apiOnD: 'Press Enter in the search box to search all of YouTube, not only our list. Each device gets {n} free searches a day, and topics someone already searched today open for free.',
   apiOwnD: 'You are using your own API key on this device, so this site sets no daily limit.',
   apiOffD: 'Full YouTube search is not switched on for this site yet. The search box still finds channels and videos in our list.',
   apiLocalD: 'This is your PC app: searches run on your computer, with no daily limit.',
@@ -1047,7 +1047,7 @@ Object.assign(T.th, {
   histT: 'ค้นหาล่าสุด · เปิดดูซ้ำได้ฟรี', histClear: 'ล้าง', sRefresh: '🔄 ค้นหาใหม่ (ใช้ 1 ครั้ง)',
   kInvalid: 'นี่ไม่ใช่คีย์ API คีย์จะขึ้นต้นด้วย “AIza” และยาว 39 ตัวอักษร',
   apiOn: 'ค้นหา YouTube: เปิด', qbOff: 'เฉพาะรายการของเรา', qbLeft: 'เหลือ {n}', apiOff: 'ค้นหา YouTube: ปิด', apiLeft: 'เหลือ {n} ครั้งวันนี้', apiT: 'ค้นหาจาก YouTube ทั้งหมด',
-  apiOnD: 'กด Enter ในช่องค้นหาเพื่อค้นหาจาก YouTube ทั้งหมด ไม่ใช่แค่รายการของเรา แต่ละอุปกรณ์ค้นหาฟรีได้วันละ {n} ครั้ง',
+  apiOnD: 'กด Enter ในช่องค้นหาเพื่อค้นหาจาก YouTube ทั้งหมด ไม่ใช่แค่รายการของเรา แต่ละอุปกรณ์ค้นหาฟรีได้วันละ {n} ครั้ง และหัวข้อที่มีคนค้นไว้แล้ววันนี้เปิดดูได้ฟรี',
   apiOwnD: 'คุณใช้คีย์ API ของคุณเองบนอุปกรณ์นี้ เว็บนี้จึงไม่จำกัดจำนวนครั้งต่อวัน',
   apiOffD: 'เว็บนี้ยังไม่ได้เปิดการค้นหาจาก YouTube ทั้งหมด ช่องค้นหายังหาช่องและคลิปในรายการของเราได้',
   apiLocalD: 'นี่คือแอปบนคอมพิวเตอร์ของคุณ ค้นหาบนเครื่องของคุณได้ไม่จำกัด',
@@ -1312,6 +1312,16 @@ Object.assign(T.th, {
 });
 Object.assign(T.en, {nTutorial: 'Video tutorial', nTour: 'Hands-on tour', sYou: 'You', mLearn: 'Learn', mExplore: 'Explore', langT: 'Language', searchT: 'Search', backT: 'Back'});
 Object.assign(T.th, {nTutorial: 'วิดีโอสอนใช้งาน', nTour: 'ลองใช้จริงทีละขั้น', sYou: 'ของคุณ', mLearn: 'เรียนรู้', mExplore: 'สำรวจ', langT: 'ภาษา', searchT: 'ค้นหา', backT: 'กลับ'});
+Object.assign(T.en, {
+  qbRest: 'back at {time}', sShared: 'already searched {ago}, free to open',
+  hintRest: 'Today’s YouTube searches for the whole site are used up. They come back at {time}. Topics someone already searched still open for free, and typing finds channels in our list.',
+  kRest: 'Today’s YouTube searches for the whole site are used up. They come back at {time}. Topics someone already searched today still open for free.'
+});
+Object.assign(T.th, {
+  qbRest: 'กลับมา {time}', sShared: 'มีคนค้นไว้แล้วเมื่อ {ago} เปิดดูฟรี',
+  hintRest: 'วันนี้ทั้งเว็บใช้การค้นหา YouTube ครบแล้ว จะกลับมาค้นหาได้ตอน {time} หัวข้อที่มีคนค้นไว้แล้วยังเปิดดูได้ฟรี และพิมพ์เพื่อหาช่องในรายการของเราได้',
+  kRest: 'วันนี้ทั้งเว็บใช้การค้นหา YouTube ครบแล้ว จะกลับมาค้นหาได้ตอน {time} หัวข้อที่มีคนค้นไว้แล้ววันนี้ยังเปิดดูได้ฟรี'
+});
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
     den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
@@ -1872,10 +1882,10 @@ function searchView() {
   if (s.state === 'error') status = s.msg || t('sErr');
   else if (s.state === 'running') status = s.phase === 'searching' ? t('sSearching') : t('sChecking', {a: s.done, b: s.total});
   else status = t('sDone', {n: s.channels.length});
-  const extra = (s.cachedAt ? ' · ' + t('sCached', {ago: ago(s.cachedAt)}) : '') + (STATIC && !ownKey() && !s.limit ? ' · ' + t('sLeft', {n: freeLeft()}) : '');
+  const extra = (s.cachedAt ? ' · ' + t(s.shared ? 'sShared' : 'sCached', {ago: ago(s.cachedAt)}) : '') + (STATIC && !ownKey() && !s.limit ? ' · ' + t('sLeft', {n: freeLeft()}) : '');
   const head = `<div class="phead"><h1>${esc(t('sTitle', {q: s.query}))}</h1><p>${esc(t('sLead'))} · <b>${esc(status)}</b>${esc(extra)}</p></div>`;
   const refresh = s.cachedAt && canSearch() ? `<div class="wkhead"><button type="button" class="pillbtn" data-research>${esc(t('sRefresh'))}</button></div>` : '';
-  if (s.limit) return head + `<div class="banner"><span>${esc(t('sLimit'))}</span><button type="button" class="pillbtn" data-changekey>${esc(t('sAddKey'))}</button></div>`;
+  if (s.limit) return head + `<div class="banner"><span>${esc(s.msg || t('sLimit'))}</span><button type="button" class="pillbtn" data-changekey>${esc(t('sAddKey'))}</button></div>`;
   if (!s.channels.length) {
     if (s.state === 'done') return head + emptyBox(t('sEmpty'));
     return head + (s.state === 'running' ? '<div class="empty"><span class="dot live" style="display:inline-block"></span></div>' : '');
@@ -2036,6 +2046,18 @@ function takeFreeSearch() {
   LS.set('radar.sq', {d: todayStr(), n: FREE_SEARCHES - left + 1});
   return true;
 }
+function refundFreeSearch() {   // the search never ran (YouTube refused it), so it doesn't count
+  const q = LS.get('radar.sq', {});
+  if (q.d === todayStr() && q.n > 0) LS.set('radar.sq', {d: q.d, n: q.n - 1});
+}
+function nextPacificMidnight() {   // YouTube's daily quota resets then
+  const now = new Date(), pac = new Date(now.toLocaleString('en-US', {timeZone: 'America/Los_Angeles'}));
+  const mid = new Date(pac); mid.setHours(24, 0, 0, 0);
+  return mid.getTime() + (now - pac);
+}
+const restingUntil = () => { const u = LS.get('radar.qrest', 0); return u > Date.now() ? u : 0; };
+const clock = ms => new Date(ms).toLocaleTimeString(UI === 'th' ? 'th-TH' : 'en-US', {hour: 'numeric', minute: '2-digit'});
+const qKey = q => q.toLowerCase().trim().replace(/\s+/g, ' ');
 const HIST_MS = 7 * 86400e3;   // saved search results reopen for free for a week
 const searchCache = () => LS.get('radar.scache', []).filter(x => x && x.q && Date.now() - x.t < HIST_MS);
 function saveSearchCache(q, channels, label) {
@@ -2061,19 +2083,69 @@ function apiHelp() {
 function searchBadge() {
   const el = $('#qbadge');
   if (!el) return;
-  const on = canSearch(), lim = on && limited(), n = lim ? freeLeft() : 0;
-  el.className = 'qbadge ' + (!on ? 'off' : lim && !n ? 'out' : 'on');
-  el.title = t(on ? 'apiOn' : 'apiOff') + (lim ? ' · ' + t('apiLeft', {n}) : '');
-  el.innerHTML = '<i></i>' + (!on ? esc(t('qbOff')) : lim ? `<span class="qbw"><b>YouTube</b> ·</span><span>${esc(t('qbLeft', {n}))}</span>` : '<b>YouTube</b>');
+  const on = canSearch(), lim = on && limited(), n = lim ? freeLeft() : 0, rest = lim && restingUntil();
+  el.className = 'qbadge ' + (!on ? 'off' : rest || (lim && !n) ? 'out' : 'on');
+  el.title = rest ? t('hintRest', {time: clock(rest)}) : t(on ? 'apiOn' : 'apiOff') + (lim ? ' · ' + t('apiLeft', {n}) : '');
+  el.innerHTML = '<i></i>' + (!on ? esc(t('qbOff')) : lim ? `<span class="qbw"><b>YouTube</b> ·</span><span>${esc(rest ? t('qbRest', {time: clock(rest)}) : t('qbLeft', {n}))}</span>` : '<b>YouTube</b>');
 }
 function searchHint() {
   searchBadge();
   const el = $('#shint');
   if (!el) return;
-  const msg = !canSearch() ? t('hintOff') : limited() ? (freeLeft() ? t('hintOn', {n: freeLeft()}) : t('hintLimit')) : t('hintOnFree');
+  const msg = !canSearch() ? t('hintOff') : limited() && restingUntil() ? t('hintRest', {time: clock(restingUntil())}) : limited() ? (freeLeft() ? t('hintOn', {n: freeLeft()}) : t('hintLimit')) : t('hintOnFree');
   const hist = STATIC ? searchCache().slice(0, 6) : [];
   el.innerHTML = `<div>${esc(msg)}</div>` + (hist.length ? `<div class="hhead"><b>${esc(t('histT'))}</b><button type="button" data-histclear>${esc(t('histClear'))}</button></div>` +
     hist.map(x => `<button type="button" class="hitem" data-hist="${esc(x.label || x.q)}"><span>🕘 ${esc(x.label || x.q)}</span><small>${esc(ago(x.t / 1000))}</small></button>`).join('') : '');
+}
+
+/* ---------- shared search results: one search serves every visitor for a day (Cloud Firestore, plain REST) ---------- */
+const SHARE_MS = 24 * 3600e3;
+const fsDocs = () => `https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents`;
+async function shareId(key) {
+  const h = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(key)));
+  return 'q' + [...h.slice(0, 20)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+async function sharedGet(key) {
+  if (!FB || !(window.crypto && crypto.subtle)) return null;
+  try {
+    const r = await fetch(`${fsDocs()}/searches/${await shareId(key)}?key=${encodeURIComponent(FB.apiKey)}`);
+    if (!r.ok) return null;
+    const f = (await r.json()).fields || {}, at = Date.parse((f.t || {}).timestampValue || '');
+    if (!(Date.now() - at < SHARE_MS)) return null;
+    const channels = cleanShared(JSON.parse((f.c || {}).stringValue || '[]'));
+    return channels.length ? {channels, at} : null;
+  } catch (e) { return null; }
+}
+async function sharedPut(key, query, channels) {
+  if (!FB || !(window.crypto && crypto.subtle) || !channels.length) return;
+  try {
+    const name = `projects/${FB.projectId}/databases/(default)/documents/searches/${await shareId(key)}`;
+    await fetch(`${fsDocs()}:commit?key=${encodeURIComponent(FB.apiKey)}`, {method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({writes: [{update: {name, fields: {q: {stringValue: query.slice(0, 120)}, c: {stringValue: JSON.stringify(channels)}, n: {integerValue: String(channels.length)}}},
+        updateTransforms: [{fieldPath: 't', setToServerValue: 'REQUEST_TIME'}]}]})});
+  } catch (e) {}
+}
+const TAG_OK = new Set(['Consistent engine', 'One-hit', 'Tiny & huge', 'Rising', 'Fading']);
+function cleanShared(list) {   // results another visitor saved: rebuild every channel from checked fields only
+  const num = (x, hi = 1e13) => (typeof x === 'number' && isFinite(x) ? Math.min(hi, Math.max(0, x)) : 0);
+  const str = (x, n) => (typeof x === 'string' ? x.slice(0, n) : '');
+  return (Array.isArray(list) ? list : []).slice(0, 15).filter(c => c && /^UC[\w-]{22}$/.test(c.ch_id) && Array.isArray(c.series)).map(c => {
+    const series = c.series.slice(0, 24).filter(v => v && /^[\w-]{11}$/.test(v.id)).map(v => {
+      const o = {id: v.id, t: str(v.t, 200), v: num(v.v), x: num(v.x, 1e4)};
+      if (v.p != null) o.p = num(v.p);
+      if (v.d != null) o.d = num(v.d, 1e6);
+      if (v.c != null) o.c = num(v.c);
+      if (v.l != null) o.l = num(v.l);
+      return o;
+    });
+    const lang = /^[a-z]{2,3}$/.test(c.lang) ? c.lang : 'und';
+    return {ch_id: c.ch_id, name: str(c.name, 100) || c.ch_id, handle: str(c.handle, 80).startsWith('@') ? str(c.handle, 80) : '', subs: num(c.subs), lang,
+      english: lang === 'en' || lang === 'und', queries: [str((c.queries || [])[0], 120)], series, watch: false, descr: str(c.descr, 400),
+      avatar_url: /^https:\/\/(yt3\.ggpht\.com|yt3\.googleusercontent\.com)\/[\w\-./=~%]+$/.test(c.avatar_url || '') ? c.avatar_url : '',
+      created: c.created != null ? num(c.created) : undefined, pick: null,
+      n: num(c.n, 100), med_recent: num(c.med_recent), med_all: num(c.med_all), max_views: num(c.max_views), share_100k: num(c.share_100k, 1), share_1m: num(c.share_1m, 1),
+      trend: num(c.trend, 1e4), peak_vs_med: num(c.peak_vs_med, 1e6), ratio: num(c.ratio, 1e7), score: num(c.score, 100), tags: (Array.isArray(c.tags) ? c.tags : []).filter(x => TAG_OK.has(x))};
+  }).filter(c => c.series.length);
 }
 
 /* ---------- this week ---------- */
@@ -3556,7 +3628,7 @@ async function ytApi(path, params) {
   try { r = await fetch(u.toString()); } catch (e) { throw {net: true}; }
   if (!r.ok) {
     let body = {}; try { body = await r.json(); } catch (e) {}
-    if (r.status === 403 && /quota/i.test(JSON.stringify(body))) throw {quota: true};
+    if (r.status === 403 && /quota/i.test(JSON.stringify(body))) { if (!ownKey()) LS.set('radar.qrest', nextPacificMidnight()); throw {quota: true}; }
     if (r.status === 400 || r.status === 403) throw {badKey: true};
     throw {http: r.status};
   }
@@ -3587,15 +3659,22 @@ async function probeStatic(chId, info, query) {
     created: sn.publishedAt ? Math.round(Date.parse(sn.publishedAt) / 1000) : undefined, pick: null}, m);
 }
 async function staticSearch(query, fresh) {
-  const ck = query.toLowerCase(), hit = fresh ? null : searchCache().find(x => x.q === ck);   // saved results reopen for free
+  const ck = qKey(query), hit = fresh ? null : searchCache().find(x => x.q === ck);   // saved results reopen for free
   if (!hit && !getKey()) { go('channels'); return; }   // no key: the typed words already filter our own list
   enterSearch();
   const base = {query, id: 'web', phase: '', done: 0, total: 0, found: 0, channels: [], error: null, tracked: false, msg: ''};
   if (hit) { SEARCH = Object.assign(base, {state: 'done', channels: hit.channels, cachedAt: hit.t / 1000}); render(); window.scrollTo(0, 0); return; }
-  if (!ownKey() && !takeFreeSearch()) { SEARCH = Object.assign(base, {state: 'error', msg: t('sLimit'), limit: true}); render(); window.scrollTo(0, 0); return; }
   const mine = SEARCH = Object.assign(base, {state: 'running', phase: 'searching'});
   render(); window.scrollTo(0, 0);
   const paint = () => { if (S.tab === 'search' && SEARCH === mine) renderContent(); };
+  const shared = fresh ? null : await sharedGet(ck);   // someone searched this today: free for everyone
+  if (SEARCH !== mine) return;
+  if (shared) {
+    Object.assign(mine, {state: 'done', channels: shared.channels, cachedAt: shared.at / 1000, shared: true});
+    saveSearchCache(ck, shared.channels, query); searchHint(); paint(); return;
+  }
+  const rest = !ownKey() && restingUntil();
+  if (rest || (!ownKey() && !takeFreeSearch())) { Object.assign(mine, {state: 'error', msg: rest ? t('kRest', {time: clock(rest)}) : t('sLimit'), limit: true}); paint(); return; }
   try {
     const thai = /[฀-๿]/.test(query);
     const sr = await ytApi('search', Object.assign({part: 'id', type: 'video', order: 'viewCount', videoDuration: 'short', maxResults: 50, q: query,
@@ -3624,11 +3703,13 @@ async function staticSearch(query, fresh) {
     await Promise.all([worker(), worker(), worker(), worker()]);
     mine.state = 'done';
     saveSearchCache(ck, mine.channels, query);
+    sharedPut(ck, query, mine.channels);
     searchHint();
   } catch (e) {
     mine.state = 'error';
+    if (e && e.quota && !ownKey()) { refundFreeSearch(); searchHint(); }
     if (e && e.badKey && !ownKey()) { SITE_KEY_BAD = true; searchHint(); renderSide(); }   // the site's key was refused: stop offering YouTube search
-    mine.msg = e && e.quota ? t('kQuota') : e && e.badKey ? t('kBad') : e && e.net ? t('kNet') : t('sErr');
+    mine.msg = e && e.quota ? (!ownKey() && restingUntil() ? t('kRest', {time: clock(restingUntil())}) : t('kQuota')) : e && e.badKey ? t('kBad') : e && e.net ? t('kNet') : t('sErr');
   }
   if (S.tab === 'search' && SEARCH === mine) { renderChips(); renderContent(); }
 }
