@@ -123,12 +123,6 @@
   "q": "slime"
  },
  {
-  "q": "3d printing"
- },
- {
-  "q": "woodworking"
- },
- {
   "q": "diy crafts"
  },
  {
@@ -157,9 +151,6 @@
  },
  {
   "q": "psychology facts"
- },
- {
-  "q": "dark psychology"
  },
  {
   "q": "science experiment"
@@ -231,16 +222,10 @@
   "q": "survival challenge"
  },
  {
-  "q": "build challenge minecraft"
- },
- {
   "q": "valorant"
  },
  {
   "q": "chess"
- },
- {
-  "q": "soccer skills"
  },
  {
   "q": "nba shorts"
@@ -255,9 +240,6 @@
   "q": "animal rescue"
  },
  {
-  "q": "fishing"
- },
- {
   "q": "dog"
  },
  {
@@ -268,9 +250,6 @@
  },
  {
   "q": "monkey"
- },
- {
-  "q": "snake"
  },
  {
   "q": "shark"
@@ -293,101 +272,307 @@
  {
   "q": "แมว",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "หมา สุนัข",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "แอนิเมชัน เรื่องเล่า",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "การ์ตูน AI",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "ทำอาหาร",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "อาหารสตรีทฟู้ด",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "ความรู้รอบตัว",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "เรื่องผี",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "ตลก ฮา",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "ท่องเที่ยว",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "ออมเงิน การเงิน",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "หุ้น ลงทุน",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "ฟิตเนส ออกกำลังกาย",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "DIY ประดิษฐ์",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "สัตว์โลก",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "รถ",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "เกมมือถือ",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "Roblox ไทย",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "Minecraft ไทย",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
  },
  {
   "q": "ไอเดียน่ารู้",
   "lang": "th",
-  "region": "TH"
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "แกล้งแฟน",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ชาเลนจ์",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "สูตรอาหารง่ายๆ",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "รีวิวของกิน",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ร้านอร่อย",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ขนมไทย",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "แต่งหน้า",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "แฟชั่น",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ทำเล็บ",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ไลฟ์แฮ็ก",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "เล่าเรื่อง",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "สาระน่ารู้",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ประวัติศาสตร์ไทย",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "วิทยาศาสตร์ ทดลอง",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "เรียนภาษาอังกฤษ",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ฟุตบอล ไฮไลท์",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "มวยไทย",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ตกปลา",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "สัตว์เลี้ยงน่ารัก",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ปลูกผัก ทำสวน",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ซ่อมรถ",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "แต่งบ้าน",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ASMR ไทย",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "พากย์นรก",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ละครสั้น",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "แอนิเมชันไทย",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ดูดวง",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ไอเดียธุรกิจ",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "ROV",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "Free Fire",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
+ },
+ {
+  "q": "เต้น",
+  "lang": "th",
+  "region": "TH",
+  "w": 2
  }
 ]

@@ -100,12 +100,24 @@ How to apply (after your site is already live on its github.io address):
 
 If it is declined, nothing breaks: keep using the free github.io address.
 
-## Live search on the site
+## Live search on the site (set up once, works on every device)
 
-The search box on the site can search any topic on YouTube, in any language including Thai, but it needs an API key, because every search costs quota:
+Typing in the search box always filters the channels already on the site. Searching **all of YouTube** needs an API key, because every search uses quota. The site never asks visitors for one by itself.
 
-- **Simplest:** each person pastes their own free API key the first time they search (the page asks). It stays in their browser and goes only to Google. Each search uses one of that project's roughly 100 free daily searches.
-- **Open to every visitor:** set `BROWSER_KEY` to a second key whose Google Cloud restriction is "HTTP referrers" limited to your site address (for example `https://radar.yourdomain.com/*`), and "YouTube Data API v3" only: `gh variable set BROWSER_KEY --body "<that key>"`. A key restricted that way is designed to be visible in a web page. Keep it in a **different Google Cloud project** from the scanner key, because the quota belongs to the project, not the key, and a busy day of searching would otherwise eat the scanner's budget.
+**One-time setup, so it works on every phone and computer with no sign-in:** create a second key that only works on your site's address and give it to the site as `BROWSER_KEY`. A key locked to your address is designed to sit in a web page. It is useless on any other site, and it never touches your scanner secret.
+
+1. Open https://console.cloud.google.com/apis/credentials (the same Google project as before is fine).
+2. Create credentials, then API key. Copy it.
+3. Click the new key to edit it:
+   - Application restrictions: **Websites**. Add `https://sparyryan-collab.github.io/*`, and later your custom domain too (for example `https://viralradar.foo.ng/*`).
+   - API restrictions: **Restrict key**, then tick only **YouTube Data API v3**. Save.
+4. In a terminal in the repository folder: `gh variable set BROWSER_KEY` (paste the key when asked), then `gh workflow run "Refresh site"`.
+
+After that run, everyone gets a "Search all of YouTube" button and Enter searches YouTube directly.
+
+How the quota is protected: each device gets 15 searches a day with the site's key, and repeated searches reuse results saved in that browser for 12 hours. The scanner keeps at most 30 of the project's roughly 100 daily searches for itself, so the rest is free for visitors. If you would rather keep visitors completely separate from the scanner, create the key in a second Google Cloud project instead (also free, no card).
+
+Anyone who wants more can still add their own key from the How to use page; it stays in their browser.
 
 ## Changing things
 

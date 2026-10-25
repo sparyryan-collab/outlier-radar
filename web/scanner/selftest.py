@@ -157,6 +157,8 @@ def main():
         assert newest["id"] == vid(1, 14) and "g" not in newest, newest                                                       # the new upload is first, with no growth baseline yet
         assert newest["p"] > NOW.timestamp() - 2 * 3600, "publish time of the new upload should be kept"
         assert d2["_state"]["runs"] == 2 and d2["_state"]["quota_used"] > 0
+        assert len(hit2["hist"]) == 2 and hit2["hist"][0][0] < hit2["hist"][1][0], hit2["hist"]                              # one growth point per check
+        assert hit2["found"] == hit["found"] and abs(hit["found"] - NOW.timestamp()) < 120, (hit.get("found"), hit2.get("found"))   # first-seen time is kept
         print(f"run 2 OK: {len(grown)} videos grew by 5000 over 4.0h, new upload detected ({int((NOW.timestamp() - newest['p'])/60)} min old), quota today {d2['_state']['quota_used']}")
 
         # a wrong key must not crash the whole pipeline: data.json is still written

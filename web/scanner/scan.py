@@ -26,6 +26,7 @@ SEARCH_DAILY_CAP = int(os.environ.get("SEARCH_DAILY_CAP", "30"))  # Google allow
 RUN_BUDGET = int(os.environ.get("RUN_BUDGET", "400"))
 WINDOW_DAYS = int(os.environ.get("SEARCH_WINDOW_DAYS", "30"))
 KEEP_CHANNELS = int(os.environ.get("KEEP_CHANNELS", "700"))
+HIST_POINTS = int(os.environ.get("HIST_POINTS", "48"))         # growth history kept per channel (at most one point per 6 hours)
 
 
 def load_radar():
@@ -74,8 +75,28 @@ def pick_targets(channels, pending, st, picks, now, limit):
     return [c for *_, c in out[:limit]]
 
 
+def rotation(queries):
+    """Search order: every phrase once, then the ones weighted "w": 2 (or more) again, so they come up more often without repeating back to back."""
+    top = max([int(q.get("w", 1)) for q in queries] or [1])
+    return [q for k in range(1, top + 1) for q in queries if int(q.get("w", 1)) >= k]
+
+
+def add_hist(rec, now, subs, m):
+    """Growth history: [time, subscribers, typical views, score]; all but the newest point are at least 6 hours apart."""
+    h = [list(x) for x in rec.get("hist") or []]
+    if not h and rec.get("last_probe") and rec.get("med_recent") is not None:   # the record we already had becomes the first point
+        h.append([int(rec["last_probe"]), rec.get("subs", 0), int(rec["med_recent"]), rec.get("score", 0)])
+    point = [int(now), subs, int(m["med_recent"]), m["score"]]
+    if len(h) >= 2 and h[-1][0] - h[-2][0] < 6 * 3600:
+        h[-1] = point
+    else:
+        h.append(point)
+    return h[-HIST_POINTS:]
+
+
 def discover(yt, st, queries, channels, pending, now, log):
-    q = queries[st["cursor"] % len(queries)]
+    rot = rotation(queries)
+    q = rot[st["cursor"] % len(rot)]
     st["cursor"] += 1
     text = q["q"]
     ids = yt.search_videos(text, now - WINDOW_DAYS * 86400, q.get("lang"), q.get("region"))
@@ -101,7 +122,7 @@ def discover(yt, st, queries, channels, pending, now, log):
     log.append(f"Search '{text}': {len(rows)} short videos from {len(best)} channels")
 
 
-def probe(radar, yt, ch_id, rec, info, now):
+def probe(radar, yt, ch_id, rec, info, now, is_new=False):
     """Re-score one channel from its newest uploads. Returns the new channel dict, or None if it has too few shorts."""
     ids = yt.recent_upload_ids(ch_id, 50)
     vids = yt.videos(ids)
@@ -127,6 +148,7 @@ def probe(radar, yt, ch_id, rec, info, now):
         "score": m["score"], "tags": m["tags"], "lang": lang, "english": lang in ("en", "und"), "queries": rec.get("queries", []),
         "series": series, "watch": False, "last_probe": now, "descr": descr,
         "avatar_url": (info or {}).get("avatar") or rec.get("avatar_url", ""), "hit_views": rec.get("hit_views", 0), "pick": None,
+        "hist": add_hist(rec, now, subs, m), **({"found": rec.get("found") or int(now)} if (is_new or rec.get("found")) else {}),
     }
 
 
@@ -178,7 +200,7 @@ def main():
             for ch_id in targets:
                 rec = channels.get(ch_id) or pending.get(ch_id) or {}
                 try:
-                    new = probe(radar, yt, ch_id, rec, infos.get(ch_id), now)
+                    new = probe(radar, yt, ch_id, rec, infos.get(ch_id), now, is_new=ch_id not in channels)
                 except QuotaExceeded:
                     raise
                 except ApiError as e:

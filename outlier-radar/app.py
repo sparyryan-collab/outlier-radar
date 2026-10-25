@@ -203,6 +203,8 @@ def db_connect():
           english INTEGER DEFAULT 1, series TEXT DEFAULT '[]', watch INTEGER DEFAULT 0);
         CREATE TABLE IF NOT EXISTS hist(vid TEXT, ts REAL, views INTEGER);
         CREATE INDEX IF NOT EXISTS hist_vid ON hist(vid, ts);
+        CREATE TABLE IF NOT EXISTS chist(ch_id TEXT, ts REAL, subs INTEGER, med REAL, score REAL);
+        CREATE INDEX IF NOT EXISTS chist_ch ON chist(ch_id, ts);
         CREATE TABLE IF NOT EXISTS qstats(
           query TEXT PRIMARY KEY, runs INTEGER DEFAULT 0, last_run REAL DEFAULT 0,
           last_rows INTEGER DEFAULT 0, total_rows INTEGER DEFAULT 0);
@@ -454,6 +456,7 @@ def probe_channel(ch_id):
     lang = detect_lang([v["t"] for v in res["vids"]] + [res.get("descr", "")])
     with DB_LOCK:
         DB.executemany("INSERT INTO hist(vid,ts,views) VALUES(?,?,?)", [(v["id"], now, v["v"]) for v in res["vids"]])
+        DB.execute("INSERT INTO chist(ch_id,ts,subs,med,score) VALUES(?,?,?,?,?)", (ch_id, now, res["subs"], m["med_recent"], m["score"]))
         DB.execute(
             "UPDATE channels SET name=COALESCE(?,name), handle=COALESCE(?,handle), subs=?, last_probe=?, probe_fail=0, n=?, med_recent=?,"
             " med_all=?, max_views=?, share_100k=?, share_1m=?, trend=?, peak_vs_med=?, ratio=?, score=?, tags=?, english=?, series=?,"
@@ -702,7 +705,7 @@ def row_to_channel(r, picks):
         "score": r["score"], "tags": json.loads(r["tags"]), "lang": lang, "english": lang in ("en", "und"),
         "queries": json.loads(r["queries"]), "series": json.loads(r["series"]), "watch": bool(r["watch"]),
         "last_probe": r["last_probe"], "avatar_ok": avatar_path(r["ch_id"]).exists(), "descr": r["descr"] or "",
-        "pick": picks.get(r["ch_id"]),
+        "pick": picks.get(r["ch_id"]), **({"found": int(r["first_seen"])} if r["first_seen"] else {}),
     }
 
 
@@ -783,10 +786,30 @@ def search_payload(job_id):
             "done": job["done"], "total": job["total"], "error": job.get("error"), "channels": chans}
 
 
+def channel_history(ids, keep=48, gap=6 * 3600):
+    """Growth points [time, subscribers, typical views, score] per channel, at most one per 6 hours (plus the newest)."""
+    out = {}
+    for i in range(0, len(ids), 400):
+        part = ids[i:i + 400]
+        marks = ",".join("?" * len(part))
+        for r in q(f"SELECT ch_id, ts, subs, med, score FROM chist WHERE ch_id IN ({marks}) ORDER BY ts", part):
+            h = out.setdefault(r["ch_id"], [])
+            point = [int(r["ts"]), r["subs"] or 0, int(r["med"] or 0), r["score"]]
+            if len(h) >= 2 and h[-1][0] - h[-2][0] < gap:
+                h[-1] = point
+            else:
+                h.append(point)
+    return {k: v[-keep:] for k, v in out.items()}
+
+
 def build_data():
     picks = load_picks()
     rows = q("SELECT * FROM channels WHERE score IS NOT NULL ORDER BY score DESC LIMIT 700")
     channels = [row_to_channel(r, picks) for r in rows]
+    hist = channel_history([c["ch_id"] for c in channels])
+    for c in channels:
+        if c["ch_id"] in hist:
+            c["hist"] = hist[c["ch_id"]]
     qs = [dict(r) for r in q("SELECT query, runs, last_run, last_rows, total_rows FROM qstats ORDER BY query")]
     tracked = q("SELECT COUNT(*) c FROM channels", one=True)["c"]
     status = dict(STATUS)

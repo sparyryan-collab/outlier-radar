@@ -12,12 +12,12 @@
   --bg:#ffffff; --bg2:#f9f9f9; --surface:#f2f2f2; --surface2:#e5e5e5; --text:#0f0f0f; --muted:#606060; --line:#e5e5e5;
   --on-bg:#0f0f0f; --on-fg:#ffffff; --accent:#065fd4; --red:#ff0033; --good:#188038; --warn:#b05a00; --bad:#d93025;
   --hover:rgba(0,0,0,.05); --card:#ffffff; --shadow:0 6px 28px rgba(0,0,0,.10);
-  --hot3:#ff0033; --hot2:#f05a00; --hot1bg:#fff1d6; --hot1:#8a4b00; --tip:#fff8e1; --tipline:#f3d48a;
+  --hot3:#ff0033; --hot2:#f05a00; --hot1bg:#fff1d6; --hot1:#8a4b00; --tip:#fff8e1; --tipline:#f3d48a; --series-1:#2a78d6;
 }
 @media (prefers-color-scheme:dark){
   :root{--bg:#0f0f0f; --bg2:#151515; --surface:#272727; --surface2:#3f3f3f; --text:#f1f1f1; --muted:#aaaaaa; --line:#303030;
     --on-bg:#f1f1f1; --on-fg:#0f0f0f; --accent:#3ea6ff; --good:#4cc36f; --warn:#f2a33a; --bad:#ff6b61; --hover:rgba(255,255,255,.08);
-    --card:#1c1c1c; --shadow:0 6px 28px rgba(0,0,0,.5); --hot1bg:#3a2a10; --hot1:#ffc66b; --tip:#2a2412; --tipline:#5c4b1d;}
+    --card:#1c1c1c; --shadow:0 6px 28px rgba(0,0,0,.5); --hot1bg:#3a2a10; --hot1:#ffc66b; --tip:#2a2412; --tipline:#5c4b1d; --series-1:#3987e5;}
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -62,6 +62,8 @@ svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .nav:hover{background:var(--hover)}
 .nav[aria-current=true]{background:var(--surface);font-weight:600}
 .nav .n{margin-left:auto;color:var(--muted);font-size:12px;font-weight:400}
+.navsep{border:0;border-top:1px solid var(--line);margin:8px 0}
+#side .nav[data-tab=more]{display:none}
 .nav .n.hot{background:var(--red);color:#fff;border-radius:9px;padding:0 6px;line-height:18px;font-weight:600}
 .sidesec{border-top:1px solid var(--line);margin:10px 0;padding-top:12px}
 .sidesec h4{margin:0 12px 8px;font-size:14px;font-weight:600}
@@ -280,7 +282,7 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .taglist{display:flex;flex-direction:column;gap:8px}
 .taglist div{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 .taglist small{color:var(--muted);font-size:13px}
-#player{width:auto;max-width:96vw;background:#0f0f0f;color:#f1f1f1}
+#player{width:fit-content;max-width:96vw;background:#0f0f0f;color:#f1f1f1}
 #player .pwrap{position:relative;display:flex;max-height:90vh}
 #player .pvid{height:min(84vh,780px);aspect-ratio:9/16;background:#000;flex:none}
 #player iframe{width:100%;height:100%;border:0;display:block}
@@ -309,6 +311,226 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .welcome li .em{font-size:20px}
 .welcome .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 
+
+/* ---- this week ---- */
+.wkhead{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.wkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:24px 16px}
+.rk{display:flex;align-items:center}
+.rk .num{flex:none;font-size:92px;line-height:.8;font-weight:900;letter-spacing:-.08em;color:var(--bg);-webkit-text-stroke:3px var(--text);margin-right:-18px;z-index:1;pointer-events:none;font-family:Arial,sans-serif}
+.rk .vcard{flex:1;min-width:0}
+.rlist{display:flex;flex-direction:column;gap:6px;max-width:920px}
+.rrow{display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:14px;background:var(--surface);cursor:pointer}
+.rrow:hover{background:var(--surface2)}
+.rrow .n{font-size:22px;font-weight:800;width:30px;text-align:center;color:var(--muted);flex:none}
+.rrow .n.top{color:var(--red)}
+.rrow .meta{flex:1;min-width:0}
+.rrow .meta b{display:block;font-size:15px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rrow .meta small{color:var(--muted);font-size:12.5px}
+.rrow .gain{font-weight:700;white-space:nowrap}
+
+/* ---- idea lab ---- */
+.recipe{padding:18px 20px;border-radius:16px;background:linear-gradient(120deg,color-mix(in srgb,#ffb000 16%,var(--bg)),color-mix(in srgb,var(--red) 10%,var(--bg)));margin:0 0 16px}
+.recipe h2{margin:0 0 10px;font-size:19px}
+.recipe .chips2{display:flex;flex-wrap:wrap;gap:8px}
+.recipe .chips2 span{background:var(--bg);border-radius:999px;padding:6px 12px;font-weight:600;font-size:13.5px}
+.recipe p{margin:10px 0 0;color:var(--muted);font-size:12.5px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;margin-bottom:18px}
+.pbox{background:var(--surface);border-radius:14px;padding:14px 16px}
+.pbox h4{margin:0 0 10px;font-size:14.5px}
+.pbox p{margin:0;color:var(--muted);font-size:12.5px}
+.bars{display:flex;flex-direction:column;gap:7px}
+.bar{display:grid;grid-template-columns:74px 1fr 44px;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.bar i{display:block;height:12px;border-radius:0 4px 4px 0;background:var(--series-1);min-width:2px}
+.bar i.o{background:color-mix(in srgb,var(--muted) 45%,transparent)}
+.bar b{color:var(--text);text-align:right;font-variant-numeric:tabular-nums}
+.wcloud{display:flex;flex-wrap:wrap;gap:6px}
+.wcloud span{background:var(--surface);border-radius:8px;padding:3px 9px;font-weight:600}
+.wcloud span small{color:var(--muted);font-weight:400;margin-left:4px}
+
+/* ---- compare ---- */
+#tray{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:44;display:flex;align-items:center;gap:10px;padding:7px 8px 7px 12px;border-radius:999px;background:var(--on-bg);color:var(--on-fg);box-shadow:var(--shadow);max-width:94vw}
+#tray:empty{display:none}
+#tray .stack .av{box-shadow:0 0 0 2px var(--on-bg)}
+#tray .stack .av+.av{margin-left:-8px}
+#tray .go{background:var(--red);color:#fff;border:0;border-radius:999px;height:34px;padding:0 14px;font-weight:600;white-space:nowrap}
+#tray .x{background:transparent;border:0;color:inherit;opacity:.75;width:30px;height:30px;border-radius:50%}
+.cmpwrap{overflow-x:auto;margin-top:6px;border-top:1px solid var(--line)}
+.cmp{display:grid;min-width:max-content}
+.cmp>div{padding:10px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;min-width:180px}
+.cmp .lbl{color:var(--muted);font-size:13px;position:sticky;left:0;background:var(--bg);z-index:1;min-width:136px;max-width:160px}
+.cmp .hd{flex-direction:column;align-items:center;text-align:center;gap:6px;position:relative}
+.cmp .hd .x{position:absolute;right:4px;top:4px;width:28px;height:28px}
+.cmp .hd button.name{border:0;background:none;padding:0;font-weight:600;font-size:15px}
+.cmp .hd button.name:hover{text-decoration:underline}
+.cmp .v{font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+.cmp .best{background:color-mix(in srgb,#ffb000 13%,transparent)}
+.cmp .thumbs{display:flex;gap:4px}
+.cmp .thumbs a{width:48px;aspect-ratio:9/16;border-radius:6px;overflow:hidden;background:var(--surface);display:block}
+.cmp .thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.spark{width:140px;height:36px;stroke:none;fill:none;display:block}
+
+/* ---- growth charts ---- */
+.charts2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.chartbox{background:var(--surface);border-radius:12px;padding:12px 14px 10px}
+.chartbox h4{margin:0;font-size:12.5px;color:var(--muted);font-weight:500}
+.chartbox .big{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.chartbox .delta{font-size:12.5px;font-weight:600;margin-left:6px;color:var(--muted)}
+.chartbox .delta.up{color:var(--good)}
+.lchart{position:relative;width:100%;height:140px;margin-top:6px;touch-action:pan-y}
+.lchart svg{display:block;width:100%;height:100%;stroke:none;fill:none;overflow:visible}
+.lchart .ln,.spark .ln{fill:none;stroke:var(--series-1);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.lchart .gl{stroke:var(--line);stroke-width:1}
+.lchart .dt,.spark .dt,.lchart .hd{fill:var(--series-1);stroke:var(--surface);stroke-width:2}
+.lchart .lb{fill:var(--text);font-size:12px;font-weight:600}
+.lchart .ax{fill:var(--muted);font-size:11px}
+.lchart .xh{stroke:var(--muted);stroke-width:1}
+.lchart .tip{position:absolute;pointer-events:none;background:var(--on-bg);color:var(--on-fg);font-size:12px;padding:5px 8px;border-radius:8px;white-space:nowrap;transform:translate(-50%,calc(-100% - 10px));display:none;z-index:2}
+.ctbl{margin-top:8px;font-size:12.5px;color:var(--muted)}
+.ctbl summary{cursor:pointer}
+.tbl{border-collapse:collapse;margin-top:6px;font-variant-numeric:tabular-nums}
+.tbl td,.tbl th{padding:4px 10px;border-bottom:1px solid var(--line);text-align:right;font-weight:400}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+
+/* ---- help (simple) ---- */
+.hcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:4px 0 22px;max-width:920px}
+.hcard{border:0;text-align:left;border-radius:18px;padding:0;overflow:hidden;background:var(--card);box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
+.hcard:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.hcard .poster{position:relative;aspect-ratio:16/9;background:#111;display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden}
+.hcard .poster img{width:100%;height:100%;object-fit:cover;opacity:.75}
+.hcard .poster .pl{position:absolute;inset:0;margin:auto;width:68px;height:48px;border-radius:14px;background:var(--red);display:grid;place-items:center;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+.hcard .poster .pl svg{fill:#fff;stroke:none;width:26px;height:26px;margin-left:3px}
+.hcard .poster .tag2{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.8);color:#fff;border-radius:6px;padding:1px 7px;font-size:12px;font-weight:600}
+.hcard .poster.tourp{display:grid;place-items:center;grid-template-columns:1fr;background:linear-gradient(120deg,#ff0033,#ff8a00)}
+.hcard .poster.tourp span{font-size:64px;filter:drop-shadow(0 6px 12px rgba(0,0,0,.3))}
+.hcard .hb{padding:14px 16px 16px}
+.hcard .hb b{display:block;font-size:17px;margin-bottom:4px}
+.hcard .hb small{color:var(--muted);font-size:13px;line-height:1.5}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:0 0 24px;max-width:920px}
+.three div{background:var(--surface);border-radius:16px;padding:16px}
+.three .vis{font-size:26px;font-weight:800;margin-bottom:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;min-height:34px}
+.three b{display:block;font-size:16px;margin-bottom:4px}
+.three small{color:var(--muted);font-size:13px;line-height:1.5}
+.acc{max-width:920px}
+.acc details{background:var(--card);box-shadow:0 0 0 1px var(--line);border-radius:14px;margin:0 0 10px;padding:0 18px}
+.acc details>summary{cursor:pointer;font-weight:600;font-size:16px;padding:14px 0;list-style:none;display:flex;justify-content:space-between;gap:10px}
+.acc details>summary::-webkit-details-marker{display:none}
+.acc details>summary::after{content:"＋";color:var(--muted)}
+.acc details[open]>summary::after{content:"－"}
+.acc details>div{padding:0 0 14px}
+.acc ol{margin:0 0 6px;padding-left:22px}
+.acc li{margin:6px 0}
+
+/* ---- video-style intro ---- */
+#intro{background:#0b0b0b;color:#fff;width:fit-content;max-width:96vw;border-radius:22px}
+#intro .iv{width:min(460px,94vw);display:flex;flex-direction:column;align-items:center;position:relative}
+#intro .ihead{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px 8px}
+#intro .ihead b{flex:1;font-size:15px}
+#intro .frame{position:relative;height:min(68vh,640px);aspect-ratio:9/16;overflow:hidden;border-radius:16px;background:#0f0f0f;box-shadow:0 0 0 1px #262626}
+#intro .stage{position:absolute;left:0;top:0;width:360px;height:640px;transform-origin:0 0;overflow:hidden;background:radial-gradient(circle at 50% 28%,#3a0f18,#0f0f0f 68%);color:#f1f1f1;font-size:15px;line-height:1.4}
+#intro .icap{min-height:66px;padding:12px 18px 4px;font-size:16px;line-height:1.45;text-align:center;font-weight:600;width:100%;transition:opacity .3s}
+#intro .ibar{display:flex;align-items:center;gap:8px;width:100%;padding:6px 14px 14px}
+#intro .ibar button,#intro .ihead button{background:#272727;border:0;color:#fff;border-radius:999px;height:34px;min-width:34px;padding:0 11px;font-weight:600;display:inline-grid;place-items:center}
+#intro .ibar button:hover,#intro .ihead button:hover{background:#3a3a3a}
+#intro .ibar svg{width:18px;height:18px}
+#intro .iprog{flex:1;height:6px;background:#3a3a3a;border-radius:3px;position:relative;cursor:pointer}
+#intro .iprog i{position:absolute;left:0;top:0;bottom:0;background:var(--red);border-radius:3px}
+#intro .iprog b{position:absolute;top:-2px;width:2px;height:10px;background:#666;border-radius:1px}
+#intro .itime{font-size:12px;color:#aaa;font-variant-numeric:tabular-nums;min-width:76px;text-align:right}
+.stage .sc{position:absolute;inset:0;animation:scin .45s ease both}
+@keyframes scin{from{opacity:0}to{opacity:1}}
+.stage .pop{transform:scale(.3);opacity:0;transition:transform .55s cubic-bezier(.2,1.6,.4,1),opacity .35s}
+.stage .up{transform:translateY(26px);opacity:0;transition:transform .5s ease,opacity .5s ease}
+.stage .on{transform:none;opacity:1}
+.stage .center{position:absolute;left:0;right:0;text-align:center}
+.stage .logo{position:absolute;left:130px;top:150px;width:100px;height:74px;border-radius:22px;background:#ff0033;display:grid;place-items:center;box-shadow:0 10px 40px rgba(255,0,51,.45)}
+.stage .logo svg{width:44px;height:44px;fill:#fff;stroke:none}
+.stage .rings{position:absolute;left:180px;top:187px}
+.stage .rings i{position:absolute;left:-60px;top:-60px;width:120px;height:120px;border-radius:50%;border:2px solid rgba(255,0,51,.6);animation:ring 2.4s infinite}
+.stage .rings i:nth-child(2){animation-delay:.8s}
+.stage .rings i:nth-child(3){animation-delay:1.6s}
+@keyframes ring{from{transform:scale(.6);opacity:1}to{transform:scale(2.6);opacity:0}}
+.stage .ttl{top:262px;font-size:34px;font-weight:800;letter-spacing:-.03em}
+.stage .cnt{top:318px;font-size:15px;color:#ccc}
+.stage .cnt b{color:#fff;font-size:18px}
+.stage .card2{position:absolute;left:30px;right:30px;top:70px;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:19px;font-weight:700}
+.stage .fact{position:absolute;left:30px;right:30px;text-align:center;font-size:18px;background:#1f1f1f;border-radius:16px;padding:12px}
+.stage .fact b{font-size:24px}
+.stage .fact.big{background:#2a1a00;color:#ffd27a}
+.stage .fact.big b{font-size:30px;color:#fff}
+.stage .arrow{position:absolute;left:0;right:0;text-align:center;font-size:30px;color:#aaa}
+.stage .boom{position:absolute;left:90px;width:180px;text-align:center;top:470px;font-size:58px;font-weight:900;color:#fff;background:#ff0033;border-radius:20px;padding:4px 0;box-shadow:0 10px 50px rgba(255,0,51,.6)}
+.stage .lvl{position:absolute;left:26px;right:26px;display:flex;align-items:center;gap:10px;background:#1c1c1c;border-radius:14px;padding:12px 14px;font-size:14px;color:#ccc}
+.stage .lvl .vd{font-size:13px;line-height:26px}
+.stage .lvl.glow{box-shadow:0 0 0 2px #ff0033,0 0 30px rgba(255,0,51,.5)}
+.stage .mhead{position:absolute;left:0;right:0;top:0;height:50px;display:flex;align-items:center;gap:8px;padding:0 12px;background:#0f0f0f}
+.stage .mlogo{width:26px;height:19px;border-radius:6px;background:#ff0033;display:grid;place-items:center}
+.stage .mlogo svg{width:13px;height:13px;fill:#fff;stroke:none}
+.stage .mhead b{font-size:15px;letter-spacing:-.03em}
+.stage .mseg{margin-left:auto;display:flex;background:#272727;border-radius:14px;padding:2px;font-size:12px}
+.stage .mseg span{padding:3px 9px;border-radius:12px;color:#aaa}
+.stage .mseg span.a{background:#f1f1f1;color:#0f0f0f}
+.stage .mchips{position:absolute;left:12px;right:0;top:58px;display:flex;gap:7px;overflow:hidden;white-space:nowrap}
+.stage .mchips span{background:#272727;border-radius:8px;padding:5px 10px;font-size:12.5px;transition:background .3s,color .3s}
+.stage .mchips span.a{background:#f1f1f1;color:#0f0f0f}
+.stage .mtitle{position:absolute;left:12px;right:12px;top:104px;font-size:16px;font-weight:700}
+.stage .mrow{position:absolute;left:12px;right:12px;top:136px;display:flex;gap:8px}
+.stage .mth{position:relative;flex:1;aspect-ratio:9/16;border-radius:10px;overflow:hidden;background:#222}
+.stage .mth img{width:100%;height:100%;object-fit:cover;display:block}
+.stage .mth .x{position:absolute;left:5px;top:5px;background:#ff0033;color:#fff;border-radius:5px;padding:0 5px;font-size:11px;font-weight:700}
+.stage .mth .vw{position:absolute;left:6px;bottom:5px;font-size:11px;font-weight:700;text-shadow:0 1px 2px #000}
+.stage .mplayer{position:absolute;left:0;top:0;width:360px;height:640px;background:#000;transform-origin:0 0;transition:transform .5s cubic-bezier(.3,1,.4,1),opacity .3s;opacity:0}
+.stage .mplayer.on{opacity:1}
+.stage .mplayer img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9}
+.stage .mplayer .pp{position:absolute;left:150px;top:290px;width:60px;height:60px;border-radius:50%;background:rgba(0,0,0,.5);display:grid;place-items:center}
+.stage .mplayer .pp svg{fill:#fff;stroke:none;width:26px;height:26px;margin-left:4px}
+.stage .mplayer .fp{position:absolute;left:20px;right:20px;bottom:60px;background:rgba(15,15,15,.92);border-radius:14px;padding:12px 14px;font-size:15px;font-weight:600}
+.stage .mrowch{position:absolute;left:12px;right:12px;top:104px;display:flex;align-items:center;gap:10px;background:#1c1c1c;border-radius:14px;padding:10px}
+.stage .mrowch b{font-size:16px}
+.stage .msheet{position:absolute;left:0;right:0;top:640px;height:600px;background:#181818;border-radius:20px 20px 0 0;padding:20px 16px;transition:top .55s cubic-bezier(.3,1,.4,1);box-shadow:0 -10px 40px rgba(0,0,0,.6)}
+.stage .msheet.on{top:80px}
+.stage .msheet .top{display:flex;align-items:center;gap:12px}
+.stage .msheet .top b{font-size:20px;display:block}
+.stage .mwhy{margin-top:16px;background:#2a2412;border:1px solid #5c4b1d;border-radius:12px;padding:12px;font-size:14.5px;min-height:96px}
+.stage .mwhy h5{margin:0 0 6px;font-size:14px}
+.stage .mcards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.stage .mcards div{background:#272727;border-radius:10px;padding:10px;font-size:12px;color:#aaa}
+.stage .mcards b{display:block;color:#fff;font-size:20px}
+.stage .msave{margin-top:14px;display:inline-flex;align-items:center;gap:6px;background:#f1f1f1;color:#0f0f0f;border-radius:18px;padding:8px 18px;font-weight:700;transition:background .2s,color .2s}
+.stage .msave.done{background:#272727;color:#fff}
+.stage .mtoast{position:absolute;left:50%;bottom:40px;transform:translateX(-50%) translateY(20px);background:#f1f1f1;color:#0f0f0f;border-radius:10px;padding:10px 16px;font-weight:600;opacity:0;transition:all .3s;white-space:nowrap;font-size:14px}
+.stage .mtoast.on{opacity:1;transform:translateX(-50%)}
+.stage .heart{position:absolute;font-size:22px;animation:float 1.2s ease-out forwards;pointer-events:none}
+@keyframes float{from{transform:translate(0,0) scale(.6);opacity:1}to{transform:translate(var(--dx),-90px) scale(1.3);opacity:0}}
+.stage .vcur{position:absolute;left:400px;top:700px;width:38px;height:38px;z-index:30;pointer-events:none;transition:left .8s cubic-bezier(.5,0,.2,1),top .8s cubic-bezier(.5,0,.2,1)}
+.stage .vcur svg{width:38px;height:38px;fill:#fff;stroke:#000;stroke-width:1.2;filter:drop-shadow(0 3px 5px rgba(0,0,0,.6))}
+.stage .vcur i{position:absolute;left:-8px;top:-8px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.6);transform:scale(0);opacity:0}
+.stage .vcur.tap i{animation:tap .55s ease-out}
+@keyframes tap{0%{transform:scale(0);opacity:1}100%{transform:scale(2.2);opacity:0}}
+.stage .end{position:absolute;left:24px;right:24px;top:150px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.stage .end .emo2{font-size:70px}
+.stage .end h3{margin:0;font-size:26px}
+.stage .end button{width:100%;height:50px;border-radius:25px;border:0;font-size:16px;font-weight:700}
+.stage .end .b1{background:#ff0033;color:#fff}
+.stage .end .b2{background:#272727;color:#fff}
+
+/* ---- guided tour ---- */
+#tour{position:fixed;inset:0;z-index:96;pointer-events:none}
+#tour .hole{position:fixed;border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.62),0 0 0 3px #ff0033;transition:all .35s cubic-bezier(.3,1,.4,1);pointer-events:none}
+#tour .hole.none{left:0!important;top:0!important;width:100vw!important;height:100vh!important;border-radius:0;box-shadow:none;background:rgba(0,0,0,.62)}
+#tour .hole.pulse::after{content:"";position:absolute;inset:-3px;border-radius:16px;box-shadow:0 0 0 3px #ff0033;animation:hp 1.4s infinite}
+@keyframes hp{from{transform:scale(1);opacity:1}to{transform:scale(1.08);opacity:0}}
+#tour .bub{position:fixed;width:min(320px,calc(100vw - 24px));background:var(--bg);color:var(--text);border-radius:16px;padding:16px 16px 12px;box-shadow:0 12px 40px rgba(0,0,0,.45);pointer-events:auto;transition:left .3s,top .3s}
+#tour .bub p{padding-right:26px;margin:0 0 6px;font-size:15.5px;line-height:1.5;font-weight:500}
+#tour .bub .try{color:var(--red);font-weight:700;font-size:13px;margin:0 0 6px}
+#tour .bub .row2{display:flex;align-items:center;gap:8px;margin-top:10px}
+#tour .bub .row2 small{color:var(--muted);margin-right:auto}
+#tour .bub button{height:34px;border-radius:17px;border:0;padding:0 14px;font-weight:600;background:var(--surface);color:var(--text)}
+#tour .bub button.nx{background:var(--red);color:#fff}
+#tour .bub .sk{position:absolute;right:8px;top:8px;width:30px;height:30px;padding:0;background:transparent;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.stage *,#tour .hole,#tour .bub{animation:none!important;transition:none!important}.confetti{display:none}}
+.confetti{position:fixed;top:-20px;z-index:99;font-size:22px;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+
 @media (max-width:1180px){.pillbtn .lbl{display:none}.pillbtn{padding:0 10px}}
 @media (max-width:1000px){
   #side{width:76px;padding:4px}
@@ -326,7 +548,11 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
   #chips{top:0;position:static;padding-top:4px}
   #side{position:fixed;inset:auto 0 0 0;top:auto;z-index:45;width:auto;height:60px;display:flex;padding:0 2px;background:var(--bg);border-top:1px solid var(--line);overflow:hidden}
   #side .nav{height:58px;flex:1;min-width:0;border-radius:0}
-  #side .nav[data-tab=topics],#side .nav[data-tab=help]{display:none}
+  #side .nav[data-tab=channels],#side .nav[data-tab=live],#side .nav[data-tab=ideas],#side .nav[data-tab=topics],#side .nav[data-tab=compare],#side .nav[data-tab=help],#side .navsep{display:none}
+  #side .nav[data-tab=more]{display:flex}
+  #tray{bottom:72px}
+  .wkgrid{grid-template-columns:1fr 1fr;gap:18px 8px}
+  .rk .num{font-size:54px;margin-right:-12px;-webkit-text-stroke:2px var(--text)}
   #side .nav[aria-current=true]{background:transparent;color:var(--red)}
   main{padding:0 12px 84px}
   .hero{flex-direction:column;align-items:flex-start;padding:18px;gap:10px}
@@ -367,8 +593,10 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 <dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
 <dialog id="sheet"><div class="dlg" id="sheetBody"></div></dialog>
 <dialog id="player"><div id="playerBody"></div></dialog>
+<dialog id="intro"><div id="introBody"></div></dialog>
 <div id="pop" role="tooltip"></div>
 <div id="toast" role="status" aria-live="polite"></div>
+<div id="tray"></div>
 
 <script>window.RADAR_STATIC = false/*__STATIC__*/; window.RADAR_CFG = {}/*__CFG__*/;</script>
 <script>
@@ -597,6 +825,126 @@ const T = {
     wStart: 'เริ่มใช้งาน', wHow: 'ดูวิธีใช้งาน'
   }
 };
+Object.assign(T.en, {
+  nWeek: 'This week', nIdeas: 'Idea lab', nCompare: 'Compare', nMore: 'More',
+  searchPhList: 'Search our channels and videos',
+  pWeekT: 'This week’s Top 10', pWeekD: 'The biggest Shorts and channels of the last 7 days. Copy the list and send it to a friend.',
+  wkVideos: '🏆 Top 10 Shorts of the week', wkVideosD: 'Uploaded in the last 7 days, most views first',
+  wkChannels: '🚀 Top 10 channels of the week', wkChannelsD: 'Most views from the Shorts they posted in the last 7 days',
+  wkNew: '🌱 New channels we found this week', wkNewD: 'First spotted in the last 7 days, hottest first',
+  wkClimb: '📈 Biggest climbers', wkClimbD: 'Most new subscribers over the last 7 days',
+  wkUploads: '{n} new Shorts · {v} views', wkGain: '+{n} subscribers ({p}) in {d} days', wkFound: 'found {ago}',
+  wkEmpty: 'Not enough data for this list yet. It fills in as channels are re-checked over the next day or two.',
+  wkCopy: '📋 Copy as text', wkCopied: 'Copied. Paste it into a chat.', wkShare: '🔗 Copy link',
+  wkTextTitle: 'Viral Radar · Top 10 Shorts this week ({d})', wkTextCh: 'Top channels this week', wkTextChLine: '{n} new Shorts, {v} views', wkTextMore: 'More: {u}',
+  pIdeasT: 'Idea lab', pIdeasD: 'What the winning Shorts in a topic have in common: title style, words, emoji and length. Copy the pattern, never the video.',
+  ideaRecipe: '💡 The recipe for this topic', ideaBased: 'Based on {n} winning Shorts (at least 2× their channel’s usual views and 100K+ views) compared with {m} others.',
+  ideaFew: 'Not enough winning Shorts in this topic yet. Try “All” or another topic.',
+  ideaLenT: '⏱️ Length of winning Shorts', ideaLen: 'Most winners are {a}–{b} seconds long.', ideaLenNo: 'Video lengths appear as channels are re-checked.',
+  ideaWordsT: '📝 Title length', ideaWords: 'Winning titles have about {n} words (others: {m}).',
+  ideaQ: '❓ Ask a question', ideaNum: '🔢 Use a number', ideaEmoji: '😀 Use an emoji', ideaCaps: '🔠 Use a CAPITAL word', ideaTag: '#️⃣ Use hashtags',
+  ideaWin: 'Winners', ideaOther: 'Others',
+  ideaTopWords: '🔤 Words winners use most', ideaTopWordsD: '× = how much more often than in other titles',
+  ideaTopEmoji: '😀 Favourite emoji', ideaTopTags: '#️⃣ Common hashtags', ideaStarts: '🚀 How winning titles start', ideaExamples: '🏅 Winning examples',
+  ideaRLen: '⏱️ {a}–{b} s long', ideaRWords: '📝 ~{n}-word title', ideaRQ: '❓ a question', ideaRNum: '🔢 a number', ideaREmoji: '😀 an emoji', ideaRCaps: '🔠 a CAPITAL word', ideaRTag: '#️⃣ hashtags',
+  cmpAdd: 'Compare', cmpOn: 'Comparing', cmpNow: 'Compare ({n})', cmpClear: 'Clear', cmpMax: 'You can compare up to 3 channels.',
+  cmpTitle: 'Compare channels', cmpD: 'Side by side. 👑 marks the best in each row.', cmpEmpty: 'Press “Compare” on 2 or 3 channels, then come back here.',
+  cmpGrowth: 'Subscriber growth', cmpTop: 'Best Shorts', cmpLen: 'Typical length', cmpShare: '🔗 Copy link to this comparison', cmpRemove: 'Remove',
+  chGrowth: 'Growth', chSubs: 'Subscribers', chViews: 'Typical views', chSince: 'since {d}', chTable: 'Show as a table', chDate: 'Date',
+  chFew: 'The growth chart appears after we have checked this channel a few times (usually within a day).',
+  introBtn: '▶ Watch the 1-minute intro', introBtnD: 'A quick video-style walkthrough with real channels. Turn the voice on if you like.',
+  tourBtn: '👆 Hands-on tour', tourBtnD: 'Try it on the real site, one step at a time. Takes about 30 seconds.', skip: 'Skip',
+  introT: 'Viral Radar in 1 minute', replay: 'Replay', voice: 'Voice', voiceNone: 'This device has no voice for this language. Captions are on screen.',
+  iCount: '<b>{a}</b> channels · <b>{b}</b> Shorts checked', iSubs: '{n} subscribers', iViews: '{n} views per video',
+  i1: 'Viral Radar finds YouTube Shorts channels that are blowing up.',
+  i2: 'Like this one: only {s} subscribers, but a typical video gets {v} views. That means the idea works.',
+  i3: 'More fire means hotter. Three fires is the top 5%.',
+  i4: 'Tap any video to watch it right here.',
+  i5: 'Tap a channel to see why it stands out, in plain words.',
+  i6: 'Press Save to keep the ones you like.',
+  i7: 'Pick a topic, and switch between Thai and English any time.',
+  i8: 'That’s it! Now try it yourself.',
+  t0: 'Hi! This quick tour shows you around. Tap Next.',
+  t1: 'These are topics. Tap one to see only that kind of channel.',
+  t2: 'Switch between ไทย and English any time.',
+  t3: 'The fire shows how hot a channel is. 🔥🔥🔥 means top 5%.',
+  t4: 'Tap this video to watch it.',
+  t5: 'This box tells you how the video did compared with the channel’s usual.',
+  t6: 'Now tap this channel to open it.',
+  t7: 'Here’s why it stands out, in plain words.',
+  t8: 'Tap Save to keep it for later.',
+  t9: 'Your saved channels are here.',
+  t10: 'The weekly Top 10 is here. Share it with friends!',
+  t11: 'Need help again? Tap here any time. Have fun! 🎉',
+  tNext: 'Next', tBack: 'Back', tDone: 'Done', tStep: '{a} of {b}', tTry: '👆 Your turn: tap it',
+  threeT: '3 things to know', helpD: 'Watch the intro or take the hands-on tour. More detail is further down if you want it.',
+  k1T: 'Fire = how hot', k1D: 'More fire means the channel gets more views than its size would suggest.',
+  k2T: 'Typical views', k2D: 'What a normal video on the channel gets. One lucky hit can’t fake it.',
+  k3T: '× usual', k3D: 'How many times better a video did than the channel’s normal.',
+  helpMore: 'Want more detail?', helpWords: '📖 All words explained', helpSetup: 'Set up full YouTube search',
+  sLimit: 'You’ve used today’s free searches on this device. More tomorrow, or add your own free key.', sLeft: '{n} free searches left today on this device',
+  sAddKey: 'Add my own key', sCached: 'saved results from {ago}'
+});
+Object.assign(T.th, {
+  nWeek: 'สัปดาห์นี้', nIdeas: 'ห้องไอเดีย', nCompare: 'เปรียบเทียบ', nMore: 'เพิ่มเติม',
+  searchPhList: 'ค้นหาช่องและคลิปในรายการของเรา',
+  pWeekT: 'ท็อป 10 ประจำสัปดาห์', pWeekD: 'คลิปสั้นและช่องที่ดังที่สุดใน 7 วันที่ผ่านมา คัดลอกรายการแล้วส่งให้เพื่อนได้เลย',
+  wkVideos: '🏆 ท็อป 10 คลิปสั้นประจำสัปดาห์', wkVideosD: 'อัปโหลดใน 7 วันที่ผ่านมา เรียงจากยอดวิวสูงสุด',
+  wkChannels: '🚀 ท็อป 10 ช่องประจำสัปดาห์', wkChannelsD: 'ยอดวิวรวมสูงสุดจากคลิปสั้นที่ลงใน 7 วันที่ผ่านมา',
+  wkNew: '🌱 ช่องใหม่ที่เราเจอสัปดาห์นี้', wkNewD: 'เพิ่งพบใน 7 วันที่ผ่านมา เรียงจากมาแรงที่สุด',
+  wkClimb: '📈 ช่องที่ผู้ติดตามพุ่งที่สุด', wkClimbD: 'ได้ผู้ติดตามใหม่มากที่สุดใน 7 วันที่ผ่านมา',
+  wkUploads: 'คลิปใหม่ {n} คลิป · {v} วิว', wkGain: 'ผู้ติดตาม +{n} ({p}) ใน {d} วัน', wkFound: 'พบ {ago}',
+  wkEmpty: 'ข้อมูลยังไม่พอสำหรับรายการนี้ จะค่อย ๆ เพิ่มขึ้นเมื่อระบบตรวจช่องซ้ำในวันสองวันนี้',
+  wkCopy: '📋 คัดลอกเป็นข้อความ', wkCopied: 'คัดลอกแล้ว วางในแชตได้เลย', wkShare: '🔗 คัดลอกลิงก์',
+  wkTextTitle: 'Viral Radar · ท็อป 10 คลิปสั้นสัปดาห์นี้ ({d})', wkTextCh: 'ช่องเด่นประจำสัปดาห์', wkTextChLine: 'คลิปใหม่ {n} คลิป, {v} วิว', wkTextMore: 'ดูเพิ่ม: {u}',
+  pIdeasT: 'ห้องไอเดีย', pIdeasD: 'ดูว่าคลิปสั้นที่ปังในแต่ละหมวดมีอะไรเหมือนกัน ทั้งสไตล์ชื่อคลิป คำที่ใช้ อีโมจิ และความยาว ลอกแค่รูปแบบ ห้ามลอกคลิป',
+  ideaRecipe: '💡 สูตรของหมวดนี้', ideaBased: 'คำนวณจากคลิปที่ปัง {n} คลิป (ยอดวิวอย่างน้อย 2 เท่าของปกติของช่องและเกิน 100K) เทียบกับคลิปอื่น {m} คลิป',
+  ideaFew: 'หมวดนี้ยังมีคลิปที่ปังไม่พอ ลองเลือก “ทั้งหมด” หรือหมวดอื่น',
+  ideaLenT: '⏱️ ความยาวของคลิปที่ปัง', ideaLen: 'คลิปที่ปังส่วนใหญ่ยาว {a}–{b} วินาที', ideaLenNo: 'ความยาวคลิปจะขึ้นเมื่อระบบตรวจช่องซ้ำ',
+  ideaWordsT: '📝 ความยาวชื่อคลิป', ideaWords: 'ชื่อคลิปที่ปังมีประมาณ {n} คำ (คลิปอื่น: {m} คำ)',
+  ideaQ: '❓ ตั้งคำถาม', ideaNum: '🔢 มีตัวเลข', ideaEmoji: '😀 มีอีโมจิ', ideaCaps: '🔠 มีคำตัวพิมพ์ใหญ่', ideaTag: '#️⃣ ใส่แฮชแท็ก',
+  ideaWin: 'คลิปที่ปัง', ideaOther: 'คลิปอื่น',
+  ideaTopWords: '🔤 คำที่คลิปปังใช้บ่อย', ideaTopWordsD: '× = ใช้บ่อยกว่าชื่อคลิปอื่นกี่เท่า',
+  ideaTopEmoji: '😀 อีโมจิยอดนิยม', ideaTopTags: '#️⃣ แฮชแท็กที่ใช้บ่อย', ideaStarts: '🚀 คลิปที่ปังขึ้นต้นชื่อแบบนี้', ideaExamples: '🏅 ตัวอย่างคลิปที่ปัง',
+  ideaRLen: '⏱️ ยาว {a}–{b} วินาที', ideaRWords: '📝 ชื่อคลิปราว {n} คำ', ideaRQ: '❓ ตั้งคำถาม', ideaRNum: '🔢 มีตัวเลข', ideaREmoji: '😀 มีอีโมจิ', ideaRCaps: '🔠 มีคำตัวพิมพ์ใหญ่', ideaRTag: '#️⃣ ใส่แฮชแท็ก',
+  cmpAdd: 'เปรียบเทียบ', cmpOn: 'กำลังเทียบ', cmpNow: 'เปรียบเทียบ ({n})', cmpClear: 'ล้าง', cmpMax: 'เปรียบเทียบได้สูงสุด 3 ช่อง',
+  cmpTitle: 'เปรียบเทียบช่อง', cmpD: 'ดูเทียบกันแบบข้างต่อข้าง 👑 คือดีที่สุดในแต่ละแถว', cmpEmpty: 'กด “เปรียบเทียบ” ที่ช่อง 2–3 ช่อง แล้วกลับมาที่นี่',
+  cmpGrowth: 'การเติบโตของผู้ติดตาม', cmpTop: 'คลิปที่ดีที่สุด', cmpLen: 'ความยาวคลิปปกติ', cmpShare: '🔗 คัดลอกลิงก์การเปรียบเทียบนี้', cmpRemove: 'นำออก',
+  chGrowth: 'การเติบโต', chSubs: 'ผู้ติดตาม', chViews: 'ยอดวิวปกติ', chSince: 'ตั้งแต่ {d}', chTable: 'ดูเป็นตาราง', chDate: 'วันที่',
+  chFew: 'กราฟการเติบโตจะขึ้นหลังจากเราตรวจช่องนี้ไปสักสองสามครั้ง (ปกติภายในหนึ่งวัน)',
+  introBtn: '▶ ดูวิดีโอแนะนำ 1 นาที', introBtnD: 'พาชมแบบวิดีโอสั้น ๆ ด้วยช่องจริง เปิดเสียงพากย์ได้ถ้าต้องการ',
+  tourBtn: '👆 ลองใช้จริงทีละขั้น', tourBtnD: 'ลองกดบนเว็บจริงทีละขั้นตอน ใช้เวลาประมาณ 30 วินาที', skip: 'ข้าม',
+  introT: 'Viral Radar ใน 1 นาที', replay: 'ดูอีกครั้ง', voice: 'เสียง', voiceNone: 'อุปกรณ์นี้ไม่มีเสียงพากย์ภาษานี้ ดูคำบรรยายบนจอแทนได้',
+  iCount: 'ตรวจ <b>{a}</b> ช่อง · <b>{b}</b> คลิปสั้น', iSubs: 'ผู้ติดตาม {n} คน', iViews: 'ยอดวิว {n} ต่อคลิป',
+  i1: 'Viral Radar ช่วยหาช่อง YouTube Shorts ที่กำลังมาแรง',
+  i2: 'อย่างช่องนี้ มีผู้ติดตามแค่ {s} คน แต่คลิปทั่วไปได้ยอดวิว {v} แปลว่าไอเดียนี้ได้ผล',
+  i3: 'ยิ่งไฟเยอะ ยิ่งมาแรง ไฟสามดวงคือกลุ่ม 5% แรก',
+  i4: 'กดที่คลิปไหนก็ได้ เพื่อดูในหน้านี้เลย',
+  i5: 'กดที่ช่อง เพื่อดูว่าทำไมช่องนั้นถึงน่าสนใจ อธิบายแบบง่าย ๆ',
+  i6: 'กดบันทึก เพื่อเก็บช่องที่ชอบไว้',
+  i7: 'เลือกหมวดที่สนใจ และสลับภาษาไทยกับอังกฤษได้ตลอด',
+  i8: 'แค่นี้เอง! ลองใช้ด้วยตัวเองเลย',
+  t0: 'สวัสดี! ทัวร์สั้น ๆ นี้จะพาดูรอบ ๆ เว็บ กด “ถัดไป” ได้เลย',
+  t1: 'นี่คือหมวดหมู่ กดหมวดไหนก็ได้ เพื่อดูเฉพาะช่องแนวนั้น',
+  t2: 'สลับภาษาไทยกับอังกฤษได้ตลอดเวลา',
+  t3: 'ไฟบอกว่าช่องมาแรงแค่ไหน 🔥🔥🔥 คือกลุ่ม 5% แรก',
+  t4: 'กดที่คลิปนี้เพื่อดูคลิป',
+  t5: 'กล่องนี้บอกว่าคลิปทำผลงานได้เท่าไรเมื่อเทียบกับปกติของช่อง',
+  t6: 'ต่อไป กดที่ช่องนี้เพื่อเปิดดู',
+  t7: 'ตรงนี้บอกว่าทำไมช่องนี้ถึงน่าสนใจ อธิบายแบบง่าย ๆ',
+  t8: 'กดบันทึก เพื่อเก็บไว้ดูทีหลัง',
+  t9: 'ช่องที่บันทึกไว้จะอยู่ตรงนี้',
+  t10: 'ท็อป 10 ประจำสัปดาห์อยู่ตรงนี้ แชร์ให้เพื่อนได้เลย!',
+  t11: 'ถ้าต้องการความช่วยเหลืออีก กดตรงนี้ได้ตลอด ขอให้สนุก! 🎉',
+  tNext: 'ถัดไป', tBack: 'ย้อนกลับ', tDone: 'เสร็จแล้ว', tStep: '{a} จาก {b}', tTry: '👆 ตาคุณแล้ว: กดเลย',
+  threeT: '3 อย่างที่ควรรู้', helpD: 'ดูวิดีโอแนะนำ หรือลองใช้จริงทีละขั้น ถ้าอยากรู้ละเอียดขึ้น เลื่อนลงไปดูด้านล่างได้',
+  k1T: 'ไฟ = ความแรง', k1D: 'ยิ่งไฟเยอะ แปลว่าช่องได้ยอดวิวมากเกินขนาดช่อง',
+  k2T: 'ยอดวิวปกติ', k2D: 'ยอดวิวที่คลิปทั่วไปของช่องได้ คลิปที่ฟลุกปังคลิปเดียวหลอกตัวเลขนี้ไม่ได้',
+  k3T: '× เท่าของปกติ', k3D: 'คลิปนี้ทำได้ดีกว่าปกติของช่องกี่เท่า',
+  helpMore: 'อยากรู้ละเอียดขึ้น?', helpWords: '📖 คำศัพท์ทั้งหมด อธิบายแบบง่าย', helpSetup: 'ตั้งค่าการค้นหาจาก YouTube ทั้งหมด',
+  sLimit: 'ใช้สิทธิ์ค้นหาฟรีของวันนี้บนอุปกรณ์นี้ครบแล้ว พรุ่งนี้ค้นหาได้อีก หรือใส่คีย์ฟรีของคุณเอง', sLeft: 'วันนี้เหลือสิทธิ์ค้นหาฟรีอีก {n} ครั้งบนอุปกรณ์นี้',
+  sAddKey: 'ใส่คีย์ของฉันเอง', sCached: 'ผลที่บันทึกไว้เมื่อ {ago}'
+});
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
     den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
@@ -618,17 +966,17 @@ const LN = {
 };
 // Topics group the scanner's search phrases (and a live search's phrase) into plain categories.
 const TOPICS = [
-  ['animals', '🐾', 'Animals', 'สัตว์', /\b(cats?|dogs?|sharks?|monkeys?|birds?|snakes?|farm|animals?|wildlife|fishing|pets?|puppy|kitten)\b|แมว|หมา|สุนัข|สัตว์/i],
-  ['animation', '🎬', 'Animation & stories', 'แอนิเมชันและเรื่องเล่า', /animat|cartoon|stickman|story|การ์ตูน|แอนิเมชัน|เรื่องเล่า/i],
+  ['animals', '🐾', 'Animals', 'สัตว์', /\b(cats?|dogs?|sharks?|monkeys?|birds?|snakes?|farm|animals?|wildlife|fishing|pets?|puppy|kitten)\b|แมว|หมา|สุนัข|สัตว์|ตกปลา/i],
+  ['animation', '🎬', 'Animation & stories', 'แอนิเมชันและเรื่องเล่า', /animat|cartoon|stickman|story|การ์ตูน|แอนิเมชัน|เรื่องเล่า|เล่าเรื่อง|ละครสั้น/i],
   ['ai', '🤖', 'Made with AI', 'ทำด้วย AI', /\bai\b/i],
-  ['games', '🎮', 'Games', 'เกม', /roblox|minecraft|fortnite|valorant|chess|brainrot|grow a garden|gaming|เกม/i],
+  ['games', '🎮', 'Games', 'เกม', /roblox|minecraft|fortnite|valorant|chess|brainrot|grow a garden|gaming|\brov\b|free fire|เกม/i],
   ['satisfying', '😌', 'Satisfying', 'ดูเพลิน', /satisf|asmr|slime|restor|hydraulic|crush|factory|cutting|cleaning|giant|3d printing|woodwork/i],
-  ['facts', '🧠', 'Facts & science', 'ความรู้และวิทยาศาสตร์', /\bfacts?\b|did you know|science|chemistry|history|geograph|map anim|country|psycholog|space|ocean|what if|what would|dinosaur|illusion|riddle|ความรู้|น่ารู้/i],
-  ['funny', '😂', 'Funny', 'ตลก', /funny|comedy|prank|challenge|ตลก|ฮา/i],
-  ['food', '🍳', 'Food', 'อาหาร', /food|cook|recipe|อาหาร/i],
-  ['diy', '🛠️', 'DIY & skills', 'DIY และทักษะ', /diy|craft|life hack|drawing|magic|3d printing|woodwork|makeup|fashion|glow up|ประดิษฐ์/i],
-  ['money', '💰', 'Money & luxury', 'การเงินและความหรูหรา', /money|financ|invest|luxury|mansion|rich|ออมเงิน|การเงิน|หุ้น|ลงทุน/i],
-  ['sports', '⚽', 'Sports & fitness', 'กีฬาและฟิตเนส', /sport|nba|soccer|football|basketball|fitness|gym|ฟิตเนส|ออกกำลัง/i],
+  ['facts', '🧠', 'Facts & science', 'ความรู้และวิทยาศาสตร์', /\bfacts?\b|did you know|science|chemistry|history|geograph|map anim|country|psycholog|space|ocean|what if|what would|dinosaur|illusion|riddle|ความรู้|น่ารู้|สาระ|ประวัติศาสตร์|วิทยาศาสตร์|ภาษาอังกฤษ|ดูดวง/i],
+  ['funny', '😂', 'Funny', 'ตลก', /funny|comedy|prank|challenge|ตลก|ฮา|แกล้ง|พากย์|ชาเลนจ์/i],
+  ['food', '🍳', 'Food', 'อาหาร', /food|cook|recipe|อาหาร|ของกิน|ร้านอร่อย|ขนม|สูตร/i],
+  ['diy', '🛠️', 'DIY & skills', 'DIY และทักษะ', /diy|craft|life hack|drawing|magic|3d printing|woodwork|makeup|fashion|glow up|ประดิษฐ์|แต่งหน้า|ทำเล็บ|ไลฟ์แฮ็ก|แต่งบ้าน|ปลูก|แฟชั่น/i],
+  ['money', '💰', 'Money & luxury', 'การเงินและความหรูหรา', /money|financ|invest|luxury|mansion|rich|ออมเงิน|การเงิน|หุ้น|ลงทุน|ขายของ|ธุรกิจ/i],
+  ['sports', '⚽', 'Sports & fitness', 'กีฬาและฟิตเนส', /sport|nba|soccer|football|basketball|fitness|gym|ฟิตเนส|ออกกำลัง|ฟุตบอล|มวย/i],
   ['scary', '👻', 'Scary stories', 'เรื่องผีและสยองขวัญ', /scary|horror|เรื่องผี/i],
   ['cars', '🚗', 'Cars', 'รถยนต์', /\bcars?\b|supercar|รถ/i],
   ['travel', '✈️', 'Travel', 'ท่องเที่ยว', /travel|ท่องเที่ยว/i]
@@ -658,8 +1006,8 @@ const HELP = {
       'Never re-upload or copy someone’s video. Copies get little reach and can get your channel penalized.',
       'Post regularly (several times a week) and check which of your videos beat your own usual views.']},
     {id: 'search', em: '🔎', h: 'Searching for any topic', p: [
-      'Typing in the search box instantly shows matching channels from our list.',
-      'Pressing **Enter** searches all of YouTube live. That needs a free YouTube API key, made in about 2 minutes in Google Cloud, with **no credit card**. The site walks you through it the first time.']},
+      'Typing in the search box instantly finds matching channels and videos from our list.',
+      'Searching **all of YouTube** works when it is switched on for this site: press Enter, or tap “Search all of YouTube” under the search box. It works on any device, with no sign-in.']},
     {id: 'faq', em: '❓', h: 'Common questions', qa: [
       ['Is it free? Do I need an account?', 'Yes, it is free. No account and no sign-in.'],
       ['How fresh are the numbers?', 'Channels are re-checked all day using YouTube’s official data. View counts on YouTube itself can lag a little.'],
@@ -690,8 +1038,8 @@ const HELP = {
       'ห้ามอัปโหลดซ้ำหรือก๊อปคลิปของคนอื่น คลิปที่ลอกมามักได้ยอดวิวน้อย และอาจทำให้ช่องโดนลงโทษ',
       'ลงคลิปสม่ำเสมอ (หลายครั้งต่อสัปดาห์) แล้วสังเกตว่าคลิปไหนของคุณทำได้ดีกว่าปกติของตัวเอง']},
     {id: 'search', em: '🔎', h: 'ค้นหาหัวข้ออะไรก็ได้', p: [
-      'พิมพ์ในช่องค้นหา ระบบจะแสดงช่องในรายการของเราที่ตรงกันทันที',
-      'กด **Enter** เพื่อค้นหาสดจาก YouTube ทั้งหมด ซึ่งต้องใช้คีย์ YouTube API ฟรี สร้างได้ใน Google Cloud ภายในประมาณ 2 นาที **ไม่ต้องใช้บัตรเครดิต** ครั้งแรกเว็บจะแนะนำวิธีทำให้']},
+      'พิมพ์ในช่องค้นหา ระบบจะแสดงช่องและคลิปในรายการของเราที่ตรงกันทันที',
+      'การค้นหาจาก **YouTube ทั้งหมด** ใช้ได้เมื่อเว็บนี้เปิดใช้งานไว้ กด Enter หรือกดปุ่ม “ค้นหาบน YouTube ทั้งหมด” ใต้ช่องค้นหา ใช้ได้ทุกอุปกรณ์ ไม่ต้องล็อกอิน']},
     {id: 'faq', em: '❓', h: 'คำถามที่พบบ่อย', qa: [
       ['ใช้ฟรีไหม ต้องสมัครสมาชิกหรือเปล่า?', 'ฟรี ไม่ต้องสมัครและไม่ต้องล็อกอิน'],
       ['ตัวเลขอัปเดตบ่อยแค่ไหน?', 'ระบบตรวจช่องซ้ำตลอดทั้งวันด้วยข้อมูลทางการของ YouTube ยอดวิวบน YouTube เองอาจช้ากว่าจริงเล็กน้อย'],
@@ -712,9 +1060,9 @@ const langName = c => (LN[c] ? LN[c][UI === 'th' ? 1 : 0] : c.toUpperCase());
 const topicName = tp => (UI === 'th' ? tp[3] : tp[2]);
 
 /* ---------- state ---------- */
-const TABS = ['home', 'videos', 'channels', 'live', 'topics', 'saved', 'help'];
+const TABS = ['home', 'week', 'videos', 'channels', 'live', 'ideas', 'topics', 'saved', 'compare', 'help'];
 const S = Object.assign({tab: 'home', q: '', topic: '', minScore: 50, maxSubs: 0, minMed: 0, lang: 'all', hideOne: true, tag: '', niche: '',
-  sort: 'score', minX: 3, vsort: 'x', shelf: 'new', lsort: 'new', detail: false}, LS.get('radar.state3', {}));
+  sort: 'score', minX: 3, vsort: 'x', shelf: 'new', lsort: 'new', detail: false, cmp: []}, LS.get('radar.state3', {}));
 const hashTab = () => { const h = decodeURIComponent(location.hash.slice(1)); return TABS.includes(h) ? h : null; };
 if (hashTab()) S.tab = hashTab();
 if (!TABS.includes(S.tab)) S.tab = 'home';
@@ -724,7 +1072,7 @@ const shown = {channels: 15, videos: 60, live: 60};
 const watchLocal = new Set(LS.get('radar.watch', []));
 let SEARCH = null, PREV_TAB = 'home', searchTimer = null, SHEET_ID = null, SHEET_SORT = 'new', lastTab = null;
 const canLive = () => SERVER && !!DATA && !DATA.readonly;   // owner of the local app: scan, track, change settings
-const canSearch = () => canLive() || STATIC;                 // live search: local app, or hosted site with an API key
+const canSearch = () => canLive() || (STATIC && !!getKey());   // live search: local app, or hosted site with the site's key or the visitor's own
 
 /* ---------- helpers ---------- */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -786,7 +1134,11 @@ const ICON = {
   close: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
   left: '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
   right: '<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>',
-  play: '<svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></svg>'
+  play: '<svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></svg>',
+  week: '<svg viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7M10 17h4"/></svg>',
+  ideas: '<svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>',
+  compare: '<svg viewBox="0 0 24 24"><path d="M12 4v16M8 20h8M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0z"/></svg>',
+  more: '<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>'
 };
 
 async function api(path, body) {
@@ -980,6 +1332,7 @@ function channelRow(c) {
         ${S.detail ? `<div class="ring" style="--p:${c.score};--c:${scoreColor(c.score)}" data-help="score"><span>${Math.round(c.score)}</span></div>` : ''}
         ${saveBtn(c)}
         <button type="button" class="ghost" data-open-ch="${id}">${esc(t('details'))} ${ICON.right}</button>
+        ${cmpBtn(c)}
       </div>
     </div>
     <div class="shelf">${vids.map(v => shortCard(v, c)).join('')}</div>
@@ -1009,7 +1362,7 @@ function homeView() {
   let h = '', n = 0;
   if (!LS.get('radar.heroHidden', false)) {
     h += `<section class="hero"><div class="emo">📡</div><div><h2>${esc(t('heroTitle'))}</h2><p>${esc(t('heroBody'))}</p>
-      <div class="btns"><button type="button" class="pillbtn big red" data-tab="help">${esc(t('heroHow'))}</button><button type="button" class="pillbtn big" data-herohide>${esc(t('heroHide'))}</button></div></div>
+      <div class="btns"><button type="button" class="pillbtn big red" data-intro>${esc(t('introBtn'))}</button><button type="button" class="pillbtn big" data-herohide>${esc(t('heroHide'))}</button></div></div>
       <button type="button" class="icon closex" data-herohide aria-label="${esc(t('dClose'))}">${ICON.close}</button></section>`;
   }
   const st = statusInfo();
@@ -1107,7 +1460,7 @@ function topicsView() {
   return h;
 }
 function helpView() {
-  const H = HELP[UI] || HELP.en;
+  const H = HELP[UI] || HELP.en, sec = id => H.find(x => x.id === id) || {h: '', em: ''};
   const gl = (dt, dd) => `<dt>${dt}</dt><dd>${esc(dd)}</dd>`;
   const verdicts = `<dl class="gl">${[3, 2, 1, 0].map(l => gl(`<span class="vd v${l}">${esc((l ? fire(l) + ' ' : '') + t(VKEY[l]))}</span>`, t(VKEY[l] + 'D'))).join('')}</dl>`;
   const gloss = `<dl class="gl">` + ['subs', 'typical', 'best', 'ratio', 'x', 'hits', 'grow', 'freq', 'new', 'trend', 'score'].map(k => {
@@ -1115,14 +1468,22 @@ function helpView() {
     const ex = k === 'x' ? ' <span class="tag bad" style="background:var(--hot3);color:#fff">12×</span>' : k === 'new' ? ` <span class="tag new">${esc(t('newBadge'))}</span>` : '';
     return gl(esc(t(lk)) + ex, t(gk));
   }).join('') + Object.keys(TAGS).map(k => gl(`<span class="tag ${TAGS[k].cls}">${esc(tagName(k))}</span>`, tagDesc(k))).join('') + '</dl>';
-  return pageHead('nHelp', 'helpLead') + `<div class="help"><div class="toc">${H.map(s => `<button type="button" class="chip" data-jump="${s.id}">${s.em} ${esc(s.h)}</button>`).join('')}</div>` +
-    H.map(s => `<section class="hsec" id="h-${s.id}"><h2><span class="em">${s.em}</span>${esc(s.h)}</h2>` +
-      (s.p || []).map(x => `<p>${rich(x)}</p>`).join('') +
-      (s.ol ? `<ol>${s.ol.map(x => `<li>${rich(x)}</li>`).join('')}</ol>` : '') +
-      (s.verdicts ? verdicts : '') + (s.gloss ? gloss : '') +
-      (s.qa ? s.qa.map(([q, a]) => `<details class="qa"><summary>${esc(q)}</summary><p>${rich(a)}</p></details>`).join('') : '') +
-      (s.p2 || []).map(x => `<p>${rich(x)}</p>`).join('') + '</section>').join('') +
-    `<div style="text-align:center;margin:22px 0"><button type="button" class="pillbtn big red" data-tab="home">${esc(t('wStart'))}</button></div></div>`;
+  const ideas = sec('ideas'), srch = sec('search'), faq = sec('faq');
+  const poster = viralVideos(DATA.channels).slice(0, 4).map(([v]) => `<img src="${thumb(v.id)}" alt="">`).join('');
+  return `<div class="phead"><h1>${esc(t('nHelp'))}</h1><p>${esc(t('helpD'))}</p></div>
+    <div class="hcards"><button type="button" class="hcard" data-intro><div class="poster">${poster}<span class="pl">${ICON.play}</span><span class="tag2">${mmss(INTRO_MS)}</span></div><div class="hb"><b>${esc(t('introBtn'))}</b><small>${esc(t('introBtnD'))}</small></div></button>
+      <button type="button" class="hcard" data-tour><div class="poster tourp"><span>👆</span></div><div class="hb"><b>${esc(t('tourBtn'))}</b><small>${esc(t('tourBtnD'))}</small></div></button></div>
+    <h2 class="subhead">${esc(t('threeT'))}</h2>
+    <div class="three"><div><div class="vis"><span class="vd v3">🔥🔥🔥 ${esc(t('vSuper'))}</span></div><b>${esc(t('k1T'))}</b><small>${esc(t('k1D'))}</small></div>
+      <div><div class="vis">👁 ${esc(fmt(1200000))}</div><b>${esc(t('k2T'))}</b><small>${esc(t('k2D'))}</small></div>
+      <div><div class="vis"><span class="tag" style="background:var(--hot3);color:#fff;font-size:16px;line-height:30px;padding:0 12px">12×</span></div><b>${esc(t('k3T'))}</b><small>${esc(t('k3D'))}</small></div></div>
+    <h2 class="subhead">${esc(t('helpMore'))}</h2>
+    <div class="acc">
+      <details><summary>${esc(t('helpWords'))}</summary><div>${verdicts}${gloss}</div></details>
+      <details><summary>${ideas.em} ${esc(ideas.h)}</summary><div><ol>${(ideas.ol || []).map(x => `<li>${rich(x)}</li>`).join('')}</ol></div></details>
+      <details><summary>${srch.em} ${esc(srch.h)}</summary><div>${(srch.p || []).map(x => `<p>${rich(x)}</p>`).join('')}${STATIC && !canSearch() ? `<button type="button" class="pillbtn" data-changekey>${esc(t('helpSetup'))}</button>` : ''}</div></details>
+      <details><summary>${faq.em} ${esc(faq.h)}</summary><div>${(faq.qa || []).map(([q, a]) => `<details class="qa"><summary>${esc(q)}</summary><p>${rich(a)}</p></details>`).join('')}</div></details>
+    </div>`;
 }
 function searchView() {
   const s = SEARCH;
@@ -1130,7 +1491,9 @@ function searchView() {
   if (s.state === 'error') status = s.msg || t('sErr');
   else if (s.state === 'running') status = s.phase === 'searching' ? t('sSearching') : t('sChecking', {a: s.done, b: s.total});
   else status = t('sDone', {n: s.channels.length});
-  const head = `<div class="phead"><h1>${esc(t('sTitle', {q: s.query}))}</h1><p>${esc(t('sLead'))} · <b>${esc(status)}</b></p></div>`;
+  const extra = (s.cachedAt ? ' · ' + t('sCached', {ago: ago(s.cachedAt)}) : '') + (STATIC && !ownKey() && !s.limit ? ' · ' + t('sLeft', {n: freeLeft()}) : '');
+  const head = `<div class="phead"><h1>${esc(t('sTitle', {q: s.query}))}</h1><p>${esc(t('sLead'))} · <b>${esc(status)}</b>${esc(extra)}</p></div>`;
+  if (s.limit) return head + `<div class="banner"><span>${esc(t('sLimit'))}</span><button type="button" class="pillbtn" data-changekey>${esc(t('sAddKey'))}</button></div>`;
   if (!s.channels.length) {
     if (s.state === 'done') return head + emptyBox(t('sEmpty'));
     return head + (s.state === 'running' ? '<div class="empty"><span class="dot live" style="display:inline-block"></span></div>' : '');
@@ -1181,7 +1544,7 @@ function drawSheet(keepScroll) {
     <div class="shtop">${avatarEl(c, 104)}<div style="min-width:0">
       <h2>${esc(c.name)} ${vdPill(c)}</h2>
       <div class="chsub">${c.handle ? `<span>${esc(c.handle)}</span><span>·</span>` : ''}<span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span>${langChip(c)}${pick ? `<span class="tag pick">${esc(tier)}</span>` : ''}${f.isNew ? `<button type="button" class="tag new" data-help="new">${esc(t('newBadge'))}</button>` : ''}</div>
-      <div class="btns">${saveBtn(c)}<a class="pillbtn red" href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>
+      <div class="btns">${saveBtn(c)}<a class="pillbtn red" href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>${cmpBtn(c)}
         ${LIVE ? `<button type="button" class="pillbtn" data-copy="${id}">${esc(t('copyLink'))}</button>` : ''}</div></div></div>
     <div class="shbody">
       <h3>💡 ${esc(t('why'))}</h3><div class="why">${whyLines(c).map(s => `<div>${esc(s)}</div>`).join('')}</div>
@@ -1192,12 +1555,14 @@ function drawSheet(keepScroll) {
         ${f.freq ? card('lFreq', freqText(f.freq), f.last ? t('lLast') + ': ' + ago(f.last) : '', 'freq') : ''}
         ${S.detail ? card('lScore', Math.round(c.score) + ' / 100', '', 'score') + card('lTrend', fmtX(c.trend) + '×', '', 'trend') : ''}
       </div>
+      <h3>📈 ${esc(t('chGrowth'))}</h3>${growthHtml(c)}
       ${c.tags.length ? `<h3>🏷️ ${esc(t('labels'))}</h3><div class="taglist">${c.tags.map(k => `<div><span class="tag ${TAGS[k] ? TAGS[k].cls : ''}">${esc(tagName(k))}</span><small>${esc(tagDesc(k))}</small></div>`).join('')}</div>` : ''}
       <h3>🎬 ${esc(t('recent'))} <span class="seg"><button type="button" data-shsort="new" aria-pressed="${SHEET_SORT === 'new'}">${esc(t('newestFirst'))}</button><button type="button" data-shsort="top" aria-pressed="${SHEET_SORT === 'top'}">${esc(t('topFirst'))}</button></span></h3>
       <div class="vgrid">${vids.map(v => vCard(v, c, {noCh: true, showWhen: true})).join('')}</div>
       ${c.descr ? `<h3>ℹ️ ${esc(t('about'))}</h3><p class="descr">${esc(c.descr)}${needsTr(c) ? ` <a class="tr" href="${trUrl(c.descr)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}</p>` : ''}
     </div>`;
   body.scrollTop = keepScroll ? top : 0;
+  if ($('#sheet').open) drawCharts(body);
 }
 function openChannel(id) {
   if (!findCh(id)) return;
@@ -1206,6 +1571,8 @@ function openChannel(id) {
   drawSheet(false);
   const d = $('#sheet');
   if (!d.open) d.showModal();
+  drawCharts($('#sheetBody'));
+  tourEvent('sheet');
 }
 $('#sheet').addEventListener('close', () => {
   SHEET_ID = null;
@@ -1233,12 +1600,13 @@ function openPlayer(vid, chId) {
         ${c && needsTr(c) && v.t ? `<a class="pillbtn" href="${trUrl(v.t)}" target="_blank" rel="noopener noreferrer">🌐 ${esc(t('translate'))}</a>` : ''}</div>
       <span class="hint">${esc(t('pNoEmbed'))}</span></div></div>`;
   $('#player').showModal();
+  tourEvent('player');
 }
 $('#player').addEventListener('close', () => { $('#playerBody').innerHTML = ''; });   // stops the video
 
 /* ---------- popovers, toasts ---------- */
 let POP_BTN = null, toastTimer = null;
-const topLayer = () => ['player', 'dlg', 'sheet'].map(id => $('#' + id)).find(d => d.open) || document.body;
+const topLayer = () => ['player', 'intro', 'dlg', 'sheet'].map(id => $('#' + id)).find(d => d.open) || document.body;
 function closePop() { $('#pop').style.display = 'none'; POP_BTN = null; }
 function showPop(btn, html) {
   const pop = $('#pop'), host = topLayer();
@@ -1270,16 +1638,548 @@ function openWelcome() {
     body.innerHTML = `<div class="welcome"><div class="emo">📡</div><h3>${esc(t('wTitle'))}</h3><p>${esc(t('wPick'))}</p>
       <div class="langs"><button type="button" data-wl="th" aria-pressed="${UI === 'th'}">ไทย</button><button type="button" data-wl="en" aria-pressed="${UI === 'en'}">English</button></div>
       <ul><li><span class="em">🔍</span><span>${esc(t('w1'))}</span></li><li><span class="em">🔥</span><span>${esc(t('w2'))}</span></li><li><span class="em">🔖</span><span>${esc(t('w3'))}</span></li></ul>
-      <div class="btns"><button type="button" class="pillbtn big red" data-wgo="home">${esc(t('wStart'))}</button><button type="button" class="pillbtn big" data-wgo="help">${esc(t('wHow'))}</button></div></div>`;
+      <div class="btns"><button type="button" class="pillbtn big red" data-wgo="intro">${esc(t('introBtn'))}</button><button type="button" class="pillbtn big" data-wgo="tour">${esc(t('tourBtn'))}</button></div>
+      <button type="button" class="ghost" data-wgo="skip" style="margin-top:10px">${esc(t('skip'))}</button></div>`;
   };
   draw();
   body.onclick = e => {
     const l = e.target.closest('[data-wl]');
     if (l) { setUI(l.dataset.wl); draw(); return; }
     const g = e.target.closest('[data-wgo]');
-    if (g) { dlg.close(); go(g.dataset.wgo); }
+    if (g) { dlg.close(); if (g.dataset.wgo === 'intro') openIntro(); else if (g.dataset.wgo === 'tour') startTour(); }
   };
   dlg.addEventListener('close', () => LS.set('radar.welcomed', true), {once: true});
+  dlg.showModal();
+}
+
+
+/* ---------- search limits on the shared site key ---------- */
+const ownKey = () => { try { return !!(localStorage.getItem('radar.key') || '').trim(); } catch (e) { return false; } };
+const FREE_SEARCHES = 15;   // per device per day when searching with the site's shared key
+const todayStr = () => new Date().toISOString().slice(0, 10);
+const freeLeft = () => { const q = LS.get('radar.sq', {}); return Math.max(0, FREE_SEARCHES - (q.d === todayStr() ? q.n : 0)); };
+function takeFreeSearch() {
+  const left = freeLeft();
+  if (left <= 0) return false;
+  LS.set('radar.sq', {d: todayStr(), n: FREE_SEARCHES - left + 1});
+  return true;
+}
+const searchCache = () => LS.get('radar.scache', []);
+function saveSearchCache(q, channels) {
+  const list = searchCache().filter(x => x.q !== q);
+  list.unshift({q, t: Date.now(), channels});
+  for (let n = 5; n > 0; n--) { try { localStorage.setItem('radar.scache', JSON.stringify(list.slice(0, n))); return; } catch (e) {} }
+}
+const pct = x => (x >= 0.1 ? Math.round(x * 100) : Math.round(x * 1000) / 10) + '%';
+const mmss = ms => { const s = Math.round(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+const shortDate = ts => new Date(ts * 1000).toLocaleDateString(UI === 'th' ? 'th-TH' : 'en-US', {month: 'short', day: 'numeric'});
+const longTime = ts => new Date(ts * 1000).toLocaleString(UI === 'th' ? 'th-TH' : 'en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
+
+/* ---------- this week ---------- */
+function weekData() {
+  const wk = nowTs() - 7 * 86400, per = new Map();
+  const vids = videoPool(DATA.channels).filter(([v]) => when(v) >= wk).sort((a, b) => b[0].v - a[0].v)
+    .filter(([, c]) => { const n = per.get(c.ch_id) || 0; per.set(c.ch_id, n + 1); return n < 2; }).slice(0, 10);
+  const chans = DATA.channels.map(c => { const w = c.series.filter(v => when(v) >= wk); return {c, n: w.length, v: w.reduce((a, x) => a + x.v, 0)}; })
+    .filter(r => r.n).sort((a, b) => b.v - a.v).slice(0, 10);
+  const fresh = DATA.channels.filter(c => c.found && c.found >= wk).sort((a, b) => b.score - a.score).slice(0, 10);
+  const climb = DATA.channels.map(c => {
+    const h = (c.hist || []).filter(p => p[0] >= wk);
+    if (h.length < 2) return null;
+    const a = h[0], b = h[h.length - 1], days = (b[0] - a[0]) / 86400;
+    return days >= 0.5 && b[1] > a[1] ? {c, gain: b[1] - a[1], pct: a[1] ? (b[1] - a[1]) / a[1] : 0, days} : null;
+  }).filter(Boolean).sort((a, b) => b.gain - a.gain).slice(0, 10);
+  return {vids, chans, fresh, climb};
+}
+function rankRow(i, c, sub) {
+  return `<article class="rrow" data-open-ch="${esc(c.ch_id)}" tabindex="0" role="button"><span class="n ${i < 3 ? 'top' : ''}">${i + 1}</span>${avatarEl(c, 44)}
+    <div class="meta"><b>${esc(c.name)}</b><small>${sub}</small></div>${vdPill(c)}</article>`;
+}
+function weekView() {
+  const W = weekData();
+  const sec = (title, desc, body) => `<section class="shelfsec"><div class="shhead"><div><h2>${esc(t(title))}</h2><p>${esc(t(desc))}</p></div></div>${body}</section>`;
+  const none = `<div class="empty" style="padding:24px">${esc(t('wkEmpty'))}</div>`;
+  let h = pageHead('pWeekT', 'pWeekD', `<div class="wkhead"><button type="button" class="pillbtn red" data-wkcopy>${esc(t('wkCopy'))}</button>${LIVE ? `<button type="button" class="pillbtn" data-copylink="week">${esc(t('wkShare'))}</button>` : ''}</div>`);
+  h += sec('wkVideos', 'wkVideosD', W.vids.length ? `<div class="wkgrid">${W.vids.map(([v, c], i) => `<div class="rk"><span class="num">${i + 1}</span>${vCard(v, c, {showWhen: true})}</div>`).join('')}</div>` : none);
+  h += sec('wkChannels', 'wkChannelsD', W.chans.length ? `<div class="rlist">${W.chans.map((r, i) => rankRow(i, r.c, esc(t('wkUploads', {n: r.n, v: fmt(r.v)})))).join('')}</div>` : none);
+  if (W.climb.length) h += sec('wkClimb', 'wkClimbD', `<div class="rlist">${W.climb.map((r, i) => rankRow(i, r.c, `<span class="gain">▲ ${esc(t('wkGain', {n: fmt(r.gain), p: pct(r.pct), d: Math.max(1, Math.round(r.days))}))}</span>`)).join('')}</div>`);
+  if (W.fresh.length) h += sec('wkNew', 'wkNewD', `<div class="rlist">${W.fresh.map((c, i) => rankRow(i, c, esc(t('subscribers', {n: fmt(c.subs)}) + ' · ' + t('wkFound', {ago: ago(c.found)})))).join('')}</div>`);
+  return h;
+}
+function weekText() {
+  const W = weekData();
+  const d = new Date(nowTs() * 1000).toLocaleDateString(UI === 'th' ? 'th-TH' : 'en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+  const lines = [t('wkTextTitle', {d}), ''];
+  W.vids.forEach(([v, c], i) => lines.push(`${i + 1}. ${v.t} — ${c.name} — ${t('views', {n: fmt(v.v)})}`, `   ${vidUrl(v.id)}`));
+  if (W.chans.length) {
+    lines.push('', t('wkTextCh'));
+    W.chans.slice(0, 5).forEach((r, i) => lines.push(`${i + 1}. ${r.c.name} — ${t('wkTextChLine', {n: r.n, v: fmt(r.v)})}`, `   ${chUrl(r.c.ch_id)}`));
+  }
+  if (LIVE) lines.push('', t('wkTextMore', {u: location.origin + location.pathname + '#week'}));
+  return lines.join('\n');
+}
+
+/* ---------- idea lab: what winning titles have in common ---------- */
+const EMO = /\p{Extended_Pictographic}/u, EMO_G = /\p{Extended_Pictographic}(?:️|‍\p{Extended_Pictographic})*/gu;
+const SEG = (() => { try { return new Intl.Segmenter(undefined, {granularity: 'word'}); } catch (e) { return null; } })();   // splits Thai, which has no spaces
+const STOP_TH = new Set('และ ที่ ของ ใน ไม่ ได้ ให้ เป็น มี ว่า จะ กับ แต่ ก็ นี้ คือ จาก ไป มา แล้ว เลย นะ ครับ ค่ะ คะ หรือ อยู่ ทำ กัน ซึ่ง เขา เรา คุณ ผม ฉัน มัน นั้น นี่ อะไร ยัง ถ้า ตอน'.split(' '));
+function titleWords(title) {
+  const clean = String(title).replace(/#[\p{L}\p{N}_]+/gu, ' ').replace(EMO_G, ' ');
+  return SEG ? [...SEG.segment(clean)].filter(s => s.isWordLike).map(s => s.segment.toLowerCase()) : (clean.toLowerCase().match(/[\p{L}\p{N}']+/gu) || []);
+}
+const isStop = w => w.length < 2 || /^\d+$/.test(w) || STOP_TH.has(w) || Object.values(STOP).some(s => s.has(w));
+const quant = (a, q) => a[Math.min(a.length - 1, Math.max(0, Math.round(q * (a.length - 1))))];
+function patterns(chs) {
+  const all = videoPool(chs), isWin = v => v.x >= 2 && v.v >= 100000;
+  const win = all.filter(([v]) => isWin(v)).map(([v]) => v), rest = all.filter(([v]) => !isWin(v)).map(([v]) => v);
+  if (win.length < 8) return null;
+  const share = (list, fn) => Math.round(100 * list.filter(v => fn(v.t)).length / Math.max(1, list.length));
+  const feats = [['ideaQ', 'ideaRQ', s => /[?？]/.test(s)], ['ideaNum', 'ideaRNum', s => /\d/.test(s)], ['ideaEmoji', 'ideaREmoji', s => EMO.test(s)],
+    ['ideaCaps', 'ideaRCaps', s => /\b[A-Z]{3,}\b/.test(s)], ['ideaTag', 'ideaRTag', s => /#[\p{L}\p{N}_]/u.test(s)]]
+    .map(([k, rk, fn]) => ({k, rk, a: share(win, fn), b: share(rest, fn)}));
+  const wordsIn = list => median(list.map(v => titleWords(v.t).length).filter(Boolean)) || 0;
+  const ds = win.map(v => v.d).filter(d => d > 0 && d <= 180).sort((a, b) => a - b);
+  const count = (list, fn) => { const m = new Map(); list.forEach(v => new Set(fn(v.t)).forEach(w => m.set(w, (m.get(w) || 0) + 1))); return m; };
+  const keyWords = s => titleWords(s).filter(w => !isStop(w));
+  const ww = count(win, keyWords), rw = count(rest, keyWords);
+  const words = [...ww.entries()].filter(([, n]) => n >= 3).map(([w, n]) => ({w, n, lift: (n / win.length) / (((rw.get(w) || 0) + 1) / (rest.length + 1))}))
+    .sort((a, b) => b.n * Math.min(b.lift, 4) - a.n * Math.min(a.lift, 4)).slice(0, 16);
+  const top = (m, k) => [...m.entries()].filter(([, n]) => n >= 2).sort((a, b) => b[1] - a[1]).slice(0, k);
+  const seen = new Set();
+  const examples = all.filter(([v]) => isWin(v)).sort((a, b) => Math.min(b[0].x, 50) * Math.log10(b[0].v) - Math.min(a[0].x, 50) * Math.log10(a[0].v))
+    .filter(([, c]) => !seen.has(c.ch_id) && seen.add(c.ch_id)).slice(0, 10);
+  return {
+    nWin: win.length, nRest: rest.length, feats, words, examples, wWin: Math.round(wordsIn(win)), wRest: Math.round(wordsIn(rest)),
+    len: ds.length >= 5 ? [quant(ds, 0.25), quant(ds, 0.75)] : null,
+    emoji: top(count(win, s => s.match(EMO_G) || []), 10),
+    tags: top(count(win, s => (s.match(/#[\p{L}\p{N}_]+/gu) || []).map(x => x.toLowerCase())), 10),
+    starts: top(count(win, s => { const w = titleWords(s); return w.length >= 2 ? [w.slice(0, 2).join(' ')] : []; }), 8)
+  };
+}
+function ideasView() {
+  const P = patterns(DATA.channels.filter(baseOk));
+  let h = pageHead('pIdeasT', 'pIdeasD');
+  if (!P) return h + emptyBox(t('ideaFew'), '💡');
+  const chips = [];
+  if (P.len) chips.push(t('ideaRLen', {a: P.len[0], b: P.len[1]}));
+  if (P.wWin) chips.push(t('ideaRWords', {n: P.wWin}));
+  P.feats.filter(f => f.a >= 15 && f.a >= f.b * 1.25 + 3).forEach(f => chips.push(t(f.rk)));
+  h += `<section class="recipe"><h2>${esc(t('ideaRecipe'))}</h2><div class="chips2">${chips.map(c => `<span>${esc(c)}</span>`).join('')}</div><p>${esc(t('ideaBased', {n: P.nWin, m: P.nRest}))}</p></section>`;
+  const bars = (a, b) => `<div class="bars"><div class="bar"><span>${esc(t('ideaWin'))}</span><i style="width:${a}%"></i><b>${a}%</b></div><div class="bar"><span>${esc(t('ideaOther'))}</span><i class="o" style="width:${b}%"></i><b>${b}%</b></div></div>`;
+  h += `<div class="pgrid"><div class="pbox"><h4>${esc(t('ideaLenT'))}</h4><p>${esc(P.len ? t('ideaLen', {a: P.len[0], b: P.len[1]}) : t('ideaLenNo'))}</p></div>` +
+    `<div class="pbox"><h4>${esc(t('ideaWordsT'))}</h4><p>${esc(t('ideaWords', {n: P.wWin, m: P.wRest}))}</p></div>` +
+    P.feats.map(f => `<div class="pbox"><h4>${esc(t(f.k))}</h4>${bars(f.a, f.b)}</div>`).join('') + '</div>';
+  const cloud = (title, items, sub) => items ? `<h3 class="subhead">${esc(t(title))}</h3>${sub ? `<p style="color:var(--muted);margin:0 0 8px;font-size:12.5px">${esc(t(sub))}</p>` : ''}<div class="wcloud">${items}</div>` : '';
+  h += cloud('ideaTopWords', P.words.map(w => `<span>${esc(w.w)}<small>${w.n}${w.lift >= 1.5 ? ' · ' + fmtX(w.lift) + '×' : ''}</small></span>`).join(''), 'ideaTopWordsD');
+  h += cloud('ideaStarts', P.starts.map(([w, n]) => `<span>${esc(w)}…<small>${n}</small></span>`).join(''));
+  h += cloud('ideaTopEmoji', P.emoji.map(([w, n]) => `<span style="font-size:18px">${esc(w)}<small>${n}</small></span>`).join(''));
+  h += cloud('ideaTopTags', P.tags.map(([w, n]) => `<span>${esc(w)}<small>${n}</small></span>`).join(''));
+  h += `<h3 class="subhead">${esc(t('ideaExamples'))}</h3><div class="vgrid">${P.examples.map(([v, c]) => vCard(v, c)).join('')}</div>`;
+  return h;
+}
+
+/* ---------- compare ---------- */
+if (!Array.isArray(S.cmp)) S.cmp = [];
+function toggleCmp(id) {
+  const i = S.cmp.indexOf(id);
+  if (i >= 0) S.cmp.splice(i, 1);
+  else if (S.cmp.length >= 3) { toast(t('cmpMax')); return; }
+  else S.cmp.push(id);
+  saveState();
+}
+const cmpBtn = c => { const on = S.cmp.includes(c.ch_id); return `<button type="button" class="ghost" data-cmp="${esc(c.ch_id)}" aria-pressed="${on}">⚖️ ${esc(t(on ? 'cmpOn' : 'cmpAdd'))}</button>`; };
+function renderTray() {
+  const el = $('#tray'), list = S.cmp.map(findCh).filter(Boolean);
+  if (!list.length || S.tab === 'compare') { el.innerHTML = ''; return; }
+  el.innerHTML = `<span class="stack">${list.map(c => avatarEl(c, 30)).join('')}</span><button type="button" class="go" data-tab="compare">⚖️ ${esc(t('cmpNow', {n: list.length}))}</button>` +
+    `<button type="button" class="x" data-cmpclear aria-label="${esc(t('cmpClear'))}">✕</button>`;
+}
+function spark(c) {
+  const h = c.hist || [];
+  if (h.length < 2) return '–';
+  const W = 140, H = 36, t0 = h[0][0], t1 = h[h.length - 1][0], vs = h.map(p => p[1]), lo = Math.min(...vs), sp = (Math.max(...vs) - lo) || 1;
+  const X = ts => 4 + (t1 > t0 ? (ts - t0) / (t1 - t0) : 1) * (W - 8), Y = v => H - 5 - (v - lo) / sp * (H - 10);
+  const d = h.map((p, i) => (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1)).join('');
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" aria-hidden="true"><path class="ln" d="${d}"/><circle class="dt" cx="${X(t1).toFixed(1)}" cy="${Y(vs[vs.length - 1]).toFixed(1)}" r="3.5"/></svg>`;
+}
+function compareView() {
+  const list = S.cmp.map(findCh).filter(Boolean);
+  const h = pageHead('cmpTitle', 'cmpD', list.length && LIVE ? `<div class="wkhead"><button type="button" class="pillbtn" data-copylink="compare/${list.map(c => c.ch_id).join(',')}">${esc(t('cmpShare'))}</button></div>` : '');
+  if (!list.length) return h + emptyBox(t('cmpEmpty'), '⚖️');
+  const best = c => c.series.reduce((a, b) => (b.v > a.v ? b : a), c.series[0] || {v: c.max_views});
+  const lenOf = c => { const d = c.series.map(v => v.d).filter(Boolean); return d.length ? median(d) : null; };
+  const hits = c => c.series.filter(v => v.v >= 1e5).length;
+  const rows = [
+    [t('lVerdict'), c => vdPill(c), c => c.score],
+    [t('lSubs'), c => esc(fmt(c.subs))],
+    [t('lTypical'), c => esc(fmt(c.med_recent)), c => c.med_recent],
+    [t('lBest'), c => esc(fmt(best(c).v)), c => best(c).v],
+    [t('lRatio'), c => esc(fmtX(c.ratio) + '×'), c => c.ratio],
+    [t('lHits'), c => esc(t('hitsVal', {k: hits(c), n: c.series.length})), c => hits(c) / Math.max(1, c.series.length)],
+    [t('lFreq'), c => { const f = chFacts(c); return f.freq ? esc(freqText(f.freq)) : '–'; }, c => chFacts(c).freq || 0],
+    [t('cmpLen'), c => { const l = lenOf(c); return l ? esc(fmtDur(l)) : '–'; }],
+    [t('lTrend'), c => esc(fmtX(c.trend) + '×'), c => c.trend],
+    ...(S.detail ? [[t('lScore'), c => esc(String(Math.round(c.score))), c => c.score]] : []),
+    [t('cmpGrowth'), c => spark(c)],
+    [t('cmpTop'), c => `<div class="thumbs">${topVids(c, 3).map(v => `<a href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" data-play="${esc(v.id)}" data-c="${esc(c.ch_id)}"><img loading="lazy" src="${thumb(v.id)}" alt=""></a>`).join('')}</div>`],
+    ['', c => saveBtn(c)]
+  ];
+  let g = '<div class="lbl"></div>' + list.map(c => `<div class="hd"><button type="button" class="icon x" data-cmprm="${esc(c.ch_id)}" aria-label="${esc(t('cmpRemove'))}">${ICON.close}</button>${avatarEl(c, 56)}<button type="button" class="name" data-open-ch="${esc(c.ch_id)}">${esc(c.name)}</button></div>`).join('');
+  for (const [label, cell, score] of rows) {
+    const top = score && list.length > 1 ? Math.max(...list.map(score)) : null;
+    g += `<div class="lbl">${esc(label)}</div>` + list.map(c => { const win = top != null && top > 0 && score(c) === top; return `<div class="${win ? 'best' : ''}">${win ? '👑' : ''}<span class="v">${cell(c)}</span></div>`; }).join('');
+  }
+  return h + `<div class="cmpwrap"><div class="cmp" style="grid-template-columns:auto repeat(${list.length},minmax(180px,1fr))">${g}</div></div>`;
+}
+
+/* ---------- growth charts (one line per chart, never two scales on one chart) ---------- */
+function growthHtml(c) {
+  const h = c.hist || [];
+  if (h.length < 2) return `<p class="descr">${esc(t('chFew'))}</p>`;
+  const box = (k, label) => {
+    const a = h[0][k], b = h[h.length - 1][k], dv = b - a, since = esc(t('chSince', {d: shortDate(h[0][0])}));
+    const delta = dv ? `<span class="delta ${dv > 0 ? 'up' : ''}">${dv > 0 ? '▲ +' : '▼ −'}${esc(fmt(Math.abs(dv)))} (${a ? pct(Math.abs(dv / a)) : '–'}) · ${since}</span>` : `<span class="delta">${since}</span>`;
+    return `<div class="chartbox"><h4>${esc(t(label))}</h4><div><span class="big">${esc(fmt(b))}</span>${delta}</div><div class="lchart" data-ch="${esc(c.ch_id)}" data-k="${k}"></div></div>`;
+  };
+  const rows = h.slice().reverse().map(p => `<tr><td>${esc(longTime(p[0]))}</td><td>${esc(fmt(p[1]))}</td><td>${esc(fmt(p[2]))}</td></tr>`).join('');
+  return `<div class="charts2">${box(1, 'chSubs')}${box(2, 'chViews')}</div><details class="ctbl"><summary>${esc(t('chTable'))}</summary><table class="tbl"><tr><th>${esc(t('chDate'))}</th><th>${esc(t('chSubs'))}</th><th>${esc(t('chViews'))}</th></tr>${rows}</table></details>`;
+}
+function drawCharts(root) {
+  root.querySelectorAll('.lchart[data-ch]').forEach(el => {
+    const c = findCh(el.dataset.ch), k = +el.dataset.k, pts = ((c && c.hist) || []).map(p => [p[0], p[k]]);
+    const W = el.clientWidth, H = el.clientHeight;
+    if (!W || pts.length < 2) return;
+    const pl = 4, pr = 56, pt = 10, pb = 20, t0 = pts[0][0], t1 = pts[pts.length - 1][0];
+    let lo = Math.min(...pts.map(p => p[1])), hi = Math.max(...pts.map(p => p[1]));
+    const span = hi - lo || Math.max(1, Math.abs(hi) * 0.02);
+    lo -= span * 0.25; hi += span * 0.25;
+    const X = ts => pl + (t1 > t0 ? (ts - t0) / (t1 - t0) : 1) * (W - pl - pr), Y = v => pt + (1 - (v - lo) / (hi - lo)) * (H - pt - pb);
+    const d = pts.map((p, i) => (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1)).join('');
+    const grid = [0, 0.5, 1].map(f => { const y = (pt + f * (H - pt - pb)).toFixed(1); return `<line class="gl" x1="${pl}" x2="${W - pr}" y1="${y}" y2="${y}"/>`; }).join('');
+    const L = pts[pts.length - 1];
+    el.innerHTML = `<svg width="${W}" height="${H}" role="img" aria-label="${esc(el.closest('.chartbox').querySelector('h4').textContent)}">${grid}<path class="ln" d="${d}"/>` +
+      `<circle class="dt" cx="${X(L[0]).toFixed(1)}" cy="${Y(L[1]).toFixed(1)}" r="4"/><text class="lb" x="${(X(L[0]) + 8).toFixed(1)}" y="${(Y(L[1]) + 4).toFixed(1)}">${esc(fmt(L[1]))}</text>` +
+      `<text class="ax" x="${pl}" y="${H - 4}">${esc(shortDate(t0))}</text><text class="ax" x="${W - pr}" y="${H - 4}" text-anchor="end">${esc(shortDate(t1))}</text>` +
+      `<line class="xh" y1="${pt}" y2="${H - pb}" visibility="hidden"/><circle class="hd" r="5" visibility="hidden"/></svg><div class="tip"></div>`;
+    const xh = el.querySelector('.xh'), hd = el.querySelector('.hd'), tip = el.querySelector('.tip');
+    el.onpointermove = e => {
+      const x = e.clientX - el.getBoundingClientRect().left;
+      const p = pts.reduce((a, b) => (Math.abs(X(b[0]) - x) < Math.abs(X(a[0]) - x) ? b : a)), px = X(p[0]), py = Y(p[1]);
+      xh.setAttribute('x1', px); xh.setAttribute('x2', px); xh.setAttribute('visibility', 'visible');
+      hd.setAttribute('cx', px); hd.setAttribute('cy', py); hd.setAttribute('visibility', 'visible');
+      tip.textContent = longTime(p[0]) + ' · ' + fmt(p[1]);
+      tip.style.display = 'block'; tip.style.left = px + 'px'; tip.style.top = py + 'px';
+    };
+    el.onpointerleave = () => { xh.setAttribute('visibility', 'hidden'); hd.setAttribute('visibility', 'hidden'); tip.style.display = 'none'; };
+  });
+}
+let chartTimer = null;
+window.addEventListener('resize', () => { clearTimeout(chartTimer); chartTimer = setTimeout(() => { if ($('#sheet').open) drawCharts($('#sheetBody')); if ($('#intro').open) fitIntro(); }, 150); });
+
+/* ---------- video-style intro: a scripted walkthrough of a mock phone screen, with real channels ---------- */
+const I = {open: false, playing: false, t: 0, last: 0, raf: 0, scene: -1, fired: new Set(), voice: false, scenes: [], total: 0, cur: [400, 700], btn: ''};
+const SCENE_MS = [5500, 8500, 6500, 8000, 8500, 6500, 7500, 6000];
+const INTRO_MS = SCENE_MS.reduce((a, b) => a + b, 0);
+const FLAME = '<svg viewBox="0 0 24 24"><path d="M12 2c1 4 6.5 6.5 6.5 13a6.5 6.5 0 0 1-13 0c0-3.5 2.2-5.6 3.3-6.6 0 2.3 1 3.6 2.3 3.6 0-3.4-1-6.6.9-10z"/></svg>';
+const CURSOR = '<svg viewBox="0 0 24 24"><path d="M5 3l14 8-6 1.6 3.6 6.4-2.6 1.4-3.6-6.4L6 18z"/></svg>';
+const PAUSE = '<svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg>', REPLAY = '<svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v5h5"/></svg>';
+const stageEl = () => $('#intro .stage');
+const $s = sel => stageEl().querySelector(sel.startsWith('#') || sel.startsWith('.') || sel.startsWith('[') ? sel : '#' + sel);
+const iOn = id => { const e = $s(id); if (e) e.classList.add('on'); };
+function iPt(sel) {
+  const e = $s(sel), s = stageEl().getBoundingClientRect();
+  if (!e || !s.width) return [180, 320];
+  const r = e.getBoundingClientRect(), k = s.width / 360;
+  return [(r.left - s.left + r.width / 2) / k, (r.top - s.top + r.height / 2) / k];
+}
+function iMove(sel) { const [x, y] = iPt(sel), c = $s('.vcur'); I.cur = [x - 6, y - 4]; c.style.left = I.cur[0] + 'px'; c.style.top = I.cur[1] + 'px'; }
+function iTap() { const c = $s('.vcur'); c.classList.remove('tap'); void c.offsetWidth; c.classList.add('tap'); }
+function iBurst(x, y, emo) {
+  for (let i = 0; i < 8; i++) {
+    const e = document.createElement('span');
+    e.className = 'heart'; e.textContent = emo;
+    e.style.left = (x - 11) + 'px'; e.style.top = (y - 11) + 'px';
+    e.style.setProperty('--dx', (Math.random() * 140 - 70) + 'px'); e.style.animationDelay = (i * 45) + 'ms';
+    stageEl().appendChild(e); setTimeout(() => e.remove(), 1600);
+  }
+}
+function iCount() {
+  stageEl().querySelectorAll('[data-n]').forEach(el => {
+    const n = +el.dataset.n, t0 = performance.now();
+    const step = now => { const k = Math.min(1, (now - t0) / 1400); el.textContent = fmt(Math.round(n * (1 - Math.pow(1 - k, 3)))); if (k < 1 && el.isConnected) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+}
+function iType(sel, text, ms) {
+  const el = $s(sel), chars = [...text], t0 = performance.now();
+  const step = now => { if (!el.isConnected) return; const k = Math.min(1, (now - t0) / ms); el.textContent = chars.slice(0, Math.round(chars.length * k)).join(''); if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+function iGrow(plSel, fromSel) {   // the player grows out of the tapped thumbnail
+  const pl = $s(plSel), th = $s(fromSel).getBoundingClientRect(), s = stageEl().getBoundingClientRect(), k = s.width / 360;
+  pl.style.transition = 'none';
+  pl.style.transform = `translate(${(th.left - s.left) / k}px,${(th.top - s.top) / k}px) scale(${th.width / k / 360},${th.height / k / 640})`;
+  void pl.offsetWidth;
+  pl.style.transition = ''; pl.classList.add('on'); pl.style.transform = 'none';
+}
+function introScenes() {
+  const P = picksList()[0] || DATA.channels[0];
+  const small = DATA.channels.filter(c => c.subs >= 1000 && c.subs <= 60000 && c.score >= 65 && !c.tags.includes('One-hit')).sort((a, b) => b.ratio - a.ratio)[0] || P;
+  const viral = viralVideos(DATA.channels).slice(0, 3);
+  for (let i = 0; viral.length < 3 && i < P.series.length; i++) viral.push([P.series[i], P]);
+  const why = whyLines(P)[0] || '', best = topVids(P, 1)[0] || {v: P.max_views};
+  const other = UI === 'th' ? 'en' : 'th';
+  const chips = lang => TOPICS.slice(0, 5).map((tp, i) => `<span data-i="${i}">${tp[1]} ${esc(lang === 'th' ? tp[3] : tp[2])}</span>`).join('');
+  const head = () => `<div class="mhead"><span class="mlogo">${FLAME}</span><b>Viral Radar</b><span class="mseg" id="i_seg"><span class="${UI === 'en' ? 'a' : ''}">EN</span><span class="${UI === 'th' ? 'a' : ''}">ไทย</span></span></div>`;
+  const thumbs = () => viral.map(([v], i) => `<div class="mth" id="i_th${i}"><img src="${thumb(v.id)}" alt=""><span class="x">${fmtX(v.x)}×</span><span class="vw">▶ ${esc(fmt(v.v))}</span></div>`).join('');
+  const sheet = open => `<div class="msheet ${open ? 'on' : ''}" id="i_sheet"><div class="top">${avatarEl(P, 56)}<div><b>${esc(P.name)}</b>${vdPill(P)}</div></div>
+    <div class="mwhy"><h5>💡 ${esc(t('why'))}</h5><span id="i_type"></span></div>
+    <div class="mcards up" id="i_cards"><div>${esc(t('lTypical'))}<b>${esc(fmt(P.med_recent))}</b></div><div>${esc(t('lBest'))}<b>${esc(fmt(best.v))}</b></div></div>
+    <span class="msave" id="i_save">🔖 ${esc(t('save'))}</span></div>`;
+  const swap = lang => {
+    stageEl().querySelectorAll('#i_chips span').forEach((s, i) => { s.textContent = TOPICS[i][1] + ' ' + (lang === 'th' ? TOPICS[i][3] : TOPICS[i][2]); });
+    const seg = $s('i_seg'); seg.children[0].className = lang === 'en' ? 'a' : ''; seg.children[1].className = lang === 'th' ? 'a' : '';
+  };
+  return [
+    {cap: 'i1', html: () => `<div class="rings"><i></i><i></i><i></i></div><div class="logo pop" id="i_logo">${FLAME}</div><div class="center ttl up" id="i_ttl">Viral Radar</div>` +
+        `<div class="center cnt up" id="i_cnt">${t('iCount', {a: `<span data-n="${DATA.channels.length}">0</span>`, b: `<span data-n="${videoPool(DATA.channels).length}">0</span>`})}</div>`,
+     at: [[100, () => iOn('i_logo')], [600, () => iOn('i_ttl')], [1200, () => { iOn('i_cnt'); iCount(); }]]},
+    {cap: 'i2', capv: {s: fmt(small.subs), v: fmt(small.med_recent)},
+     html: () => `<div class="card2 up" id="i_c">${avatarEl(small, 84)}<span>${esc(small.name)}</span></div>` +
+        `<div class="fact up" id="i_f1" style="top:236px">👥 ${t('iSubs', {n: `<b>${esc(fmt(small.subs))}</b>`})}</div><div class="arrow up" id="i_ar" style="top:306px">⬇</div>` +
+        `<div class="fact big up" id="i_f2" style="top:356px">👁 ${t('iViews', {n: `<b>${esc(fmt(small.med_recent))}</b>`})}</div><div class="boom pop" id="i_x">×${esc(fmtX(small.ratio))}</div>`,
+     at: [[200, () => iOn('i_c')], [1000, () => iOn('i_f1')], [2200, () => iOn('i_ar')], [2900, () => iOn('i_f2')], [4300, () => { iOn('i_x'); iBurst(180, 505, '🔥'); }]]},
+    {cap: 'i3', html: () => [3, 2, 1, 0].map((l, i) => `<div class="lvl up" id="i_l${i}" style="top:${110 + i * 92}px"><span class="vd v${l}">${esc((l ? fire(l) + ' ' : '') + t(VKEY[l]))}</span><span>${esc(t(VKEY[l] + 'D'))}</span></div>`).join(''),
+     at: [[200, () => iOn('i_l0')], [800, () => iOn('i_l1')], [1400, () => iOn('i_l2')], [2000, () => iOn('i_l3')], [3300, () => $s('i_l0').classList.add('glow')]]},
+    {cap: 'i4', cur: true, html: () => head() + `<div class="mchips">${chips(UI)}</div><div class="mtitle">${esc(t('shViral'))}</div><div class="mrow">${thumbs()}</div>` +
+        `<div class="mplayer" id="i_pl"><img src="${thumb(viral[0][0].id)}" alt=""><span class="pp">${ICON.play}</span><div class="fp up" id="i_fp">🔥 ${esc(t('pX', {x: fmtX(viral[0][0].x)}))}</div></div>`,
+     at: [[500, () => iMove('i_th0')], [1700, iTap], [2000, () => iGrow('i_pl', 'i_th0')], [3000, () => iOn('i_fp')]]},
+    {cap: 'i5', cur: true, html: () => head() + `<div class="mrowch">${avatarEl(P, 44)}<b id="i_nm">${esc(P.name)}</b>${vdPill(P)}</div>` + sheet(false),
+     at: [[400, () => iMove('i_nm')], [1500, iTap], [1700, () => iOn('i_sheet')], [2400, () => iType('i_type', why, 3000)], [5800, () => iOn('i_cards')]]},
+    {cap: 'i6', cur: true, html: () => head() + sheet(true) + `<div class="mtoast" id="i_toast">✅ ${esc(t('saved'))}</div>`,
+     at: [[0, () => { $s('i_type').textContent = why; iOn('i_cards'); }], [500, () => iMove('i_save')], [1600, iTap],
+          [1750, () => { const s = $s('i_save'); s.classList.add('done'); s.textContent = '✓ ' + t('saved'); iBurst(...iPt('i_save'), '❤️'); }], [2000, () => iOn('i_toast')]]},
+    {cap: 'i7', cur: true, html: () => head() + `<div class="mchips" id="i_chips">${chips(UI)}</div><div class="mtitle">${esc(t('shViral'))}</div><div class="mrow">${thumbs()}</div>`,
+     at: [[500, () => iMove('#i_chips [data-i="0"]')], [1500, iTap], [1650, () => $s('#i_chips [data-i="0"]').classList.add('a')], [2700, () => iMove('i_seg')], [3600, iTap],
+          [3750, () => swap(other)], [5600, () => swap(UI)]]},
+    {cap: 'i8', html: () => `<div class="end"><div class="emo2 pop" id="i_end">🎉</div><h3>${esc(t('i8'))}</h3><button type="button" class="b1" data-itour>${esc(t('tourBtn'))}</button><button type="button" class="b2" data-iclose>${esc(t('wStart'))}</button></div>`,
+     at: [[100, () => { iOn('i_end'); iBurst(180, 190, '🎉'); }]]}
+  ].map((s, i) => Object.assign(s, {d: SCENE_MS[i]}));
+}
+function introVoice() {
+  if (!('speechSynthesis' in window)) return null;
+  const lang = UI === 'th' ? 'th' : 'en';
+  return speechSynthesis.getVoices().find(v => v.lang.toLowerCase().replace('_', '-').startsWith(lang)) || null;
+}
+function speak(text) {
+  if (!I.voice || !('speechSynthesis' in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text), v = introVoice();
+    if (v) u.voice = v;
+    u.lang = UI === 'th' ? 'th-TH' : 'en-US';
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+function enterScene(i) {
+  const sc = I.scenes[i];
+  I.scene = i; I.fired = new Set();
+  if (!sc.cur) I.cur = [400, 700];
+  stageEl().innerHTML = `<div class="sc">${sc.html()}</div><div class="vcur" style="left:${I.cur[0]}px;top:${I.cur[1]}px">${CURSOR}<i></i></div>`;
+  const cap = $('#intro .icap');
+  cap.textContent = t(sc.cap, sc.capv);
+  if (I.playing) speak(cap.textContent);
+}
+function introTick(ts) {
+  if (!I.open) return;
+  const dt = I.last ? Math.min(1000, ts - I.last) : 0;   // keeps time even when the browser slows animation frames
+  I.last = ts;
+  if (I.playing) I.t = Math.min(I.total, I.t + dt);
+  let acc = 0, i = 0;
+  while (i < I.scenes.length - 1 && I.t >= acc + I.scenes[i].d) acc += I.scenes[i++].d;
+  if (i !== I.scene) enterScene(i);
+  const local = I.t - acc;
+  I.scenes[i].at.forEach((e, k) => { if (!I.fired.has(k) && local >= e[0]) { I.fired.add(k); try { e[1](); } catch (err) {} } });
+  if (I.t >= I.total) I.playing = false;
+  $('#intro .iprog i').style.width = (100 * I.t / I.total) + '%';
+  $('#intro .itime').textContent = mmss(I.t) + ' / ' + mmss(I.total);
+  const btn = I.playing ? 'pause' : I.t >= I.total ? 'replay' : 'play';
+  if (btn !== I.btn) { I.btn = btn; const b = $('#intro [data-iplay]'); b.innerHTML = btn === 'pause' ? PAUSE : btn === 'replay' ? REPLAY : ICON.play; b.setAttribute('aria-label', btn); }
+  I.raf = requestAnimationFrame(introTick);
+}
+function fitIntro() { const f = $('#intro .frame'), s = stageEl(); if (f && s) s.style.transform = `scale(${f.clientHeight / 640})`; }
+function openIntro() {
+  if (!DATA || !DATA.channels.length) return;
+  closePop();
+  ['dlg', 'sheet', 'player'].forEach(id => { if ($('#' + id).open) $('#' + id).close(); });
+  I.scenes = introScenes(); I.total = INTRO_MS;
+  Object.assign(I, {t: 0, scene: -1, last: 0, playing: true, open: true, cur: [400, 700], btn: ''});
+  let acc = 0;
+  const marks = I.scenes.slice(0, -1).map(s => { acc += s.d; return `<b style="left:${(100 * acc / I.total).toFixed(2)}%"></b>`; }).join('');
+  $('#introBody').innerHTML = `<div class="iv"><div class="ihead"><b>${esc(t('introT'))}</b>` +
+    ('speechSynthesis' in window ? `<button type="button" data-ivoice aria-pressed="${I.voice}">${I.voice ? '🔊' : '🔇'} ${esc(t('voice'))}</button>` : '') +
+    `<button type="button" data-iclose aria-label="${esc(t('dClose'))}">${ICON.close}</button></div>` +
+    `<div class="frame"><div class="stage"></div></div><div class="icap" aria-live="polite"></div>` +
+    `<div class="ibar"><button type="button" data-iplay></button><div class="iprog" data-iseek>${marks}<i></i></div><span class="itime"></span></div></div>`;
+  $('#intro').showModal();
+  fitIntro();
+  cancelAnimationFrame(I.raf);
+  I.raf = requestAnimationFrame(introTick);
+}
+$('#intro').addEventListener('close', () => { I.open = false; I.playing = false; cancelAnimationFrame(I.raf); try { speechSynthesis.cancel(); } catch (e) {} $('#introBody').innerHTML = ''; });
+if ('speechSynthesis' in window) { try { speechSynthesis.getVoices(); } catch (e) {} }   // voices load in the background
+function introClick(x, e) {
+  if (x.closest('[data-iclose]')) { $('#intro').close(); return true; }
+  if (x.closest('[data-itour]')) { $('#intro').close(); startTour(); return true; }
+  if (x.closest('[data-iplay]')) {
+    if (I.t >= I.total) { I.t = 0; I.scene = -1; }
+    I.playing = !I.playing;
+    if (!I.playing) { try { speechSynthesis.cancel(); } catch (err) {} } else if (I.scene >= 0) speak($('#intro .icap').textContent);
+    return true;
+  }
+  const seek = x.closest('[data-iseek]');
+  if (seek) {
+    const r = seek.getBoundingClientRect(), target = I.total * Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+    let acc = 0, i = 0;
+    while (i < I.scenes.length - 1 && target >= acc + I.scenes[i].d) acc += I.scenes[i++].d;
+    I.t = acc; I.scene = -1; I.playing = true;
+    return true;
+  }
+  if (x.closest('[data-ivoice]')) {
+    if (!I.voice && !introVoice()) { toast(t('voiceNone')); return true; }
+    I.voice = !I.voice;
+    const b = x.closest('[data-ivoice]');
+    b.innerHTML = (I.voice ? '🔊 ' : '🔇 ') + esc(t('voice')); b.setAttribute('aria-pressed', String(I.voice));
+    if (I.voice && I.playing) speak($('#intro .icap').textContent); else { try { speechSynthesis.cancel(); } catch (err) {} }
+    return true;
+  }
+  return false;
+}
+
+/* ---------- hands-on tour: spotlights the real page, one step at a time ---------- */
+const TOUR = {i: -1, steps: [], raf: 0, target: null};
+function tourSteps() {
+  return [
+    {k: 't0'},
+    {k: 't1', sel: '#chips [data-topic]:not([data-topic=""])', wait: 'topic'},
+    {k: 't2', sel: '#langSeg'},
+    {k: 't3', sel: '#content .pcard .vd, #content .ccard .vd'},
+    {k: 't4', sel: '#content .shelfsec .vcard .th', wait: 'player'},
+    {k: 't5', sel: '#player .pfacts', dlg: 'player', leave: () => { if ($('#player').open) $('#player').close(); }},
+    {k: 't6', sel: '#content .pcard, #content .ccard', wait: 'sheet'},
+    {k: 't7', sel: '#sheet .why', dlg: 'sheet'},
+    {k: 't8', sel: '#sheet .shtop [data-star]', dlg: 'sheet', wait: 'star', leave: () => { if ($('#sheet').open) $('#sheet').close(); }},
+    {k: 't9', sel: '#side [data-tab=saved]'},
+    {k: 't10', sel: '#side [data-tab=week]'},
+    {k: 't11', sel: '#btnHelp'}
+  ];
+}
+function startTour() {
+  ['intro', 'dlg', 'sheet', 'player'].forEach(id => { if ($('#' + id).open) $('#' + id).close(); });
+  closePop();
+  S.topic = ''; saveState();
+  if (S.tab !== 'home') go('home'); else render();
+  window.scrollTo(0, 0);
+  TOUR.steps = tourSteps(); TOUR.i = -1;
+  let el = $('#tour');
+  if (!el) { el = document.createElement('div'); el.id = 'tour'; }
+  document.body.appendChild(el);
+  el.innerHTML = '<div class="hole none"></div><div class="bub" role="dialog" aria-live="polite"></div>';
+  setTimeout(() => { tourGo(0); cancelAnimationFrame(TOUR.raf); TOUR.raf = requestAnimationFrame(tourFrame); }, 60);
+}
+function tourGo(i, dir = 1) {
+  const prev = TOUR.steps[TOUR.i];
+  if (prev && prev.leave && i !== TOUR.i) prev.leave();
+  while (i >= 0 && i < TOUR.steps.length) {   // skip steps whose target is not on screen (for example on a phone)
+    const s = TOUR.steps[i];
+    if (!s.sel) break;
+    const e = (!s.dlg || $('#' + s.dlg).open) ? document.querySelector(s.sel) : null;
+    if (e && e.getClientRects().length) { e.scrollIntoView({block: 'center', inline: 'nearest'}); break; }
+    i += dir;
+  }
+  if (i >= TOUR.steps.length) { endTour(true); return; }
+  if (i < 0) i = 0;
+  TOUR.i = i;
+  const s = TOUR.steps[i], el = $('#tour'), host = s.dlg ? $('#' + s.dlg) : document.body, n = TOUR.steps.length;
+  if (el.parentNode !== host) host.appendChild(el);
+  TOUR.target = s.sel ? document.querySelector(s.sel) : null;
+  el.querySelector('.bub').innerHTML = `<button type="button" class="sk" data-tskip aria-label="${esc(t('skip'))}">✕</button><p>${esc(t(s.k))}</p>${s.wait ? `<div class="try">${esc(t('tTry'))}</div>` : ''}` +
+    `<div class="row2"><small>${esc(t('tStep', {a: i + 1, b: n}))}</small>${i ? `<button type="button" data-tback>${esc(t('tBack'))}</button>` : ''}<button type="button" class="nx" data-tnext>${esc(t(i === n - 1 ? 'tDone' : 'tNext'))}</button></div>`;
+  el.querySelector('.hole').classList.toggle('pulse', !!s.wait);
+  tourPlace();
+}
+function tourFrame() {
+  if (!tourPlace()) return;
+  TOUR.raf = requestAnimationFrame(tourFrame);
+}
+function tourPlace() {   // positions the spotlight and the bubble; returns false once the tour is over
+  const el = $('#tour');
+  if (!el || TOUR.i < 0) return false;
+  const s = TOUR.steps[TOUR.i], hole = el.querySelector('.hole'), bub = el.querySelector('.bub');
+  if (s.sel && (!TOUR.target || !TOUR.target.isConnected)) TOUR.target = document.querySelector(s.sel);
+  const r = TOUR.target && TOUR.target.getClientRects().length ? TOUR.target.getBoundingClientRect() : null;
+  const bw = bub.offsetWidth, bh = bub.offsetHeight;
+  if (r) {
+    hole.classList.remove('none');
+    Object.assign(hole.style, {left: r.left - 6 + 'px', top: r.top - 6 + 'px', width: r.width + 12 + 'px', height: r.height + 12 + 'px'});
+    let top = r.bottom + 16;
+    if (top + bh > innerHeight - 8) top = r.top - bh - 16 >= 8 ? r.top - bh - 16 : Math.max(8, innerHeight - bh - 8);
+    bub.style.left = Math.min(innerWidth - bw - 12, Math.max(12, r.left + r.width / 2 - bw / 2)) + 'px';
+    bub.style.top = top + 'px';
+  } else {
+    hole.classList.add('none');
+    Object.assign(hole.style, {left: innerWidth / 2 + 'px', top: innerHeight / 2 + 'px'});
+    bub.style.left = (innerWidth - bw) / 2 + 'px'; bub.style.top = (innerHeight - bh) / 2 + 'px';
+  }
+  return true;
+}
+window.addEventListener('scroll', () => tourPlace(), true);
+window.addEventListener('resize', () => tourPlace());
+function tourEvent(name) {
+  if (TOUR.i < 0) return;
+  const s = TOUR.steps[TOUR.i];
+  if (s.wait === name) setTimeout(() => { if (TOUR.steps[TOUR.i] === s) tourGo(TOUR.i + 1); }, 450);
+}
+function tourDialogClosed(id) {   // the visitor closed a window the tour was pointing into
+  if (TOUR.i < 0) return;
+  const s = TOUR.steps[TOUR.i];
+  if (s.dlg === id) tourGo(TOUR.i + 1);
+  else if (s.wait === (id === 'player' ? 'player' : 'sheet')) { const el = $('#tour'); if (el.parentNode !== document.body) document.body.appendChild(el); }
+}
+function endTour(done) {
+  cancelAnimationFrame(TOUR.raf);
+  const s = TOUR.steps[TOUR.i];
+  TOUR.i = -1; TOUR.target = null;
+  if (s && s.leave) s.leave();
+  const el = $('#tour');
+  if (el) el.remove();
+  LS.set('radar.toured', true);
+  if (done) {
+    const em = ['🎉', '🔥', '⭐', '✨', '🎊'];
+    for (let i = 0; i < 36; i++) {
+      const e = document.createElement('span');
+      e.className = 'confetti'; e.textContent = em[i % em.length];
+      e.style.left = Math.random() * 100 + 'vw'; e.style.animationDuration = 1.6 + Math.random() * 1.6 + 's'; e.style.animationDelay = Math.random() * 0.5 + 's';
+      document.body.appendChild(e); setTimeout(() => e.remove(), 4200);
+    }
+  }
+}
+function tourClick(x) {
+  if (x.closest('[data-tnext]')) { tourGo(TOUR.i + 1); return true; }
+  if (x.closest('[data-tback]')) { tourGo(TOUR.i - 1, -1); return true; }
+  if (x.closest('[data-tskip]')) { endTour(false); return true; }
+  return false;
+}
+['player', 'sheet'].forEach(id => $('#' + id).addEventListener('close', () => tourDialogClosed(id)));
+
+/* ---------- phone menu ---------- */
+function openMore() {
+  const dlg = $('#dlg'), body = $('#dlgBody');
+  body.onclick = null;
+  const items = [['home', 'nHome'], ['week', 'nWeek'], ['videos', 'nVideos'], ['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['saved', 'nSaved'], ['compare', 'nCompare'], ['help', 'nHelp']];
+  body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('nMore'))}</h3>` +
+    items.map(([id, k]) => `<button type="button" class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(k))}</span></button>`).join('') +
+    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>`;
   dlg.showModal();
 }
 
@@ -1301,8 +2201,8 @@ function applyStaticText() {
 function renderSide() {
   const saved = DATA.channels.filter(isWatched).length, fresh = liveVideos(DATA.channels).length, st = statusInfo();
   const nav = (id, key, n, hot) => `<button type="button" class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(key))}</span>${n ? `<span class="n ${hot ? 'hot' : ''}">${n}</span>` : ''}</button>`;
-  $('#side').innerHTML = nav('home', 'nHome') + nav('videos', 'nVideos') + nav('channels', 'nChannels') + nav('live', 'nLive', fresh, true) + nav('topics', 'nTopics') +
-    nav('saved', 'nSaved', saved) + nav('help', 'nHelp') +
+  $('#side').innerHTML = nav('home', 'nHome') + nav('week', 'nWeek') + nav('videos', 'nVideos') + nav('channels', 'nChannels') + nav('live', 'nLive', fresh, true) +
+    nav('ideas', 'nIdeas') + nav('topics', 'nTopics') + '<hr class="navsep">' + nav('saved', 'nSaved', saved) + nav('compare', 'nCompare', S.cmp.length) + nav('help', 'nHelp') + nav('more', 'nMore') +
     `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` +
     `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div></div>`;
 }
@@ -1311,10 +2211,10 @@ function renderChips() {
   if (S.tab === 'search') {
     el.innerHTML = `<button type="button" class="chip" data-searchback>${esc(t('sBack'))}</button>` +
       (SEARCH && canLive() ? `<button type="button" class="chip" data-tracktopic aria-pressed="${!!SEARCH.tracked}">${esc(SEARCH.tracked ? t('sTracked') : t('sTrack'))}</button>` : '') +
-      (STATIC ? `<button type="button" class="chip" data-changekey>${esc(t('kChange'))}</button>` : '');
+      (STATIC && ownKey() ? `<button type="button" class="chip" data-changekey>${esc(t('kChange'))}</button>` : '');
     return;
   }
-  if (!['home', 'videos', 'channels', 'live'].includes(S.tab)) { el.innerHTML = ''; return; }
+  if (!['home', 'videos', 'channels', 'live', 'ideas'].includes(S.tab)) { el.innerHTML = ''; return; }
   const present = new Set();
   for (const c of DATA.channels) for (const k of chTopics(c)) present.add(k);
   const langSel = `<select id="fLang" class="chip" aria-label="Language">${[['all', 'langAll'], ['th', 'langTh'], ['en', 'langEn'], ['other', 'langOther']].map(([v, k]) => `<option value="${v}" ${S.lang === v ? 'selected' : ''}>${esc(t(k))}</option>`).join('')}</select>`;
@@ -1331,6 +2231,9 @@ function renderContent() {
   else if (tab === 'videos') el.innerHTML = videosView();
   else if (tab === 'channels') el.innerHTML = pageHead('pChannelsT', 'pChannelsD', filtersHtml('channels') + qBanner()) + channelsView(channelsFiltered(false), DATA.channels.length ? null : t('emptyFirst'));
   else if (tab === 'live') el.innerHTML = liveView();
+  else if (tab === 'week') el.innerHTML = weekView();
+  else if (tab === 'ideas') el.innerHTML = ideasView();
+  else if (tab === 'compare') el.innerHTML = compareView();
   else if (tab === 'topics') el.innerHTML = topicsView();
   else if (tab === 'saved') el.innerHTML = pageHead('pSavedT', canLive() ? 'pSavedDLive' : 'pSavedD') + channelsView(DATA.channels.filter(isWatched).sort((a, b) => b.score - a.score), t('emptySaved'));
   else if (tab === 'help') el.innerHTML = helpView();
@@ -1351,7 +2254,7 @@ function render(keepChips) {
   if (!DATA) return;
   applyStaticText(); renderSide();
   if (!keepChips) renderChips();
-  renderContent(); renderButtons();
+  renderContent(); renderButtons(); renderTray();
 }
 function setUI(l) {
   UI = l === 'th' ? 'th' : 'en'; LS.set('radar.ui', UI); closePop();
@@ -1373,7 +2276,14 @@ window.addEventListener('hashchange', () => {
   if (TABS.includes(h)) { if (S.tab !== h) applyTab(h); }
   else if (h === 'search' && SEARCH) { S.tab = 'search'; render(); }
   else if (/^ch\/UC[\w-]{22}$/.test(h)) openChannel(h.slice(3));
+  else if (/^compare\/[\w,-]+$/.test(h)) openCompareLink(h);
 });
+function openCompareLink(h) {
+  const ids = h.slice(8).split(',').filter(chOk).slice(0, 3);
+  if (ids.length) { S.cmp = ids; saveState(); }
+  history.replaceState(null, '', '#compare');
+  applyTab('compare');
+}
 
 /* ---------- events ---------- */
 const PRESETS = {
@@ -1385,7 +2295,19 @@ document.addEventListener('click', async e => {
   const help = x.closest('[data-help]');
   if (help) { e.preventDefault(); e.stopPropagation(); if (POP_BTN === help) closePop(); else showPop(help, helpHtml(help.dataset.help)); return; }
   if (POP_BTN && !x.closest('#pop')) closePop();
-  for (const d of ['dlg', 'sheet', 'player']) if (x === $('#' + d)) { $('#' + d).close(); return; }   // click on the dark backdrop
+  if (tourClick(x) || introClick(x, e)) return;
+  for (const d of ['dlg', 'sheet', 'player', 'intro']) if (x === $('#' + d)) { $('#' + d).close(); return; }   // click on the dark backdrop
+  if (x.closest('[data-intro]')) { openIntro(); return; }
+  if (x.closest('[data-tour]')) { startTour(); return; }
+  const cmp = x.closest('[data-cmp]');
+  if (cmp) { toggleCmp(cmp.dataset.cmp); render(true); if ($('#sheet').open) drawSheet(true); return; }
+  const cmprm = x.closest('[data-cmprm]');
+  if (cmprm) { toggleCmp(cmprm.dataset.cmprm); render(true); return; }
+  if (x.closest('[data-cmpclear]')) { S.cmp = []; saveState(); render(true); return; }
+  if (x.closest('[data-wkcopy]')) { if (await copyText(weekText())) toast(t('wkCopied')); return; }
+  const cl = x.closest('[data-copylink]');
+  if (cl) { if (await copyText(location.origin + location.pathname + '#' + cl.dataset.copylink)) toast(t('copied')); return; }
+  if (x.closest('[data-tab="more"]')) { openMore(); return; }
   if (x.closest('[data-close]')) { x.closest('dialog').close(); return; }
   const play = x.closest('[data-play]');
   if (play) {
@@ -1398,11 +2320,11 @@ document.addEventListener('click', async e => {
   const ui = x.closest('[data-ui]');
   if (ui) { setUI(ui.dataset.ui); return; }
   const det = x.closest('[data-detail]');
-  if (det) { S.detail = det.dataset.detail === 'toggle' ? !S.detail : det.dataset.detail === '1'; saveState(); render(); if ($('#sheet').open) drawSheet(true); return; }
+  if (det) { S.detail = det.dataset.detail === 'toggle' ? !S.detail : det.dataset.detail === '1'; saveState(); if ($('#dlg').open) $('#dlg').close(); render(); if ($('#sheet').open) drawSheet(true); return; }
   const topic = x.closest('[data-topic]');
-  if (topic) { S.topic = topic.dataset.topic; saveState(); shown.channels = 15; shown.videos = 60; if (topic.dataset.go) go(topic.dataset.go); else render(); return; }
+  if (topic) { S.topic = topic.dataset.topic; saveState(); shown.channels = 15; shown.videos = 60; if (topic.dataset.go) go(topic.dataset.go); else render(); tourEvent('topic'); return; }
   const tab = x.closest('[data-tab]');
-  if (tab) { e.preventDefault(); go(tab.dataset.tab); return; }
+  if (tab) { e.preventDefault(); if ($('#dlg').open && tab.closest('#dlg')) $('#dlg').close(); go(tab.dataset.tab); return; }
   const see = x.closest('[data-see]');
   if (see) {
     const k = see.dataset.see;
@@ -1438,6 +2360,7 @@ document.addEventListener('click', async e => {
     render(true);
     if ($('#sheet').open) drawSheet(true);
     toast(t(next ? 'savedToast' : 'unsavedToast'));
+    tourEvent('star');
     return;
   }
   const cp = x.closest('[data-copy]');
@@ -1613,9 +2536,13 @@ async function probeStatic(chId, info, query) {
     queries: [query], series: vids, watch: false, descr, avatar_url: (th.medium || th.default || {}).url || '', pick: null}, m);
 }
 async function staticSearch(query) {
-  if (!getKey()) { openKeyDialog(); return; }
+  if (!getKey()) { go('channels'); return; }   // no key: the typed words already filter our own list
+  const ck = query.toLowerCase(), hit = searchCache().find(x => x.q === ck && Date.now() - x.t < 12 * 3600e3);
   enterSearch();
-  const mine = SEARCH = {query, id: 'web', state: 'running', phase: 'searching', done: 0, total: 0, found: 0, channels: [], error: null, tracked: false, msg: ''};
+  const base = {query, id: 'web', phase: '', done: 0, total: 0, found: 0, channels: [], error: null, tracked: false, msg: ''};
+  if (hit) { SEARCH = Object.assign(base, {state: 'done', channels: hit.channels, cachedAt: hit.t / 1000}); render(); window.scrollTo(0, 0); return; }
+  if (!ownKey() && !takeFreeSearch()) { SEARCH = Object.assign(base, {state: 'error', msg: t('sLimit'), limit: true}); render(); window.scrollTo(0, 0); return; }
+  const mine = SEARCH = Object.assign(base, {state: 'running', phase: 'searching'});
   render(); window.scrollTo(0, 0);
   const paint = () => { if (S.tab === 'search' && SEARCH === mine) renderContent(); };
   try {
@@ -1645,6 +2572,7 @@ async function staticSearch(query) {
     };
     await Promise.all([worker(), worker(), worker(), worker()]);
     mine.state = 'done';
+    saveSearchCache(ck, mine.channels);
   } catch (e) {
     mine.state = 'error';
     mine.msg = e && e.quota ? t('kQuota') : e && e.badKey ? t('kBad') : e && e.net ? t('kNet') : t('sErr');
@@ -1689,9 +2617,10 @@ async function refresh() {
 function afterFirstData() {
   const m = /^#ch\/(UC[\w-]{22})$/.exec(location.hash);
   if (m && findCh(m[1])) openChannel(m[1]);
+  else if (/^#compare\/[\w,-]+$/.test(location.hash)) openCompareLink(location.hash.slice(1));
   else if (!LS.get('radar.welcomed', false)) openWelcome();
 }
-if (!hashTab() && !/^#ch\//.test(location.hash)) history.replaceState(null, '', '#' + S.tab);
+if (!hashTab() && !/^#(ch|compare)\//.test(location.hash)) history.replaceState(null, '', '#' + S.tab);
 applyStaticText();
 if (LIVE) { refresh(); setInterval(refresh, STATIC ? 60000 : 15000); } else { render(); afterFirstData(); }
 </script>
