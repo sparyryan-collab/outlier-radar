@@ -17,6 +17,9 @@
   --hover:rgba(0,0,0,.05); --card:#ffffff; --shadow:0 6px 28px rgba(0,0,0,.10);
   --hot3:#ff0033; --hot2:#f05a00; --hot1bg:#fff1d6; --hot1:#8a4b00; --tip:#fff8e1; --tipline:#f3d48a; --series-1:#2a78d6;
 }
+:root{--c1:#2a78d6;--c2:#eb6834;--c3:#1baf7a;--c4:#eda100}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--c1:#3987e5;--c2:#d95926;--c3:#199e70;--c4:#c98500}}
+:root[data-theme=dark]{--c1:#3987e5;--c2:#d95926;--c3:#199e70;--c4:#c98500}
 @media (prefers-color-scheme:dark){
   :root:not([data-theme=light]){color-scheme:dark;--bg:#0f0f0f; --bg2:#151515; --surface:#272727; --surface2:#3f3f3f; --text:#f1f1f1; --muted:#aaaaaa; --line:#303030;
     --on-bg:#f1f1f1; --on-fg:#0f0f0f; --accent:#3ea6ff; --good:#4cc36f; --warn:#f2a33a; --bad:#ff6b61; --hover:rgba(255,255,255,.08);
@@ -608,13 +611,13 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 #tour .ripple::before,#tour .ripple::after{content:"";position:absolute;left:-22px;top:-22px;width:44px;height:44px;border-radius:50%;border:3px solid #ff0033;animation:ripple 1.6s ease-out infinite}
 #tour .ripple::after{animation-delay:.8s}
 @keyframes ripple{0%{transform:scale(.4);opacity:1}100%{transform:scale(1.8);opacity:0}}
-#tour .tcard{display:flex;flex-direction:column;align-items:center;text-align:center;padding:26px 22px 20px;background:radial-gradient(120% 70% at 50% 0%,color-mix(in srgb,#ff0033 16%,var(--bg)),var(--bg) 70%)}
+#tour .twc{display:flex;flex-direction:column;align-items:center;text-align:center;padding:26px 22px 20px;background:radial-gradient(120% 70% at 50% 0%,color-mix(in srgb,#ff0033 16%,var(--bg)),var(--bg) 70%)}
 #tour .tlogo{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,#ff0033,#ff7a00);box-shadow:0 10px 30px rgba(255,0,51,.35);animation:hp 2.4s infinite}
 #tour .tlogo svg{width:34px;height:34px;fill:#fff;stroke:none}
 #tour .tlogo.ok{background:linear-gradient(135deg,#0f9d58,#34c27a);box-shadow:0 10px 30px rgba(15,157,88,.35)}
 #tour .tlogo.ok svg.i{width:34px;height:34px;color:#fff;fill:none;stroke:#fff;stroke-width:3}
-#tour .tcard h3{margin:14px 0 6px;font-size:21px}
-#tour .tcard p{margin:0;color:var(--muted);font-size:14px;line-height:1.5;max-width:340px}
+#tour .twc h3{margin:14px 0 6px;font-size:21px}
+#tour .twc p{margin:0;color:var(--muted);font-size:14px;line-height:1.5;max-width:340px}
 #tour .tfeat{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:14px 0 4px}
 #tour .tfeat span{display:inline-flex;gap:5px;align-items:center;background:var(--surface);border-radius:999px;padding:5px 10px;font-size:12.5px;font-weight:600}
 #tour .tfeat svg.i{width:15px;height:15px;color:var(--red)}
@@ -868,6 +871,161 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .pf small{color:var(--muted);font-size:12.5px;line-height:1.45}
 .pctbl{max-width:640px}
 .pctbl td:nth-child(n+2),.pctbl th:nth-child(n+2){text-align:center;width:70px}
+/* ---- bubble charts, trend cards, brief, boards, topics and Idea Lab ---- */
+.vizcard{background:var(--card);box-shadow:0 0 0 1px var(--line);border-radius:18px;padding:14px 14px 8px;margin:0 0 16px}
+.vizhead{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:6px}
+.vizhead h3{margin:0;font-size:16px;display:flex;gap:7px;align-items:center}
+.vizhead h3 svg.i{width:18px;height:18px;color:var(--c1)}
+.vizhead p{margin:3px 0 0;color:var(--muted);font-size:12.5px;line-height:1.45;max-width:640px}
+.vlegend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.vlegend span{display:inline-flex;gap:6px;align-items:center}
+.vlegend i{width:10px;height:10px;border-radius:50%;background:var(--muted)}
+.vlegend i.early{background:var(--c1)}.vlegend i.spread{background:var(--c3)}.vlegend i.boom{background:var(--c2)}.vlegend i.other{background:var(--surface2)}
+.viz{position:relative;width:100%}
+.viz svg{display:block;overflow:visible;stroke:none}
+.viz .zone{fill:color-mix(in srgb,var(--c1) 9%,transparent)}
+.viz .zl{fill:var(--c1);font-size:11.5px;font-weight:700}
+.viz .gline{stroke:var(--line);stroke-width:1}
+.viz .ax{stroke:var(--muted);stroke-width:1;opacity:.6}
+.viz .tk{fill:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.viz .al{fill:var(--muted);font-size:11px;font-weight:600}
+.viz .bub{cursor:pointer;outline:none}
+.viz .bub circle{fill-opacity:.82;stroke:var(--card);stroke-width:2;transition:fill-opacity .15s}
+.viz .bub.early circle{fill:var(--c1)}.viz .bub.spread circle{fill:var(--c3)}.viz .bub.boom circle{fill:var(--c2)}
+.viz .bub.dim circle{fill-opacity:.25}
+.viz .bub:focus circle,.viz .bub:hover circle{fill-opacity:1;stroke:var(--text)}
+.viz .bl{fill:var(--text);font-size:11.5px;font-weight:600;pointer-events:none;paint-order:stroke;stroke:var(--card);stroke-width:3px;stroke-linejoin:round}
+.viz .tip{position:absolute;display:none;transform:translate(-50%,-100%);background:var(--on-bg);color:var(--on-fg);border-radius:10px;padding:7px 10px;font-size:12px;line-height:1.45;pointer-events:none;z-index:3;width:max-content;max-width:240px;box-shadow:var(--shadow)}
+.viz .tip .stage{margin-top:3px}
+.stage{display:inline-block;font-size:10.5px;font-weight:700;border-radius:6px;padding:1px 7px;white-space:nowrap}
+.stage.early{background:color-mix(in srgb,var(--c1) 16%,transparent);color:var(--c1)}
+.stage.spread{background:color-mix(in srgb,var(--c3) 16%,transparent);color:var(--c3)}
+.stage.boom{background:color-mix(in srgb,var(--c2) 16%,transparent);color:var(--c2)}
+.tcard .trio{aspect-ratio:16/7}
+.tcard .tbody{gap:8px}
+.tcard .ttop{align-items:center}
+.aspk{width:100%;height:40px;display:block;stroke:none}
+.aspk .a0{fill:color-mix(in srgb,var(--muted) 18%,transparent)}
+.aspk .a1{fill:color-mix(in srgb,var(--c2) 35%,transparent)}
+.aspk polyline{fill:none;stroke:var(--c2);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.tnums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.tnums span{display:flex;flex-direction:column;min-width:0}
+.tnums b{font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tnums b.up{color:var(--good)}
+.tnums small{color:var(--muted);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brief2{margin:4px 0 16px}
+.brief2 .brh{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.brief2 .brh b{font-size:17px}
+.brief2 .brh small{color:var(--muted);font-size:12.5px}
+.brgrid2{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:150px;gap:10px}
+.bcard{position:relative;border:0;padding:0;border-radius:16px;overflow:hidden;text-align:left;color:#fff;background:linear-gradient(135deg,#3a1d5c,#123a6b);cursor:pointer}
+.bcard.big{grid-column:span 2;grid-row:span 2}
+.bcard.plain{background:linear-gradient(135deg,#123a6b,#0d6b5a)}
+.bbg{position:absolute;inset:0;display:flex}
+.bbg img{flex:1;min-width:0;height:100%;object-fit:cover;filter:saturate(1.15)}
+.bcard::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 0%,rgba(0,0,0,.35) 45%,rgba(0,0,0,.86) 100%)}
+.bc{position:absolute;inset:auto 0 0 0;z-index:1;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.bc .ico{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.18);backdrop-filter:blur(6px);margin-bottom:4px}
+.bc .ico svg.i{width:17px;height:17px;color:#fff}
+.bc small{font-size:11.5px;opacity:.85}
+.bc b{font-size:15px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bcard.big b{font-size:24px}
+.bc em{font-style:normal;font-size:12px;opacity:.9}
+.bc .aspk{height:38px;margin-top:6px}
+.bc .aspk .a0{fill:rgba(255,255,255,.18)}
+.bc .aspk .a1{fill:rgba(255,120,60,.6)}
+.bc .aspk polyline{stroke:#ffb37a}
+.bcard:hover .bbg img{transform:scale(1.04)}
+.bbg img{transition:transform .4s}
+.hbr{display:block;height:5px;border-radius:3px;background:var(--surface2);overflow:hidden;margin-top:5px;max-width:260px}
+.hbr i{display:block;height:100%;border-radius:3px;background:var(--c1)}
+.hbr.up i{background:var(--c2)}
+.podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 14px;max-width:960px}
+.pod{position:relative;border:0;padding:0;border-radius:16px;overflow:hidden;background:var(--card);box-shadow:0 0 0 1px var(--line);text-align:left;display:flex;flex-direction:column;cursor:pointer}
+.pod:hover{box-shadow:var(--shadow)}
+.pth{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;aspect-ratio:16/8;background:var(--surface)}
+.pth img{width:100%;height:100%;object-fit:cover}
+.pempty{grid-column:1/-1;display:grid;place-items:center;color:var(--muted)}
+.pb{padding:10px 12px 12px;display:flex;flex-direction:column;gap:3px}
+.pb b{font-size:16px}
+.pb small{color:var(--muted);font-size:12px}
+.pb .hbr{max-width:none}
+.medal{position:absolute;top:8px;left:8px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#3b2a00;background:linear-gradient(135deg,#ffe27a,#f2b400);box-shadow:0 2px 8px rgba(0,0,0,.35);z-index:1}
+.pod.p2 .medal{background:linear-gradient(135deg,#f2f2f2,#b9b9b9);color:#333}
+.pod.p3 .medal{background:linear-gradient(135deg,#f3c39b,#c27a3e);color:#3a1c00}
+.ytpod{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 12px;max-width:960px}
+.ytbig{border:0;padding:0;background:none;text-align:left;display:flex;flex-direction:column;gap:5px;cursor:pointer}
+.yth{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:16/9;background:var(--surface)}
+.yth img{width:100%;height:100%;object-fit:cover}
+.yrank{position:absolute;left:8px;bottom:6px;font-size:34px;font-weight:900;line-height:1;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.7)}
+.yth .mv{position:absolute;right:8px;top:8px}
+.ytbig b{font-size:14px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ytbig small{color:var(--muted);font-size:12px}
+.ttiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;padding-top:4px}
+.ttile{border:0;padding:0;border-radius:16px;overflow:hidden;background:var(--card);box-shadow:0 0 0 1px var(--line);text-align:left;display:flex;flex-direction:column;cursor:pointer;transition:box-shadow .2s,transform .2s}
+.ttile:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.tth{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;aspect-ratio:16/7;background:var(--surface)}
+.tth img{width:100%;height:100%;object-fit:cover}
+.ttb{padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px}
+.ttop2{display:flex;gap:8px;align-items:center}
+.ttop2 b{flex:1;min-width:0;font-size:15.5px}
+.tico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--c1) 14%,transparent);color:var(--c1);flex:none;margin-top:-26px;box-shadow:0 0 0 3px var(--card)}
+.tico svg.i{width:19px;height:19px}
+.opp{font-size:11px;font-weight:800;border-radius:8px;padding:2px 7px;background:color-mix(in srgb,var(--c2) 15%,transparent);color:var(--c2)}
+.meter{height:7px;border-radius:4px;background:var(--surface2);overflow:hidden}
+.meter i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--c4),var(--c2))}
+.ttb small{color:var(--muted);font-size:12px}
+.ttb .stack{display:flex}
+.ttb .stack .av{box-shadow:0 0 0 2px var(--card)}
+.recipe2,.tbuild{border-radius:18px;padding:16px;margin:0 0 16px;background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.recipe2{background:radial-gradient(120% 100% at 0% 0%,color-mix(in srgb,var(--c4) 18%,var(--card)),var(--card) 60%)}
+.rh{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.rh .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none;color:#fff;background:linear-gradient(135deg,var(--c4),var(--c2))}
+.rh .ico.b{background:linear-gradient(135deg,var(--c1),var(--c3))}
+.rh .ico svg.i{width:21px;height:21px}
+.rh h2,.rh h3{margin:0;font-size:17px}
+.rh p{margin:3px 0 0;color:var(--muted);font-size:12.5px;line-height:1.45}
+.rblocks{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rb{background:var(--bg);border-radius:14px;padding:10px 14px;display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:110px;box-shadow:0 0 0 1px var(--line)}
+.rb .ri svg.i{width:18px;height:18px;color:var(--c2)}
+.rb b{font-size:20px;font-variant-numeric:tabular-nums}
+.rb small{color:var(--muted);font-size:11.5px}
+.plus{font-size:20px;font-weight:300;color:var(--muted)}
+.tbuild .addch{max-width:none}
+.ibchips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 4px}
+.ibchips .chip{height:30px;font-size:12.5px}
+#ibOut .tcres{margin-top:10px}
+.diffs{display:flex;flex-direction:column;gap:10px;padding:4px 0 8px}
+.drow{display:grid;grid-template-columns:minmax(120px,190px) 1fr 52px;gap:10px;align-items:center}
+.dl{display:flex;gap:6px;align-items:center;font-size:13px;font-weight:600}
+.dl svg.i{width:16px;height:16px;color:var(--muted)}
+.dpair{display:flex;flex-direction:column;gap:3px;min-width:0}
+.dpair>span{position:relative;height:16px;border-radius:8px;background:var(--surface);overflow:hidden;display:block}
+.dpair i{position:absolute;inset:0 auto 0 0;border-radius:8px}
+.dw i{background:var(--c2)}
+.do i{background:var(--surface2)}
+.dpair b{position:relative;font-size:11px;line-height:16px;padding-left:7px}
+.dw b{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.dx{font-weight:800;font-size:14px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.dx.up{color:var(--c2)}
+.wcloud2{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:baseline;padding:4px 0 10px}
+.wcloud2 button{border:0;background:var(--surface);border-radius:10px;padding:3px 10px;font-weight:700;color:var(--text);line-height:1.3;cursor:pointer}
+.wcloud2 button.hot{color:var(--c2);background:color-mix(in srgb,var(--c2) 12%,var(--surface))}
+.wcloud2 button.on{box-shadow:inset 0 0 0 2px var(--c1)}
+.wcloud2 small{font-size:10.5px;font-weight:500;color:var(--muted);margin-left:5px}
+.minis{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;padding-bottom:6px}
+.minis h5{margin:0 0 6px;font-size:12.5px;color:var(--muted)}
+@media (max-width:760px){
+  .brgrid2{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -12px;padding:0 12px;grid-auto-rows:auto}
+  .brgrid2::-webkit-scrollbar{display:none}
+  .bcard,.bcard.big{flex:0 0 78vw;height:170px;scroll-snap-align:start}
+  .bcard.big b{font-size:18px}
+  .podium,.ytpod{grid-template-columns:1fr 1fr}
+  .podium .p1,.ytpod .ytbig:first-child{grid-column:1/-1}
+  .drow{grid-template-columns:1fr 46px}
+  .dl{grid-column:1/-1}
+  .tnums b{font-size:13px}
+}
 /* ---- display modes: skim cards and the analytics strip ---- */
 .modeseg button{display:inline-flex;gap:6px;align-items:center}
 .modeseg svg.i{width:16px;height:16px}
@@ -904,8 +1062,8 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .sblist b{font-variant-numeric:tabular-nums}
 .sblist b small{color:var(--muted);font-weight:400}
 svg.mini{width:100%;height:70px;display:block;stroke:none}
-svg.mini rect{fill:color-mix(in srgb,var(--series-1) 55%,var(--surface2))}
-svg.mini rect.hot{fill:#ff2d55}
+svg.mini rect{fill:color-mix(in srgb,var(--c1) 55%,var(--surface2))}
+svg.mini rect.hot{fill:var(--c2)}
 svg.mini line{stroke:var(--text);stroke-width:1.5;stroke-dasharray:3 3;vector-effect:non-scaling-stroke;opacity:.6}
 svg.mini.line polyline{fill:none;stroke:#12a150;stroke-width:2.5;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
 .dotsg{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
@@ -1945,6 +2103,28 @@ Object.assign(T.th, {
   mxRhythm: 'การลงคลิป 4 สัปดาห์ล่าสุด', mxRhythmD: '{n} คลิปใน 4 สัปดาห์', mxLen: 'ความยาวที่ดีที่สุด', mxLenD: '{l} ได้วิวมากที่สุด',
   mxEng: 'การมีส่วนร่วม', mxTalk: 'คอมเมนต์ต่อ 1K วิว', mxLikes: 'ไลก์ต่อ 1K วิว', mxAvg: 'ค่าเฉลี่ยทั้งเว็บ: {n} คอมเมนต์ต่อ 1K', mxSubs: 'ผู้ติดตาม', mxSubsD: '{n} ใน {d} วัน'
 });
+Object.assign(T.en, {
+  stEarly: 'Early', stBoom: 'Exploding', stSpread: 'Spreading', tnLift: 'vs usual', tnShorts: 'new Shorts', tnCh: 'channels', tnViews: 'typical views',
+  radT: 'Trend radar', radD: 'Each bubble is a rising trend. Further left = fewer channels on it so far (the best time to jump in). Higher = rising faster. Bigger = more new Shorts.',
+  radX: 'Channels posting it', radY: 'Times its usual Shorts', radEarly: 'Early: few channels yet',
+  oppT: 'Opportunity map', oppD: 'Each bubble is a topic. Higher = bigger typical views. Further left = fewer channels competing. Bigger = more of its Shorts go viral. Tap one to see it.',
+  oppX: 'Channels posting (2 weeks)', oppY: 'Typical views', oppSweet: 'Sweet spot', oppOther: 'Other topics', oppScore: 'Opportunity',
+  oppTip: 'Typical {m} views · {a} channels posting · {v}% go viral',
+  ibT: 'Build a title', ibD: 'Type a title, or tap the words and openings winning Shorts use. It’s scored as you type.', ibPh: 'Type a title idea…',
+  diffT: 'What winners do differently', diffD: 'How often winning Shorts do each thing, against everyone else.', ideaWordsTap: 'Bigger = used by more winners; red = far more than in other Shorts. Tap a word to see its examples.',
+  ideaWordEx: 'Winning Shorts with “{w}”'
+});
+Object.assign(T.th, {
+  stEarly: 'เพิ่งเริ่ม', stBoom: 'กำลังระเบิด', stSpread: 'กำลังกระจาย', tnLift: 'เทียบปกติ', tnShorts: 'คลิปใหม่', tnCh: 'ช่อง', tnViews: 'วิวปกติ',
+  radT: 'เรดาร์เทรนด์', radD: 'แต่ละวงคือเทรนด์ที่กำลังมา ยิ่งอยู่ซ้าย = ยังมีช่องทำน้อย (จังหวะดีที่สุดที่จะกระโดดเข้าไป) ยิ่งสูง = มาแรงเร็ว ยิ่งใหญ่ = คลิปใหม่เยอะ',
+  radX: 'จำนวนช่องที่ทำ', radY: 'กี่เท่าของคลิปปกติ', radEarly: 'เพิ่งเริ่ม: ยังมีช่องทำน้อย',
+  oppT: 'แผนที่โอกาส', oppD: 'แต่ละวงคือหัวข้อ ยิ่งสูง = วิวปกติยิ่งมาก ยิ่งอยู่ซ้าย = คู่แข่งยิ่งน้อย ยิ่งใหญ่ = คลิปไวรัลยิ่งเยอะ กดเพื่อดูหัวข้อนั้น',
+  oppX: 'จำนวนช่องที่ลงคลิป (2 สัปดาห์)', oppY: 'วิวปกติ', oppSweet: 'จุดที่น่าทำ', oppOther: 'หัวข้ออื่น', oppScore: 'โอกาส',
+  oppTip: 'วิวปกติ {m} · มี {a} ช่องลงคลิป · ไวรัล {v}%',
+  ibT: 'ลองตั้งชื่อคลิป', ibD: 'พิมพ์ชื่อคลิป หรือกดคำและคำขึ้นต้นที่คลิปดังใช้ ระบบให้คะแนนทันทีขณะพิมพ์', ibPh: 'พิมพ์ไอเดียชื่อคลิป…',
+  diffT: 'คลิปดังทำอะไรต่างออกไป', diffD: 'คลิปดังทำแต่ละอย่างบ่อยแค่ไหน เทียบกับคลิปอื่น ๆ', ideaWordsTap: 'ยิ่งใหญ่ = คลิปดังใช้เยอะ สีแดง = ใช้มากกว่าคลิปอื่นมาก กดคำเพื่อดูตัวอย่าง',
+  ideaWordEx: 'คลิปดังที่มีคำว่า “{w}”'
+});
 Object.assign(T.en, {ytFrom: 'On YouTube’s trending chart'});
 Object.assign(T.th, {ytFrom: 'อยู่บนชาร์ตมาแรงของ YouTube'});
 Object.assign(T.en, {legalUpdated: 'Last updated {d}', contactGh: 'open a message on GitHub', fTerms: 'Terms', fPrivacy: 'Privacy', fRefunds: 'Refunds', fContact: 'Contact',
@@ -2094,7 +2274,7 @@ Object.assign(T.th, {
   proCard: 'Viral Radar Pro', proCardBeta: 'ใช้ฟรีช่วงทดลอง', proCardPrice: '{p} ต่อเดือน'
 });
 (() => {   // labels drop any leading emoji: icons are drawn separately where they help
-  const lead = /^(?:\p{Extended_Pictographic}|\p{Regional_Indicator})(?:️|‍\p{Extended_Pictographic}|\p{Regional_Indicator}|\p{Extended_Pictographic})*\s*/u;
+  const lead = /^(?:[#*0-9]️?⃣|\p{Extended_Pictographic}|\p{Regional_Indicator})(?:️|‍\p{Extended_Pictographic}|\p{Regional_Indicator}|\p{Extended_Pictographic})*\s*/u;
   for (const L of [T.en, T.th]) for (const k of Object.keys(L)) if (typeof L[k] === 'string') { const v = L[k].replace(lead, ''); if (v) L[k] = v; }
 })();
 const TAGS = {
@@ -2257,7 +2437,7 @@ const langName = c => {   // a video language's name in the visitor's language
 };
 const topicName = tp => t('_topic_' + tp[0]);
 function installPack(code, d) {   // a language's strings; anything missing falls back to English
-  const lead = /^(?:\p{Extended_Pictographic}|\p{Regional_Indicator})(?:️|‍\p{Extended_Pictographic}|\p{Regional_Indicator}|\p{Extended_Pictographic})*\s*/u;
+  const lead = /^(?:[#*0-9]️?⃣|\p{Extended_Pictographic}|\p{Regional_Indicator})(?:️|‍\p{Extended_Pictographic}|\p{Regional_Indicator}|\p{Extended_Pictographic})*\s*/u;
   const out = {};
   for (const [k, v] of Object.entries(d || {})) if (typeof v === 'string' && typeof T.en[k] === 'string') out[k] = v.replace(lead, '') || v;
   T[code] = out; LOADED.add(code);
@@ -2671,6 +2851,51 @@ function shelf(title, desc, items, see) {
 }
 const emptyBox = msg => `<div class="empty"><span class="emi">${IC.inbox}</span>${esc(msg)}</div>`;
 
+/* ---------- bubble charts drawn at their box's real size (labels stay readable on a phone) ---------- */
+const VIZ = new Map();
+let vizN = 0;
+const vizBox = (kind, data, h, label) => { const id = 'v' + (++vizN); VIZ.set(id, {kind, data}); return `<div class="viz" data-viz="${id}" style="height:${h}px" role="img" aria-label="${esc(label)}"></div>`; };
+function drawViz(root) {
+  root.querySelectorAll('.viz[data-viz]').forEach(el => { const v = VIZ.get(el.dataset.viz); if (v && el.clientWidth) bubbleChart(el, el.clientWidth, el.clientHeight, v.data); });
+}
+function bubbleChart(el, W, H, o) {   // o: {pts: [{x, y, r, cls, label, lab, tip, attr}], xmin, xmax, ymin, ymax, xticks, yticks, xfmt, yfmt, xlab, ylab, zone}
+  const phone = W < 520, pl = phone ? 36 : 46, pr = 12, pt = 12, pb = 34, iw = W - pl - pr, ih = H - pt - pb;
+  const sx = v => pl + iw * Math.log(clampN(v, o.xmin, o.xmax) / o.xmin) / Math.log(o.xmax / o.xmin);
+  const sy = v => pt + ih * (1 - Math.log(clampN(v, o.ymin, o.ymax) / o.ymin) / Math.log(o.ymax / o.ymin));
+  const k = phone ? 0.8 : 1, pts = o.pts.map(p => Object.assign({}, p, {cx: sx(p.x), cy: sy(p.y), rr: p.r * k})).sort((a, b) => b.rr - a.rr);
+  let svg = '';
+  if (o.zone) {   // a shaded region with its name
+    const x0 = sx(o.zone.x0), x1 = sx(o.zone.x1), y0 = sy(o.zone.y1), y1 = sy(o.zone.y0);
+    svg += `<rect class="zone" x="${x0.toFixed(1)}" y="${y0.toFixed(1)}" width="${(x1 - x0).toFixed(1)}" height="${(y1 - y0).toFixed(1)}" rx="8"/><text class="zl" x="${(x0 + 8).toFixed(1)}" y="${(y0 + 16).toFixed(1)}">${esc(o.zone.label)}</text>`;
+  }
+  o.yticks.filter(v => v >= o.ymin && v <= o.ymax).forEach(v => { const y = sy(v).toFixed(1); svg += `<line class="gline" x1="${pl}" x2="${W - pr}" y1="${y}" y2="${y}"/><text class="tk" x="${pl - 6}" y="${(+y + 4).toFixed(1)}" text-anchor="end">${esc(o.yfmt(v))}</text>`; });
+  o.xticks.filter(v => v >= o.xmin && v <= o.xmax).forEach(v => { const x = sx(v).toFixed(1); svg += `<text class="tk" x="${x}" y="${H - pb + 16}" text-anchor="middle">${esc(o.xfmt(v))}</text>`; });
+  svg += `<line class="ax" x1="${pl}" x2="${W - pr}" y1="${pt + ih}" y2="${pt + ih}"/><text class="al" x="${W - pr}" y="${H - 3}" text-anchor="end">${esc(o.xlab)} →</text>` +
+    `<text class="al" x="${pl}" y="${pt - 1}" dy="-1" text-anchor="start" transform="rotate(0)">${esc('↑ ' + o.ylab)}</text>`;
+  pts.forEach((p, i) => { svg += `<g class="bub ${p.cls}" ${p.attr} data-i="${i}" tabindex="0"><circle cx="${p.cx.toFixed(1)}" cy="${p.cy.toFixed(1)}" r="${Math.max(4, p.rr).toFixed(1)}"/></g>`; });
+  const boxes = [];   // labels for the biggest bubbles, skipping any that would overlap
+  pts.filter(p => p.lab).sort((a, b) => b.rr - a.rr).forEach(p => {
+    const w = Math.min(130, p.label.length * 6.6 + 4), lx = p.cx + p.rr + 4 + w > W - pr ? p.cx - p.rr - 4 - w : p.cx + p.rr + 4, ly = p.cy - 7;
+    if (boxes.some(b => lx < b[0] + b[2] && lx + w > b[0] && ly < b[1] + 14 && ly + 14 > b[1])) return;
+    boxes.push([lx, ly, w]);
+    svg += `<text class="bl" x="${lx.toFixed(1)}" y="${(ly + 11).toFixed(1)}">${esc(p.label.length > 20 ? p.label.slice(0, 19) + '…' : p.label)}</text>`;
+  });
+  el.innerHTML = `<svg width="${W}" height="${H}">${svg}</svg><div class="tip"></div>`;
+  const tip = el.querySelector('.tip');
+  const show = g => {
+    const p = pts[+g.dataset.i];
+    el.querySelectorAll('.bub').forEach(b => b.classList.toggle('dim', b !== g));
+    tip.innerHTML = p.tip; tip.style.display = 'block';
+    tip.style.left = clampN(p.cx, 90, W - 90) + 'px'; tip.style.top = Math.max(p.cy - p.rr - 8, 40) + 'px';
+  };
+  const hide = () => { tip.style.display = 'none'; el.querySelectorAll('.bub').forEach(b => b.classList.remove('dim')); };
+  el.onpointermove = e => { const g = e.target.closest('.bub'); if (g) show(g); else hide(); };
+  el.onpointerleave = hide;
+  el.onfocusin = e => { const g = e.target.closest('.bub'); if (g) show(g); };
+}
+const logTicks = (lo, hi) => [1, 2, 3, 5, 10, 20, 30, 50, 100, 200, 500, 1e3, 2e3, 5e3, 1e4, 2e4, 5e4, 1e5, 2e5, 5e5, 1e6, 2e6, 5e6, 1e7].filter(v => v >= lo && v <= hi);
+const spread = (arr, n) => (arr.length <= n ? arr : arr.filter((_, i) => i % Math.ceil(arr.length / n) === 0));
+
 /* ---------- the two display modes: Simple (skim cards) and Detailed (every number, drawn) ---------- */
 const modeSeg = () => `<div class="seg modeseg" role="group" aria-label="${esc(t('dispTitle'))}"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${IC.grid}<span>${esc(t('simple'))}</span></button>` +
   `<button type="button" data-detail="1" aria-pressed="${S.detail}">${IC.chart}<span>${esc(t('detailed'))}</span></button></div>`;
@@ -2683,10 +2908,10 @@ function quickCard(c) {   // Simple: one big number and one reason, so a page of
 }
 const clampN = (x, a, b) => Math.min(b, Math.max(a, x));
 function scoreParts(c) {   // the scanner's score, part by part (the same formula as compute_metrics in app.py)
-  return [['spEngine', 30 * clampN((Math.log10(Math.max(c.med_recent || 0, 1)) - 4.7) / 1.3, 0, 1), 30, 'var(--series-1)'],
-    ['spLever', 35 * clampN(Math.log10(Math.max(c.ratio || 0, 1)) / Math.log10(30), 0, 1), 35, '#ff2d55'],
-    ['spHits', 15 * (c.share_100k || 0) + 10 * clampN((c.share_1m || 0) / 0.25, 0, 1), 25, '#12a150'],
-    ['spTrend', 10 * clampN((Math.log2(Math.max(c.trend || 1, 0.05)) + 1) / 2, 0, 1), 10, '#e8a200'],
+  return [['spEngine', 30 * clampN((Math.log10(Math.max(c.med_recent || 0, 1)) - 4.7) / 1.3, 0, 1), 30, 'var(--c1)'],
+    ['spLever', 35 * clampN(Math.log10(Math.max(c.ratio || 0, 1)) / Math.log10(30), 0, 1), 35, 'var(--c2)'],
+    ['spHits', 15 * (c.share_100k || 0) + 10 * clampN((c.share_1m || 0) / 0.25, 0, 1), 25, 'var(--c3)'],
+    ['spTrend', 10 * clampN((Math.log2(Math.max(c.trend || 1, 0.05)) + 1) / 2, 0, 1), 10, 'var(--c4)'],
     ['spFluke', c.peak_vs_med > 30 ? -15 : c.peak_vs_med > 15 ? -8 : 0, 0, 'var(--muted)']];
 }
 function scoreBreak(c) {
@@ -2843,17 +3068,34 @@ function liveView() {
   if (!vids.length) return head + emptyBox(t('emptyLive'), '🕒');
   return head + `<div class="vgrid">${vids.slice(0, shown.live).map(([v, c]) => vCard(v, c, {showWhen: true})).join('')}</div>` + moreBtn('live', vids.length - shown.live);
 }
+function oppMap() {   // demand (typical views) against competition (channels posting), per topic
+  const rows = niches();
+  if (rows.length < 4) return '';
+  const actives = rows.map(r => r.active).sort((a, b) => a - b), meds = rows.map(r => r.med).sort((a, b) => a - b);
+  const midA = actives[Math.floor(actives.length / 2)], midM = meds[Math.floor(meds.length / 2)];
+  const xmax = Math.max(...actives) * 1.4, xmin = Math.max(1, Math.min(...actives) / 1.4), ymax = Math.max(...meds) * 1.6, ymin = Math.max(1000, Math.min(...meds) / 1.6);
+  const data = {xmin, xmax, ymin, ymax, xticks: spread(logTicks(xmin, xmax), 6), yticks: spread(logTicks(ymin, ymax), 5), xfmt: v => fmt(v), yfmt: v => fmt(v),
+    xlab: t('oppX'), ylab: t('oppY'), zone: {x0: xmin, x1: midA, y0: midM, y1: ymax, label: t('oppSweet')},
+    pts: rows.map(r => ({x: r.active, y: r.med, r: 7 + 16 * Math.sqrt(r.viral), cls: r.active <= midA && r.med >= midM ? 'early' : 'spread', label: topicName(r.tp), lab: true,
+      attr: `data-topic="${r.tp[0]}" data-go="home"`, tip: `<b>${esc(topicName(r.tp))}</b><br>${esc(t('oppTip', {m: fmt(r.med), a: r.active, v: Math.round(100 * r.viral)}))}<br>${esc(t('oppScore'))}: ${r.score}/100`}))};
+  return `<section class="vizcard"><div class="vizhead"><div><h3>${IC.target}${esc(t('oppT'))}</h3><p>${esc(t('oppD'))}</p></div>
+    <div class="vlegend"><span><i class="early"></i>${esc(t('oppSweet'))}</span><span><i class="spread"></i>${esc(t('oppOther'))}</span></div></div>${vizBox('bubbles', data, 340, t('oppT'))}</section>`;
+}
 function topicsView() {
+  const opp = new Map(niches().map(r => [r.tp[0], r.score]));
   const rows = TOPICS.map(tp => {
     const chs = DATA.channels.filter(c => chTopics(c).has(tp[0]) && langOk(c)).sort((a, b) => b.score - a.score);
-    return {tp, n: chs.length, hot: chs.filter(c => c.score >= 65).length, top: chs.slice(0, 5)};
+    return {tp, chs, n: chs.length, hot: chs.filter(c => c.score >= 65).length, top: chs.slice(0, 5)};
   }).filter(r => r.n).sort((a, b) => b.hot - a.hot || b.n - a.n);
-  let h = pageHead('pTopicsT', 'pTopicsD', `<div class="filters">${modeSeg()}</div>`) + heatSection();
+  let h = pageHead('pTopicsT', 'pTopicsD', `<div class="filters">${modeSeg()}</div>`) + oppMap() + heatSection();
   if (!rows.length) return h + emptyBox(t('emptyNiche'));
-  const mx = Math.max(1, ...rows.map(r => r.hot));
-  h += `<div class="tiles">` + rows.map(r => `<button type="button" class="tile" data-topic="${r.tp[0]}" data-go="home"><span class="ico">${topicIcon(r.tp[0])}</span><b>${esc(topicName(r.tp))}</b>
-    <div class="stack">${r.top.map(c => avatarEl(c, 34)).join('')}</div><div class="bar2"><i style="width:${(r.hot / mx) * 100}%"></i></div>
-    <small>${esc(t('topicStats', {h: r.hot, n: r.n}))}</small></button>`).join('') + '</div>';
+  h += `<div class="ttiles">` + rows.map(r => {
+    const vids = viralVideos(r.chs).slice(0, 3), o = opp.get(r.tp[0]);
+    return `<button type="button" class="ttile" data-topic="${r.tp[0]}" data-go="home"><span class="tth">${vids.map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('')}</span>
+      <span class="ttb"><span class="ttop2"><span class="tico">${topicIcon(r.tp[0])}</span><b>${esc(topicName(r.tp))}</b>${o != null ? `<span class="opp" title="${esc(t('oppScore'))}">${o}</span>` : ''}</span>
+        <span class="meter"><i style="width:${(100 * r.hot / r.n).toFixed(0)}%"></i></span><small>${esc(t('topicStats', {h: r.hot, n: r.n}))}</small>
+        <span class="stack">${r.top.map(c => avatarEl(c, 28)).join('')}</span></span></button>`;
+  }).join('') + '</div>';
   if (S.detail) {   // the raw search phrases behind the topics
     const map = new Map();
     for (const c of DATA.channels) for (const nq of c.queries || []) {
@@ -3260,21 +3502,36 @@ function ideasView() {
   const P = patterns(DATA.channels.filter(baseOk));
   let h = pageHead('pIdeasT', 'pIdeasD', `<div class="filters">${modeSeg()}</div>`);
   if (!P) return h + emptyBox(t('ideaFew'), '💡');
-  const chips = [];
-  if (P.len) chips.push(t('ideaRLen', {a: P.len[0], b: P.len[1]}));
-  if (P.wWin) chips.push(t('ideaRWords', {n: P.wWin}));
-  P.feats.filter(f => f.a >= 15 && f.a >= f.b * 1.25 + 3).forEach(f => chips.push(t(f.rk)));
-  h += `<section class="recipe"><h2>${esc(t('ideaRecipe'))}</h2><div class="chips2">${chips.map(c => `<span>${esc(c)}</span>`).join('')}</div><p>${esc(t('ideaBased', {n: P.nWin, m: P.nRest}))}</p></section>`;
-  const bars = (a, b) => `<div class="bars"><div class="bar"><span>${esc(t('ideaWin'))}</span><i style="width:${a}%"></i><b>${a}%</b></div><div class="bar"><span>${esc(t('ideaOther'))}</span><i class="o" style="width:${b}%"></i><b>${b}%</b></div></div>`;
-  h += `<div class="pgrid"><div class="pbox"><h4>${esc(t('ideaLenT'))}</h4><p>${esc(P.len ? t('ideaLen', {a: P.len[0], b: P.len[1]}) : t('ideaLenNo'))}</p></div>` +
-    `<div class="pbox"><h4>${esc(t('ideaWordsT'))}</h4><p>${esc(t('ideaWords', {n: P.wWin, m: P.wRest}))}</p></div>` +
-    P.feats.map(f => `<div class="pbox"><h4>${esc(t(f.k))}</h4>${bars(f.a, f.b)}</div>`).join('') + '</div>';
-  const cloud = (title, items, sub) => items ? `<h3 class="subhead">${esc(t(title))}</h3>${sub ? `<p style="color:var(--muted);margin:0 0 8px;font-size:12.5px">${esc(t(sub))}</p>` : ''}<div class="wcloud">${items}</div>` : '';
-  h += cloud('ideaTopWords', P.words.map(w => `<span>${esc(w.w)}<small>${w.n}${w.lift >= 1.5 ? ' · ' + fmtX(w.lift) + '×' : ''}</small></span>`).join(''), 'ideaTopWordsD');
-  h += cloud('ideaStarts', P.starts.map(([w, n]) => `<span>${esc(w)}…<small>${n}</small></span>`).join(''));
-  h += cloud('ideaTopEmoji', P.emoji.map(([w, n]) => `<span style="font-size:18px">${esc(w)}<small>${n}</small></span>`).join(''));
-  h += cloud('ideaTopTags', P.tags.map(([w, n]) => `<span>${esc(w)}<small>${n}</small></span>`).join(''));
-  h += `<h3 class="subhead">${esc(t('ideaExamples'))}</h3><div class="vgrid">${P.examples.map(([v, c]) => vCard(v, c)).join('')}</div>`;
+  const FIC = {ideaQ: IC.help || IC.bulb, ideaNum: IC.chart, ideaEmoji: IC.smile, ideaCaps: IC.edit, ideaTag: IC.search};
+  const blocks = [];
+  if (P.len) blocks.push([IC.clock, `${P.len[0]}–${P.len[1]}s`, t('ideaLenT')]);
+  if (P.wWin) blocks.push([IC.edit, String(P.wWin), t('ideaWordsT')]);
+  if (P.starts[0]) blocks.push([IC.sparkle, P.starts[0][0] + '…', t('ideaStarts')]);
+  if (P.emoji[0]) blocks.push([IC.smile, P.emoji[0][0], t('ideaTopEmoji')]);
+  if (P.tags[0]) blocks.push([IC.search, P.tags[0][0], t('ideaTopTags')]);
+  P.feats.filter(f => f.a >= 15 && f.a >= f.b * 1.25 + 3).forEach(f => blocks.push([FIC[f.k] || IC.check, f.a + '%', t(f.k)]));
+  h += `<section class="recipe2"><div class="rh"><span class="ico">${IC.bulb}</span><div><h2>${esc(t('ideaRecipe'))}</h2><p>${esc(t('ideaBased', {n: P.nWin, m: P.nRest}))}</p></div></div>
+    <div class="rblocks">${blocks.map(([ic, v, k]) => `<div class="rb"><span class="ri">${ic}</span><b>${esc(v)}</b><small>${esc(k)}</small></div>`).join('')}</div></section>`;
+  const chips = [...P.starts.map(([w]) => w + ' '), ...P.words.slice(0, 10).map(x => x.w), ...P.emoji.slice(0, 6).map(([w]) => w), ...P.tags.slice(0, 5).map(([w]) => w)];
+  h += `<section class="tbuild"><div class="rh"><span class="ico b">${IC.edit}</span><div><h3>${esc(t('ibT'))}</h3><p>${esc(t('ibD'))}</p></div></div>
+    <div class="addch"><input id="ibIn" placeholder="${esc(t('ibPh'))}" value="${esc(S.ibtext || '')}" autocomplete="off" maxlength="200"></div>
+    <div class="ibchips">${chips.map(w => `<button type="button" class="chip" data-ibadd="${esc(w)}">+ ${esc(w.trim())}</button>`).join('')}</div>
+    <div id="ibOut">${S.ibtext ? checkTitle(S.ibtext) : ''}</div></section>`;
+  const feats = P.feats.slice().sort((a, b) => (b.a - b.b) - (a.a - a.b));
+  h += `<section class="vizcard"><div class="vizhead"><div><h3>${IC.chart}${esc(t('diffT'))}</h3><p>${esc(t('diffD'))}</p></div>
+    <div class="vlegend"><span><i class="boom"></i>${esc(t('ideaWin'))}</span><span><i class="other"></i>${esc(t('ideaOther'))}</span></div></div>
+    <div class="diffs">${feats.map(f => `<div class="drow"><span class="dl">${FIC[f.k] || ''}${esc(t(f.k))}</span><span class="dpair"><span class="dw"><i style="width:${f.a}%"></i><b>${f.a}%</b></span><span class="do"><i style="width:${f.b}%"></i><b>${f.b}%</b></span></span>` +
+      `<span class="dx ${f.a > f.b * 1.2 ? 'up' : ''}">${f.b ? esc(fmtX(f.a / Math.max(f.b, 1))) + '×' : '–'}</span></div>`).join('')}</div></section>`;
+  const mxn = Math.max(...P.words.map(w => w.n), 1);
+  h += `<section class="vizcard"><div class="vizhead"><div><h3>${IC.sparkle}${esc(t('ideaTopWords'))}</h3><p>${esc(t('ideaWordsTap'))}</p></div></div>
+    <div class="wcloud2">${P.words.map(w => `<button type="button" class="${w.lift >= 1.5 ? 'hot' : ''} ${S.iword === w.w ? 'on' : ''}" data-iword="${esc(w.w)}" style="font-size:${(13 + 13 * w.n / mxn).toFixed(1)}px">${esc(w.w)}<small>${w.n}${w.lift >= 1.5 ? ' · ' + esc(fmtX(w.lift)) + '×' : ''}</small></button>`).join('')}</div>
+    <div class="minis">${P.starts.length ? `<div><h5>${esc(t('ideaStarts'))}</h5><div class="wcloud">${P.starts.map(([w, n]) => `<span>${esc(w)}…<small>${n}</small></span>`).join('')}</div></div>` : ''}
+      ${P.emoji.length ? `<div><h5>${esc(t('ideaTopEmoji'))}</h5><div class="wcloud">${P.emoji.map(([w, n]) => `<span style="font-size:18px">${esc(w)}<small>${n}</small></span>`).join('')}</div></div>` : ''}
+      ${P.tags.length ? `<div><h5>${esc(t('ideaTopTags'))}</h5><div class="wcloud">${P.tags.map(([w, n]) => `<span>${esc(w)}<small>${n}</small></span>`).join('')}</div></div>` : ''}</div></section>`;
+  const word = S.iword && P.words.some(w => w.w === S.iword) ? S.iword : '';
+  const ex = word ? videoPool(DATA.channels.filter(baseOk)).filter(([v]) => v.x >= 2 && v.v >= 100000 && titleWords(v.t).includes(word))
+    .sort((a, b) => Math.min(b[0].x, 50) * Math.log10(b[0].v) - Math.min(a[0].x, 50) * Math.log10(a[0].v)).slice(0, 12) : P.examples;
+  h += `<h3 class="subhead">${esc(word ? t('ideaWordEx', {w: word}) : t('ideaExamples'))}${word ? ` <button type="button" class="chip x" aria-pressed="true" data-iword="">${esc(word)}</button>` : ''}</h3><div class="vgrid">${ex.map(([v, c]) => vCard(v, c)).join('')}</div>`;
   return h;
 }
 
@@ -3466,7 +3723,7 @@ function drawBars(root) {
 }
 
 let chartTimer = null;
-window.addEventListener('resize', () => { clearTimeout(chartTimer); chartTimer = setTimeout(() => { if ($('#sheet').open) drawCharts($('#sheetBody')); if ($('#player').open) drawCharts($('#playerBody')); if ($('#content .bchart')) drawCharts($('#content')); if ($('#intro').open) fitIntro(); }, 150); });
+window.addEventListener('resize', () => { clearTimeout(chartTimer); chartTimer = setTimeout(() => { if ($('#sheet').open) drawCharts($('#sheetBody')); if ($('#player').open) drawCharts($('#playerBody')); if ($('#content .bchart')) drawCharts($('#content')); drawViz($('#content')); if ($('#intro').open) fitIntro(); }, 150); });
 
 /* ---------- video-style intro: a scripted walkthrough of a mock phone screen, with real channels ---------- */
 const I = {open: false, playing: false, t: 0, last: 0, raf: 0, scene: -1, fired: new Set(), voice: false, scenes: [], total: 0, cur: [400, 700], btn: ''};
@@ -3644,13 +3901,13 @@ function startTour() {
 function tourCard(s) {
   if (s.k === 'w') {
     const sug = UI === 'en' ? browserLangs().find(c => c !== 'en') : '';
-    return `<div class="tcard"><div class="tlogo">${FLAME}</div><h3>${esc(t('tour_w_t'))}</h3><p>${esc(t('tour_w_d'))}</p>
+    return `<div class="twc"><div class="tlogo">${FLAME}</div><h3>${esc(t('tour_w_t'))}</h3><p>${esc(t('tour_w_d'))}</p>
       <div class="tfeat">${[['trophy', 'tour_f1'], ['scissors', 'tour_f2'], ['trend', 'tour_f3']].map(([ic, k]) => `<span>${IC[ic]}${esc(t(k))}</span>`).join('')}</div>
       <button type="button" class="tlang" data-langpick>${ICON.lang}<span>${esc(t('langT'))}</span><b>${esc(langInfo(UI)[1])}</b><i>${esc(t('lChange'))} ›</i></button>
       ${sug ? `<button type="button" class="tsug" data-pickl="${sug}" lang="${sug}">${esc(t('lSuggest', {l: langInfo(sug)[1]}))}</button>` : ''}
       <div class="tbtns"><button type="button" class="nx big" data-tnext>${ICON.play}${esc(t('tour_go'))}</button><button type="button" data-tskip>${esc(t('tour_skip'))}</button></div></div>`;
   }
-  return `<div class="tcard"><div class="tlogo ok">${IC.check}</div><h3>${esc(t('tour_done_t'))}</h3><p>${esc(t('tour_done_d'))}</p>
+  return `<div class="twc"><div class="tlogo ok">${IC.check}</div><h3>${esc(t('tour_done_t'))}</h3><p>${esc(t('tour_done_d'))}</p>
     <div class="tbtns"><button type="button" class="nx big" data-tnext>${esc(t('tour_done_go'))}</button></div></div>`;
 }
 function tourGo(i, dir = 1) {
@@ -4619,20 +4876,51 @@ function spark(days) {   // Shorts per day over two weeks; the last 3 days (the 
   }).join('')}</svg>`;
 }
 const liftText = s => (s.b === 0 && s.r ? t('liftNew') : t('liftX', {x: fmtX(Math.min(s.lift, 99))}));
+const trendStage = s => (s.chs.size <= 4 ? 'early' : s.r >= 15 ? 'boom' : 'spread');
+const stageBadge = s => `<span class="stage ${trendStage(s)}">${esc(t({early: 'stEarly', boom: 'stBoom', spread: 'stSpread'}[trendStage(s)]))}</span>`;
+function areaSpark(days) {   // two weeks of new Shorts a day; the last 3 days (the ones that count) in colour
+  const n = days.length, mx = Math.max(1, ...days), w = 140, h = 40, X = i => i / (n - 1) * w, Y = v => h - 2 - (h - 8) * v / mx;
+  const pts = days.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`), cut = n - 3;
+  return `<svg class="aspk" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><path class="a0" d="M0,${h} L${pts.join(' L')} L${w},${h} Z"/>` +
+    `<path class="a1" d="M${X(cut).toFixed(1)},${h} L${pts.slice(cut).join(' L')} L${w},${h} Z"/><polyline points="${pts.join(' ')}"/></svg>`;
+}
 function trendCard(s) {
   const imgs = s.vids.slice(0, 3).map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('');
   return `<article class="tcard" data-trend="${esc(s.key)}" tabindex="0" role="button" aria-label="${esc(s.label)}">
     <div class="trio">${imgs}</div>
-    <div class="tbody"><div class="ttop"><b>${esc(s.label)}</b><span class="lift">▲ ${esc(liftText(s))}</span></div>
-    <small>${esc(t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)}))}</small>
-    <div class="tfoot">${spark(s.days)}<span class="tcat">${esc(catName(s.cat))}</span>${isTracked(s.key) ? `<span class="tcat on">${IC.star}</span>` : ''}</div></div></article>`;
+    <div class="tbody"><div class="ttop"><b>${esc(s.label)}</b>${s.r ? stageBadge(s) : ''}</div>
+      ${areaSpark(s.days)}
+      <div class="tnums"><span><b class="up">▲ ${esc(s.b === 0 && s.r ? t('liftNew') : fmtX(Math.min(s.lift, 99)) + '×')}</b><small>${esc(t('tnLift'))}</small></span>
+        <span><b>${s.r}</b><small>${esc(t('tnShorts'))}</small></span><span><b>${s.chs.size}</b><small>${esc(t('tnCh'))}</small></span><span><b>${esc(fmt(s.med))}</b><small>${esc(t('tnViews'))}</small></span></div>
+      <div class="tfoot"><span class="tcat">${esc(catName(s.cat))}</span>${isTracked(s.key) ? `<span class="tcat on">${IC.star}</span>` : ''}</div></div></article>`;
 }
-function boardRow(s, i) {
+function trendRadar(list, extra) {   // every rising trend as a bubble: few channels (left) means early; higher means rising faster
+  const seen = new Set(), pts = list.concat(extra || []).filter(s => s.r >= 2 && s.chs.size && s.lift > 1 && !seen.has(s.key) && seen.add(s.key)).slice(0, 45);
+  if (pts.length < 4) return '';
+  const maxR = Math.max(...pts.map(s => s.r)), maxC = Math.max(...pts.map(s => s.chs.size)), lifts = pts.map(s => (s.b === 0 ? 20 : Math.min(s.lift, 50)));
+  const ymax = Math.max(8, Math.max(...lifts) * 1.25), xmax = Math.max(12, maxC * 1.3);
+  const data = {xmin: 0.75, xmax, ymin: 1.5, ymax, xticks: logTicks(1, xmax), yticks: spread(logTicks(2, ymax), 5), xfmt: v => fmt(v), yfmt: v => v + '×',
+    xlab: t('radX'), ylab: t('radY'), zone: {x0: 0.75, x1: 4.5, y0: 1.5, y1: ymax, label: t('radEarly')},
+    pts: pts.map((s, i) => ({x: s.chs.size, y: lifts[i], r: 5 + 15 * Math.sqrt(s.r / maxR), cls: trendStage(s), label: s.label, lab: i < 10, attr: `data-trend="${esc(s.key)}"`,
+      tip: `<b>${esc(s.label)}</b><br>▲ ${esc(liftText(s))} · ${esc(t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)}))}<br><span class="stage ${trendStage(s)}">${esc(t({early: 'stEarly', boom: 'stBoom', spread: 'stSpread'}[trendStage(s)]))}</span>`}))};
+  return `<section class="vizcard"><div class="vizhead"><div><h3>${IC.compass}${esc(t('radT'))}</h3><p>${esc(t('radD'))}</p></div>
+    <div class="vlegend">${[['early', 'stEarly'], ['spread', 'stSpread'], ['boom', 'stBoom']].map(([c, k]) => `<span><i class="${c}"></i>${esc(t(k))}</span>`).join('')}</div></div>
+    ${vizBox('bubbles', data, 330, t('radT'))}</section>`;
+}
+function boardRow(s, i, top) {
   const imgs = s.vids.slice(0, 3).map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('');
   const flags = [...new Set(s.yt.map(x => x.region))].join(' · ');
   return `<button type="button" class="brow" data-trend="${esc(s.key)}"><span class="bnum">${i + 1}</span><span class="bthumbs">${imgs}</span>
-    <span class="bmain"><b>${esc(s.label)}</b><small>${s.r ? esc(t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)})) : esc(t('tQuiet'))}${s.yt.length ? ' · ' + esc(t('onCharts', {n: s.yt.length, f: flags})) : ''}</small></span>
+    <span class="bmain"><b>${esc(s.label)}</b><small>${s.r ? esc(t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)})) : esc(t('tQuiet'))}${s.yt.length ? ' · ' + esc(t('onCharts', {n: s.yt.length, f: flags})) : ''}</small>
+      <span class="hbr"><i style="width:${clampN(100 * s.score / (top || 1), 3, 100).toFixed(0)}%"></i></span></span>
     <span class="bside">${s.r ? `<span class="lift">▲ ${esc(liftText(s))}</span>` : ''}${spark(s.days)}</span></button>`;
+}
+function podium(list) {   // the top three, big
+  const top = list[0] ? list[0].score : 1;
+  return `<div class="podium">${list.slice(0, 3).map((s, i) => `<button type="button" class="pod p${i + 1}" data-trend="${esc(s.key)}"><span class="medal">${i + 1}</span>
+    <span class="pth">${s.vids.slice(0, 3).map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('') || `<span class="pempty">${IC.gamepad}</span>`}</span>
+    <span class="pb"><b>${esc(s.label)}</b><span class="hbr"><i style="width:${clampN(100 * s.score / (top || 1), 3, 100).toFixed(0)}%"></i></span>
+      <small>${s.r ? esc(t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)})) : esc(t('tQuiet'))}</small>${s.r ? `<span class="lift">▲ ${esc(liftText(s))}</span>` : ''}</span></button>`).join('')}</div>`;
 }
 function ideaList(x) {
   return `<div class="ilist">${[1, 2, 3, 4, 5, 6].map(i => { const s = t('tIdea' + i, {x}); return `<div class="irow"><span>${esc(s)}</span><button type="button" class="ghost" data-copytext="${esc(s)}">${esc(t('copy'))}</button></div>`; }).join('')}</div>`;
@@ -4652,13 +4940,15 @@ function trendsView() {
   if (tab === 'games' || tab === 'cartoons') {
     const list = tab === 'games' ? T_.games : T_.toons;
     h += `<p class="pbtip">${esc(t(tab === 'games' ? 'ttGamesD' : 'ttToonsD'))}</p>`;
-    h += list.length ? `<div class="blist">${gateList(list.slice(0, 40).map(boardRow), t(tab === 'games' ? 'ttGames' : 'ttToons')).join('')}</div>` : emptyBox(t('tNone'), '🔭');
+    const top = list[0] ? list[0].score : 1;
+    h += list.length ? podium(list) + `<div class="blist">${gateList(list.slice(3, 40).map((x, i) => boardRow(x, i + 3, top)), t(tab === 'games' ? 'ttGames' : 'ttToons')).join('')}</div>` : emptyBox(t('tNone'), '🔭');
   } else if (tab === 'yt') h += ytTab();
   else if (tab === 'clips') h += clipsTab();
   else if (tab === 'news') h += newsTab();
   else {
     const cat = S.tcat || 'all', list = T_.rising.filter(s => cat === 'all' || s.cat === cat);
-    h += `<div class="tcats">${TREND_CATS.filter(c => c[0] === 'all' || T_.rising.some(s => s.cat === c[0])).map(c => `<button type="button" class="chip" data-tcat="${c[0]}" aria-pressed="${cat === c[0]}">${esc(t('_tcat_' + c[0]))}</button>`).join('')}</div>`;
+    h += trendRadar(list, cat === 'all' ? T_.games.concat(T_.toons) : cat === 'games' ? T_.games : cat === 'cartoons' ? T_.toons : []);
+    h += `<div class="tcats">${TREND_CATS.filter(c => c[0] === 'all' || T_.rising.some(s => s.cat === c[0])).map(c => `<button type="button" class="chip" data-tcat="${c[0]}" aria-pressed="${cat === c[0]}">${esc(t('_tcat_' + c[0]))} <span class="pbmuted">${c[0] === 'all' ? T_.rising.length : T_.rising.filter(s => s.cat === c[0]).length}</span></button>`).join('')}</div>`;
     h += `<p class="pbtip">${esc(t('ttRisingD'))}</p>`;
     h += list.length ? `<div class="tgrid">${gateList(list.slice(0, 60).map(trendCard), t('ttRising'), 6).join('')}</div>` : emptyBox(t('tNone'), '🔭');
   }
@@ -4666,17 +4956,20 @@ function trendsView() {
 }
 function briefHtml(T_) {
   const reg = S.treg || (UI === 'th' ? 'TH' : 'US'), wiki = wikiItems(UI === 'th' ? 'th' : 'en').filter(w => w.rise)[0], yt = ytChart(reg, 'all')[0];
-  const cells = [];
-  if (T_.rising[0]) cells.push([IC.rocket, t('brShorts'), T_.rising[0].label, '▲ ' + liftText(T_.rising[0]), `data-trend="${esc(T_.rising[0].key)}"`]);
-  const g = T_.games.find(s => s.r);
-  if (g) cells.push([IC.gamepad, t('brGame'), g.label, t('tStats', {n: g.r, k: g.chs.size, v: fmt(g.med)}), `data-trend="${esc(g.key)}"`]);
-  if (wiki) cells.push([IC.news, t('brNews'), wiki.title, t('wikiViews', {n: fmt(wiki.v)}), 'data-ttab="news"']);
-  const clip = clipList().filter(fits3).sort((a, b) => b.score - a.score)[0];
-  if (clip) cells.push([IC.scissors, t('brClip'), clip.name, t('clAudV', {n: fmt(clip.subs)}) + ' · ' + (clip.clips ? t('clFewV', {k: clip.clippers, n: clip.clips}) : t('clFewNone')), 'data-ttab="clips"']);
-  if (yt) { YT_ITEMS.set(yt.id, yt); cells.push([IC.trend, t('brYt', {c: t(reg === 'TH' ? 'cTH' : 'cUS')}), yt.t, t('views', {n: fmt(yt.v || 0)}), `data-play="${esc(yt.id)}" data-c=""`]); }
+  const cells = [], ids = s => s.vids.slice(0, 3).map(([v]) => v.id);
+  const r0 = T_.rising[0];
+  if (r0) cells.push({ic: IC.rocket, k: t('brShorts'), v: r0.label, sub: '▲ ' + liftText(r0), attr: `data-trend="${esc(r0.key)}"`, imgs: ids(r0), extra: areaSpark(r0.days)});
+  const g = T_.games.find(x => x.r);
+  if (g) cells.push({ic: IC.gamepad, k: t('brGame'), v: g.label, sub: t('tStats', {n: g.r, k: g.chs.size, v: fmt(g.med)}), attr: `data-trend="${esc(g.key)}"`, imgs: ids(g)});
+  const clip = clipList().filter(fits3).sort((a, b) => b.score - a.score)[0] || clipList().sort((a, b) => b.score - a.score)[0];
+  if (clip) cells.push({ic: IC.scissors, k: t('brClip'), v: clip.name, sub: t('clAudV', {n: fmt(clip.subs)}) + ' · ' + (clip.clips ? t('clFewV', {k: clip.clippers, n: clip.clips}) : t('clFewNone')),
+    attr: 'data-ttab="clips"', imgs: [clip.latest && clip.latest.id, clip.top && clip.top.id].filter(vidOk)});
+  if (yt) { YT_ITEMS.set(yt.id, yt); cells.push({ic: IC.trend, k: t('brYt', {c: t(reg === 'TH' ? 'cTH' : 'cUS')}), v: yt.t, sub: t('views', {n: fmt(yt.v || 0)}), attr: `data-play="${esc(yt.id)}" data-c=""`, imgs: [yt.id]}); }
+  if (wiki) cells.push({ic: IC.news, k: t('brNews'), v: wiki.title, sub: t('wikiViews', {n: fmt(wiki.v)}), attr: 'data-ttab="news"', imgs: []});
   if (!cells.length) return '';
-  return `<div class="brief"><div class="brh"><b>${esc(t('brT'))}</b><small>${esc(t('brD'))}</small></div><div class="brgrid">${cells.map(([em, k, v, sub, attr]) =>
-    `<button type="button" class="brcell" ${attr}><span class="ico">${em}</span><span><small>${esc(k)}</small><b>${esc(v)}</b><small>${esc(sub)}</small></span></button>`).join('')}</div></div>`;
+  return `<section class="brief2"><div class="brh"><b>${esc(t('brT'))}</b><small>${esc(t('brD'))}</small></div><div class="brgrid2">${cells.map((c, i) =>
+    `<button type="button" class="bcard ${i === 0 ? 'big' : ''} ${c.imgs.length ? '' : 'plain'}" ${c.attr}><span class="bbg">${c.imgs.slice(0, i === 0 ? 3 : 1).map(id => `<img loading="lazy" src="${thumb(id)}" alt="">`).join('')}</span>
+      <span class="bc"><span class="ico">${c.ic}</span><small>${esc(c.k)}</small><b>${esc(c.v)}</b><em>${esc(c.sub)}</em>${c.extra || ''}</span></button>`).join('')}</div></section>`;
 }
 function ytTab() {
   const reg = S.treg || (UI === 'th' ? 'TH' : 'US'), cat = S.tycat || 'all', shortsOnly = !!S.tshorts;
@@ -4687,10 +4980,13 @@ function ytTab() {
     <select id="tyCat" aria-label="${esc(t('ytCat'))}">${YT_CATS.filter(c => ytChart(reg, c).length).map(c => `<option value="${c}" ${c === cat ? 'selected' : ''}>${esc(t('yc_' + c))}</option>`).join('')}</select>
     <button type="button" class="chip" data-tshorts aria-pressed="${shortsOnly}">${esc(t('ytShorts'))}</button></div>
     <p class="pbtip">${esc(t('ytD', {ago: ago(TRENDS.yt.updated)}))}</p>`;
+  const mxv = Math.max(1, ...items.map(x => x.v || 0));
   const row = x => `<button type="button" class="yrow2" data-play="${esc(x.id)}" data-c=""><span class="bnum">${x.r}</span>${moveBadge(x)}<img loading="lazy" src="${thumb(x.id)}" alt="">
     <span class="bmain"><b>${esc(x.t)}</b><small>${esc(x.cht)} · ${esc(t('views', {n: fmt(x.v || 0)}))}${x.p ? ' · ' + esc(ago(x.p)) : ''}${(x.d || 1e9) <= 180 ? ' · Shorts' : ''}</small>
-    <small>${esc(t('ytSince', {ago: ago(x.f)}))}</small></span></button>`;
-  return h + (items.length ? `<div class="blist">${gateList(items.map(row), t('ttYt'), cat === 'all' ? 10 : 3).join('')}</div>` : emptyBox(t('tNone'), '📈'));
+    <span class="hbr"><i style="width:${clampN(100 * (x.v || 0) / mxv, 2, 100).toFixed(0)}%"></i></span><small>${esc(t('ytSince', {ago: ago(x.f)}))}</small></span></button>`;
+  const big = x => `<button type="button" class="ytbig" data-play="${esc(x.id)}" data-c=""><span class="yth"><img loading="lazy" src="${thumb(x.id)}" alt=""><span class="yrank">${x.r}</span>${moveBadge(x)}</span>
+    <b>${esc(x.t)}</b><small>${esc(x.cht)} · ${esc(t('views', {n: fmt(x.v || 0)}))}</small></button>`;
+  return h + (items.length ? `<div class="ytpod">${items.slice(0, 3).map(big).join('')}</div><div class="blist">${gateList(items.slice(3).map(row), t('ttYt'), cat === 'all' ? 7 : 2).join('')}</div>` : emptyBox(t('tNone'), '📈'));
 }
 /* ---------- clip finder: big creators few channels clip yet (researched by the scanner, see trends.py) ---------- */
 /* what creators write about clipping (the same patterns the scanner uses, see trends.py) */
@@ -4967,8 +5263,10 @@ function newsTab() {
   const lang = S.wlang || (UI === 'th' ? 'th' : 'en'), items = wikiItems(lang), day = ((((TRENDS || {}).wiki || {})[lang]) || {}).day;
   if (!items.length) return emptyBox(t(STATIC ? 'ytWait' : 'ytWeb'), '📰');
   const rising = items.filter(x => x.rise), steady = items.filter(x => !x.rise);
+  const mxw = Math.max(1, ...items.map(x => x.v));
   const row = x => `<div class="nrow"><span class="bnum">${x.r}</span><span class="bmain"><a href="https://${lang}.wikipedia.org/wiki/${encodeURIComponent(x.a)}" target="_blank" rel="noopener noreferrer"><b>${esc(x.title)}</b></a>
-    <small>${esc(t('wikiViews', {n: fmt(x.v)}))}${x.pv == null ? ' · ' + esc(t('wikiNew')) : x.ratio >= 1.5 ? ' · ▲ ' + esc(t('liftX', {x: fmtX(x.ratio)})) : ''}</small></span>
+    <small>${esc(t('wikiViews', {n: fmt(x.v)}))}${x.pv == null ? ' · ' + esc(t('wikiNew')) : x.ratio >= 1.5 ? ' · ▲ ' + esc(t('liftX', {x: fmtX(x.ratio)})) : ''}</small>
+    <span class="hbr ${x.rise ? 'up' : ''}"><i style="width:${clampN(100 * x.v / mxw, 2, 100).toFixed(0)}%"></i></span></span>
     <button type="button" class="ghost" data-ideas="${esc(x.title)}">${IC.bulb}${esc(t('tIdeasBtn'))}</button></div>`;
   let h = `<div class="ytbar"><div class="seg">${[['en', 'English'], ['th', 'ไทย']].map(([l, n]) => `<button type="button" data-wlang="${l}" aria-pressed="${lang === l}">${n}</button>`).join('')}</div></div>
     <p class="pbtip">${esc(t('newsD', {d: day || ''}))}</p>`;
@@ -5365,6 +5663,7 @@ function renderChips() {
 }
 function renderContent() {
   const el = $('#content');
+  VIZ.clear();
   let tab = S.tab;
   if (tab === 'search' && !SEARCH) tab = 'home';
   const rails = lastTab === tab ? [...el.querySelectorAll('.rail')].map(r => r.scrollLeft) : [];
@@ -5387,6 +5686,7 @@ function renderContent() {
   else el.innerHTML = homeView();
   el.querySelectorAll('.rail').forEach((r, i) => { if (rails[i]) { r.style.scrollBehavior = 'auto'; r.scrollLeft = rails[i]; r.style.scrollBehavior = ''; } });
   if (el.querySelector('.bchart')) drawCharts(el);
+  drawViz(el);
   lastTab = tab;
 }
 function renderButtons() {
@@ -5482,6 +5782,16 @@ document.addEventListener('click', async e => {
   if (x.closest('[data-call3]')) { S.call3 = !S.call3; saveState(); renderContent(); return; }
   if (x.closest('[data-callow]')) { S.callow = !S.callow; saveState(); renderContent(); return; }
   if (x.closest('[data-cfall]')) { S.cfall = !S.cfall; saveState(); renderContent(); return; }
+  const iw = x.closest('[data-iword]');
+  if (iw) { S.iword = S.iword === iw.dataset.iword ? '' : iw.dataset.iword; saveState(); const y = window.scrollY; renderContent(); window.scrollTo(0, y); return; }
+  const iba = x.closest('[data-ibadd]');
+  if (iba) {   // a tapped word joins the title being built
+    const el = $('#ibIn'); if (!el) return;
+    const add = iba.dataset.ibadd, cur = el.value.trimEnd();
+    el.value = (cur ? cur + ' ' : '') + add.trim() + (add.endsWith(' ') ? ' ' : '');
+    el.dispatchEvent(new Event('input', {bubbles: true})); el.focus();
+    return;
+  }
   if (x.closest('[data-cccomp]')) { checkedCompetition(); return; }
   const clf = x.closest('[data-clfocus]');
   if (clf) {   // jump to that creator's research, clearing filters that hide it
@@ -5633,10 +5943,17 @@ document.addEventListener('change', e => {
   if (e.target.id === 'tyCat') { S.tycat = e.target.value; saveState(); renderContent(); }
   if (e.target.id === 'btTopic') { S.bttopic = e.target.value; saveState(); renderContent(); }
 });
+let ibTimer = null;
 document.addEventListener('input', e => {
   if (e.target.id === 'lq') {   // the language picker's search
     const q = e.target.value.trim().toLowerCase();
     document.querySelectorAll('#dlgBody .lrow').forEach(r => { r.hidden = !!q && !(r.textContent.toLowerCase().includes(q) || r.dataset.pickl.toLowerCase().startsWith(q)); });
+    return;
+  }
+  if (e.target.id === 'ibIn') {   // Idea Lab's title builder scores as you type
+    S.ibtext = e.target.value.slice(0, 200);
+    clearTimeout(ibTimer);
+    ibTimer = setTimeout(() => { const out = $('#ibOut'); if (out) out.innerHTML = S.ibtext.trim() ? checkTitle(S.ibtext) : ''; }, 220);
     return;
   }
   if (e.target.id !== 'tcIn') return;
