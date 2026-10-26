@@ -3706,6 +3706,18 @@ function termsOf(title) {   // hashtags, words and two-word phrases in a title, 
   termCache.set(title, out);
   return out;
 }
+const capCache = new Map();
+function capsIn(title) {   // in a title written as an ordinary sentence, the words that start with a capital (names of people, games, characters)
+  let out = capCache.get(title);
+  if (out) return out;
+  const raw = String(title).replace(/#[\p{L}\p{N}_]+/gu, ' ');
+  const ws = SEG ? [...SEG.segment(raw)].filter(x => x.isWordLike).map(x => x.segment) : (raw.match(/[\p{L}\p{N}']+/gu) || []);
+  const cased = ws.filter(w => w.toLowerCase() !== w.toUpperCase()), caps = cased.filter(w => /^\p{Lu}/u.test(w));
+  out = {plain: cased.length >= 3 && caps.length / cased.length <= 0.6, caps: new Set(ws.filter((w, i) => i > 0 && /^\p{Lu}/u.test(w)).map(w => w.toLowerCase()))};
+  capCache.set(title, out);
+  return out;
+}
+const CASED = /[\p{Script=Latin}\p{Script=Cyrillic}\p{Script=Greek}]/u;
 const TREND_CATS = [['all', '✨', 'All', 'ทั้งหมด'], ['games', '🎮', 'Games', 'เกม'], ['cartoons', '🎨', 'Cartoons & anime', 'การ์ตูนและอนิเมะ'],
   ['memes', '🤪', 'Memes & challenges', 'มีมและชาเลนจ์'], ['news', '📰', 'News & events', 'ข่าวและเหตุการณ์'], ['music', '🎵', 'Music & dance', 'เพลงและการเต้น'],
   ['food', '🍳', 'Food', 'อาหาร'], ['animals', '🐾', 'Animals', 'สัตว์'], ['sports', '⚽', 'Sports', 'กีฬา'], ['facts', '🧠', 'Facts', 'ความรู้'], ['other', '🔥', 'Everything else', 'อื่น ๆ']];
@@ -3717,7 +3729,7 @@ const GAMES = [['Roblox', /roblox/i], ['Minecraft', /minecraft/i], ['Fortnite', 
   ['Overwatch', /overwatch/i], ['Counter-Strike', /counter[- ]?strike|\bcs2\b/i], ['Elden Ring', /elden ring/i], ['Silksong', /silksong|hollow knight/i],
   ['Stardew Valley', /stardew/i], ['Terraria', /terraria/i], ['Subway Surfers', /subway surfers/i], ['Geometry Dash', /geometry dash/i], ['Rocket League', /rocket league/i],
   ['EA FC / FIFA', /\bea ?fc\b|\bfifa\b|\bfc ?2[4-7]\b/i], ['eFootball', /efootball/i], ['NBA 2K', /nba ?2k/i], ['Blox Fruits', /blox fruits?/i], ['Brookhaven', /brookhaven/i],
-  ['Grow a Garden', /grow a garden/i], ['Steal a Brainrot', /steal a brainrot/i], ['99 Nights in the Forest', /99 nights/i], ['Dead Rails', /dead rails/i],
+  ['Grow a Garden', /grow a garden/i], ['Steal a Brainrot', /steal a brainrot/i], ['99 Nights in the Forest', /99 nights/i], ['Dead Rails', /dead rails/i], ['Forsaken', /forsaken/i],
   ['Bedwars', /bedwars/i], ['Stumble Guys', /stumble guys/i], ['Fall Guys', /fall guys/i], ['Honor of Kings', /honor of kings/i], ['Delta Force', /delta force/i],
   ['Marvel Rivals', /marvel rivals/i], ['Wuthering Waves', /wuthering waves/i], ['Plants vs Zombies', /plants vs\.? zombies|\bpvz\b/i], ['Chess', /\bchess\b|หมากรุก/i]];
 const CARTOONS = [['Sprunki', /sprunki/i], ['Skibidi Toilet', /skibidi/i], ['Italian Brainrot', /brainrot|tralalero|tung ?tung|sahur|bombardiro|cappuccina|lirili|chimpanzini/i],
@@ -3771,15 +3783,21 @@ function trendData() {   // rising words, hashtags, games and characters; worked
   const sig = DATA.generated + ':' + DATA.channels.length;
   if (TR && TR.sig === sig) return TR;
   const win = windowVideos(), terms = new Map();
-  for (const [v, c, age] of win) for (const term of termsOf(v.t)) {
-    let s = terms.get(term);
-    if (!s) terms.set(term, s = newStats('t:' + term, term));
-    addVideo(s, v, c, age);
+  for (const [v, c, age] of win) {
+    const cap = capsIn(v.t);
+    for (const term of termsOf(v.t)) {
+      let s = terms.get(term);
+      if (!s) terms.set(term, s = newStats('t:' + term, term));
+      addVideo(s, v, c, age);
+      if (cap.plain && age <= TR_RECENT) { s.plain = (s.plain || 0) + 1; if (cap.caps.has(term)) s.named = (s.named || 0) + 1; }
+    }
   }
   const rising = [];
   for (const s of terms.values()) {   // phrases and hashtags are more telling than single words, so single words need more channels behind them
     const phrase = s.label.includes(' ') || s.label.startsWith('#');
-    if (s.r < (phrase ? 3 : 4) || s.chs.size < (phrase ? 2 : 4) || finishStats(s).lift < (phrase ? 1.8 : 2.5) || s.med < (phrase ? 10000 : 50000)) continue;
+    // a single word only counts when people write it like a name (Mbappé, Labubu), not an everyday word
+    if (!phrase && !(CASED.test(s.label) && (s.plain || 0) >= 2 && (s.named || 0) / s.plain >= 0.6)) continue;
+    if (s.r < (phrase ? 3 : 4) || s.chs.size < (phrase ? 2 : 3) || finishStats(s).lift < (phrase ? 1.8 : 2.2) || s.med < (phrase ? 10000 : 30000)) continue;
     if (phrase) s.heat *= 1.6;
     rising.push(s);
   }
