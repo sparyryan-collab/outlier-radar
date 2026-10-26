@@ -868,6 +868,76 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .pf small{color:var(--muted);font-size:12.5px;line-height:1.45}
 .pctbl{max-width:640px}
 .pctbl td:nth-child(n+2),.pctbl th:nth-child(n+2){text-align:center;width:70px}
+/* ---- display modes: skim cards and the analytics strip ---- */
+.modeseg button{display:inline-flex;gap:6px;align-items:center}
+.modeseg svg.i{width:16px;height:16px}
+.sumline .modeseg{margin-left:auto;flex:none}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;padding-top:4px}
+.qcard{border-radius:16px;background:var(--card);box-shadow:0 0 0 1px var(--line);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:box-shadow .2s,transform .2s}
+.qcard:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.qbody{padding:10px 12px 12px;display:flex;flex-direction:column;gap:7px;align-items:flex-start}
+.qtop{display:flex;gap:10px;align-items:center;width:100%;min-width:0}
+.qn{min-width:0;display:flex;flex-direction:column}
+.qn b{font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qn small{color:var(--muted);font-size:12px}
+.qbig{display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+.qbig b{font-size:26px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.qbig span{color:var(--muted);font-size:12.5px}
+.qwhy{margin:0;font-size:12.5px;color:var(--muted);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.anx{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:14px 0 4px}
+.anx.one{grid-template-columns:1fr;margin:0 0 6px}
+.anx-t{background:var(--surface);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.anx-t.wide{grid-column:span 2}
+.anx.one .anx-t.wide{grid-column:auto}
+.anx-t h5{margin:0;font-size:12.5px;display:flex;gap:6px;align-items:center;color:var(--muted);font-weight:600}
+.anx-t h5 svg.i{width:15px;height:15px}
+.anx-t>small{color:var(--muted);font-size:11.5px;line-height:1.35}
+.sbhead{display:flex;gap:10px;align-items:center}
+.sbhead h5{color:var(--text);font-size:14px}
+.sbhead small{color:var(--muted);font-size:11.5px}
+.sbbar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--surface2);gap:2px}
+.sbbar i{display:block;height:100%}
+.sblist{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px 12px}
+.sblist div{display:flex;gap:6px;align-items:center;font-size:12.5px}
+.sblist i{width:9px;height:9px;border-radius:3px;flex:none}
+.sblist span{flex:1;min-width:0;color:var(--muted)}
+.sblist b{font-variant-numeric:tabular-nums}
+.sblist b small{color:var(--muted);font-weight:400}
+svg.mini{width:100%;height:70px;display:block;stroke:none}
+svg.mini rect{fill:color-mix(in srgb,var(--series-1) 55%,var(--surface2))}
+svg.mini rect.hot{fill:#ff2d55}
+svg.mini line{stroke:var(--text);stroke-width:1.5;stroke-dasharray:3 3;vector-effect:non-scaling-stroke;opacity:.6}
+svg.mini.line polyline{fill:none;stroke:#12a150;stroke-width:2.5;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.dotsg{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
+.dotsg i{aspect-ratio:1;border-radius:4px;background:var(--surface2)}
+.dotsg i.na{opacity:.35}
+.dotsg i.l1{background:color-mix(in srgb,#ff2d55 55%,var(--surface2))}
+.dotsg i.l2{background:#ff2d55}
+.hb2{display:flex;flex-direction:column;gap:5px}
+.hb2 div{display:grid;grid-template-columns:58px 1fr auto;gap:8px;align-items:center;font-size:12px}
+.hb2 span{color:var(--muted)}
+.hb2 i{height:8px;border-radius:4px;background:var(--surface2);overflow:hidden;display:block}
+.hb2 i b{display:block;height:100%;background:color-mix(in srgb,var(--series-1) 55%,var(--surface2));border-radius:4px}
+.hb2 .top i b{background:var(--series-1)}
+.hb2 em{font-style:normal;font-variant-numeric:tabular-nums;font-weight:600}
+.eg{display:grid;grid-template-columns:18px auto 1fr;gap:4px 8px;align-items:center;font-size:12px}
+.eg svg.i{width:16px;height:16px;color:var(--muted)}
+.eg b{font-size:16px;font-variant-numeric:tabular-nums}
+.eg span{color:var(--muted)}
+.eg i{grid-column:1/-1;height:6px;border-radius:3px;background:var(--surface2);overflow:hidden;display:block}
+.eg i b{display:block;height:100%;background:#e8a200;border-radius:3px}
+.vdx{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.xbar{position:relative;height:18px;border-radius:9px;background:var(--surface);overflow:hidden}
+.xbar i{position:absolute;inset:0 auto 0 0;background:color-mix(in srgb,var(--hot2) 35%,var(--surface));border-radius:9px}
+.xbar.hot i{background:color-mix(in srgb,#ff2d55 45%,var(--surface))}
+.xbar.low i{background:var(--surface2)}
+.xbar span{position:relative;font-size:11px;font-weight:700;padding:0 8px;line-height:18px}
+.vfx{display:flex;flex-wrap:wrap;gap:3px 9px;font-size:11.5px;color:var(--muted)}
+.vfx span{display:inline-flex;gap:3px;align-items:center}
+.vfx svg.i{width:13px;height:13px}
+svg.vhs{width:100%;height:26px;display:block;stroke:none}
+svg.vhs polyline{fill:none;stroke:#12a150;stroke-width:2;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+@media (max-width:760px){.anx{grid-template-columns:1fr 1fr}.anx-t.wide{grid-column:1/-1}.qgrid{grid-template-columns:1fr 1fr;gap:10px}.qbig b{font-size:21px}.modeseg span{display:none}.sumline .modeseg{display:none}}
 /* ---- clip finder: automatic checks, moments, creators who invite clippers ---- */
 .acheck{display:flex;flex-direction:column;gap:8px;background:var(--surface);border-radius:12px;padding:10px 12px}
 .ackhead{display:flex;gap:10px;align-items:center;padding-bottom:6px;border-bottom:1px solid var(--line)}
@@ -1220,7 +1290,7 @@ const T = {
     exportTip: 'Download one HTML file with the current results to send to someone',
     searchPh: 'Search a topic, e.g. "cat animation"', searchPhList: 'Search channels and videos in this list',
     nHome: 'Home', nVideos: 'Viral Shorts', nChannels: 'Channels', nLive: 'New uploads', nTopics: 'Topics', nSaved: 'Saved', nHelp: 'How to use',
-    dispTitle: 'Display', simple: 'Simple', detailed: 'Detailed', dispHint: 'Detailed view shows every number, score and filter.',
+    dispTitle: 'Display', simple: 'Simple', detailed: 'Detailed', dispHint: 'Simple: quick cards you can skim. Detailed: every number, drawn as charts.',
     snap: 'Snapshot from {d} · {n} channels', stDisc: 'Scanning · finding breakout Shorts {a}/{b}', stProbe: 'Scanning · checking channels {a}/{b}',
     stStart: 'Starting…', stIdle: 'Last scan {ago}', stNext: ' · next in {n} min', stUpdated: 'Live · updated {ago}', stCounts: '{s} channels scored',
     offline: 'Can’t reach the app. Is it still running?',
@@ -1319,7 +1389,7 @@ const T = {
     exportTip: 'ดาวน์โหลดไฟล์ HTML ไฟล์เดียวที่มีผลลัพธ์ปัจจุบัน เพื่อส่งให้คนอื่น',
     searchPh: 'ค้นหาหัวข้อ เช่น "แมว" หรือ "cat animation"', searchPhList: 'ค้นหาช่องและคลิปในรายการนี้',
     nHome: 'หน้าแรก', nVideos: 'คลิปไวรัล', nChannels: 'ช่องทั้งหมด', nLive: 'คลิปใหม่', nTopics: 'หมวดหมู่', nSaved: 'ที่บันทึกไว้', nHelp: 'วิธีใช้งาน',
-    dispTitle: 'การแสดงผล', simple: 'แบบง่าย', detailed: 'แบบละเอียด', dispHint: 'แบบละเอียดจะแสดงตัวเลข คะแนน และตัวกรองทั้งหมด',
+    dispTitle: 'การแสดงผล', simple: 'แบบง่าย', detailed: 'แบบละเอียด', dispHint: 'แบบง่าย: การ์ดสั้น ๆ ดูผ่าน ๆ ได้เร็ว แบบละเอียด: ตัวเลขทุกตัวพร้อมกราฟ',
     snap: 'ข้อมูลบันทึกไว้เมื่อ {d} · {n} ช่อง', stDisc: 'กำลังสแกน · ค้นหาคลิปสั้นที่มาแรง {a}/{b}', stProbe: 'กำลังสแกน · ตรวจสอบช่อง {a}/{b}',
     stStart: 'กำลังเริ่มต้น…', stIdle: 'สแกนล่าสุด {ago}', stNext: ' · ครั้งถัดไปใน {n} นาที', stUpdated: 'สด · อัปเดต {ago}', stCounts: 'ให้คะแนนแล้ว {s} ช่อง',
     offline: 'เชื่อมต่อแอปไม่ได้ แอปยังทำงานอยู่หรือเปล่า?',
@@ -1861,6 +1931,20 @@ Object.assign(T.th, {
   tour_done_t: 'พร้อมแล้ว!', tour_done_d: 'กลับมาดูทัวร์นี้ได้ทุกเมื่อที่ เพิ่มเติม → ลองใช้จริงทีละขั้น', tour_done_go: 'เริ่มใช้งาน',
   tTry: 'ตาคุณแล้ว: กดตรงที่เรืองแสง'
 });
+Object.assign(T.en, {
+  qRatio: 'more views than subscribers', xUsual: '{x}× its usual',
+  spT: 'What makes the score', spD: 'The 100-point score, part by part', spEngine: 'Views per video', spLever: 'Views vs channel size', spHits: 'Hit rate',
+  spTrend: 'Momentum', spFluke: 'One-hit penalty', mxViews: 'Recent Shorts', mxViewsD: 'Oldest to newest · line = typical {m}',
+  mxRhythm: 'Uploads, last 4 weeks', mxRhythmD: '{n} Shorts in 4 weeks', mxLen: 'Best length', mxLenD: '{l} gets the most views',
+  mxEng: 'Engagement', mxTalk: 'comments per 1K views', mxLikes: 'likes per 1K views', mxAvg: 'Site average: {n} comments per 1K', mxSubs: 'Subscribers', mxSubsD: '{n} in {d} days'
+});
+Object.assign(T.th, {
+  qRatio: 'วิวมากกว่าผู้ติดตาม', xUsual: '{x} เท่าของปกติ',
+  spT: 'คะแนนมาจากอะไร', spD: 'คะแนนเต็ม 100 แยกเป็นส่วน ๆ', spEngine: 'วิวต่อคลิป', spLever: 'วิวเทียบขนาดช่อง', spHits: 'อัตราคลิปฮิต',
+  spTrend: 'แรงส่ง', spFluke: 'หักคะแนนฮิตคลิปเดียว', mxViews: 'คลิปล่าสุด', mxViewsD: 'เก่าไปใหม่ · เส้น = ยอดวิวปกติ {m}',
+  mxRhythm: 'การลงคลิป 4 สัปดาห์ล่าสุด', mxRhythmD: '{n} คลิปใน 4 สัปดาห์', mxLen: 'ความยาวที่ดีที่สุด', mxLenD: '{l} ได้วิวมากที่สุด',
+  mxEng: 'การมีส่วนร่วม', mxTalk: 'คอมเมนต์ต่อ 1K วิว', mxLikes: 'ไลก์ต่อ 1K วิว', mxAvg: 'ค่าเฉลี่ยทั้งเว็บ: {n} คอมเมนต์ต่อ 1K', mxSubs: 'ผู้ติดตาม', mxSubsD: '{n} ใน {d} วัน'
+});
 Object.assign(T.en, {ytFrom: 'On YouTube’s trending chart'});
 Object.assign(T.th, {ytFrom: 'อยู่บนชาร์ตมาแรงของ YouTube'});
 Object.assign(T.en, {legalUpdated: 'Last updated {d}', contactGh: 'open a message on GitHub', fTerms: 'Terms', fPrivacy: 'Privacy', fRefunds: 'Refunds', fContact: 'Contact',
@@ -2319,6 +2403,9 @@ const IC = {
   star: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z"/></svg>',
   bulb: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>',
   chart: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-6M3 20h18"/></svg>',
+  grid: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>',
+  chat: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H10l-4 3v-3H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/></svg>',
+  thumb: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11v9H4v-9zM7 11l4-7c1.5 0 2.5 1 2.2 2.6L12.6 10H19a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 17.8 20H7"/></svg>',
   compass: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>',
   news: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="14" height="16" rx="2"/><path d="M17 8h3v10a2 2 0 0 1-2 2M7 8h6M7 12h6M7 16h4"/></svg>',
   gamepad: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5"/><path d="M7.5 10.5v4M5.5 12.5h4M15.5 11.5h.01M18 13.5h.01"/></svg>',
@@ -2520,7 +2607,7 @@ function vCard(v, c, opts = {}) {
   return `<div class="vcard">${thumbBox(v, c)}<div class="vmeta">` +
     (opts.noCh ? '' : `<button type="button" class="avlink" data-open-ch="${esc(c.ch_id)}" aria-label="${esc(c.name)}">${avatarEl(c, 36)}</button>`) +
     `<div class="vtxt"><a class="vt" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" data-play="${esc(v.id)}" data-c="${esc(c.ch_id)}" title="${esc(v.t)}">${esc(v.t)}</a>${chLine}` +
-    `<div class="vst">${esc(t('views', {n: fmt(v.v)}))}${opts.talk && talk(v) != null ? ` · <span class="hotx">${esc(t('talkV', {n: fmtTalk(talk(v))}))}</span>` : speed(v) ? ` · <span class="hotx">${esc(t('speed', {n: fmt(speed(v))}))}</span>` : v.x ? ` · <span class="${v.x >= 1.5 ? 'hotx' : ''}">${esc(xText(v.x))}</span>` : ''}</div>${w}</div></div></div>`;
+    `<div class="vst">${esc(t('views', {n: fmt(v.v)}))}${opts.talk && talk(v) != null ? ` · <span class="hotx">${esc(t('talkV', {n: fmtTalk(talk(v))}))}</span>` : speed(v) ? ` · <span class="hotx">${esc(t('speed', {n: fmt(speed(v))}))}</span>` : v.x ? ` · <span class="${v.x >= 1.5 ? 'hotx' : ''}">${esc(xText(v.x))}</span>` : ''}</div>${w}${S.detail ? vDetail(v) : ''}</div></div></div>`;
 }
 const topVids = (c, n) => c.series.slice().sort((a, b) => b.v - a.v).slice(0, n);
 const trio = c => `<div class="trio">${topVids(c, 3).map(v => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('')}</div>`;
@@ -2572,6 +2659,7 @@ function channelRow(c) {
         ${cmpBtn(c)}
       </div>
     </div>
+    ${S.detail ? chAnalytics(c) : ''}
     <div class="shelf">${vids.map(v => shortCard(v, c)).join('')}</div>
   </section>`;
 }
@@ -2582,6 +2670,88 @@ function shelf(title, desc, items, see) {
     <div class="rail">${items.join('')}</div></section>`;
 }
 const emptyBox = msg => `<div class="empty"><span class="emi">${IC.inbox}</span>${esc(msg)}</div>`;
+
+/* ---------- the two display modes: Simple (skim cards) and Detailed (every number, drawn) ---------- */
+const modeSeg = () => `<div class="seg modeseg" role="group" aria-label="${esc(t('dispTitle'))}"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${IC.grid}<span>${esc(t('simple'))}</span></button>` +
+  `<button type="button" data-detail="1" aria-pressed="${S.detail}">${IC.chart}<span>${esc(t('detailed'))}</span></button></div>`;
+function quickCard(c) {   // Simple: one big number and one reason, so a page of channels reads at a glance
+  const why = whyLines(c), line = why[1] || why[0] || '';
+  const big = c.subs > 0 && c.ratio >= 1.5 ? `<b>${esc(fmtX(c.ratio))}×</b><span>${esc(t('qRatio'))}</span>` : `<b>${esc(fmt(c.med_recent))}</b><span>${esc(t('lTypical'))}</span>`;
+  return `<article class="qcard" data-open-ch="${esc(c.ch_id)}" tabindex="0" role="button" aria-label="${esc(c.name)}">${trio(c)}
+    <div class="qbody"><div class="qtop">${avatarEl(c, 40)}<div class="qn"><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))}</small></div></div>
+      <div class="qbig">${big}</div>${vdPill(c)}${line ? `<p class="qwhy">${esc(line)}</p>` : ''}</div></article>`;
+}
+const clampN = (x, a, b) => Math.min(b, Math.max(a, x));
+function scoreParts(c) {   // the scanner's score, part by part (the same formula as compute_metrics in app.py)
+  return [['spEngine', 30 * clampN((Math.log10(Math.max(c.med_recent || 0, 1)) - 4.7) / 1.3, 0, 1), 30, 'var(--series-1)'],
+    ['spLever', 35 * clampN(Math.log10(Math.max(c.ratio || 0, 1)) / Math.log10(30), 0, 1), 35, '#ff2d55'],
+    ['spHits', 15 * (c.share_100k || 0) + 10 * clampN((c.share_1m || 0) / 0.25, 0, 1), 25, '#12a150'],
+    ['spTrend', 10 * clampN((Math.log2(Math.max(c.trend || 1, 0.05)) + 1) / 2, 0, 1), 10, '#e8a200'],
+    ['spFluke', c.peak_vs_med > 30 ? -15 : c.peak_vs_med > 15 ? -8 : 0, 0, 'var(--muted)']];
+}
+function scoreBreak(c) {
+  const parts = scoreParts(c), num = v => (v < 0 ? '−' + Math.abs(Math.round(v)) : String(Math.round(v)));
+  return `<div class="anx-t wide"><div class="sbhead"><div class="ring" style="--p:${c.score};--c:${scoreColor(c.score)}"><span>${Math.round(c.score)}</span></div><div><h5>${esc(t('spT'))}</h5><small>${esc(t('spD'))}</small></div></div>
+    <div class="sbbar">${parts.filter(x => x[1] > 0).map(([k, v, , col]) => `<i style="width:${v.toFixed(1)}%;background:${col}" title="${esc(t(k))}: ${Math.round(v)}"></i>`).join('')}</div>
+    <div class="sblist">${parts.filter(x => x[2] || x[1]).map(([k, v, mx, col]) => `<div><i style="background:${col}"></i><span>${esc(t(k))}</span><b>${num(v)}${mx ? `<small>/${mx}</small>` : ''}</b></div>`).join('')}</div></div>`;
+}
+const tile = (icon, title, body, foot) => `<div class="anx-t"><h5>${icon}${esc(title)}</h5>${body}${foot ? `<small>${esc(foot)}</small>` : ''}</div>`;
+function viewsMini(c) {   // every recent Short as a bar, oldest to newest; hits (2x usual and more) in colour
+  const vids = c.series.filter(v => v.v != null).slice(0, 24).reverse();
+  if (vids.length < 3) return '';
+  const mx = Math.max(...vids.map(v => v.v)) || 1, med = c.med_recent || median(vids.map(v => v.v)), w = 100 / vids.length, my = (100 - 100 * med / mx).toFixed(1);
+  return tile(IC.chart, t('mxViews'), `<svg class="mini" viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="${esc(t('mxViews'))}">${vids.map((v, i) => {
+    const h = Math.max(2, 100 * v.v / mx);
+    return `<rect x="${(i * w + w * 0.14).toFixed(2)}" y="${(100 - h).toFixed(2)}" width="${(w * 0.72).toFixed(2)}" height="${h.toFixed(2)}" class="${v.x >= 2 ? 'hot' : ''}"><title>${esc(fmt(v.v))} · ${esc(String(v.t || '').slice(0, 60))}</title></rect>`;
+  }).join('')}<line x1="0" x2="100" y1="${my}" y2="${my}"/></svg>`, t('mxViewsD', {m: fmt(med)}));
+}
+function rhythmMini(c) {   // the last four weeks, one dot a day; days before the oldest video we hold are faded
+  const ps = c.series.map(v => v.p).filter(Boolean);
+  if (ps.length < 2) return '';
+  const now = nowTs(), days = Array(28).fill(0), oldest = Math.floor((now - Math.min(...ps)) / 86400);
+  ps.forEach(p => { const d = Math.floor((now - p) / 86400); if (d >= 0 && d < 28) days[27 - d]++; });
+  const n = days.reduce((a, b) => a + b, 0);
+  return tile(IC.calendar, t('mxRhythm'), `<div class="dotsg">${days.map((k, i) => `<i class="${k >= 2 ? 'l2' : k ? 'l1' : 27 - i > oldest ? 'na' : ''}" title="${k}"></i>`).join('')}</div>`, t('mxRhythmD', {n}));
+}
+function lenMini(c) {   // typical views for each video length
+  const rows = [[0, 20, 'lenB1'], [20, 40, 'lenB2'], [40, 60, 'lenB3'], [60, 1e9, 'lenB4']].map(([a, b, k]) => {
+    const vs = c.series.filter(v => v.d != null && v.d >= a && v.d < b).map(v => v.v);
+    return {k, n: vs.length, med: vs.length >= 2 ? median(vs) : null};
+  }).filter(r => r.med != null);
+  if (rows.length < 2) return '';
+  const mx = Math.max(...rows.map(r => r.med)), best = rows.find(r => r.med === mx);
+  return tile(IC.clock, t('mxLen'), `<div class="hb2">${rows.map(r => `<div class="${r === best ? 'top' : ''}"><span>${esc(t(r.k))}</span><i><b style="width:${(100 * r.med / mx).toFixed(0)}%"></b></i><em>${esc(fmt(r.med))}</em></div>`).join('')}</div>`,
+    t('mxLenD', {l: t(best.k)}));
+}
+function engageMini(c) {   // comments and likes for every 1,000 views, against the site's average
+  const tk = chTalk(c), avg = talkNorm(), lr = chRates(c).likes;
+  if (tk == null && lr == null) return '';
+  const row = (icon, val, label, ref) => `<div class="eg">${icon}<b>${esc(val)}</b><span>${esc(label)}</span>${ref != null ? `<i><b style="width:${clampN(100 * ref, 4, 100).toFixed(0)}%"></b></i>` : ''}</div>`;
+  return tile(IC.chat, t('mxEng'), (tk != null ? row(IC.chat, fmtTalk(tk), t('mxTalk'), avg ? tk / (2 * avg) : null) : '') + (lr != null ? row(IC.thumb, fmtRate(lr), t('mxLikes'), lr / 80) : ''),
+    avg ? t('mxAvg', {n: fmtTalk(avg)}) : '');
+}
+function subsMini(c) {   // subscribers at each scan since the channel was found
+  const h = (c.hist || []).filter(x => x[1] > 0);
+  if (h.length < 2) return '';
+  const x0 = h[0][0], x1 = h[h.length - 1][0], ys = h.map(x => x[1]), lo = Math.min(...ys), hi = Math.max(...ys);
+  const pts = h.map(x => `${((x[0] - x0) / ((x1 - x0) || 1) * 100).toFixed(1)},${(92 - (x[1] - lo) / ((hi - lo) || 1) * 80).toFixed(1)}`).join(' ');
+  const gain = ys[ys.length - 1] - ys[0];
+  return tile(IC.trend, t('mxSubs'), `<svg class="mini line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}"/></svg>`,
+    t('mxSubsD', {n: (gain >= 0 ? '+' : '−') + fmt(Math.abs(gain)), d: Math.max(1, Math.round((x1 - x0) / 86400))}));
+}
+const chAnalytics = c => `<div class="anx">${scoreBreak(c)}${viewsMini(c)}${rhythmMini(c)}${lenMini(c)}${engageMini(c)}${subsMini(c)}</div>`;
+function vhSpark(v) {   // a Short's views at each check since upload
+  const h = v.vh || [];
+  if (h.length < 3) return '';
+  const x0 = h[0][0], x1 = h[h.length - 1][0], top = Math.max(...h.map(x => x[1])) || 1;
+  return `<svg class="vhs" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><polyline points="${h.map(x => `${((x[0] - x0) / ((x1 - x0) || 1) * 100).toFixed(1)},${(28 - 26 * x[1] / top).toFixed(1)}`).join(' ')}"/></svg>`;
+}
+function vDetail(v) {   // Detailed: how far above its channel's usual, how fast, how talked about
+  const g = grow(v), tk = talk(v), lk = perK(v.l, v.v), xw = v.x ? clampN(100 * Math.log10(Math.max(v.x, 1)) / Math.log10(50), 3, 100) : 0;
+  const f = [g ? `<span>${IC.bolt}+${esc(fmt(g))}/${esc(t('hUnit'))}</span>` : '', tk != null ? `<span>${IC.chat}${esc(fmtTalk(tk))}/1K</span>` : '',
+    lk != null ? `<span>${IC.thumb}${esc(fmtRate(lk))}/1K</span>` : '', v.d ? `<span>${IC.clock}${esc(fmtDur(v.d))}</span>` : '', when(v) ? `<span>${IC.calendar}${esc(ago(when(v)))}</span>` : ''].join('');
+  return `<div class="vdx">${v.x ? `<div class="xbar ${v.x >= 3 ? 'hot' : v.x < 1 ? 'low' : ''}"><i style="width:${xw.toFixed(0)}%"></i><span>${esc(t('xUsual', {x: fmtX(v.x)}))}</span></div>` : ''}<div class="vfx">${f}</div>${vhSpark(v)}</div>`;
+}
 
 /* ---------- pages ---------- */
 const pageHead = (tk, dk, extra = '') => `<div class="phead"><h1>${esc(t(tk))}</h1><p>${esc(t(dk))}</p></div>${extra}`;
@@ -2599,7 +2769,7 @@ function homeView() {
   let h = '', n = 0;
   const st = statusInfo();
   h += `<div class="sumline"><span>${t('sumTracked', {n: DATA.channels.length})}</span><span class="smhide">${t('sumHot', {n: DATA.channels.filter(c => c.score >= 65).length})}</span>` +
-    `<span class="smhide">${t('sumNew', {n: liveVideos(DATA.channels).length})}</span><span class="livebox" style="margin:0"><span class="${st.cls}"></span>${esc(st.txt)}</span></div>`;
+    `<span class="smhide">${t('sumNew', {n: liveVideos(DATA.channels).length})}</span><span class="livebox" style="margin:0"><span class="${st.cls}"></span>${esc(st.txt)}</span>${modeSeg()}</div>`;
   const add = (title, desc, items, see) => {
     if (!items.length) return;
     h += shelf(title, desc, items, see);
@@ -2646,8 +2816,7 @@ function filtersHtml(kind) {
   }
   if (S.niche) p.push(`<button type="button" class="chip x" aria-pressed="true" data-clear="niche">${esc(t('nicheChip', {x: S.niche}))}</button>`);
   if (S.tag && !det) p.push(`<button type="button" class="chip x" aria-pressed="true" data-clear="tag">${esc(t('tagChip', {x: tagName(S.tag)}))}</button>`);
-  if (kind === 'channels' || kind === 'videos') p.push(`<button type="button" class="chip" data-detail="toggle" aria-pressed="${det}">${esc(t('detailOn'))}</button>`);
-  return p.length ? `<div class="filters">${p.join('')}</div>` : '';
+  return `<div class="filters">${modeSeg()}${p.join('')}</div>`;
 }
 function qBanner() {
   const q = S.q.trim();
@@ -2657,7 +2826,7 @@ function qBanner() {
 function channelsView(list, empty) {
   if (!list.length) return emptyBox(empty || t('emptyCh'));
   const lim = shown.channels;
-  return list.slice(0, lim).map(channelRow).join('') + moreBtn('channels', list.length - lim);
+  return (S.detail ? list.slice(0, lim).map(channelRow).join('') : `<div class="qgrid">${list.slice(0, lim * 2).map(quickCard).join('')}</div>`) + moreBtn('channels', list.length - (S.detail ? lim : lim * 2));
 }
 function videosView() {
   const vids = videoPool(channelsFiltered(true)).filter(([v]) => v.x >= S.minX);
@@ -2679,7 +2848,7 @@ function topicsView() {
     const chs = DATA.channels.filter(c => chTopics(c).has(tp[0]) && langOk(c)).sort((a, b) => b.score - a.score);
     return {tp, n: chs.length, hot: chs.filter(c => c.score >= 65).length, top: chs.slice(0, 5)};
   }).filter(r => r.n).sort((a, b) => b.hot - a.hot || b.n - a.n);
-  let h = pageHead('pTopicsT', 'pTopicsD') + heatSection();
+  let h = pageHead('pTopicsT', 'pTopicsD', `<div class="filters">${modeSeg()}</div>`) + heatSection();
   if (!rows.length) return h + emptyBox(t('emptyNiche'));
   const mx = Math.max(1, ...rows.map(r => r.hot));
   h += `<div class="tiles">` + rows.map(r => `<button type="button" class="tile" data-topic="${r.tp[0]}" data-go="home"><span class="ico">${topicIcon(r.tp[0])}</span><b>${esc(topicName(r.tp))}</b>
@@ -2806,6 +2975,7 @@ function drawSheet(keepScroll) {
         ${(lr => lr != null ? card('lLikeRate', fmtRate(lr), '', '') : '')(chRates(c).likes)}
         ${S.detail ? card('lScore', Math.round(c.score) + ' / 100', '', 'score') + card('lTrend', fmtX(c.trend) + '×', '', 'trend') : ''}
       </div>
+      <h3>${esc(t('spT'))}</h3><div class="anx one">${scoreBreak(c)}</div>
       ${(an => an ? `<h3>${esc(t('anT'))}</h3>${an}` : '')(chStats(c))}
       <h3>${esc(t('chGrowth'))}</h3>${growthHtml(c)}
       ${c.tags.length ? `<h3>${esc(t('labels'))}</h3><div class="taglist">${c.tags.map(k => `<div><span class="tag ${TAGS[k] ? TAGS[k].cls : ''}">${esc(tagName(k))}</span><small>${esc(tagDesc(k))}</small></div>`).join('')}</div>` : ''}
@@ -3088,7 +3258,7 @@ function patterns(chs) {
 }
 function ideasView() {
   const P = patterns(DATA.channels.filter(baseOk));
-  let h = pageHead('pIdeasT', 'pIdeasD');
+  let h = pageHead('pIdeasT', 'pIdeasD', `<div class="filters">${modeSeg()}</div>`);
   if (!P) return h + emptyBox(t('ideaFew'), '💡');
   const chips = [];
   if (P.len) chips.push(t('ideaRLen', {a: P.len[0], b: P.len[1]}));
