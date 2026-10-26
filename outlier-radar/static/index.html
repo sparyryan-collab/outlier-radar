@@ -582,15 +582,74 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 #tour .hole.none{left:0!important;top:0!important;width:100vw!important;height:100vh!important;border-radius:0;box-shadow:none;background:rgba(0,0,0,.62)}
 #tour .hole.pulse::after{content:"";position:absolute;inset:-3px;border-radius:16px;box-shadow:0 0 0 3px #ff0033;animation:hp 1.4s infinite}
 @keyframes hp{from{transform:scale(1);opacity:1}to{transform:scale(1.08);opacity:0}}
-#tour .bub{position:fixed;width:min(320px,calc(100vw - 24px));background:var(--bg);color:var(--text);border-radius:16px;padding:16px 16px 12px;box-shadow:0 12px 40px rgba(0,0,0,.45);pointer-events:auto;transition:left .3s,top .3s}
-#tour .bub p{padding-right:26px;margin:0 0 6px;font-size:15.5px;line-height:1.5;font-weight:500}
-#tour .bub .try{color:var(--red);font-weight:700;font-size:13px;margin:0 0 6px}
-#tour .bub .row2{display:flex;align-items:center;gap:8px;margin-top:10px}
-#tour .bub .row2 small{color:var(--muted);margin-right:auto}
-#tour .bub button{height:34px;border-radius:17px;border:0;padding:0 14px;font-weight:600;background:var(--surface);color:var(--text)}
-#tour .bub button.nx{background:var(--red);color:#fff}
-#tour .bub .sk{position:absolute;right:8px;top:8px;width:30px;height:30px;padding:0;background:transparent;color:var(--muted)}
-@media (prefers-reduced-motion:reduce){.stage *,#tour .hole,#tour .bub{animation:none!important;transition:none!important}.confetti{display:none}}
+#tour .bub{position:fixed;width:min(340px,calc(100vw - 16px));background:var(--bg);color:var(--text);border-radius:18px;padding:14px 14px 12px;box-shadow:0 16px 48px rgba(0,0,0,.5);pointer-events:auto;transition:left .3s,top .3s}
+#tour .bub.card{width:min(420px,calc(100vw - 24px));padding:0;overflow:hidden}
+#tour .bub .sk{position:absolute;right:8px;top:8px;width:32px;height:32px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--muted);display:grid;place-items:center}
+#tour .bub .sk svg{width:18px;height:18px}
+#tour .bhead{display:flex;gap:10px;align-items:center;padding-right:30px}
+#tour .bico{width:40px;height:40px;border-radius:12px;flex:none;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#ff0033,#ff7a00)}
+#tour .bico svg.i{width:21px;height:21px}
+#tour .bhead small{display:block;color:var(--muted);font-size:11.5px;font-weight:600;letter-spacing:.02em}
+#tour .bhead b{display:block;font-size:16.5px;line-height:1.25}
+#tour .bub p{margin:10px 0 0;font-size:14.5px;line-height:1.5;color:var(--text)}
+#tour .try{display:flex;gap:8px;align-items:center;margin-top:10px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,var(--red) 12%,transparent);color:var(--red);font-weight:700;font-size:13px}
+#tour .tapdot{width:12px;height:12px;border-radius:50%;background:var(--red);flex:none;animation:hp 1.2s infinite}
+#tour .dots{display:flex;gap:4px;margin-top:12px;flex-wrap:wrap}
+#tour .dots i{width:14px;height:4px;border-radius:2px;background:var(--surface2)}
+#tour .dots i.done{background:color-mix(in srgb,var(--red) 45%,var(--surface2))}
+#tour .dots i.on{background:var(--red);width:22px}
+#tour .row2{display:flex;align-items:center;gap:8px;margin-top:12px;justify-content:flex-end}
+#tour .row2 button{height:38px;border-radius:19px;border:0;padding:0 16px;font-weight:600;background:var(--surface);color:var(--text);display:inline-flex;gap:4px;align-items:center}
+#tour .row2 button svg{width:18px;height:18px}
+#tour .row2 .bk{width:38px;padding:0;justify-content:center;margin-right:auto}
+#tour .row2 .nx,#tour .tbtns .nx{background:var(--red);color:#fff}
+#tour .ripple{position:fixed;width:0;height:0;pointer-events:none;display:none}
+#tour.wait .ripple{display:block}
+#tour .ripple::before,#tour .ripple::after{content:"";position:absolute;left:-22px;top:-22px;width:44px;height:44px;border-radius:50%;border:3px solid #ff0033;animation:ripple 1.6s ease-out infinite}
+#tour .ripple::after{animation-delay:.8s}
+@keyframes ripple{0%{transform:scale(.4);opacity:1}100%{transform:scale(1.8);opacity:0}}
+#tour .tcard{display:flex;flex-direction:column;align-items:center;text-align:center;padding:26px 22px 20px;background:radial-gradient(120% 70% at 50% 0%,color-mix(in srgb,#ff0033 16%,var(--bg)),var(--bg) 70%)}
+#tour .tlogo{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,#ff0033,#ff7a00);box-shadow:0 10px 30px rgba(255,0,51,.35);animation:hp 2.4s infinite}
+#tour .tlogo svg{width:34px;height:34px;fill:#fff;stroke:none}
+#tour .tlogo.ok{background:linear-gradient(135deg,#0f9d58,#34c27a);box-shadow:0 10px 30px rgba(15,157,88,.35)}
+#tour .tlogo.ok svg.i{width:34px;height:34px;color:#fff;fill:none;stroke:#fff;stroke-width:3}
+#tour .tcard h3{margin:14px 0 6px;font-size:21px}
+#tour .tcard p{margin:0;color:var(--muted);font-size:14px;line-height:1.5;max-width:340px}
+#tour .tfeat{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:14px 0 4px}
+#tour .tfeat span{display:inline-flex;gap:5px;align-items:center;background:var(--surface);border-radius:999px;padding:5px 10px;font-size:12.5px;font-weight:600}
+#tour .tfeat svg.i{width:15px;height:15px;color:var(--red)}
+#tour .tlang{display:flex;gap:8px;align-items:center;width:100%;margin-top:12px;border:0;border-radius:14px;padding:10px 12px;background:var(--surface);color:var(--text);font-size:13.5px;text-align:left}
+#tour .tlang svg{width:20px;height:20px;flex:none}
+#tour .tlang b{margin-left:auto}
+#tour .tlang i{font-style:normal;color:var(--accent);font-weight:600}
+#tour .tsug{margin-top:8px;border:0;background:transparent;color:var(--accent);font-weight:600;font-size:13px}
+#tour .tbtns{display:flex;flex-direction:column;gap:6px;width:100%;margin-top:14px}
+#tour .tbtns button{height:44px;border-radius:22px;border:0;font-weight:600;font-size:15px;background:transparent;color:var(--muted);display:inline-flex;gap:6px;align-items:center;justify-content:center}
+#tour .tbtns .nx svg{width:20px;height:20px;fill:#fff;stroke:none}
+@media (max-width:760px){#tour .bub{width:calc(100vw - 16px)}#tour .bub.card{width:calc(100vw - 24px)}}
+/* ---- language picker ---- */
+.lhead{display:flex;gap:8px;align-items:center}
+.lhead svg{width:22px;height:22px}
+.lq{width:100%;height:42px;border:1px solid var(--line);border-radius:21px;background:var(--bg);padding:0 16px;margin:8px 0 2px;outline:none;color:var(--text)}
+.lq:focus{border-color:var(--accent)}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px}
+.lrow{display:flex;gap:8px;align-items:center;justify-content:space-between;border:0;border-radius:12px;padding:8px 12px;background:var(--surface);color:var(--text);text-align:left;min-height:50px}
+.lrow:hover{background:var(--surface2)}
+.lrow span{display:flex;flex-direction:column;min-width:0}
+.lrow b{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lrow small{color:var(--muted);font-size:11.5px}
+.lrow.on{box-shadow:inset 0 0 0 2px var(--accent)}
+.lrow svg.i{width:18px;height:18px;color:var(--accent);flex:none}
+.lrow .ldev{font-size:10.5px;color:var(--muted);background:var(--bg);border-radius:6px;padding:1px 6px;flex:none}
+.lrow[hidden]{display:none}
+.lsug{display:flex;gap:8px;align-items:center;width:100%;border:0;border-radius:12px;padding:10px 12px;margin:6px 0;background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-weight:600;text-align:left}
+.lsug svg.i{width:18px;height:18px}
+#btnLang svg{width:22px;height:22px}
+#lang2{min-width:44px}
+[dir=rtl] .lrow,[dir=rtl] #tour .tlang{text-align:right}
+[dir=rtl] #tour .bub .sk{right:auto;left:8px}
+[dir=rtl] #tour .bhead{padding-right:0;padding-left:30px}
+@media (prefers-reduced-motion:reduce){.stage *,#tour .hole,#tour .bub,#tour .ripple::before,#tour .ripple::after,#tour .tlogo{animation:none!important;transition:none!important}.confetti{display:none}}
 .confetti{position:fixed;top:-20px;z-index:99;font-size:22px;pointer-events:none;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
 
@@ -1021,7 +1080,7 @@ svg.i{width:16px;height:16px;flex:none;vertical-align:-3px}
 }
 @media (max-width:760px){
   #top{height:48px;padding:0 4px 0 12px;gap:4px}
-  #btnMenu,#btnHelp,#langSeg,.search,#searchBtn{display:none}
+  #btnMenu,#btnHelp,#langSeg,#btnLang,.search,#searchBtn{display:none}
   .brand{font-size:18px;padding:0;gap:5px}
   .brand .logo{width:28px;height:20px;border-radius:6px}
   .brand .logo svg{width:14px;height:14px}
@@ -1120,7 +1179,8 @@ svg.i{width:16px;height:16px;flex:none;vertical-align:-3px}
     <button class="icon" id="btnTheme" type="button"></button>
     <span id="acct"></span>
     <button class="icon" id="btnHelp" data-tab="help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.8M12 17.2h.01"/></svg></button>
-    <div class="seg" id="langSeg" role="group" aria-label="Language"><button data-ui="en" aria-pressed="true">EN</button><button data-ui="th" aria-pressed="false">ไทย</button></div>
+    <div class="seg" id="langSeg" role="group" aria-label="Language"><button data-ui="en" aria-pressed="true">EN</button><button data-ui="th" id="lang2" aria-pressed="false">ไทย</button></div>
+    <button class="icon" id="btnLang" type="button" data-langpick><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg></button>
   </div>
 </header>
 <div id="layout">
@@ -1391,32 +1451,10 @@ Object.assign(T.en, {
   cmpGrowth: 'Subscriber growth', cmpTop: 'Best Shorts', cmpLen: 'Typical length', cmpShare: '🔗 Copy link to this comparison', cmpRemove: 'Remove',
   chGrowth: 'Growth', chSubs: 'Subscribers', chViews: 'Typical views', chSince: 'since {d}', chTable: 'Show as a table', chDate: 'Date',
   chFew: 'The growth chart appears after we have checked this channel a few times (usually within a day).',
-  introBtn: '▶ Watch the 1-minute intro', introBtnD: 'A quick video-style walkthrough with real channels. Turn the voice on if you like.',
   tourBtn: '👆 Hands-on tour', tourBtnD: 'Try it on the real site, one step at a time. Takes about 30 seconds.', skip: 'Skip',
-  introT: 'Viral Radar in 1 minute', replay: 'Replay', voice: 'Voice', voiceNone: 'This device has no voice for this language. Captions are on screen.',
-  iCount: '<b>{a}</b> channels · <b>{b}</b> Shorts checked', iSubs: '{n} subscribers', iViews: '{n} views per video',
-  i1: 'Viral Radar finds YouTube Shorts channels that are blowing up.',
-  i2: 'Like this one: only {s} subscribers, but a typical video gets {v} views. That means the idea works.',
-  i3: 'More fire means hotter. Three fires is the top 5%.',
-  i4: 'Tap any video to watch it right here.',
-  i5: 'Tap a channel to see why it stands out, in plain words.',
-  i6: 'Press Save to keep the ones you like.',
-  i7: 'Pick a topic, and switch between Thai and English any time.',
-  i8: 'That’s it! Now try it yourself.',
-  t0: 'Hi! This quick tour shows you around. Tap Next.',
-  t1: 'These are topics. Tap one to see only that kind of channel.',
-  t2: 'Switch between ไทย and English any time.',
-  t3: 'The fire shows how hot a channel is. 🔥🔥🔥 means top 5%.',
-  t4: 'Tap this video to watch it.',
-  t5: 'This box tells you how the video did compared with the channel’s usual.',
-  t6: 'Now tap this channel to open it.',
-  t7: 'Here’s why it stands out, in plain words.',
-  t8: 'Tap Save to keep it for later.',
-  t9: 'Your saved channels are here.',
-  t10: 'The weekly Top 10 is here. Share it with friends!',
-  t11: 'Need help again? Tap here any time. Have fun! 🎉',
+  replay: 'Replay', voice: 'Voice', voiceNone: 'This device has no voice for this language. Captions are on screen.',
   tNext: 'Next', tBack: 'Back', tDone: 'Done', tStep: '{a} of {b}', tTry: '👆 Your turn: tap it',
-  threeT: '3 things to know', helpD: 'Watch the intro or take the hands-on tour. More detail is further down if you want it.',
+  threeT: '3 things to know', helpD: 'Take the hands-on tour, or read the details further down.',
   k1T: 'Fire = how hot', k1D: 'More fire means the channel gets more views than its size would suggest.',
   k2T: 'Typical views', k2D: 'What a normal video on the channel gets. One lucky hit can’t fake it.',
   k3T: '× usual', k3D: 'How many times better a video did than the channel’s normal.',
@@ -1461,30 +1499,8 @@ Object.assign(T.th, {
   cmpGrowth: 'การเติบโตของผู้ติดตาม', cmpTop: 'คลิปที่ดีที่สุด', cmpLen: 'ความยาวคลิปปกติ', cmpShare: '🔗 คัดลอกลิงก์การเปรียบเทียบนี้', cmpRemove: 'นำออก',
   chGrowth: 'การเติบโต', chSubs: 'ผู้ติดตาม', chViews: 'ยอดวิวปกติ', chSince: 'ตั้งแต่ {d}', chTable: 'ดูเป็นตาราง', chDate: 'วันที่',
   chFew: 'กราฟการเติบโตจะขึ้นหลังจากเราตรวจช่องนี้ไปสักสองสามครั้ง (ปกติภายในหนึ่งวัน)',
-  introBtn: '▶ ดูวิดีโอแนะนำ 1 นาที', introBtnD: 'พาชมแบบวิดีโอสั้น ๆ ด้วยช่องจริง เปิดเสียงพากย์ได้ถ้าต้องการ',
   tourBtn: '👆 ลองใช้จริงทีละขั้น', tourBtnD: 'ลองกดบนเว็บจริงทีละขั้นตอน ใช้เวลาประมาณ 30 วินาที', skip: 'ข้าม',
-  introT: 'Viral Radar ใน 1 นาที', replay: 'ดูอีกครั้ง', voice: 'เสียง', voiceNone: 'อุปกรณ์นี้ไม่มีเสียงพากย์ภาษานี้ ดูคำบรรยายบนจอแทนได้',
-  iCount: 'ตรวจ <b>{a}</b> ช่อง · <b>{b}</b> คลิปสั้น', iSubs: 'ผู้ติดตาม {n} คน', iViews: 'ยอดวิว {n} ต่อคลิป',
-  i1: 'Viral Radar ช่วยหาช่อง YouTube Shorts ที่กำลังมาแรง',
-  i2: 'อย่างช่องนี้ มีผู้ติดตามแค่ {s} คน แต่คลิปทั่วไปได้ยอดวิว {v} แปลว่าไอเดียนี้ได้ผล',
-  i3: 'ยิ่งไฟเยอะ ยิ่งมาแรง ไฟสามดวงคือกลุ่ม 5% แรก',
-  i4: 'กดที่คลิปไหนก็ได้ เพื่อดูในหน้านี้เลย',
-  i5: 'กดที่ช่อง เพื่อดูว่าทำไมช่องนั้นถึงน่าสนใจ อธิบายแบบง่าย ๆ',
-  i6: 'กดบันทึก เพื่อเก็บช่องที่ชอบไว้',
-  i7: 'เลือกหมวดที่สนใจ และสลับภาษาไทยกับอังกฤษได้ตลอด',
-  i8: 'แค่นี้เอง! ลองใช้ด้วยตัวเองเลย',
-  t0: 'สวัสดี! ทัวร์สั้น ๆ นี้จะพาดูรอบ ๆ เว็บ กด “ถัดไป” ได้เลย',
-  t1: 'นี่คือหมวดหมู่ กดหมวดไหนก็ได้ เพื่อดูเฉพาะช่องแนวนั้น',
-  t2: 'สลับภาษาไทยกับอังกฤษได้ตลอดเวลา',
-  t3: 'ไฟบอกว่าช่องมาแรงแค่ไหน 🔥🔥🔥 คือกลุ่ม 5% แรก',
-  t4: 'กดที่คลิปนี้เพื่อดูคลิป',
-  t5: 'กล่องนี้บอกว่าคลิปทำผลงานได้เท่าไรเมื่อเทียบกับปกติของช่อง',
-  t6: 'ต่อไป กดที่ช่องนี้เพื่อเปิดดู',
-  t7: 'ตรงนี้บอกว่าทำไมช่องนี้ถึงน่าสนใจ อธิบายแบบง่าย ๆ',
-  t8: 'กดบันทึก เพื่อเก็บไว้ดูทีหลัง',
-  t9: 'ช่องที่บันทึกไว้จะอยู่ตรงนี้',
-  t10: 'ท็อป 10 ประจำสัปดาห์อยู่ตรงนี้ แชร์ให้เพื่อนได้เลย!',
-  t11: 'ถ้าต้องการความช่วยเหลืออีก กดตรงนี้ได้ตลอด ขอให้สนุก! 🎉',
+  replay: 'ดูอีกครั้ง', voice: 'เสียง', voiceNone: 'อุปกรณ์นี้ไม่มีเสียงพากย์ภาษานี้ ดูคำบรรยายบนจอแทนได้',
   tNext: 'ถัดไป', tBack: 'ย้อนกลับ', tDone: 'เสร็จแล้ว', tStep: '{a} จาก {b}', tTry: '👆 ตาคุณแล้ว: กดเลย',
   threeT: '3 อย่างที่ควรรู้', helpD: 'ดูวิดีโอแนะนำ หรือลองใช้จริงทีละขั้น ถ้าอยากรู้ละเอียดขึ้น เลื่อนลงไปดูด้านล่างได้',
   k1T: 'ไฟ = ความแรง', k1D: 'ยิ่งไฟเยอะ แปลว่าช่องได้ยอดวิวมากเกินขนาดช่อง',
@@ -1795,6 +1811,56 @@ Object.assign(T.th, {
   frT: 'ครีเอเตอร์ที่เปิดรับคนตัดคลิป', frD: 'ระบบหาให้อัตโนมัติ: คำอธิบายช่องหรือวิดีโอของเขาเขียนว่ายินดีให้ตัดคลิป ตรวจซ้ำทุกสัปดาห์',
   frSee: 'ดูผลการตรวจ', frQueued: 'รอคิวตรวจ', frAll: 'ดูทั้งหมด {n}', frLess: 'ย่อลง', frNone: 'กำลังค้นหาครีเอเตอร์ที่มีโปรแกรมตัดคลิป รายชื่อแรกจะขึ้นภายในหนึ่งวัน'
 });
+Object.assign(T.en, {
+  hUnit: 'h', lD: 'Viral Radar opens in your device’s language when it can. English is always here.', lSearch: 'Search languages',
+  lBuilt: 'Built in', lMore: 'More languages', lMoreD: 'Your browser translates these on this device the first time you pick one (it can take a minute).',
+  lMoreNo: 'This browser can’t translate on its own. Use your browser’s Translate option, or open Viral Radar in Chrome on a computer.',
+  lDevice: 'on device', lWorking: 'Translating into {l}… {p}%', lNoDevice: 'This browser can’t translate into {l}. Your browser’s own Translate option can help.',
+  lChange: 'Change', lSuggest: 'Use Viral Radar in {l}', nTour: 'Hands-on tour',
+  tour_w_t: 'Welcome to Viral Radar', tour_w_d: 'Find the YouTube Shorts that are blowing up, and why. This 1-minute tour lets you try it on the real site.',
+  tour_f1: 'Top picks', tour_f2: 'Clip finder', tour_f3: 'Trends', tour_go: 'Start the tour', tour_skip: 'Not now',
+  tour_picks_t: 'Top picks', tour_picks_d: 'Channels blowing up right now, picked for you. Start here every day.',
+  tour_fire_t: 'Fire = how hot', tour_fire_d: 'More fire means more views than the channel’s size would suggest. Three fires is the top 5%.',
+  tour_play_t: 'Watch a video', tour_play_d: 'Tap this video. It plays right here.',
+  tour_facts_t: 'Why it took off', tour_facts_d: 'These numbers compare the video with the channel’s usual views.',
+  tour_open_t: 'Open a channel', tour_open_d: 'Tap this channel to see what makes it stand out.',
+  tour_why_t: 'Explained simply', tour_why_d: 'The reasons it stands out, in plain words, with charts below.',
+  tour_save_t: 'Save it', tour_save_d: 'Tap Save to keep this channel. Saved channels follow you when you sign in.',
+  tour_topic_t: 'Pick a topic', tour_topic_d: 'Tap a topic to see only that kind of channel.',
+  tour_trends_t: 'Trends', tour_trends_d: 'What’s rising on Shorts, in games, cartoons and the news. Tap Next to go there.',
+  tour_brief_t: 'Today’s viral brief', tour_brief_d: 'The one thing to know in each area, updated through the day.',
+  tour_clips_t: 'Clip finder', tour_clips_d: 'Tap Clip finder: big creators few people clip yet, and whether they allow it.',
+  tour_moments_t: 'Moments to clip', tour_moments_d: 'The exact parts viewers point to in the comments, and how many Shorts already cover them.',
+  tour_search_t: 'Search anything', tour_search_d: 'Type any topic to find channels and videos about it.',
+  tour_lang_t: 'Your language', tour_lang_d: 'Change the language any time, here or in More.',
+  tour_done_t: 'You’re all set!', tour_done_d: 'Find this tour again any time under More → Hands-on tour.', tour_done_go: 'Start exploring',
+  tTry: 'Your turn: tap the glowing spot'
+});
+Object.assign(T.th, {
+  hUnit: 'ชม.', lD: 'Viral Radar จะเปิดเป็นภาษาของเครื่องคุณเมื่อทำได้ และมีภาษาอังกฤษให้เสมอ', lSearch: 'ค้นหาภาษา',
+  lBuilt: 'มีในตัว', lMore: 'ภาษาอื่น ๆ', lMoreD: 'เบราว์เซอร์จะแปลภาษาเหล่านี้บนเครื่องของคุณเมื่อเลือกครั้งแรก (อาจใช้เวลาประมาณหนึ่งนาที)',
+  lMoreNo: 'เบราว์เซอร์นี้แปลเองไม่ได้ ใช้เมนูแปลภาษาของเบราว์เซอร์ หรือเปิด Viral Radar ใน Chrome บนคอมพิวเตอร์',
+  lDevice: 'แปลบนเครื่อง', lWorking: 'กำลังแปลเป็นภาษา {l}… {p}%', lNoDevice: 'เบราว์เซอร์นี้แปลเป็นภาษา {l} ไม่ได้ ลองใช้เมนูแปลภาษาของเบราว์เซอร์แทน',
+  lChange: 'เปลี่ยน', lSuggest: 'ใช้ Viral Radar ภาษา {l}', nTour: 'ลองใช้จริงทีละขั้น',
+  tour_w_t: 'ยินดีต้อนรับสู่ Viral Radar', tour_w_d: 'หาคลิป YouTube Shorts ที่กำลังมาแรง และรู้ว่าทำไมถึงมาแรง ทัวร์ 1 นาทีนี้ให้คุณลองกดบนเว็บจริง',
+  tour_f1: 'ช่องเด่น', tour_f2: 'หาคลิปไปตัด', tour_f3: 'เทรนด์', tour_go: 'เริ่มทัวร์', tour_skip: 'ไว้ทีหลัง',
+  tour_picks_t: 'ช่องเด่น', tour_picks_d: 'ช่องที่กำลังมาแรงตอนนี้ คัดมาให้แล้ว เริ่มดูจากตรงนี้ทุกวัน',
+  tour_fire_t: 'ไฟ = ความแรง', tour_fire_d: 'ไฟยิ่งเยอะ แปลว่าได้วิวมากกว่าขนาดช่อง ไฟ 3 ดวงคือท็อป 5%',
+  tour_play_t: 'ดูวิดีโอ', tour_play_d: 'กดวิดีโอนี้ ดูได้ที่นี่เลย',
+  tour_facts_t: 'ทำไมถึงพุ่ง', tour_facts_d: 'ตัวเลขเหล่านี้เทียบวิดีโอกับยอดวิวปกติของช่อง',
+  tour_open_t: 'เปิดดูช่อง', tour_open_d: 'กดช่องนี้เพื่อดูว่าอะไรทำให้โดดเด่น',
+  tour_why_t: 'อธิบายแบบง่าย', tour_why_d: 'เหตุผลที่ช่องนี้โดดเด่น เป็นภาษาง่าย ๆ พร้อมกราฟด้านล่าง',
+  tour_save_t: 'บันทึกไว้', tour_save_d: 'กดบันทึกเพื่อเก็บช่องนี้ไว้ ช่องที่บันทึกจะตามไปทุกเครื่องเมื่อล็อกอิน',
+  tour_topic_t: 'เลือกหัวข้อ', tour_topic_d: 'กดหัวข้อเพื่อดูเฉพาะช่องประเภทนั้น',
+  tour_trends_t: 'เทรนด์', tour_trends_d: 'อะไรกำลังมาแรงบน Shorts ในเกม การ์ตูน และข่าว กด “ถัดไป” เพื่อไปดู',
+  tour_brief_t: 'สรุปไวรัลวันนี้', tour_brief_d: 'เรื่องที่ควรรู้ในแต่ละด้าน อัปเดตตลอดวัน',
+  tour_clips_t: 'หาคลิปไปตัด', tour_clips_d: 'กด “หาคลิปไปตัด”: ครีเอเตอร์ใหญ่ที่ยังมีคนตัดคลิปน้อย และเขาอนุญาตไหม',
+  tour_moments_t: 'ช่วงที่น่าตัด', tour_moments_d: 'ช่วงที่คนดูพูดถึงในคอมเมนต์ และมี Shorts ตัดช่วงนั้นไปแล้วกี่คลิป',
+  tour_search_t: 'ค้นหาอะไรก็ได้', tour_search_d: 'พิมพ์หัวข้อเพื่อหาช่องและวิดีโอที่เกี่ยวข้อง',
+  tour_lang_t: 'ภาษาของคุณ', tour_lang_d: 'เปลี่ยนภาษาได้ตลอด ที่นี่หรือในเมนู “เพิ่มเติม”',
+  tour_done_t: 'พร้อมแล้ว!', tour_done_d: 'กลับมาดูทัวร์นี้ได้ทุกเมื่อที่ เพิ่มเติม → ลองใช้จริงทีละขั้น', tour_done_go: 'เริ่มใช้งาน',
+  tTry: 'ตาคุณแล้ว: กดตรงที่เรืองแสง'
+});
 Object.assign(T.en, {ytFrom: 'On YouTube’s trending chart'});
 Object.assign(T.th, {ytFrom: 'อยู่บนชาร์ตมาแรงของ YouTube'});
 Object.assign(T.en, {legalUpdated: 'Last updated {d}', contactGh: 'open a message on GitHub', fTerms: 'Terms', fPrivacy: 'Privacy', fRefunds: 'Refunds', fContact: 'Contact',
@@ -1966,6 +2032,7 @@ const LN = {
   bn: ['Bengali', 'เบงกาลี'], ko: ['Korean', 'เกาหลี'], ja: ['Japanese', 'ญี่ปุ่น'], zh: ['Chinese', 'จีน'],
   ta: ['Tamil', 'ทมิฬ'], te: ['Telugu', 'เตลูกู'], he: ['Hebrew', 'ฮีบรู'], el: ['Greek', 'กรีก']
 };
+Object.entries(TAGS).forEach(([k, g]) => { T.en['_tag_' + k] = g.en; T.th['_tag_' + k] = g.th; T.en['_tagd_' + k] = g.den; T.th['_tagd_' + k] = g.dth; });
 // Topics group the scanner's search phrases (and a live search's phrase) into plain categories.
 const TOPICS = [
   ['animals', '🐾', 'Animals', 'สัตว์', /\b(cats?|dogs?|sharks?|monkeys?|birds?|snakes?|farm|animals?|wildlife|fishing|pets?|puppy|kitten)\b|แมว|หมา|สุนัข|สัตว์|ตกปลา/i],
@@ -1983,6 +2050,7 @@ const TOPICS = [
   ['cars', '🚗', 'Cars', 'รถยนต์', /\bcars?\b|supercar|รถ/i],
   ['travel', '✈️', 'Travel', 'ท่องเที่ยว', /travel|ท่องเที่ยว/i]
 ];
+TOPICS.forEach(tp => { T.en['_topic_' + tp[0]] = tp[2]; T.th['_topic_' + tp[0]] = tp[3]; });
 // How-to guide. **bold** is allowed; everything else is plain text.
 const HELP = {
   en: [
@@ -2050,16 +2118,127 @@ const HELP = {
       ['ช่องที่บันทึกไว้เก็บไว้ที่ไหน?', 'เก็บในเบราว์เซอร์นี้บนอุปกรณ์นี้ ไม่มีใครเห็นนอกจากคุณ']]}
   ]
 };
-let UI = LS.get('radar.ui', (navigator.language || '').toLowerCase().startsWith('th') ? 'th' : 'en');
+/* ---------- languages: English and Thai live here, other hand-made packs in i18n/<code>.json, and the browser's own translator does the rest ---------- */
+const LANGS = [['en', 'English', 'English'], ['th', 'ไทย', 'Thai'], ['es', 'Español', 'Spanish'], ['pt', 'Português', 'Portuguese'], ['fr', 'Français', 'French'],
+  ['de', 'Deutsch', 'German'], ['id', 'Bahasa Indonesia', 'Indonesian'], ['vi', 'Tiếng Việt', 'Vietnamese'], ['ja', '日本語', 'Japanese'], ['ko', '한국어', 'Korean'],
+  ['zh', '简体中文', 'Chinese (Simplified)'], ['hi', 'हिन्दी', 'Hindi'], ['ar', 'العربية', 'Arabic'], ['ru', 'Русский', 'Russian'], ['tr', 'Türkçe', 'Turkish'], ['fil', 'Filipino', 'Filipino'],
+  ['zh-TW', '繁體中文', 'Chinese (Traditional)'], ['it', 'Italiano', 'Italian'], ['pl', 'Polski', 'Polish'], ['uk', 'Українська', 'Ukrainian'], ['nl', 'Nederlands', 'Dutch'],
+  ['ms', 'Bahasa Melayu', 'Malay'], ['bn', 'বাংলা', 'Bengali'], ['ur', 'اردو', 'Urdu'], ['fa', 'فارسی', 'Persian'], ['he', 'עברית', 'Hebrew'], ['el', 'Ελληνικά', 'Greek'],
+  ['cs', 'Čeština', 'Czech'], ['sk', 'Slovenčina', 'Slovak'], ['hu', 'Magyar', 'Hungarian'], ['ro', 'Română', 'Romanian'], ['bg', 'Български', 'Bulgarian'], ['sr', 'Српски', 'Serbian'],
+  ['hr', 'Hrvatski', 'Croatian'], ['sl', 'Slovenščina', 'Slovenian'], ['bs', 'Bosanski', 'Bosnian'], ['mk', 'Македонски', 'Macedonian'], ['sq', 'Shqip', 'Albanian'],
+  ['sv', 'Svenska', 'Swedish'], ['da', 'Dansk', 'Danish'], ['no', 'Norsk', 'Norwegian'], ['fi', 'Suomi', 'Finnish'], ['is', 'Íslenska', 'Icelandic'], ['et', 'Eesti', 'Estonian'],
+  ['lv', 'Latviešu', 'Latvian'], ['lt', 'Lietuvių', 'Lithuanian'], ['ga', 'Gaeilge', 'Irish'], ['cy', 'Cymraeg', 'Welsh'], ['eu', 'Euskara', 'Basque'], ['ca', 'Català', 'Catalan'],
+  ['gl', 'Galego', 'Galician'], ['mt', 'Malti', 'Maltese'], ['lb', 'Lëtzebuergesch', 'Luxembourgish'], ['af', 'Afrikaans', 'Afrikaans'], ['sw', 'Kiswahili', 'Swahili'],
+  ['zu', 'isiZulu', 'Zulu'], ['xh', 'isiXhosa', 'Xhosa'], ['yo', 'Yorùbá', 'Yoruba'], ['ig', 'Igbo', 'Igbo'], ['ha', 'Hausa', 'Hausa'], ['am', 'አማርኛ', 'Amharic'],
+  ['so', 'Soomaali', 'Somali'], ['rw', 'Kinyarwanda', 'Kinyarwanda'], ['mg', 'Malagasy', 'Malagasy'], ['ny', 'Chichewa', 'Chichewa'], ['sn', 'chiShona', 'Shona'],
+  ['st', 'Sesotho', 'Sesotho'], ['ta', 'தமிழ்', 'Tamil'], ['te', 'తెలుగు', 'Telugu'], ['kn', 'ಕನ್ನಡ', 'Kannada'], ['ml', 'മലയാളം', 'Malayalam'], ['mr', 'मराठी', 'Marathi'],
+  ['gu', 'ગુજરાતી', 'Gujarati'], ['pa', 'ਪੰਜਾਬੀ', 'Punjabi'], ['or', 'ଓଡ଼ିଆ', 'Odia'], ['as', 'অসমীয়া', 'Assamese'], ['ne', 'नेपाली', 'Nepali'], ['si', 'සිංහල', 'Sinhala'],
+  ['my', 'မြန်မာ', 'Burmese'], ['km', 'ខ្មែរ', 'Khmer'], ['lo', 'ລາວ', 'Lao'], ['mn', 'Монгол', 'Mongolian'], ['kk', 'Қазақ', 'Kazakh'], ['uz', 'Oʻzbek', 'Uzbek'],
+  ['ky', 'Кыргызча', 'Kyrgyz'], ['tg', 'Тоҷикӣ', 'Tajik'], ['tk', 'Türkmen', 'Turkmen'], ['az', 'Azərbaycan', 'Azerbaijani'], ['ka', 'ქართული', 'Georgian'], ['hy', 'Հայերեն', 'Armenian'],
+  ['ps', 'پښتو', 'Pashto'], ['sd', 'سنڌي', 'Sindhi'], ['ku', 'Kurdî', 'Kurdish'], ['ckb', 'کوردی', 'Central Kurdish'], ['ug', 'ئۇيغۇرچە', 'Uyghur'], ['jv', 'Basa Jawa', 'Javanese'],
+  ['su', 'Basa Sunda', 'Sundanese'], ['ceb', 'Cebuano', 'Cebuano'], ['haw', 'ʻŌlelo Hawaiʻi', 'Hawaiian'], ['sm', 'Gagana Samoa', 'Samoan'], ['mi', 'Māori', 'Maori'],
+  ['ht', 'Kreyòl ayisyen', 'Haitian Creole'], ['la', 'Latina', 'Latin'], ['eo', 'Esperanto', 'Esperanto'], ['fy', 'Frysk', 'Frisian'], ['gd', 'Gàidhlig', 'Scottish Gaelic'],
+  ['co', 'Corsu', 'Corsican'], ['yi', 'ייִדיש', 'Yiddish'], ['be', 'Беларуская', 'Belarusian'], ['tt', 'Татарча', 'Tatar'], ['dv', 'ދިވެހި', 'Dhivehi'], ['bo', 'བོད་ཡིག', 'Tibetan'],
+  ['hmn', 'Hmoob', 'Hmong'], ['qu', 'Runasimi', 'Quechua'], ['gn', 'Avañeẽ', 'Guarani'], ['ay', 'Aymar aru', 'Aymara'], ['ti', 'ትግርኛ', 'Tigrinya'], ['om', 'Oromoo', 'Oromo'],
+  ['ln', 'Lingála', 'Lingala'], ['lg', 'Luganda', 'Luganda'], ['ak', 'Akan', 'Akan'], ['ee', 'Eʋegbe', 'Ewe'], ['sa', 'संस्कृतम्', 'Sanskrit'], ['mai', 'मैथिली', 'Maithili'],
+  ['bho', 'भोजपुरी', 'Bhojpuri'], ['gom', 'कोंकणी', 'Konkani']];
+const PACKS = new Set(['en', 'th'].concat(Array.isArray(CFG.packs) ? CFG.packs : []));   // translated by hand (the site build lists i18n/*.json)
+const RTL = new Set(['ar', 'ur', 'fa', 'he', 'ps', 'sd', 'ckb', 'ug', 'yi', 'dv']);
+const SHORT = {en: 'EN', th: 'ไทย', ja: '日本語', ko: '한국어', zh: '中文', 'zh-TW': '中文', hi: 'हिन्दी', ar: 'عربي', fil: 'FIL'};
+const LOCALES = {en: 'en-US', th: 'th-TH', pt: 'pt-BR', zh: 'zh-CN', 'zh-TW': 'zh-TW', fil: 'fil-PH', no: 'nb'};
+const LOADED = new Set(['en', 'th']);
+const langInfo = c => LANGS.find(l => l[0] === c) || [c, c.toUpperCase(), c.toUpperCase()];
+const shortLang = c => SHORT[c] || c.toUpperCase();
+const LOC = () => LOCALES[UI] || UI;
+const normLang = c => (typeof c === 'string' && LANGS.some(l => l[0] === c) ? c : 'en');
+function browserLangs() {   // the visitor's languages, as codes from the list above
+  return (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en']).map(l => {
+    const lo = String(l).toLowerCase(), base = lo.split('-')[0];
+    return /^zh-(tw|hk|mo|hant)/.test(lo) ? 'zh-TW' : base === 'tl' ? 'fil' : base === 'iw' ? 'he' : base === 'nb' || base === 'nn' ? 'no' : base;
+  }).filter(c => LANGS.some(l => l[0] === c));
+}
+const startLang = () => browserLangs().find(c => PACKS.has(c)) || 'en';   // the first browser language with a hand-made pack
+let UI = normLang(LS.get('radar.ui', null) || startLang());
 const t = (k, v) => {
   let s = (T[UI] && T[UI][k]) || T.en[k] || k;
   if (v) for (const [a, b] of Object.entries(v)) s = s.split('{' + a + '}').join(b);
   return s;
 };
-const tagName = k => (TAGS[k] ? TAGS[k][UI] : k);
-const tagDesc = k => (TAGS[k] ? TAGS[k][UI === 'th' ? 'dth' : 'den'] : '');
-const langName = c => (LN[c] ? LN[c][UI === 'th' ? 1 : 0] : c.toUpperCase());
-const topicName = tp => (UI === 'th' ? tp[3] : tp[2]);
+const tagName = k => (TAGS[k] ? t('_tag_' + k) : k);
+const tagDesc = k => (TAGS[k] ? t('_tagd_' + k) : '');
+const DNAMES = {};
+const langName = c => {   // a video language's name in the visitor's language
+  try { return (DNAMES[UI] || (DNAMES[UI] = new Intl.DisplayNames([LOC()], {type: 'language'}))).of(c) || c.toUpperCase(); }
+  catch (e) { return LN[c] ? LN[c][UI === 'th' ? 1 : 0] : c.toUpperCase(); }
+};
+const topicName = tp => t('_topic_' + tp[0]);
+function installPack(code, d) {   // a language's strings; anything missing falls back to English
+  const lead = /^(?:\p{Extended_Pictographic}|\p{Regional_Indicator})(?:️|‍\p{Extended_Pictographic}|\p{Regional_Indicator}|\p{Extended_Pictographic})*\s*/u;
+  const out = {};
+  for (const [k, v] of Object.entries(d || {})) if (typeof v === 'string' && typeof T.en[k] === 'string') out[k] = v.replace(lead, '') || v;
+  T[code] = out; LOADED.add(code);
+}
+const withTimeout = (pr, ms, fallback) => Promise.race([pr, new Promise(r => setTimeout(() => r(fallback), ms))]);   // some browsers expose the translator but never answer
+const mtVersion = () => { let n = 0; for (const v of Object.values(T.en)) if (typeof v === 'string') n += v.length; return Object.keys(T.en).length + ':' + n; };
+async function ensureLang(code) {   // loads a language's strings: a hand-made pack, or this device's earlier translation
+  if (LOADED.has(code)) return true;
+  if (PACKS.has(code)) {
+    try { const r = await fetch(`i18n/${code}.json`, {cache: 'no-cache'}); if (r.ok) { installPack(code, await r.json()); return true; } } catch (e) {}
+  }
+  const mt = LS.get('radar.mt.' + code, null);
+  if (mt && mt.v === mtVersion()) { installPack(code, mt.d); return true; }
+  try { if (window.Translator && await withTimeout(Translator.availability({sourceLanguage: 'en', targetLanguage: code}), 3000, '') === 'available') return await deviceTranslate(code, () => {}); } catch (e) {}
+  return false;
+}
+async function deviceTranslate(code, progress) {   // the browser's own on-device translator (Chrome), run once and kept on this device
+  if (!window.Translator) return false;
+  let tr;
+  try {
+    const avail = await withTimeout(Translator.availability({sourceLanguage: 'en', targetLanguage: code}), 5000, '');
+    if (!avail || avail === 'unavailable') return false;
+    tr = await withTimeout(Translator.create({sourceLanguage: 'en', targetLanguage: code, monitor(m) { m.addEventListener('downloadprogress', e => progress(0.25 * (e.loaded || 0))); }}), 180000, null);
+    if (!tr || !await withTimeout(tr.translate('Hello'), 8000, '')) return false;   // a quick probe before the whole page
+  } catch (e) { return false; }
+  const keys = Object.keys(T.en).filter(k => typeof T.en[k] === 'string'), out = {};
+  let done = 0;
+  const one = async k => {
+    const src = T.en[k], ph = [];
+    const prot = src.replace(/\{[a-z0-9]+\}/gi, m => { ph.push(m); return `[${ph.length}]`; });   // placeholders such as {n} must survive
+    try {
+      let r = await withTimeout(tr.translate(prot), 15000, src);
+      ph.forEach((m, i) => { r = r.replace(`[${i + 1}]`, m); });
+      out[k] = ph.every(m => r.includes(m)) ? r : src;
+    } catch (e) { out[k] = src; }
+    progress(0.25 + 0.75 * (++done / keys.length));
+  };
+  for (let i = 0; i < keys.length; i += 8) await Promise.all(keys.slice(i, i + 8).map(one));
+  LS.set('radar.mt.' + code, {v: mtVersion(), d: out});
+  installPack(code, out);
+  return true;
+}
+async function chooseLang(code) {
+  code = normLang(code);
+  if (code === UI) return;
+  const name = langInfo(code)[1];
+  if (!LOADED.has(code) && !PACKS.has(code) && window.Translator) toast(t('lWorking', {l: name, p: 0}));
+  if (await ensureLang(code)) { setUI(code); return; }
+  if (!window.Translator) { toast(t('lNoDevice', {l: name})); return; }
+  const ok = await deviceTranslate(code, f => toast(t('lWorking', {l: name, p: Math.round(100 * f)})));
+  if (ok) setUI(code); else toast(t('lNoDevice', {l: name}));
+}
+const lang2 = () => { const b = browserLangs().find(c => c !== 'en'); return UI !== 'en' ? UI : normLang(LS.get('radar.lang2', '') || b || 'th'); };
+function openLangPicker() {
+  const dlg = $('#dlg'), body = $('#dlgBody');
+  body.onclick = null; body.dataset.mode = 'lang';
+  const sug = browserLangs().find(c => c !== UI && c !== 'en');
+  const row = ([c, nat, eng]) => `<button type="button" class="lrow ${c === UI ? 'on' : ''}" data-pickl="${c}" lang="${c}"><span><b>${esc(nat)}</b><small>${esc(eng)}</small></span>${c === UI ? IC.check : PACKS.has(c) ? '' : `<span class="ldev">${esc(t('lDevice'))}</span>`}</button>`;
+  body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3 class="lhead">${ICON.lang}${esc(t('langT'))}</h3>
+    <p class="pbtip">${esc(t('lD'))}</p>${sug ? `<button type="button" class="lsug" data-pickl="${sug}">${IC.sparkle}<span>${esc(t('lSuggest', {l: langInfo(sug)[1]}))}</span></button>` : ''}
+    <input id="lq" class="lq" type="search" placeholder="${esc(t('lSearch'))}" autocomplete="off">
+    <h4 class="navh">${esc(t('lBuilt'))}</h4><div class="lgrid">${LANGS.filter(l => PACKS.has(l[0])).map(row).join('')}</div>
+    <h4 class="navh">${esc(t('lMore'))}</h4><p class="pbtip">${esc(t(window.Translator ? 'lMoreD' : 'lMoreNo'))}</p><div class="lgrid">${LANGS.filter(l => !PACKS.has(l[0])).map(row).join('')}</div>`;
+  if (!dlg.open) dlg.showModal();
+}
 
 /* ---------- state ---------- */
 const TABS = ['home', 'trends', 'week', 'videos', 'channels', 'live', 'ideas', 'topics', 'tools', 'pro', 'playbook', 'mine', 'saved', 'compare', 'help', 'terms', 'privacy', 'refunds'];
@@ -2089,11 +2268,11 @@ document.addEventListener('error', e => {
   const im = e.target;
   if (im && im.tagName === 'IMG' && im.closest && im.closest('.av')) im.remove();
 }, true);
-const trUrl = text => `https://translate.google.com/?sl=auto&tl=${UI === 'th' ? 'th' : 'en'}&text=${encodeURIComponent(String(text).slice(0, 900))}&op=translate`;
+const trUrl = text => `https://translate.google.com/?sl=auto&tl=${UI === 'zh' ? 'zh-CN' : UI}&text=${encodeURIComponent(String(text).slice(0, 900))}&op=translate`;
 const NF = {};
 const fmt = n => {
   n = +n || 0;
-  const loc = UI === 'th' ? 'th-TH' : 'en-US';
+  const loc = LOC();
   try {
     if (!NF[loc]) NF[loc] = new Intl.NumberFormat(loc, {notation: 'compact'});
     return NF[loc].format(n);
@@ -2119,7 +2298,7 @@ const ago = ts => {
 const scoreColor = s => s >= 80 ? 'var(--hot3)' : s >= 65 ? 'var(--hot2)' : s >= 50 ? 'var(--warn)' : 'var(--muted)';
 const isWatched = c => (LIVE && !DATA.readonly ? c.watch : watchLocal.has(c.ch_id));
 const foreign = c => c.lang && c.lang !== 'en' && c.lang !== 'und';
-const needsTr = c => (c.lang && c.lang !== 'und' ? c.lang !== UI : UI === 'th');
+const needsTr = c => (c.lang && c.lang !== 'und' ? c.lang !== UI.split('-')[0] : UI !== 'en');
 const grow = v => (v.g && v.h ? v.g / v.h : 0);
 const when = v => v.p || v.s || 0;   // real upload time on the hosted site, first-seen time in the local app
 const speed = v => { const age = v.p ? nowTs() - v.p : 0; return age > 0 && age < 72 * 3600 ? v.v / Math.max(age / 3600, 1) : 0; };   // views per hour of a fresh upload
@@ -2328,7 +2507,7 @@ function thumbBox(v, c) {
   return `<a class="th" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" data-play="${esc(v.id)}" data-c="${esc(c.ch_id)}" title="${esc(v.t)}">` +
     `<img loading="lazy" src="${thumb(v.id)}" alt="">` +
     (v.x >= 2 ? `<span class="x ${badgeClass(v.x)}">${fmtX(v.x)}×</span>` : '') +
-    (g ? `<span class="g">+${esc(fmt(g))}/${UI === 'th' ? 'ชม.' : 'h'}</span>` : '') +
+    (g ? `<span class="g">+${esc(fmt(g))}/${esc(t('hUnit'))}</span>` : '') +
     `<span class="views">▶ ${esc(fmt(v.v))}</span>` + (v.d ? `<span class="dur">${fmtDur(v.d)}</span>` : '') +
     `<span class="play">${ICON.play}</span></a>`;
 }
@@ -2409,7 +2588,7 @@ const pageHead = (tk, dk, extra = '') => `<div class="phead"><h1>${esc(t(tk))}</
 const moreBtn = (kind, left) => (left > 0 ? `<button type="button" class="more" data-more="${kind}">${esc(t('more', {n: left}))}</button>` : '');
 function statusInfo() {
   const st = DATA.status || {};
-  if (DATA.snapshot) return {cls: 'dot snap', txt: t('snap', {d: new Date(DATA.generated * 1000).toLocaleString(UI === 'th' ? 'th-TH' : 'en-US'), n: DATA.channels.length})};
+  if (DATA.snapshot) return {cls: 'dot snap', txt: t('snap', {d: new Date(DATA.generated * 1000).toLocaleString(LOC()), n: DATA.channels.length})};
   if (st.state === 'scanning') return {cls: 'dot live', txt: t(st.phase === 'discovery' ? 'stDisc' : 'stProbe', {a: st.done, b: st.total})};
   if (st.state === 'starting') return {cls: 'dot', txt: t('stStart')};
   if (STATIC) return {cls: 'dot live', txt: t('stUpdated', {ago: ago(DATA.generated || st.last_cycle_end)})};
@@ -2533,9 +2712,8 @@ function helpView() {
     return gl(esc(t(lk)) + ex, t(gk));
   }).join('') + Object.keys(TAGS).map(k => gl(`<span class="tag ${TAGS[k].cls}">${esc(tagName(k))}</span>`, tagDesc(k))).join('') + '</dl>';
   const ideas = sec('ideas'), srch = sec('search'), faq = sec('faq');
-  const poster = viralVideos(DATA.channels).slice(0, 4).map(([v]) => `<img src="${thumb(v.id)}" alt="">`).join('');
   return `<div class="phead"><h1>${esc(t('nHelp'))}</h1><p>${esc(t('helpD'))}</p></div>
-    <div class="hcards"><button type="button" class="hcard" data-intro><div class="poster">${poster}<span class="pl">${ICON.play}</span><span class="tag2">${mmss(INTRO_MS)}</span></div><div class="hb"><b>${esc(t('introBtn'))}</b><small>${esc(t('introBtnD'))}</small></div></button>
+    <div class="hcards">
       <button type="button" class="hcard" data-tour><div class="poster tourp"><span>${ICON.tour}</span></div><div class="hb"><b>${esc(t('tourBtn'))}</b><small>${esc(t('tourBtnD'))}</small></div></button>
       <button type="button" class="hcard" data-tab="playbook"><div class="poster tourp"><span>${ICON.playbook}</span></div><div class="hb"><b>${esc(t('pbT'))}</b><small>${esc(t('pbCardD'))}</small></div></button></div>
     <h2 class="subhead">${esc(t('threeT'))}</h2>
@@ -2735,7 +2913,7 @@ function nextPacificMidnight() {   // YouTube's daily quota resets then
   return mid.getTime() + (now - pac);
 }
 const restingUntil = () => { const u = LS.get('radar.qrest', 0); return u > Date.now() ? u : 0; };
-const clock = ms => new Date(ms).toLocaleTimeString(UI === 'th' ? 'th-TH' : 'en-US', {hour: 'numeric', minute: '2-digit'});
+const clock = ms => new Date(ms).toLocaleTimeString(LOC(), {hour: 'numeric', minute: '2-digit'});
 const qKey = q => q.toLowerCase().trim().replace(/\s+/g, ' ');
 const HIST_MS = 7 * 86400e3;   // saved search results reopen for free for a week
 const searchCache = () => LS.get('radar.scache', []).filter(x => x && x.q && Date.now() - x.t < HIST_MS);
@@ -2746,8 +2924,8 @@ function saveSearchCache(q, channels, label) {
 }
 const pct = x => (x >= 0.1 ? Math.round(x * 100) : Math.round(x * 1000) / 10) + '%';
 const mmss = ms => { const s = Math.round(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
-const shortDate = ts => new Date(ts * 1000).toLocaleDateString(UI === 'th' ? 'th-TH' : 'en-US', {month: 'short', day: 'numeric'});
-const longTime = ts => new Date(ts * 1000).toLocaleString(UI === 'th' ? 'th-TH' : 'en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
+const shortDate = ts => new Date(ts * 1000).toLocaleDateString(LOC(), {month: 'short', day: 'numeric'});
+const longTime = ts => new Date(ts * 1000).toLocaleString(LOC(), {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
 
 /* ---------- is full YouTube search available here? ---------- */
 const limited = () => STATIC && canSearch() && !ownKey();   // the site's shared key: a daily allowance per device
@@ -2860,7 +3038,7 @@ function weekView() {
 }
 function weekText() {
   const W = weekData();
-  const d = new Date(nowTs() * 1000).toLocaleDateString(UI === 'th' ? 'th-TH' : 'en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+  const d = new Date(nowTs() * 1000).toLocaleDateString(LOC(), {day: 'numeric', month: 'short', year: 'numeric'});
   const lines = [t('wkTextTitle', {d}), ''];
   W.vids.forEach(([v, c], i) => lines.push(`${i + 1}. ${v.t} — ${c.name} — ${t('views', {n: fmt(v.v)})}`, `   ${vidUrl(v.id)}`));
   if (W.chans.length) {
@@ -3062,7 +3240,7 @@ function postTimes(c) {   // a week grid of when the channel uploads, in the vie
   if (ps.length < 4) return '';
   const g = Array.from({length: 7}, () => Array(6).fill(0));
   ps.forEach(p => { const d = new Date(p * 1000); g[(d.getDay() + 6) % 7][Math.floor(d.getHours() / 4)]++; });
-  const mx = Math.max(...g.flat()), loc = UI === 'th' ? 'th-TH' : 'en-US';
+  const mx = Math.max(...g.flat()), loc = LOC();
   const day = i => new Intl.DateTimeFormat(loc, {weekday: 'short'}).format(new Date(2024, 0, 1 + i));   // 1 Jan 2024 was a Monday
   const hr = h => new Intl.DateTimeFormat(loc, {hour: 'numeric'}).format(new Date(2024, 0, 1, h % 24));
   let best = [0, 0];
@@ -3166,53 +3344,9 @@ function iGrow(plSel, fromSel) {   // the player grows out of the tapped thumbna
   void pl.offsetWidth;
   pl.style.transition = ''; pl.classList.add('on'); pl.style.transform = 'none';
 }
-function introScenes() {
-  const P = picksList()[0] || DATA.channels[0];
-  const small = DATA.channels.filter(c => c.subs >= 1000 && c.subs <= 60000 && c.score >= 65 && !c.tags.includes('One-hit')).sort((a, b) => b.ratio - a.ratio)[0] || P;
-  const viral = viralVideos(DATA.channels).slice(0, 3);
-  for (let i = 0; viral.length < 3 && i < P.series.length; i++) viral.push([P.series[i], P]);
-  const why = whyLines(P)[0] || '', best = topVids(P, 1)[0] || {v: P.max_views};
-  const other = UI === 'th' ? 'en' : 'th';
-  const chips = lang => TOPICS.slice(0, 5).map((tp, i) => `<span data-i="${i}">${tp[1]} ${esc(lang === 'th' ? tp[3] : tp[2])}</span>`).join('');
-  const head = () => `<div class="mhead"><span class="mlogo">${FLAME}</span><b>Viral Radar</b><span class="mseg" id="i_seg"><span class="${UI === 'en' ? 'a' : ''}">EN</span><span class="${UI === 'th' ? 'a' : ''}">ไทย</span></span></div>`;
-  const thumbs = () => viral.map(([v], i) => `<div class="mth" id="i_th${i}"><img src="${thumb(v.id)}" alt=""><span class="x">${fmtX(v.x)}×</span><span class="vw">▶ ${esc(fmt(v.v))}</span></div>`).join('');
-  const sheet = open => `<div class="msheet ${open ? 'on' : ''}" id="i_sheet"><div class="top">${avatarEl(P, 56)}<div><b>${esc(P.name)}</b>${vdPill(P)}</div></div>
-    <div class="mwhy"><h5>💡 ${esc(t('why'))}</h5><span id="i_type"></span></div>
-    <div class="mcards up" id="i_cards"><div>${esc(t('lTypical'))}<b>${esc(fmt(P.med_recent))}</b></div><div>${esc(t('lBest'))}<b>${esc(fmt(best.v))}</b></div></div>
-    <span class="msave" id="i_save">🔖 ${esc(t('save'))}</span></div>`;
-  const swap = lang => {
-    stageEl().querySelectorAll('#i_chips span').forEach((s, i) => { s.textContent = TOPICS[i][1] + ' ' + (lang === 'th' ? TOPICS[i][3] : TOPICS[i][2]); });
-    const seg = $s('i_seg'); seg.children[0].className = lang === 'en' ? 'a' : ''; seg.children[1].className = lang === 'th' ? 'a' : '';
-  };
-  return [
-    {cap: 'i1', html: () => `<div class="rings"><i></i><i></i><i></i></div><div class="logo pop" id="i_logo">${FLAME}</div><div class="center ttl up" id="i_ttl">Viral Radar</div>` +
-        `<div class="center cnt up" id="i_cnt">${t('iCount', {a: `<span data-n="${DATA.channels.length}">0</span>`, b: `<span data-n="${videoPool(DATA.channels).length}">0</span>`})}</div>`,
-     at: [[100, () => iOn('i_logo')], [600, () => iOn('i_ttl')], [1200, () => { iOn('i_cnt'); iCount(); }]]},
-    {cap: 'i2', capv: {s: fmt(small.subs), v: fmt(small.med_recent)},
-     html: () => `<div class="card2 up" id="i_c">${avatarEl(small, 84)}<span>${esc(small.name)}</span></div>` +
-        `<div class="fact up" id="i_f1" style="top:236px">👥 ${t('iSubs', {n: `<b>${esc(fmt(small.subs))}</b>`})}</div><div class="arrow up" id="i_ar" style="top:306px">⬇</div>` +
-        `<div class="fact big up" id="i_f2" style="top:356px">👁 ${t('iViews', {n: `<b>${esc(fmt(small.med_recent))}</b>`})}</div><div class="boom pop" id="i_x">×${esc(fmtX(small.ratio))}</div>`,
-     at: [[200, () => iOn('i_c')], [1000, () => iOn('i_f1')], [2200, () => iOn('i_ar')], [2900, () => iOn('i_f2')], [4300, () => { iOn('i_x'); iBurst(180, 505, '🔥'); }]]},
-    {cap: 'i3', html: () => [3, 2, 1, 0].map((l, i) => `<div class="lvl up" id="i_l${i}" style="top:${110 + i * 92}px"><span class="vd v${l}">${l ? flames(l) : ''}${esc(t(VKEY[l]))}</span><span>${esc(t(VKEY[l] + 'D'))}</span></div>`).join(''),
-     at: [[200, () => iOn('i_l0')], [800, () => iOn('i_l1')], [1400, () => iOn('i_l2')], [2000, () => iOn('i_l3')], [3300, () => $s('i_l0').classList.add('glow')]]},
-    {cap: 'i4', cur: true, html: () => head() + `<div class="mchips">${chips(UI)}</div><div class="mtitle">${esc(t('shViral'))}</div><div class="mrow">${thumbs()}</div>` +
-        `<div class="mplayer" id="i_pl"><img src="${thumb(viral[0][0].id)}" alt=""><span class="pp">${ICON.play}</span><div class="fp up" id="i_fp">🔥 ${esc(t('pX', {x: fmtX(viral[0][0].x)}))}</div></div>`,
-     at: [[500, () => iMove('i_th0')], [1700, iTap], [2000, () => iGrow('i_pl', 'i_th0')], [3000, () => iOn('i_fp')]]},
-    {cap: 'i5', cur: true, html: () => head() + `<div class="mrowch">${avatarEl(P, 44)}<b id="i_nm">${esc(P.name)}</b>${vdPill(P)}</div>` + sheet(false),
-     at: [[400, () => iMove('i_nm')], [1500, iTap], [1700, () => iOn('i_sheet')], [2400, () => iType('i_type', why, 3000)], [5800, () => iOn('i_cards')]]},
-    {cap: 'i6', cur: true, html: () => head() + sheet(true) + `<div class="mtoast" id="i_toast">✅ ${esc(t('saved'))}</div>`,
-     at: [[0, () => { $s('i_type').textContent = why; iOn('i_cards'); }], [500, () => iMove('i_save')], [1600, iTap],
-          [1750, () => { const s = $s('i_save'); s.classList.add('done'); s.textContent = '✓ ' + t('saved'); iBurst(...iPt('i_save'), '❤️'); }], [2000, () => iOn('i_toast')]]},
-    {cap: 'i7', cur: true, html: () => head() + `<div class="mchips" id="i_chips">${chips(UI)}</div><div class="mtitle">${esc(t('shViral'))}</div><div class="mrow">${thumbs()}</div>`,
-     at: [[500, () => iMove('#i_chips [data-i="0"]')], [1500, iTap], [1650, () => $s('#i_chips [data-i="0"]').classList.add('a')], [2700, () => iMove('i_seg')], [3600, iTap],
-          [3750, () => swap(other)], [5600, () => swap(UI)]]},
-    {cap: 'i8', html: () => `<div class="end"><div class="emo2 pop" id="i_end">🎉</div><h3>${esc(t('i8'))}</h3><button type="button" class="b1" data-itour>${esc(t('tourBtn'))}</button><button type="button" class="b2" data-iclose>${esc(t('wStart'))}</button></div>`,
-     at: [[100, () => { iOn('i_end'); iBurst(180, 190, '🎉'); }]]}
-  ].map((s, i) => Object.assign(s, {d: SCENE_MS[i]}));
-}
 function introVoice() {
   if (!('speechSynthesis' in window)) return null;
-  const lang = UI === 'th' ? 'th' : 'en';
+  const lang = UI.split('-')[0];
   return speechSynthesis.getVoices().find(v => v.lang.toLowerCase().replace('_', '-').startsWith(lang)) || null;
 }
 function speak(text) {
@@ -3221,7 +3355,7 @@ function speak(text) {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text), v = introVoice();
     if (v) u.voice = v;
-    u.lang = UI === 'th' ? 'th-TH' : 'en-US';
+    u.lang = LOC();
     speechSynthesis.speak(u);
   } catch (e) {}
 }
@@ -3256,11 +3390,11 @@ function openIntro(kind) {
   if (!DATA || !DATA.channels.length) return;
   closePop();
   ['dlg', 'sheet', 'player'].forEach(id => { if ($('#' + id).open) $('#' + id).close(); });
-  I.scenes = kind === 'method' ? methodScenes() : introScenes(); I.total = I.scenes.reduce((a, sc) => a + sc.d, 0);
+  I.scenes = methodScenes(); I.total = I.scenes.reduce((a, sc) => a + sc.d, 0);
   Object.assign(I, {t: 0, scene: -1, last: 0, playing: true, open: true, cur: [400, 700], btn: ''});
   let acc = 0;
   const marks = I.scenes.slice(0, -1).map(s => { acc += s.d; return `<b style="left:${(100 * acc / I.total).toFixed(2)}%"></b>`; }).join('');
-  $('#introBody').innerHTML = `<div class="iv"><div class="ihead"><b>${esc(t(kind === 'method' ? 'methodT' : 'introT'))}</b>` +
+  $('#introBody').innerHTML = `<div class="iv"><div class="ihead"><b>${esc(t('methodT'))}</b>` +
     ('speechSynthesis' in window ? `<button type="button" data-ivoice aria-pressed="${I.voice}">${I.voice ? '🔊' : '🔇'} ${esc(t('voice'))}</button>` : '') +
     `<button type="button" data-iclose aria-label="${esc(t('dClose'))}">${ICON.close}</button></div>` +
     `<div class="frame"><div class="stage"></div></div><div class="icap" aria-live="polite"></div>` +
@@ -3301,22 +3435,27 @@ function introClick(x, e) {
   return false;
 }
 
-/* ---------- hands-on tour: spotlights the real page, one step at a time ---------- */
+/* ---------- hands-on tour: a welcome card (with the language), then spotlights on the real page, one step at a time ---------- */
 const TOUR = {i: -1, steps: [], raf: 0, target: null};
+const visibleEl = sel => [...document.querySelectorAll(sel)].find(e => e.getClientRects().length) || null;
 function tourSteps() {
   return [
-    {k: 't0'},
-    {k: 't1', sel: '#chips [data-topic]:not([data-topic=""])', wait: 'topic'},
-    {k: 't2', sel: '#langSeg'},
-    {k: 't3', sel: '#content .pcard .vd, #content .ccard .vd'},
-    {k: 't4', sel: '#content .shelfsec .vcard .th', wait: 'player'},
-    {k: 't5', sel: '#player .pfacts', dlg: 'player', leave: () => { if ($('#player').open) $('#player').close(); }},
-    {k: 't6', sel: '#content .pcard, #content .ccard', wait: 'sheet'},
-    {k: 't7', sel: '#sheet .why', dlg: 'sheet'},
-    {k: 't8', sel: '#sheet .shtop [data-star]', dlg: 'sheet', wait: 'star', leave: () => { if ($('#sheet').open) $('#sheet').close(); }},
-    {k: 't9', sel: '#side [data-tab=saved]'},
-    {k: 't10', sel: '#side [data-tab=week]'},
-    {k: 't11', sel: '#btnHelp'}
+    {k: 'w', card: true},
+    {k: 'picks', ic: 'trophy', sel: '#content .pcard', tab: 'home'},
+    {k: 'fire', ic: 'flameF', sel: '#content .pcard .vd, #content .ccard .vd', tab: 'home'},
+    {k: 'play', ic: 'film', sel: '#content .shelfsec .vcard .th', wait: 'player', tab: 'home'},
+    {k: 'facts', ic: 'chart', sel: '#player .pfacts', dlg: 'player', leave: () => { if ($('#player').open) $('#player').close(); }},
+    {k: 'open', ic: 'eye', sel: '#content .pcard, #content .ccard', wait: 'sheet', tab: 'home'},
+    {k: 'why', ic: 'bulb', sel: '#sheet .why', dlg: 'sheet'},
+    {k: 'save', ic: 'star', sel: '#sheet .shtop [data-star]', dlg: 'sheet', wait: 'star', leave: () => { if ($('#sheet').open) $('#sheet').close(); }},
+    {k: 'topic', ic: 'compass', sel: '#chips [data-topic]:not([data-topic=""])', wait: 'topic', tab: 'home'},
+    {k: 'trends', ic: 'trend', sel: '#side [data-tab=trends]', go: 'trends'},
+    {k: 'brief', ic: 'rocket', sel: '#content .brief', tab: 'trends'},
+    {k: 'clips', ic: 'scissors', sel: '#content .ttabs [data-ttab=clips]', wait: 'clips', tab: 'trends'},
+    {k: 'moments', ic: 'bolt', sel: '#content .momsec', tab: 'trends'},
+    {k: 'search', ic: 'search', sel: '#searchForm, #btnSearchM'},
+    {k: 'lang', ic: 'globe', sel: '#btnLang, #side [data-tab=more]'},
+    {k: 'done', card: true}
   ];
 }
 function startTour() {
@@ -3329,57 +3468,100 @@ function startTour() {
   let el = $('#tour');
   if (!el) { el = document.createElement('div'); el.id = 'tour'; }
   document.body.appendChild(el);
-  el.innerHTML = '<div class="hole none"></div><div class="bub" role="dialog" aria-live="polite"></div>';
+  el.innerHTML = '<div class="hole none"></div><span class="ripple"></span><div class="bub" role="dialog" aria-live="polite"></div>';
   setTimeout(() => { tourGo(0); cancelAnimationFrame(TOUR.raf); TOUR.raf = requestAnimationFrame(tourFrame); }, 60);
+}
+function tourCard(s) {
+  if (s.k === 'w') {
+    const sug = UI === 'en' ? browserLangs().find(c => c !== 'en') : '';
+    return `<div class="tcard"><div class="tlogo">${FLAME}</div><h3>${esc(t('tour_w_t'))}</h3><p>${esc(t('tour_w_d'))}</p>
+      <div class="tfeat">${[['trophy', 'tour_f1'], ['scissors', 'tour_f2'], ['trend', 'tour_f3']].map(([ic, k]) => `<span>${IC[ic]}${esc(t(k))}</span>`).join('')}</div>
+      <button type="button" class="tlang" data-langpick>${ICON.lang}<span>${esc(t('langT'))}</span><b>${esc(langInfo(UI)[1])}</b><i>${esc(t('lChange'))} ›</i></button>
+      ${sug ? `<button type="button" class="tsug" data-pickl="${sug}" lang="${sug}">${esc(t('lSuggest', {l: langInfo(sug)[1]}))}</button>` : ''}
+      <div class="tbtns"><button type="button" class="nx big" data-tnext>${ICON.play}${esc(t('tour_go'))}</button><button type="button" data-tskip>${esc(t('tour_skip'))}</button></div></div>`;
+  }
+  return `<div class="tcard"><div class="tlogo ok">${IC.check}</div><h3>${esc(t('tour_done_t'))}</h3><p>${esc(t('tour_done_d'))}</p>
+    <div class="tbtns"><button type="button" class="nx big" data-tnext>${esc(t('tour_done_go'))}</button></div></div>`;
 }
 function tourGo(i, dir = 1) {
   const prev = TOUR.steps[TOUR.i];
   if (prev && prev.leave && i !== TOUR.i) prev.leave();
-  while (i >= 0 && i < TOUR.steps.length) {   // skip steps whose target is not on screen (for example on a phone)
+  const first = TOUR.steps[i];
+  if (first && first.tab && S.tab !== first.tab && !first.dlg) { go(first.tab); setTimeout(() => tourGo(i, dir), 120); return; }   // the step lives on another page
+  while (i >= 0 && i < TOUR.steps.length) {   // skip steps whose target isn't on screen (for example on a phone)
     const s = TOUR.steps[i];
     if (!s.sel) break;
-    const e = (!s.dlg || $('#' + s.dlg).open) ? document.querySelector(s.sel) : null;
-    if (e && e.getClientRects().length) { e.scrollIntoView({block: 'center', inline: 'nearest'}); break; }
+    if (s.tab && S.tab !== s.tab) break;
+    const e = (!s.dlg || $('#' + s.dlg).open) ? visibleEl(s.sel) : null;
+    if (e) { e.scrollIntoView({block: 'center', inline: 'nearest'}); break; }
     i += dir;
   }
   if (i >= TOUR.steps.length) { endTour(true); return; }
   if (i < 0) i = 0;
+  const s = TOUR.steps[i];
+  if (s.tab && S.tab !== s.tab && !s.dlg) { go(s.tab); setTimeout(() => tourGo(i, dir), 120); return; }
   TOUR.i = i;
-  const s = TOUR.steps[i], el = $('#tour'), host = s.dlg ? $('#' + s.dlg) : document.body, n = TOUR.steps.length;
+  const el = $('#tour'), host = s.dlg ? $('#' + s.dlg) : document.body, n = TOUR.steps.length - 2;
+  if (!el) return;
   if (el.parentNode !== host) host.appendChild(el);
-  TOUR.target = s.sel ? document.querySelector(s.sel) : null;
-  el.querySelector('.bub').innerHTML = `<button type="button" class="sk" data-tskip aria-label="${esc(t('skip'))}">✕</button><p>${esc(t(s.k))}</p>${s.wait ? `<div class="try">${esc(t('tTry'))}</div>` : ''}` +
-    `<div class="row2"><small>${esc(t('tStep', {a: i + 1, b: n}))}</small>${i ? `<button type="button" data-tback>${esc(t('tBack'))}</button>` : ''}<button type="button" class="nx" data-tnext>${esc(t(i === n - 1 ? 'tDone' : 'tNext'))}</button></div>`;
+  TOUR.target = s.sel ? visibleEl(s.sel) : null;
+  const bub = el.querySelector('.bub');
+  bub.classList.toggle('card', !!s.card);
+  bub.innerHTML = s.card ? tourCard(s) : `<button type="button" class="sk" data-tskip aria-label="${esc(t('skip'))}">${ICON.close}</button>
+    <div class="bhead"><span class="bico">${IC[s.ic] || IC.sparkle}</span><div><small>${esc(t('tStep', {a: i, b: n}))}</small><b>${esc(t('tour_' + s.k + '_t'))}</b></div></div>
+    <p>${esc(t('tour_' + s.k + '_d'))}</p>${s.wait ? `<div class="try"><span class="tapdot"></span>${esc(t('tTry'))}</div>` : ''}
+    <div class="dots">${TOUR.steps.slice(1, -1).map((x, j) => `<i class="${j + 1 === i ? 'on' : j + 1 < i ? 'done' : ''}"></i>`).join('')}</div>
+    <div class="row2">${i > 1 ? `<button type="button" class="bk" data-tback aria-label="${esc(t('tBack'))}">${ICON.left}</button>` : ''}<button type="button" class="nx" data-tnext>${esc(t('tNext'))}${ICON.right}</button></div>`;
   el.querySelector('.hole').classList.toggle('pulse', !!s.wait);
+  el.classList.toggle('wait', !!s.wait);
   tourPlace();
+  const nx = bub.querySelector('[data-tnext]');
+  if (nx && !s.wait) nx.focus({preventScroll: true});
 }
 function tourFrame() {
   if (!tourPlace()) return;
   TOUR.raf = requestAnimationFrame(tourFrame);
 }
-function tourPlace() {   // positions the spotlight and the bubble; returns false once the tour is over
+function tourPlace() {   // positions the spotlight, the tap ripple and the bubble; returns false once the tour is over
   const el = $('#tour');
   if (!el || TOUR.i < 0) return false;
-  const s = TOUR.steps[TOUR.i], hole = el.querySelector('.hole'), bub = el.querySelector('.bub');
-  if (s.sel && (!TOUR.target || !TOUR.target.isConnected)) TOUR.target = document.querySelector(s.sel);
+  const s = TOUR.steps[TOUR.i], hole = el.querySelector('.hole'), bub = el.querySelector('.bub'), rip = el.querySelector('.ripple');
+  if (s.sel && (!TOUR.target || !TOUR.target.isConnected)) TOUR.target = visibleEl(s.sel);
   const r = TOUR.target && TOUR.target.getClientRects().length ? TOUR.target.getBoundingClientRect() : null;
-  const bw = bub.offsetWidth, bh = bub.offsetHeight;
+  const bw = bub.offsetWidth, bh = bub.offsetHeight, phone = innerWidth <= 760;
   if (r) {
     hole.classList.remove('none');
     Object.assign(hole.style, {left: r.left - 6 + 'px', top: r.top - 6 + 'px', width: r.width + 12 + 'px', height: r.height + 12 + 'px'});
-    let top = r.bottom + 16;
-    if (top + bh > innerHeight - 8) top = r.top - bh - 16 >= 8 ? r.top - bh - 16 : Math.max(8, innerHeight - bh - 8);
-    bub.style.left = Math.min(innerWidth - bw - 12, Math.max(12, r.left + r.width / 2 - bw / 2)) + 'px';
-    bub.style.top = top + 'px';
+    Object.assign(rip.style, {left: r.left + r.width / 2 + 'px', top: r.top + r.height / 2 + 'px'});
+    if (phone) {   // a sheet at the top or bottom, away from what it points at
+      const low = r.top + r.height / 2 > innerHeight * 0.5;
+      bub.style.left = '8px'; bub.style.top = (low ? 56 : Math.max(56, innerHeight - bh - 64)) + 'px';
+    } else {
+      let top = r.bottom + 16;
+      if (top + bh > innerHeight - 8) top = r.top - bh - 16 >= 8 ? r.top - bh - 16 : Math.max(8, innerHeight - bh - 8);
+      bub.style.left = Math.min(innerWidth - bw - 12, Math.max(12, r.left + r.width / 2 - bw / 2)) + 'px';
+      bub.style.top = top + 'px';
+    }
   } else {
     hole.classList.add('none');
     Object.assign(hole.style, {left: innerWidth / 2 + 'px', top: innerHeight / 2 + 'px'});
-    bub.style.left = (innerWidth - bw) / 2 + 'px'; bub.style.top = (innerHeight - bh) / 2 + 'px';
+    bub.style.left = (innerWidth - bw) / 2 + 'px'; bub.style.top = Math.max(8, (innerHeight - bh) / 2) + 'px';
   }
   return true;
 }
 window.addEventListener('scroll', () => tourPlace(), true);
 window.addEventListener('resize', () => tourPlace());
+document.addEventListener('keydown', e => {   // arrows move through the tour, Escape leaves it
+  if (TOUR.i < 0 || $('#dlg').open || /INPUT|TEXTAREA|SELECT/.test((e.target || {}).tagName || '')) return;
+  if (e.key === 'ArrowRight') { e.preventDefault(); tourNext(); }
+  else if (e.key === 'ArrowLeft' && TOUR.i > 1) { e.preventDefault(); tourGo(TOUR.i - 1, -1); }
+  else if (e.key === 'Escape') endTour(false);
+});
+function tourNext() {
+  const s = TOUR.steps[TOUR.i];
+  if (s && s.go) { go(s.go); setTimeout(() => tourGo(TOUR.i + 1), 150); return; }
+  tourGo(TOUR.i + 1);
+}
 function tourEvent(name) {
   if (TOUR.i < 0) return;
   const s = TOUR.steps[TOUR.i];
@@ -3410,7 +3592,7 @@ function endTour(done) {
   }
 }
 function tourClick(x) {
-  if (x.closest('[data-tnext]')) { tourGo(TOUR.i + 1); return true; }
+  if (x.closest('[data-tnext]')) { tourNext(); return true; }
   if (x.closest('[data-tback]')) { tourGo(TOUR.i - 1, -1); return true; }
   if (x.closest('[data-tskip]')) { endTour(false); return true; }
   return false;
@@ -3426,8 +3608,8 @@ function openMore() {
   const tab = ([id, k]) => row(`data-tab="${id}" aria-current="${S.tab === id}"`, ICON[id], t(k));
   body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('nMore'))}</h3>` +
     `<button type="button" class="procard" data-tab="pro"><span class="ico">${IC.star}</span><span><b>${esc(t('proCard'))}</b><small>${esc(isPro() && PRO.gate ? '✓' : PRO.gate ? t('proCardPrice', {p: PRO.price}) : t('proCardBeta'))}</small></span><span>→</span></button>` + syncBlock() +
-    `<div class="mrow">${ICON.lang}<span>${esc(t('langT'))}</span><div class="seg"><button type="button" data-ui="en" aria-pressed="${UI === 'en'}">EN</button><button type="button" data-ui="th" aria-pressed="${UI === 'th'}">ไทย</button></div></div>` +
-    `<h4 class="navh">${esc(t('mLearn'))}</h4>` + row('data-intro', ICON.tutorial, t('nTutorial')) + row('data-tour', ICON.tour, t('nTour')) + [['playbook', 'nPlaybook'], ['help', 'nHelp']].map(tab).join('') +
+    `<div class="mrow">${ICON.lang}<span>${esc(t('langT'))}</span><button type="button" class="pillbtn" data-langpick>${esc(langInfo(UI)[1])} ›</button></div>` +
+    `<h4 class="navh">${esc(t('mLearn'))}</h4>` + row('data-tour', ICON.tour, t('nTour')) + [['playbook', 'nPlaybook'], ['help', 'nHelp']].map(tab).join('') +
     `<h4 class="navh">${esc(t('mExplore'))}</h4>` + [['week', 'nWeek'], ['tools', 'nTools'], ['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['mine', 'nMine'], ['compare', 'nCompare']].map(tab).join('') +
     `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + themeSec() + (canInstall() ? `<div class="sidesec">${installBtn()}</div>` : '') +
     `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div></div>`;
@@ -4002,7 +4184,8 @@ function reloadFromStorage() {   // another device changed something: refresh wh
   Object.assign(S, LS.get('radar.state4', {}), {tab: S.tab, q: S.q});
   Object.keys(PB).forEach(k => delete PB[k]); Object.assign(PB, PB_DEFAULT(), LS.get('radar.pb', {}));
   MY = LS.get('radar.mych', null);
-  UI = LS.get('radar.ui', UI) === 'th' ? 'th' : 'en';
+  UI = normLang(LS.get('radar.ui', UI));
+  if (!LOADED.has(UI)) ensureLang(UI).then(ok => { if (!ok) UI = 'en'; if (DATA) render(); });
   const a = document.activeElement, typing = a && a.closest && a.closest('#content') && /INPUT|TEXTAREA|SELECT/.test(a.tagName);
   if (DATA && !typing) render();
 }
@@ -4084,6 +4267,7 @@ const CASED = /[\p{Script=Latin}\p{Script=Cyrillic}\p{Script=Greek}]/u;
 const TREND_CATS = [['all', '✨', 'All', 'ทั้งหมด'], ['games', '🎮', 'Games', 'เกม'], ['cartoons', '🎨', 'Cartoons & anime', 'การ์ตูนและอนิเมะ'],
   ['memes', '🤪', 'Memes & challenges', 'มีมและชาเลนจ์'], ['news', '📰', 'News & events', 'ข่าวและเหตุการณ์'], ['music', '🎵', 'Music & dance', 'เพลงและการเต้น'],
   ['food', '🍳', 'Food', 'อาหาร'], ['animals', '🐾', 'Animals', 'สัตว์'], ['sports', '⚽', 'Sports', 'กีฬา'], ['facts', '🧠', 'Facts', 'ความรู้'], ['other', '🔥', 'Everything else', 'อื่น ๆ']];
+TREND_CATS.forEach(c => { T.en['_tcat_' + c[0]] = c[2]; T.th['_tcat_' + c[0]] = c[3]; });
 const GAMES = [['Roblox', /roblox/i], ['Minecraft', /minecraft/i], ['Fortnite', /fortnite/i], ['GTA', /\bgta\b|grand theft auto/i], ['GTA 6', /\bgta ?(6|vi)\b/i],
   ['Brawl Stars', /brawl ?stars/i], ['Free Fire', /free ?fire|ฟีฟาย/i], ['PUBG', /pubg/i], ['ROV', /\brov\b|arena of valor/i], ['Mobile Legends', /mobile legends|\bmlbb\b/i],
   ['Valorant', /valorant/i], ['Genshin Impact', /genshin/i], ['Honkai', /honkai/i], ['Among Us', /among ?us/i], ['Poppy Playtime', /poppy playtime|huggy wuggy|catnap/i],
@@ -4122,7 +4306,7 @@ function trendCat(label, vids) {   // the trend's own words first, then what its
   return top && top[1] >= vids.length / 3 ? top[0] : 'other';
 }
 const catOf = k => TREND_CATS.find(c => c[0] === k) || TREND_CATS[TREND_CATS.length - 1];
-const catName = k => { const c = catOf(k); return UI === 'th' ? c[3] : c[2]; };
+const catName = k => t('_tcat_' + catOf(k)[0]);
 function finishStats(s) {   // lift: Shorts per day in the last 3 days against the 18 days before
   s.lift = (s.r / 3) / ((s.b + 1) / 18);
   s.vids.sort((a, b) => b[0].v - a[0].v);
@@ -4304,7 +4488,7 @@ function trendsView() {
   else if (tab === 'news') h += newsTab();
   else {
     const cat = S.tcat || 'all', list = T_.rising.filter(s => cat === 'all' || s.cat === cat);
-    h += `<div class="tcats">${TREND_CATS.filter(c => c[0] === 'all' || T_.rising.some(s => s.cat === c[0])).map(c => `<button type="button" class="chip" data-tcat="${c[0]}" aria-pressed="${cat === c[0]}">${esc(UI === 'th' ? c[3] : c[2])}</button>`).join('')}</div>`;
+    h += `<div class="tcats">${TREND_CATS.filter(c => c[0] === 'all' || T_.rising.some(s => s.cat === c[0])).map(c => `<button type="button" class="chip" data-tcat="${c[0]}" aria-pressed="${cat === c[0]}">${esc(t('_tcat_' + c[0]))}</button>`).join('')}</div>`;
     h += `<p class="pbtip">${esc(t('ttRisingD'))}</p>`;
     h += list.length ? `<div class="tgrid">${gateList(list.slice(0, 60).map(trendCard), t('ttRising'), 6).join('')}</div>` : emptyBox(t('tNone'), '🔭');
   }
@@ -4660,7 +4844,7 @@ function openTrend(key) {
 function weekGrid(ps) {   // a week grid of upload times in the viewer's own time zone; returns the grid and the busiest slot
   const g = Array.from({length: 7}, () => Array(6).fill(0));
   ps.forEach(p => { const d = new Date(p * 1000); g[(d.getDay() + 6) % 7][Math.floor(d.getHours() / 4)]++; });
-  const mx = Math.max(1, ...g.flat()), loc = UI === 'th' ? 'th-TH' : 'en-US';
+  const mx = Math.max(1, ...g.flat()), loc = LOC();
   const day = i => new Intl.DateTimeFormat(loc, {weekday: 'short'}).format(new Date(2024, 0, 1 + i));   // 1 Jan 2024 was a Monday
   const hr = h => new Intl.DateTimeFormat(loc, {hour: 'numeric'}).format(new Date(2024, 0, 1, h % 24));
   let best = [0, 0];
@@ -4750,7 +4934,7 @@ function proView() {
   const rows = [['pcBrowse', 1, 1], ['pcSearch', 1, 1], ['pcAnalytics', 1, 1], ['pcTrendsTop', 1, 1], ['pcTrendsAll', 0, 1], ['pcBoards', 0, 1], ['pcAlerts', 0, 1], ['pcTools', 0, 1], ['pcExport', 0, 1]];
   let cta;
   if (!PRO.gate) cta = `<div class="probeta">${esc(t('proBeta', {p: PRO.price}))}</div>`;
-  else if (isPro()) cta = `<div class="probeta">${IC.check} ${esc(t('proYou', {d: new Date(PRO_UNTIL).toLocaleDateString(UI === 'th' ? 'th-TH' : 'en-US')}))}</div>` +
+  else if (isPro()) cta = `<div class="probeta">${IC.check} ${esc(t('proYou', {d: new Date(PRO_UNTIL).toLocaleDateString(LOC())}))}</div>` +
     ((PRO_PORTAL || PRO.manage) ? `<div style="margin-top:10px"><a class="pillbtn" href="${esc(PRO_PORTAL || PRO.manage)}" target="_blank" rel="noopener">${esc(t('proManage'))}</a></div>` : '');
   else if (!USER) cta = FB ? `<button type="button" class="pillbtn big pro" data-signin>${esc(t('proSignIn'))}</button>` : `<p class="pbmuted">${esc(t('proSoon'))}</p>`;
   else cta = checkoutLink() ? `<a class="pillbtn big pro" href="${esc(checkoutLink())}" target="_blank" rel="noopener">${esc(t('proBuy', {p: PRO.price}))}</a>` : `<p class="pbmuted">${esc(t('proSoon'))}</p>`;
@@ -4962,6 +5146,7 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderThem
 /* ---------- chrome ---------- */
 function applyStaticText() {
   document.documentElement.lang = UI;
+  document.documentElement.dir = RTL.has(UI) ? 'rtl' : 'ltr';
   const fq = $('#fq');
   fq.placeholder = canSearch() ? t('searchPh') : t('searchPhList');
   if (fq.value !== S.q) fq.value = S.q;
@@ -4976,7 +5161,10 @@ function applyStaticText() {
   document.body.classList.toggle('hasq', !!S.q.trim() || S.tab === 'search');   // phones keep the search bar open while a search is showing
   $('#btnHelp').title = t('help'); $('#btnHelp').setAttribute('aria-label', t('help'));
   $('#foot').innerHTML = footHtml();
+  const l2 = lang2(), b2 = $('#lang2');
+  if (b2) { b2.dataset.ui = l2; b2.textContent = shortLang(l2); b2.title = langInfo(l2)[1]; }
   document.querySelectorAll('#langSeg [data-ui]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ui === UI)));
+  $('#btnLang').title = t('langT'); $('#btnLang').setAttribute('aria-label', t('langT'));
 }
 function renderSide() {
   const saved = DATA.channels.filter(isWatched).length, fresh = liveVideos(DATA.channels).length, st = statusInfo();
@@ -4985,7 +5173,7 @@ function renderSide() {
   $('#side').innerHTML = nav('home', 'nHome') + nav('trends', 'nTrends', hotTracked(), true) + nav('week', 'nWeek') + nav('videos', 'nVideos') + nav('channels', 'nChannels') + nav('live', 'nLive', fresh, true) +
     nav('ideas', 'nIdeas') + nav('topics', 'nTopics') + '<hr class="navsep">' + navh('sYou') + nav('saved', 'nSaved', saved) + nav('mine', 'nMine') + nav('compare', 'nCompare', S.cmp.length) +
     '<hr class="navsep">' + navh('nMore') + nav('tools', 'nTools').replace('</span></button>', `</span>${proTag()}</button>`) + nav('playbook', 'nPlaybook', PB_STEPS.length - Object.values(PB.done).filter(Boolean).length || null) +
-    `<button type="button" class="nav" data-intro>${ICON.tutorial}<span class="lbl">${esc(t('nTutorial'))}</span></button>` + nav('help', 'nHelp') + nav('pro', 'nPro') + nav('more', 'nMore') +
+    `<button type="button" class="nav" data-tour>${ICON.tour}<span class="lbl">${esc(t('nTour'))}</span></button>` + nav('help', 'nHelp') + nav('pro', 'nPro') + nav('more', 'nMore') +
     `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + themeSec() +
     `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div>${canInstall() ? `<div style="margin:10px 12px 0">${installBtn()}</div>` : ''}</div>` + syncBlock();
 }
@@ -5047,8 +5235,10 @@ function render(keepChips) {
   renderContent(); renderButtons(); renderTray();
 }
 function setUI(l) {
-  UI = l === 'th' ? 'th' : 'en'; LS.set('radar.ui', UI); closePop();
+  UI = normLang(l); LS.set('radar.ui', UI); if (UI !== 'en') LS.set('radar.lang2', UI);
+  closePop();
   render(); renderAcct();
+  if (TOUR.i >= 0) tourGo(TOUR.i);
   if ($('#sheet').open) drawSheet(true);
   if ($('#dlg').open && $('#dlgBody').dataset.mode === 'more') openMore();
 }
@@ -5094,7 +5284,7 @@ document.addEventListener('click', async e => {
   if (x.closest('[data-histclear]')) { try { localStorage.removeItem('radar.scache'); } catch (err) {} searchHint(); return; }
   if (x.closest('[data-research]')) { if (SEARCH) staticSearch(SEARCH.query, true); return; }
   const intr = x.closest('[data-intro]');
-  if (intr) { if ($('#dlg').open) $('#dlg').close(); openIntro(intr.dataset.intro || 'site'); return; }
+  if (intr) { if ($('#dlg').open) $('#dlg').close(); openIntro('method'); return; }
   if (x.closest('[data-tour]')) { if ($('#dlg').open) $('#dlg').close(); startTour(); return; }
   const cmp = x.closest('[data-cmp]');
   if (cmp) { toggleCmp(cmp.dataset.cmp); render(true); if ($('#sheet').open) drawSheet(true); return; }
@@ -5116,7 +5306,7 @@ document.addEventListener('click', async e => {
   if (aib) { const s = trendByKey(aib.dataset.ai); aiIdeas(s.label.replace(/^#/, ''), s.vids.slice(0, 8).map(([v]) => v.t), $('#aiBox')); return; }
   if (x.closest('[data-aitopic]')) { const el = $('#aiIn'); if (el && el.value.trim()) aiIdeas(el.value.trim(), [], $('#aiTopicBox')); return; }
   const tt = x.closest('[data-ttab]');
-  if (tt) { S.ttab = tt.dataset.ttab; saveState(); if ($('#dlg').open) $('#dlg').close(); if (S.tab !== 'trends') go('trends'); else renderContent(); return; }
+  if (tt) { S.ttab = tt.dataset.ttab; saveState(); if ($('#dlg').open) $('#dlg').close(); if (S.tab !== 'trends') go('trends'); else renderContent(); if (tt.dataset.ttab === 'clips') tourEvent('clips'); return; }
   const creg = x.closest('[data-creg]');
   if (creg) { S.creg = creg.dataset.creg; saveState(); renderContent(); return; }
   if (x.closest('[data-call3]')) { S.call3 = !S.call3; saveState(); renderContent(); return; }
@@ -5168,7 +5358,10 @@ document.addEventListener('click', async e => {
   const th = x.closest('[data-theme-set]');
   if (th) { setTheme(th.dataset.themeSet); return; }
   const ui = x.closest('[data-ui]');
-  if (ui) { setUI(ui.dataset.ui); return; }
+  if (ui) { chooseLang(ui.dataset.ui); return; }
+  if (x.closest('[data-langpick]')) { openLangPicker(); return; }
+  const pl = x.closest('[data-pickl]');
+  if (pl) { if ($('#dlg').open && $('#dlgBody').dataset.mode === 'lang') $('#dlg').close(); chooseLang(pl.dataset.pickl); return; }
   const det = x.closest('[data-detail]');
   if (det) { S.detail = det.dataset.detail === 'toggle' ? !S.detail : det.dataset.detail === '1'; saveState(); if ($('#dlg').open) $('#dlg').close(); render(); if ($('#sheet').open) drawSheet(true); return; }
   const topic = x.closest('[data-topic]');
@@ -5271,6 +5464,11 @@ document.addEventListener('change', e => {
   if (e.target.id === 'btTopic') { S.bttopic = e.target.value; saveState(); renderContent(); }
 });
 document.addEventListener('input', e => {
+  if (e.target.id === 'lq') {   // the language picker's search
+    const q = e.target.value.trim().toLowerCase();
+    document.querySelectorAll('#dlgBody .lrow').forEach(r => { r.hidden = !!q && !(r.textContent.toLowerCase().includes(q) || r.dataset.pickl.toLowerCase().startsWith(q)); });
+    return;
+  }
   if (e.target.id !== 'tcIn') return;
   S.tctext = e.target.value.slice(0, 200);
   const out = $('#tcOut');
@@ -5522,16 +5720,27 @@ async function refresh() {
   }
 }
 function afterFirstData() {
+  if (!LS.get('radar.toured', false) && DATA.channels.length && !/^#(ch|compare|trend)\//.test(location.hash)) {   // a first visit starts with the welcome card
+    setTimeout(() => { if (TOUR.i < 0 && !['dlg', 'sheet', 'player', 'intro'].some(id => $('#' + id).open)) startTour(); }, 900);
+  }
   const m = /^#ch\/(UC[\w-]{22})$/.exec(location.hash);
   if (m && findCh(m[1])) openChannel(m[1]);
   else if (/^#compare\/[\w,-]+$/.test(location.hash)) openCompareLink(location.hash.slice(1));
   else if (/^#trend\//.test(location.hash)) openTrend(decodeURIComponent(location.hash.slice(7)));
 }
 if (!hashTab() && !/^#(ch|compare|trend)\//.test(location.hash)) history.replaceState(null, '', '#' + S.tab);
-applyStaticText();
-if (LIVE) { if (STATIC) { loadLite(); loadTrends(); setInterval(loadTrends, 10 * 60e3); } refresh(); setInterval(refresh, STATIC ? 60000 : 15000); } else { render(); afterFirstData(); }
-renderAcct();
-if (FB && LS.get('radar.fbuser', 0)) fbLoad().catch(() => {});   // signed in before on this device: restore the session and sync
+function start() {
+  applyStaticText();
+  if (LIVE) { if (STATIC) { loadLite(); loadTrends(); setInterval(loadTrends, 10 * 60e3); } refresh(); setInterval(refresh, STATIC ? 60000 : 15000); } else { render(); afterFirstData(); }
+  renderAcct();
+  if (FB && LS.get('radar.fbuser', 0)) fbLoad().catch(() => {});   // signed in before on this device: restore the session and sync
+}
+if (LOADED.has(UI)) start();
+else {
+  const want = UI, ready = ensureLang(want);
+  Promise.race([ready, new Promise(r => setTimeout(() => r(false), 2500))]).then(ok => { if (!ok) UI = 'en'; start(); });
+  ready.then(ok => { if (ok && UI !== want) { UI = want; applyStaticText(); if (DATA) render(); } });
+}
 </script>
 </body>
 </html>

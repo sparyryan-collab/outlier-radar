@@ -221,7 +221,10 @@ const IDEAS_SCHEMA = {type: 'object', additionalProperties: false, required: ['i
   type: 'object', additionalProperties: false, required: ['title', 'hook', 'beats'],
   properties: {title: {type: 'string'}, hook: {type: 'string'}, beats: {type: 'array', items: {type: 'string'}}}}}}};
 async function writeIdeas(input, env) {
-  const lang = input.lang === 'th' ? 'Thai' : 'English';
+  const LANG_NAMES = {en: 'English', th: 'Thai', es: 'Spanish', pt: 'Brazilian Portuguese', fr: 'French', de: 'German', id: 'Indonesian', vi: 'Vietnamese', ja: 'Japanese',
+    ko: 'Korean', zh: 'Simplified Chinese', 'zh-TW': 'Traditional Chinese', hi: 'Hindi', ar: 'Arabic', ru: 'Russian', tr: 'Turkish', fil: 'Filipino', it: 'Italian', pl: 'Polish',
+    uk: 'Ukrainian', nl: 'Dutch', ms: 'Malay', bn: 'Bengali', ur: 'Urdu', fa: 'Persian'};
+  const lang = LANG_NAMES[input.lang] || 'English';
   const examples = (Array.isArray(input.examples) ? input.examples : []).slice(0, 8).map(x => '- ' + String(x).slice(0, 140)).join('\n');
   const r = await fetch('https://api.anthropic.com/v1/messages', {method: 'POST',
     headers: {'content-type': 'application/json', 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2026-10-21', 'anthropic-beta': 'server-side-fallback-2026-07-01'},

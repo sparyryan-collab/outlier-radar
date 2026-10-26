@@ -51,6 +51,7 @@ cfg["vapidKey"] = vapid if re.fullmatch(r"[A-Za-z0-9_-]{80,100}", vapid) else ""
 cfg["aiUrl"] = ai_url if re.fullmatch(r"https://[A-Za-z0-9.-]+(/[^\s\"'<>]*)?", ai_url) else ""
 cfg["affiliateUrl"] = affiliate if re.fullmatch(r"https://[^\s\"'<>]{4,300}", affiliate) else ""
 lemon_store = lemon_store if re.fullmatch(r"[a-z0-9-]{2,40}", lemon_store) else ""
+cfg["packs"] = sorted(f.stem for f in (STATIC / "i18n").glob("*.json")) if (STATIC / "i18n").is_dir() else []   # hand-made language packs
 if checkout and not cfg["checkoutUrl"]:
     print("WARNING: CHECKOUT_URL must be a full https:// link; ignored", file=sys.stderr)
 
@@ -86,6 +87,8 @@ for old, new in swaps:
 for name in ("manifest.webmanifest", "sw.js"):   # the installable app
     shutil.copyfile(STATIC / name, out / name)
 shutil.copytree(STATIC / "icons", out / "icons", dirs_exist_ok=True)
+if cfg["packs"]:
+    shutil.copytree(STATIC / "i18n", out / "i18n", dirs_exist_ok=True)
 (out / ".nojekyll").write_text("", encoding="utf-8")
 domain = os.environ.get("CUSTOM_DOMAIN", "").strip()
 if domain:
