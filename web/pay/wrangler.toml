@@ -1,0 +1,7 @@
+# For deploying with the command line instead of the dashboard: cd web/pay && npx wrangler deploy
+name = "viral-radar"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[triggers]
+crons = ["*/15 * * * *"]   # fresh data and trend alerts every 15 minutes

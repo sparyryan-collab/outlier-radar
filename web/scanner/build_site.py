@@ -3,6 +3,7 @@
 
 Usage: python build_site.py [output_dir]
 Optional env: BROWSER_KEY (a referrer-restricted API key), CUSTOM_DOMAIN, PRO_GATE / PRO_PRICE / CHECKOUT_URL / MANAGE_URL (Viral Radar Pro), CONTACT_EMAIL,
+              VAPID_PUBLIC_KEY (alerts), AI_URL (the server worker), LEMON_STORE / AFFILIATE_URL (affiliates),
               FIREBASE_API_KEY + FIREBASE_PROJECT_ID (+ FIREBASE_AUTH_DOMAIN) to switch on Google sign-in and sync
 """
 import json
@@ -44,6 +45,12 @@ cfg.update({"proGate": os.environ.get("PRO_GATE", "").strip().lower() in ("1", "
 manage, contact = os.environ.get("MANAGE_URL", "").strip(), os.environ.get("CONTACT_EMAIL", "").strip()
 cfg["manageUrl"] = manage if re.fullmatch(r"https://[^\s\"'<>]{4,300}", manage) else ""
 cfg["contact"] = contact if re.fullmatch(r"[^\s@<>\"']+@[^\s@<>\"']+\.[A-Za-z]{2,}", contact) else ""
+vapid, ai_url = os.environ.get("VAPID_PUBLIC_KEY", "").strip(), os.environ.get("AI_URL", "").strip().rstrip("/")
+lemon_store, affiliate = os.environ.get("LEMON_STORE", "").strip(), os.environ.get("AFFILIATE_URL", "").strip()
+cfg["vapidKey"] = vapid if re.fullmatch(r"[A-Za-z0-9_-]{80,100}", vapid) else ""
+cfg["aiUrl"] = ai_url if re.fullmatch(r"https://[A-Za-z0-9.-]+(/[^\s\"'<>]*)?", ai_url) else ""
+cfg["affiliateUrl"] = affiliate if re.fullmatch(r"https://[^\s\"'<>]{4,300}", affiliate) else ""
+lemon_store = lemon_store if re.fullmatch(r"[a-z0-9-]{2,40}", lemon_store) else ""
 if checkout and not cfg["checkoutUrl"]:
     print("WARNING: CHECKOUT_URL must be a full https:// link; ignored", file=sys.stderr)
 
@@ -63,6 +70,13 @@ if "firebase" in cfg:   # Google sign-in (Firebase Auth) and sync (Cloud Firesto
         ("connect-src 'self' https://www.googleapis.com", "connect-src 'self' https://www.googleapis.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com"),
         ("frame-src https://www.youtube-nocookie.com", f"frame-src https://www.youtube-nocookie.com https://{auth_host} https://accounts.google.com"),
     ]
+if cfg["aiUrl"]:   # the AI writer is called from the page
+    ai_origin = re.match(r"https://[^/]+", cfg["aiUrl"]).group(0)
+    swaps.append(("connect-src 'self' https://www.googleapis.com", f"connect-src 'self' https://www.googleapis.com {ai_origin}"))
+if lemon_store:   # Lemon Squeezy's affiliate tracking script
+    swaps += [("script-src 'unsafe-inline'", "script-src 'unsafe-inline' https://lmsqueezy.com"),
+              ("connect-src 'self' https://www.googleapis.com", "connect-src 'self' https://www.googleapis.com https://lmsqueezy.com https://*.lemonsqueezy.com"),
+              ("</head>", f'<script>window.lemonSqueezyAffiliateConfig = {{store: "{lemon_store}"}};</script>\n<script src="https://lmsqueezy.com/affiliate.js" defer></script>\n</head>')]
 for old, new in swaps:
     if old not in html:
         sys.exit(f"build_site: expected text not found in index.html: {old[:50]}")

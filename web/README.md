@@ -149,10 +149,26 @@ Signing in with Google keeps your saved channels, Playbook, upload log and My ch
          allow create: if valid();
          allow update: if valid() && resource.data.t < request.time - duration.value(20, 'h');
        }
+       match /pro/{uid} {
+         allow read: if request.auth != null && request.auth.uid == uid;
+       }
+       match /push/{uid} {
+         allow read, write: if request.auth != null && request.auth.uid == uid;
+       }
+       match /track/{id} {
+         allow get, list: if true;
+         allow create: if request.auth != null && id.matches('UC[A-Za-z0-9_-]{22}')
+           && request.resource.data.keys().hasOnly(['t']) && request.resource.data.t == request.time;
+       }
      }
    }
    ```
-   This means each signed-in person can read and write only their own data, and anyone can read shared search results. A shared result can only be written in the expected shape, and can't be replaced until it is 20 hours old. The page also re-checks every shared result before showing it.
+   What each part allows:
+   - `users`: each signed-in person reads and writes only their own synced settings.
+   - `searches`: anyone can read shared search results; a result can only be written in the expected shape and can't be replaced until it is 20 hours old.
+   - `pro`: people can read only their own subscription status. Nobody can write it from the page; only the server worker can.
+   - `push`: each person manages only their own alert subscription.
+   - `track`: anyone can see which channels visitors asked the site to follow; a signed-in person can add a channel once.
 6. **Project settings (the gear) → General → Your apps → the `</>` (Web) button**, give it any name, skip Hosting, **Register app**. It shows a `firebaseConfig` with `apiKey: "AIza..."` and `projectId: "..."`.
 7. In a terminal: `gh variable set FIREBASE_PROJECT_ID --body "<projectId>"`, then `gh variable set FIREBASE_API_KEY` (paste the apiKey when asked), then `gh workflow run "Refresh site"`.
 
@@ -183,18 +199,49 @@ Which provider? Lemon Squeezy and Paddle are "merchants of record": they sell on
    - Cloudflare dashboard, Workers & Pages, Create, Worker; paste `worker.js`, Deploy. Under Settings, Variables, add secrets: `FIREBASE_SA` (the whole JSON file) and the signing secret for each provider you use: `LEMON_SECRET`, `STRIPE_SECRET`, `PADDLE_SECRET`.
    - In the provider's webhook settings, point at the worker: `https://<worker>.workers.dev/lemonsqueezy` (subscription events), `/stripe` (checkout.session.completed, customer.subscription.updated, customer.subscription.deleted) or `/paddle` (subscription events).
    - `node web/pay/selftest.mjs` checks the worker with fake signed webhooks from all three providers.
-3. **Add this Firestore rule** (inside `match /databases/{database}/documents { ... }`) and publish:
-   ```
-   match /pro/{uid} {
-     allow read: if request.auth != null && request.auth.uid == uid;
-   }
-   ```
+3. **Make sure the Firestore rules include `pro`** (the full rules are in step 5 of "Google sign-in and sync" above).
    Nobody can write `pro` documents from the page; only the worker can. To give someone Pro by hand (a tester or a friend), create `pro/<their uid>` in the Firebase console with a timestamp field `until`.
 4. **Set repository variables**: `PRO_PRICE` (for example `$9.99`), `CHECKOUT_URL` (from step 1), `MANAGE_URL` (optional: Stripe's customer-portal link; Lemon Squeezy sends its own portal link through the worker), `CONTACT_EMAIL` (shown on the terms, privacy and refund pages) and finally `PRO_GATE` = `1` to switch the locks on. Then run "Refresh site".
 
 The site has terms of service, privacy and refund pages (footer links). They are a sensible starting point, not legal advice: read them, set `CONTACT_EMAIL`, and adjust the refund promise (7 days, first payment) if you want a different one.
 
 Note: the locks run in the browser and the data files are public, so they stop casual use rather than determined copying. Before charging, read the YouTube API Services Terms of Service and Developer Policies (your app must add value of its own beyond YouTube's data, and must say it isn't made by YouTube; the footer does), and expect to apply for a higher YouTube quota once many people search.
+
+## The server worker (fresh data every 15 minutes, trend alerts, the AI writer)
+
+One free Cloudflare Worker, `web/pay/worker.js`, does everything the static site can't. Each part switches on only when its settings are added, so you can start with one. `node web/pay/selftest.mjs` checks all of it with fake services.
+
+**Create it (about 10 minutes):**
+1. Sign up at https://dash.cloudflare.com (free, no card). **Workers & Pages, Create, Create Worker**, name it `viral-radar`, **Deploy**, then **Edit code**: paste the whole of `web/pay/worker.js` and **Deploy** again. (Or from a terminal: `cd web/pay && npx wrangler deploy`.)
+2. **Settings, Triggers, Cron Triggers, Add**: `*/15 * * * *` (every 15 minutes).
+3. **Settings, Variables and secrets**: add the ones for the parts you want (mark keys as *Secret*):
+
+| Part | Variables |
+|---|---|
+| Fresh data every 15 minutes (GitHub's own timer only manages about every 2 hours) | `GITHUB_TOKEN`: on GitHub, Settings, Developer settings, Fine-grained tokens, Generate: only this repository, permission **Actions: Read and write**. `GITHUB_REPO`: `sparyryan-collab/outlier-radar` |
+| Payments | `FIREBASE_SA` (the service account JSON) plus each provider's signing secret, see "Viral Radar Pro" |
+| Trend alerts (phone and desktop notifications, even with the app closed) | Run `node web/pay/vapid.mjs` once. Put `VAPID_PUBLIC_KEY` in the worker **and** as a GitHub repository variable; `VAPID_PRIVATE_JWK` in the worker only (secret). Also `VAPID_SUBJECT` (`mailto:` your email), `SITE_URL` (the site's address) and `FIREBASE_SA` |
+| AI idea writer | `ANTHROPIC_API_KEY` (from https://console.anthropic.com; usage is billed by Anthropic), `FIREBASE_SA`, `ALLOWED_ORIGIN` (the site's origin, for example `https://sparyryan-collab.github.io`), and the GitHub repository variable `AI_URL` = the worker's address (`https://viral-radar.<you>.workers.dev`). Optional: `AI_MODEL` (default `claude-opus-5-5`), `AI_DAILY` (requests per person per day, default 20), `PRO_GATE` = `1` once Pro is paid |
+
+After adding GitHub variables, run "Refresh site" so the page picks them up.
+
+**Costs to know about:** Cloudflare's free plan covers this comfortably at the start. The AI writer is the only part with a running cost: each request (5 ideas) is a small Claude API call, and `AI_DAILY` caps how many each person can make. Keep it a Pro feature once Pro is paid.
+
+## Tracked channels
+
+On the Saved page anyone can paste a channel link or @handle. A channel already in the data is simply saved. For a new one (signed-in visitors only), the page asks Firestore's `track` list to follow it: the scanner reads that list every run, scans those channels like the rest, and never drops them for ranking low. Up to 400 requested channels are followed (`MAX_TRACKED`); a channel needs at least 6 Shorts to get numbers. The scanner reads the list with `FIREBASE_PROJECT_ID` and `FIREBASE_API_KEY`, the same variables sign-in uses.
+
+## Trend alerts
+
+On the Trends page people track trends, then turn on alerts. While Viral Radar is open (or installed and running), the page itself notifies them when a tracked trend takes off. With the server worker's alert settings in place, alerts also arrive when the app is closed: the scanner publishes the list of hot trends in `trends.json`, and every 15 minutes the worker sends a web push to each subscriber whose tracked trend just took off (at most once every 3 days per trend).
+
+## Affiliates
+
+Lemon Squeezy has a built-in affiliate program: creators who recommend Viral Radar earn a share of each subscription. Turn it on in Lemon Squeezy (Affiliates), then set the repository variables `LEMON_STORE` (your store's slug; the site then loads Lemon's affiliate tracking script so `?aff=` links are credited) and `AFFILIATE_URL` (your affiliate sign-up page; it appears in the footer as "Earn with us").
+
+## More YouTube quota
+
+`web/QUOTA_REQUEST.md` has answers ready for YouTube's quota extension form. Apply before many people search or Pro goes paid; reviews take a few weeks.
 
 ## Install it as an app
 

@@ -66,6 +66,8 @@ class Fake(BaseHTTPRequestHandler):
         q = urllib.parse.parse_qs(u.query)
         path = u.path.rsplit("/", 1)[-1]
         Fake.calls[path] = Fake.calls.get(path, 0) + 1
+        if u.path.endswith("/documents/track"):   # Firestore: channels visitors asked to track (public list)
+            return self.reply(200, {"documents": [{"name": f"projects/demo/databases/(default)/documents/track/{cid(2)}"}]})
         if u.path.startswith("/wiki/"):   # Wikimedia's most-read list for a day (no key)
             day = int(u.path.rstrip("/").rsplit("/", 1)[-1])
             arts = [{"article": "Main_Page", "views": 900000}, {"article": "Big_Event", "views": 5000 * day}, {"article": "Steady_Page", "views": 3000}]
@@ -201,12 +203,25 @@ def main():
         assert len(json.loads(out3.read_text(encoding="utf-8"))["channels"]) == 3
         print("bad-key run OK: data kept, non-zero exit, key not leaked")
 
+        # a channel a visitor asked to track stays in the data even when it ranks too low to be kept
+        env = dict(os.environ, YT_API_BASE=f"http://127.0.0.1:{port}", YT_API_KEY="testkey", SEARCH_EVERY="99", KEEP_CHANNELS="1", SCAN_TIME_OFFSET=str(10 * 3600),
+                   FIRESTORE_BASE=f"http://127.0.0.1:{port}/v1", FIREBASE_PROJECT_ID="demo", FIREBASE_API_KEY="fbkey", PYTHONIOENCODING="utf-8")
+        out4 = Path(tmp) / "out4.json"
+        r = subprocess.run([sys.executable, str(HERE / "scan.py"), "--seed", str(Path(tmp) / "seed.json"), "--queries", str(Path(tmp) / "queries.json"),
+                            "--picks", str(Path(tmp) / "picks.json"), "--out", str(out4), "--prev-url", out2.resolve().as_uri(), "--extra", str(Path(tmp) / "extra.json")],
+                           env=env, capture_output=True, text=True, encoding="utf-8", cwd=tmp)
+        d4 = json.loads(out4.read_text(encoding="utf-8"))
+        names4 = [c["name"] for c in d4["channels"]]
+        assert len(names4) == 2 and "Big Quiet Channel" in names4, names4   # the top channel, plus the tracked one
+        assert cid(2) in d4["_state"]["tracked"], d4["_state"].get("tracked")
+        print(f"tracked channels OK: kept {len(names4)} with KEEP_CHANNELS=1 (the tracked one is pinned)")
+
         # trend feeds: YouTube charts by country and category, Wikipedia's most-read list, history between runs
-        def run_trends(key, prev=None, offset=0):
+        def run_trends(key, prev=None, offset=0, data=None):
             out = Path(tmp) / f"trends{offset}{key}.json"
             env = dict(os.environ, YT_API_BASE=f"http://127.0.0.1:{port}", WIKI_BASE=f"http://127.0.0.1:{port}/wiki", YT_API_KEY=key,
                        TRENDS_YT_EVERY="0", SCAN_TIME_OFFSET=str(offset), PREV_TRENDS_URL=prev.resolve().as_uri() if prev else "", PYTHONIOENCODING="utf-8")
-            r = subprocess.run([sys.executable, str(HERE / "trends.py"), "--out", str(out)], env=env, capture_output=True, text=True, encoding="utf-8", cwd=tmp)
+            r = subprocess.run([sys.executable, str(HERE / "trends.py"), "--out", str(out)] + (["--data", str(data)] if data else []), env=env, capture_output=True, text=True, encoding="utf-8", cwd=tmp)
             assert r.returncode == 0 and out.exists(), (r.returncode, r.stdout, r.stderr)
             assert key not in (r.stdout + r.stderr), "the API key must never be printed"
             return json.loads(out.read_text(encoding="utf-8")), out
@@ -223,8 +238,19 @@ def main():
         assert ranks == {"tC": (1, 3), "tA": (2, 1), "tD": (3, None)}, ranks   # climbed, dropped, new
         assert t2["seen"][th["all"][0]["id"]] == th["all"][0]["f"], "first-seen time is kept between runs"
         t3, _ = run_trends("wrong", prev=f2, offset=4 * 3600)
+        now_ts = int(NOW.timestamp())
+        trend_data = {"generated": now_ts, "channels": [{"ch_id": cid(n), "series": [
+            {"t": f"Mario speedrun part {i} #mario", "p": now_ts - 3600 * (i + 1), "v": 1000} for i in range(2)] + [
+            {"t": "A quiet day", "p": now_ts - 10 * 86400, "v": 500}]} for n in (1, 2, 3)]}
+        (Path(tmp) / "trend-data.json").write_text(json.dumps(trend_data), encoding="utf-8")
+        t4, _ = run_trends("testkey", prev=f2, offset=5 * 3600, data=Path(tmp) / "trend-data.json")
+        hot = t4["hot"]
+        assert hot["t:#mario"][0] == 6 and hot["g:Mario"][0] == 6 and hot["t:mario speedrun"][2] == "mario speedrun", {k: hot[k] for k in list(hot)[:6]}
+        assert "t:quiet" not in hot and "t:a quiet" not in hot, "old uploads only count as the baseline"
+        t5, _ = run_trends("wrong", prev=Path(tmp) / "trends18000testkey.json", offset=6 * 3600)
+        assert t5["hot"] == hot, "without this run's data the previous hot list is kept"
         assert t3["yt"]["regions"] == t2["yt"]["regions"], "a refused key keeps the previous charts"
-        print(f"trends OK: {sum(len(v) for v in t1['yt']['regions'].values())} charts, rank changes tracked, Wikipedia filtered, bad key keeps old charts")
+        print(f"trends OK: {sum(len(v) for v in t1['yt']['regions'].values())} charts, rank changes tracked, Wikipedia filtered, bad key keeps old charts, {len(hot)} hot trends")
     print("ALL CHECKS PASSED")
 
 

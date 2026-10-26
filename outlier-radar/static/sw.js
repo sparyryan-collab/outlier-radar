@@ -1,5 +1,5 @@
 // Offline support for the installed app. Only same-origin files are handled; YouTube, Google and Firebase go straight to the network.
-const CACHE = 'viral-radar-v2';
+const CACHE = 'viral-radar-v3';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -40,4 +40,19 @@ self.addEventListener('fetch', e => {
   if (url.pathname.endsWith('/data-lite.json')) e.respondWith(staleWhileRevalidate(req));
   else if (url.pathname.endsWith('.json') || req.mode === 'navigate' || url.pathname.endsWith('/') || url.pathname.endsWith('.html')) e.respondWith(networkFirst(req));
   else if (url.pathname.includes('/avatars/') || url.pathname.includes('/icons/')) e.respondWith(cacheFirst(req));
+});
+
+// trend alerts sent by the server worker (web push)
+self.addEventListener('push', e => {
+  let m = {};
+  try { m = e.data ? e.data.json() : {}; } catch (err) {}
+  e.waitUntil(self.registration.showNotification(m.title || 'Viral Radar', {body: m.body || '', tag: m.tag, icon: 'icons/icon-192.png', data: {url: m.url || ''}}));
+});
+self.addEventListener('notificationclick', e => {   // open the trend, in the open window when there is one
+  e.notification.close();
+  const url = new URL('./' + ((e.notification.data || {}).url || ''), self.registration.scope).href;
+  e.waitUntil(clients.matchAll({type: 'window', includeUncontrolled: true}).then(list => {
+    const open = list.find(c => c.url.startsWith(self.registration.scope));
+    return open ? open.focus().then(c => c.navigate(url)) : clients.openWindow(url);
+  }));
 });

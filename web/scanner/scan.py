@@ -29,6 +29,7 @@ FEATURED_PER_RUN = int(os.environ.get("FEATURED_PER_RUN", "3"))  # top channels 
 RUN_BUDGET = int(os.environ.get("RUN_BUDGET", "400"))
 WINDOW_DAYS = int(os.environ.get("SEARCH_WINDOW_DAYS", "30"))
 KEEP_CHANNELS = int(os.environ.get("KEEP_CHANNELS", "1500"))
+MAX_TRACKED = int(os.environ.get("MAX_TRACKED", "400"))          # channels visitors asked for (kept on top of KEEP_CHANNELS; checked daily like the rest)
 HIST_POINTS = int(os.environ.get("HIST_POINTS", "48"))
 VH_DAYS, VH_POINTS = 10, 8                                       # views-over-time curve for Shorts younger than 10 days         # growth history kept per channel (at most one point per 6 hours)
 
@@ -105,6 +106,28 @@ def merge_extra(path, channels, st, log):
         added += 1
     st["extra_hash"] = digest
     log.append(f"Added {added} channels found by the PC scanner")
+
+
+def fetch_requested(log):
+    """Channels visitors asked the site to track (Firestore collection track/*, readable by anyone). Empty when sign-in isn't set up."""
+    project, key = os.environ.get("FIREBASE_PROJECT_ID", "").strip(), os.environ.get("FIREBASE_API_KEY", "").strip()
+    if not project or not key:
+        return []
+    base = os.environ.get("FIRESTORE_BASE", "https://firestore.googleapis.com/v1")
+    ids, page = [], ""
+    for _ in range(5):
+        url = f"{base}/projects/{project}/databases/(default)/documents/track?pageSize=300&mask.fieldPaths=t&key={key}" + (f"&pageToken={page}" if page else "")
+        try:
+            with urllib.request.urlopen(url, timeout=20) as r:
+                data = json.load(r)
+        except Exception as e:
+            log.append(f"Could not read tracked channels ({type(e).__name__})")
+            break
+        ids += [d["name"].rsplit("/", 1)[-1] for d in data.get("documents", [])]
+        page = data.get("nextPageToken", "")
+        if not page:
+            break
+    return [i for i in ids if re.fullmatch(r"UC[\w-]{22}", i)]
 
 
 def crawl_featured(yt, st, channels, pending, now, log, limit):
@@ -256,6 +279,10 @@ def main():
 
     log = list((prev.get("status") or {}).get("log", []))[-18:]
     merge_extra(args.extra, channels, st, log)
+    tracked = set(sorted(set(st.get("tracked", [])) | set(fetch_requested(log)))[:MAX_TRACKED])   # asked for by visitors: always scanned, never dropped
+    for ch_id in tracked:
+        if ch_id not in channels and ch_id not in pending and st["failed"].get(ch_id, 0) < 3:
+            pending[ch_id] = {"ch_id": ch_id, "name": "", "hit_views": 10 ** 12, "hit_title": "", "queries": [], "requested": True}
     stamp = time.strftime("%H:%M", time.gmtime(now)) + " UTC"
     errors = 0
     key = os.environ.get("YT_API_KEY", "")
@@ -308,6 +335,8 @@ def main():
         ch["pick"] = picks.get(ch_id)
     ranked = sorted(channels.values(), key=lambda c: -(c.get("score") or 0))[:KEEP_CHANNELS]
     keep = {c["ch_id"] for c in ranked}
+    ranked += sorted((channels[i] for i in tracked if i in channels and i not in keep), key=lambda c: -(c.get("score") or 0))
+    keep |= tracked
     st["qstats"] = {k: v for k, v in st["qstats"].items()}
     data = {
         "generated": now, "readonly": True, "web": True,
@@ -322,7 +351,7 @@ def main():
         "config": {},
         "_state": {**{k: st[k] for k in ("quota_day", "quota_used", "searches_used", "runs", "cursor", "failed", "qstats")},
                    "extra_hash": st.get("extra_hash", ""), "featured": {k: v for k, v in st.get("featured", {}).items() if now - v < 8 * 86400},
-                   "pending": dict(list(pending.items())[:3000])},
+                   "pending": dict(list(pending.items())[:3000]), "tracked": sorted(tracked)[:3000]},
     }
     # forget channels that fell off the ranked list (they would only be re-discovered by searches)
     data["_state"]["failed"] = {k: v for k, v in st["failed"].items() if k in keep or k in pending}

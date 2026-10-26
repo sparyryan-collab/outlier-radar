@@ -809,6 +809,23 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .pf small{color:var(--muted);font-size:12.5px;line-height:1.45}
 .pctbl{max-width:640px}
 .pctbl td:nth-child(n+2),.pctbl th:nth-child(n+2){text-align:center;width:70px}
+/* ---- add channel, alerts, AI writer ---- */
+.addch{display:flex;gap:8px;max-width:640px;margin:4px 0 6px}
+.addch input{flex:1;min-width:0;height:40px;padding:0 14px;border:1px solid var(--line);border-radius:20px;background:var(--bg);outline:none}
+.addch input:focus{border-color:var(--accent)}
+.addch .pillbtn{height:40px;border-radius:20px}
+.waitlist{margin:8px 0 12px}
+.chip svg.i{width:15px;height:15px}
+.chip.on{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}
+.aiwait{display:inline-flex;gap:8px;align-items:center}
+.aiwait svg.i{animation:pulse 1.6s infinite;color:#e8a200}
+.ailist{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:10px}
+.aiidea{background:var(--surface);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.aiidea b{font-size:14.5px;line-height:1.35}
+.aiidea p{margin:0;font-size:13px}
+.aiidea p span{color:var(--muted)}
+.aiidea ol{margin:2px 0 4px;padding-left:18px;font-size:13px;color:var(--muted)}
+.aiidea .ghost{align-self:flex-start;height:30px;padding:0 10px}
 /* ---- footer, legal pages, trend channels ---- */
 footer{border-top:1px solid var(--line);padding-top:18px}
 footer p{margin:0 0 8px}
@@ -1566,6 +1583,38 @@ Object.assign(T.th, {
 });
 Object.assign(T.en, {themeT: 'Appearance', themeAuto: 'Device', themeLight: 'Light', themeDark: 'Dark', themeToDark: 'Dark mode', themeToLight: 'Light mode'});
 Object.assign(T.th, {themeT: 'ธีม', themeAuto: 'ตามเครื่อง', themeLight: 'สว่าง', themeDark: 'มืด', themeToDark: 'โหมดมืด', themeToLight: 'โหมดสว่าง'});
+Object.assign(T.en, {
+  acPh: 'Paste a channel link or @handle', acBtn: 'Add channel', acHint: 'Add any YouTube channel to follow it here, even one we don’t list yet.',
+  acSignIn: 'Sign in to add channels we don’t list yet, so the scanner starts following them.', acBad: 'That doesn’t look like a channel link or @handle.',
+  acNoKey: 'Adding channels needs YouTube search, which is off right now.', acLooking: 'Looking it up…', acFail: 'Couldn’t reach YouTube. Try again in a moment.',
+  acNone: 'No channel found with that link or handle.', acAdded: '{n} added. Its first numbers arrive with the next scan.', acHave: '{n} is in your saved list.',
+  acNeedSignIn: 'We don’t follow this channel yet. Sign in and add it again, and the scanner will start following it.',
+  acWaiting: '{n} subscribers · first numbers with the next scan (needs at least 6 Shorts)', remove: 'Remove',
+  alEnable: 'Turn on alerts', alOn: 'Alerts on', alOff: 'Turn off alerts', alNoSupport: 'This browser can’t show notifications.',
+  alBlocked: 'Notifications are blocked. Allow them for this site in your browser settings.', alOnPush: 'Alerts on: you’ll hear when a tracked trend takes off, even with the app closed.',
+  alOnLocal: 'Alerts on: you’ll hear when a tracked trend takes off while Viral Radar is open.', alTitle: '{x} is taking off',
+  alBody: '{n} new Shorts in 3 days, {x}× more than usual. Ride it now.', alHint: 'Track trends, then turn on alerts to hear the moment one takes off.',
+  aiBtn: 'Write ideas with AI', aiT: 'AI idea writer', aiD: 'Type any topic or trend and get 5 Short ideas: a title, the first-second hook and the beats.',
+  aiPh: 'e.g. Labubu, Halloween, Roblox obby', aiGo: 'Write ideas', aiWorking: 'Writing ideas…', aiHook: 'Hook', aiSignIn: 'Sign in to use the AI writer.',
+  aiPro: 'The AI writer is part of Pro.', aiLimit: 'You’ve used today’s AI ideas. More tomorrow.', aiRefused: 'The AI couldn’t write ideas for this topic. Try another one.',
+  aiBusy: 'The AI is busy. Try again in a minute.', aiFail: 'The AI writer didn’t answer. Try again.', fAffiliate: 'Earn with us'
+});
+Object.assign(T.th, {
+  acPh: 'วางลิงก์ช่องหรือ @แฮนเดิล', acBtn: 'เพิ่มช่อง', acHint: 'เพิ่มช่อง YouTube ไหนก็ได้เพื่อติดตามที่นี่ แม้ยังไม่อยู่ในรายการของเรา',
+  acSignIn: 'เข้าสู่ระบบเพื่อเพิ่มช่องที่ยังไม่อยู่ในรายการ ระบบจะเริ่มติดตามช่องนั้นให้', acBad: 'ดูไม่เหมือนลิงก์ช่องหรือ @แฮนเดิล',
+  acNoKey: 'การเพิ่มช่องต้องใช้การค้นหา YouTube ซึ่งตอนนี้ปิดอยู่', acLooking: 'กำลังค้นหา…', acFail: 'เชื่อมต่อ YouTube ไม่ได้ ลองใหม่อีกครั้ง',
+  acNone: 'ไม่พบช่องจากลิงก์หรือแฮนเดิลนี้', acAdded: 'เพิ่ม {n} แล้ว ตัวเลขแรกจะมาพร้อมการสแกนครั้งถัดไป', acHave: '{n} อยู่ในรายการที่บันทึกแล้ว',
+  acNeedSignIn: 'เรายังไม่ได้ติดตามช่องนี้ เข้าสู่ระบบแล้วเพิ่มอีกครั้ง ระบบจะเริ่มติดตามให้',
+  acWaiting: 'ผู้ติดตาม {n} · ตัวเลขแรกมาพร้อมการสแกนครั้งถัดไป (ต้องมีอย่างน้อย 6 คลิป)', remove: 'ลบ',
+  alEnable: 'เปิดการแจ้งเตือน', alOn: 'เปิดแจ้งเตือนแล้ว', alOff: 'ปิดการแจ้งเตือน', alNoSupport: 'เบราว์เซอร์นี้แสดงการแจ้งเตือนไม่ได้',
+  alBlocked: 'การแจ้งเตือนถูกบล็อก อนุญาตให้เว็บนี้แจ้งเตือนได้ในการตั้งค่าเบราว์เซอร์', alOnPush: 'เปิดแจ้งเตือนแล้ว: เมื่อเทรนด์ที่ติดตามเริ่มพุ่ง คุณจะได้รับแจ้งแม้ปิดแอปอยู่',
+  alOnLocal: 'เปิดแจ้งเตือนแล้ว: เมื่อเทรนด์ที่ติดตามเริ่มพุ่งระหว่างที่เปิด Viral Radar อยู่ คุณจะได้รับแจ้ง', alTitle: '{x} กำลังมาแรง',
+  alBody: 'คลิปใหม่ {n} คลิปใน 3 วัน มากกว่าปกติ {x} เท่า รีบทำตามเทรนด์เลย', alHint: 'ติดตามเทรนด์ แล้วเปิดการแจ้งเตือน เพื่อรู้ทันทีที่เทรนด์เริ่มพุ่ง',
+  aiBtn: 'ให้ AI ช่วยคิดไอเดีย', aiT: 'AI ช่วยคิดไอเดีย', aiD: 'พิมพ์หัวข้อหรือเทรนด์อะไรก็ได้ แล้วรับไอเดียคลิป 5 ไอเดีย: ชื่อคลิป ประโยคเปิดวินาทีแรก และลำดับเนื้อหา',
+  aiPh: 'เช่น Labubu, ฮาโลวีน, Roblox obby', aiGo: 'คิดไอเดีย', aiWorking: 'กำลังคิดไอเดีย…', aiHook: 'ประโยคเปิด', aiSignIn: 'เข้าสู่ระบบเพื่อใช้ AI ช่วยคิดไอเดีย',
+  aiPro: 'AI ช่วยคิดไอเดียเป็นส่วนหนึ่งของ Pro', aiLimit: 'ใช้ไอเดียจาก AI ของวันนี้ครบแล้ว พรุ่งนี้ใช้ได้อีก', aiRefused: 'AI คิดไอเดียสำหรับหัวข้อนี้ไม่ได้ ลองหัวข้ออื่น',
+  aiBusy: 'AI ไม่ว่างอยู่ ลองใหม่ในอีกสักครู่', aiFail: 'AI ไม่ตอบกลับ ลองใหม่อีกครั้ง', fAffiliate: 'หารายได้กับเรา'
+});
 Object.assign(T.en, {ytFrom: 'On YouTube’s trending chart'});
 Object.assign(T.th, {ytFrom: 'อยู่บนชาร์ตมาแรงของ YouTube'});
 Object.assign(T.en, {legalUpdated: 'Last updated {d}', contactGh: 'open a message on GitHub', fTerms: 'Terms', fPrivacy: 'Privacy', fRefunds: 'Refunds', fContact: 'Contact',
@@ -1930,6 +1979,9 @@ const IC = {
   car: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 16.5v-4l2.2-5.5h13.6l2.2 5.5v4z"/><circle cx="7.5" cy="16.5" r="1.8"/><circle cx="16.5" cy="16.5" r="1.8"/></svg>',
   plane: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13.5 21 6l-4.5 14-4.5-5.5-4.5 1.5z"/><path d="M12 14.5 21 6"/></svg>',
   paw: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6.5" cy="10" r="1.8"/><circle cx="10" cy="6" r="1.8"/><circle cx="14" cy="6" r="1.8"/><circle cx="17.5" cy="10" r="1.8"/><path d="M12 11.5c-3 0-5.5 3.2-5.5 5.4 0 1.5 1.2 2.3 2.6 2.3 1.2 0 1.9-.6 2.9-.6s1.7.6 2.9.6c1.4 0 2.6-.8 2.6-2.3 0-2.2-2.5-5.4-5.5-5.4z"/></svg>',
+  bell: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 6.5 2.5 8.5 2.5 8.5h-17S6 15.5 6 9M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>',
+  sparkle: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>',
+  plus: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
   flameF: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 6.5 6.5 6.5 13a6.5 6.5 0 0 1-13 0c0-3.5 2.2-5.6 3.3-6.6 0 2.3 1 3.6 2.3 3.6 0-3.4-1-6.6.9-10z"/></svg>'
 };
 const TOPIC_IC = {animals: 'paw', animation: 'film', ai: 'chip', games: 'gamepad', satisfying: 'wave', facts: 'bulb', funny: 'smile', food: 'utensils', diy: 'wrench',
@@ -3667,7 +3719,7 @@ if (STATIC && 'serviceWorker' in navigator && (location.protocol === 'https:' ||
 /* ---------- Google sign-in + sync (Firebase Auth + Cloud Firestore on the free plan) ---------- */
 const FB = CFG.firebase && CFG.firebase.apiKey && CFG.firebase.projectId ? CFG.firebase : null;
 const FB_VER = '10.12.2';
-const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.tw'];
+const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.tw', 'radar.trackinfo'];
 const GICON = '<svg viewBox="0 0 48 48" style="stroke:none"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.7 6c4.5-4.2 6.9-10.3 6.9-17.7z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.7-6c-2.1 1.4-4.9 2.3-8.2 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>';
 let FBX = null, USER = null, SYNC = {state: 'off', at: 0, err: ''}, syncTimer = null, applyingRemote = false, unsubSnap = null;
 const lsRaw = LS.set.bind(LS);
@@ -3711,6 +3763,7 @@ function onUser(u) {
   if (unsubSnap) { unsubSnap(); unsubSnap = null; }
   if (USER) firstSync().catch(syncErr); else SYNC = {state: 'off', at: 0, err: ''};
   checkPro();
+  if (USER) savePushSub();
   renderAcct();
   if (DATA) renderSide();
 }
@@ -3938,8 +3991,8 @@ function trendData() {   // rising words, hashtags, games and characters; worked
     keep.push(s);
     if (keep.length >= 150) break;
   }
-  const board = (list, pre) => list.map(([name, rx], i) => {
-    const s = newStats(pre + i, name);
+  const board = (list, pre) => list.map(([name, rx]) => {
+    const s = newStats(pre + name, name);
     for (const [v, c, age] of win) if (rx.test(v.t)) addVideo(s, v, c, age);
     finishStats(s);
     s.cat = pre === 'g:' ? 'games' : 'cartoons';
@@ -3972,6 +4025,7 @@ async function loadTrends() {
     TRENDS = await r.json();
     if (TR) TR.sig = '';   // the boards count chart mentions too
     if (DATA && ['trends', 'home'].includes(S.tab) && !$('#dlg').open) renderContent();
+    checkLocalAlerts();
   } catch (e) {}
 }
 const YT_CATS = ['all', 'games', 'animation', 'entertainment', 'comedy', 'music', 'sports', 'news', 'animals', 'howto', 'tech', 'people'];
@@ -4004,14 +4058,19 @@ async function checkPro() {   // a subscription is recorded in Firestore pro/{ui
   }
   if (DATA) render(true);
 }
-const checkoutLink = () => (PRO.checkout && USER ? PRO.checkout.replace('{uid}', encodeURIComponent(USER.uid)).replace('{email}', encodeURIComponent(USER.email || '')) : '');
+const checkoutLink = () => {   // Lemon Squeezy's affiliate script, when present, adds the referring affiliate to the link
+  const u = PRO.checkout && USER ? PRO.checkout.replace('{uid}', encodeURIComponent(USER.uid)).replace('{email}', encodeURIComponent(USER.email || '')) : '';
+  try { return u && window.LemonSqueezy && LemonSqueezy.Affiliate && LemonSqueezy.Affiliate.Build ? LemonSqueezy.Affiliate.Build(u) : u; } catch (e) { return u; }
+};
 
 /* ---------- tracked trends: a watch list that lights up when something takes off ---------- */
-const tracked = () => LS.get('radar.tw', []).filter(x => x && x.k);
+const tracked = () => LS.get('radar.tw', []).filter(x => x && x.k)   // early keys used list positions (g:3); they are names now (g:Minecraft)
+  .map(x => (/^[gc]:\d+$/.test(x.k) ? Object.assign({}, x, {k: x.k[0] + ':' + ((x.k[0] === 'g' ? GAMES : CARTOONS)[+x.k.slice(2)] || [x.l])[0]}) : x));
 const isTracked = key => tracked().some(x => x.k === key);
 function toggleTrack(key, label) {
   const list = tracked();
   LS.set('radar.tw', list.some(x => x.k === key) ? list.filter(x => x.k !== key) : [{k: key, l: label, a: Date.now()}].concat(list).slice(0, 50));
+  savePushSub();
 }
 const hotTracked = () => (DATA ? tracked().filter(x => trendHot(trendByKey(x.k))).length : 0);
 
@@ -4047,10 +4106,11 @@ function ideaList(x) {
 const TTABS = [['rising', '🚀', 'ttRising'], ['games', '🎮', 'ttGames'], ['cartoons', '🎨', 'ttToons'], ['yt', '📈', 'ttYt'], ['news', '📰', 'ttNews']];
 function trendsView() {
   const T_ = trendData(), tab = S.ttab || 'rising';
+  TREND_OPEN = '';
   let h = pageHead('pTrendsT', 'pTrendsD') + briefHtml(T_);
   const tw = tracked();
   if (tw.length) {
-    h += `<div class="twrow"><b>${IC.star}${esc(t('twT'))}</b>${tw.map(x => { const s = trendByKey(x.k); return `<button type="button" class="chip ${trendHot(s) ? 'hot' : ''}" data-trend="${esc(x.k)}">${esc(x.l)} <span class="${trendHot(s) ? 'heatup' : 'pbmuted'}">${esc(trendHot(s) ? '▲ ' + liftText(s) : s.r ? t('twSteady') : t('twQuiet'))}</span></button>`; }).join('')}</div>`;
+    h += `<div class="twrow"><b>${IC.star}${esc(t('twT'))}</b>${alertBtn()}${tw.map(x => { const s = trendByKey(x.k); return `<button type="button" class="chip ${trendHot(s) ? 'hot' : ''}" data-trend="${esc(x.k)}">${esc(x.l)} <span class="${trendHot(s) ? 'heatup' : 'pbmuted'}">${esc(trendHot(s) ? '▲ ' + liftText(s) : s.r ? t('twSteady') : t('twQuiet'))}</span></button>`; }).join('')}</div>`;
   }
   h += `<div class="ttabs" role="tablist">${TTABS.map(([k, em, lk]) => `<button type="button" role="tab" data-ttab="${k}" aria-selected="${tab === k}">${esc(t(lk))}</button>`).join('')}</div>`;
   if (tab === 'games' || tab === 'cartoons') {
@@ -4121,7 +4181,7 @@ function openTrend(key) {
   const s = trendByKey(key);
   if (!s) return;
   const dlg = $('#dlg'), body = $('#dlgBody'), label = s.label;
-  body.onclick = null; body.dataset.mode = 'trend';
+  body.onclick = null; body.dataset.mode = 'trend'; TREND_OPEN = key;
   const days = s.days, mx = Math.max(1, ...days), start = nowTs() - (TR_DAYS - 1) * 86400;
   const bars = days.map((n, i) => `<i class="${i >= TR_DAYS - 3 ? 'now' : ''}" style="height:${Math.max(n ? 6 : 2, 100 * n / mx).toFixed(0)}%" title="${esc(shortDate(start + i * 86400))}: ${n}"></i>`).join('');
   const best = s.vids[0];
@@ -4135,9 +4195,11 @@ function openTrend(key) {
     ${s.chs.size ? `<h4 class="antitle" style="margin-top:14px">${esc(t('tChans'))}</h4><div class="tchs">${[...s.chs].map(findCh).filter(Boolean).slice(0, 14).map(c => `<button type="button" class="tch" data-open-ch="${esc(c.ch_id)}">${avatarEl(c, 40)}<small>${esc(c.name)}</small></button>`).join('')}</div>` : ''}
     ${s.vids.length ? `<h4 class="antitle" style="margin-top:14px">${esc(t('tTop'))}</h4><div class="vgrid">${s.vids.slice(0, locked ? 4 : 12).map(([v, c]) => vCard(v, c, {showWhen: true})).join('')}</div>${locked && s.vids.length > 4 ? lockCard(t('tTop')) : ''}` : ''}
     <h4 class="antitle" style="margin-top:14px">${esc(t('tRide'))}</h4>${locked ? lockCard(t('tRide')) : ideaList(label.replace(/^#/, ''))}
+    ${AI_URL ? `<div style="margin-top:10px"><button type="button" class="pillbtn" data-ai="${esc(key)}">${IC.sparkle}${esc(t('aiBtn'))}</button><div id="aiBox"></div></div>` : ''}
     <div class="pbfoot" style="margin-top:14px"><button type="button" class="pillbtn ${isTracked(key) ? '' : 'red'}" data-twatch="${esc(key)}" data-tl="${esc(label)}">${esc(t(isTracked(key) ? 'twOff' : 'twOn'))} ${proTag()}</button>
       ${canSearch() ? `<button type="button" class="pillbtn" data-tsearch="${esc(label.replace(/^#/, ''))}">${IC.search}${esc(t('tSearch'))}</button>` : ''}
-      ${LIVE ? `<button type="button" class="ghost" data-copylink="trend/${esc(encodeURIComponent(key))}">${esc(t('tShare'))}</button>` : ''}</div>`;
+      ${LIVE ? `<button type="button" class="ghost" data-copylink="trend/${esc(encodeURIComponent(key))}">${esc(t('tShare'))}</button>` : ''}
+      ${isTracked(key) ? alertBtn() : ''}</div>`;
   if (!dlg.open) dlg.showModal();
   body.scrollTop = 0;
 }
@@ -4225,6 +4287,7 @@ function toolsView() {
   h += sec(IC.clock, 'btT', 'btD', `<select id="btTopic" aria-label="${esc(t('btT'))}"><option value="">${esc(t('topicAll'))}</option>${TOPICS.map(x => `<option value="${x[0]}" ${tp === x[0] ? 'selected' : ''}>${esc(topicName(x))}</option>`).join('')}</select>
     ${grid ? `<div class="chartbox" style="margin-top:10px">${grid.html}<small class="cap">${esc(grid.best)} · ${esc(t('btCap', {n: pool.length}))}</small></div>` : `<p class="pbmuted">${esc(t('btFew'))}</p>`}`);
   h += sec(IC.edit, 'tcT', 'tcD', `<textarea id="tcIn" rows="2" placeholder="${esc(t('tcPh'))}">${esc(S.tctext || '')}</textarea><div id="tcOut">${checkTitle(S.tctext || '')}</div>`);
+  if (AI_URL) h += sec(IC.sparkle, 'aiT', 'aiD', `<div class="addch"><input id="aiIn" placeholder="${esc(t('aiPh'))}" autocomplete="off"><button type="button" class="pillbtn red" data-aitopic>${esc(t('aiGo'))}</button></div><div id="aiTopicBox"></div>`);
   h += sec(IC.download, 'exT', 'exD', `<div class="btns">${[['channels', 'exCh'], ['shorts', 'exShorts'], ['trends', 'exTrends']].map(([k, lk]) => `<button type="button" class="pillbtn" data-csv="${k}">⬇️ ${esc(t(lk))}</button>`).join('')}</div>`);
   return h;
 }
@@ -4245,6 +4308,110 @@ function proView() {
     <h3 class="subhead">${esc(t('pcT'))}</h3>
     <table class="tbl pctbl"><tr><th></th><th>${esc(t('pcFree'))}</th><th>Pro</th></tr>${rows.map(([k, f, p]) => `<tr><td>${esc(t(k))}</td><td>${f ? '✓' : '–'}</td><td>${p ? '✓' : '–'}</td></tr>`).join('')}</table>
     <p class="anote">${esc(t('proData'))}</p>`;
+}
+
+/* ---------- add any channel: it joins the saved list and the scanner starts following it ---------- */
+const trackInfo = () => LS.get('radar.trackinfo', {});
+function chFromInput(raw) {   // a channel link, an @handle or a UC... id
+  const s = String(raw || '').trim(), id = /(UC[\w-]{22})/.exec(s);
+  if (id) return {id: id[1]};
+  const h = /@([\w.\-]{3,30})/.exec(s) || /youtube\.com\/(?:c\/|user\/)?([\w.\-]{3,30})\/?$/i.exec(s) || /^([\w.\-]{3,30})$/.exec(s);
+  return h ? {handle: '@' + h[1]} : null;
+}
+async function addChannel(raw) {
+  const q = chFromInput(raw), say = (k, x) => { const m = $('#addMsg'); if (m) m.textContent = t(k, x); };
+  if (!q) return say('acBad');
+  if (!getKey()) return say('acNoKey');
+  say('acLooking');
+  let it;
+  try { it = ((await ytApi('channels', Object.assign({part: 'snippet,statistics'}, q.id ? {id: q.id} : {forHandle: q.handle}))).items || [])[0]; }
+  catch (e) { return say(e && e.quota ? 'kQuota' : 'acFail'); }
+  if (!it) return say('acNone');
+  const id = it.id, sn = it.snippet || {}, known = !!findCh(id);
+  if (!known && FB && !USER) return say('acNeedSignIn');
+  const info = trackInfo();
+  info[id] = {name: String(sn.title || id).slice(0, 100), avatar: ((sn.thumbnails || {}).default || {}).url || '', subs: +(it.statistics || {}).subscriberCount || 0, t: Date.now()};
+  LS.set('radar.trackinfo', info);
+  watchLocal.add(id); LS.set('radar.watch', [...watchLocal]);
+  if (!known && USER && FBX) {   // anyone signed in may ask once; the channel then stays followed for everyone
+    try { await FBX.F.setDoc(FBX.F.doc(FBX.db, 'track', id), {t: FBX.F.serverTimestamp()}); } catch (e) {}   // already asked for: fine
+  }
+  renderSide(); renderContent();
+  toast(t(known ? 'acHave' : 'acAdded', {n: info[id].name}));
+}
+function savedView() {
+  const list = DATA.channels.filter(isWatched).sort((a, b) => b.score - a.score), info = trackInfo();
+  const waiting = STATIC ? [...watchLocal].filter(id => !findCh(id) && info[id]) : [];
+  let h = pageHead('pSavedT', canLive() ? 'pSavedDLive' : 'pSavedD');
+  if (STATIC) h += `<div class="addch"><input id="addIn" placeholder="${esc(t('acPh'))}" autocomplete="off"><button type="button" class="pillbtn red" data-addch>${IC.plus}${esc(t('acBtn'))}</button></div>
+    <p class="pbtip" id="addMsg">${esc(t(FB && !USER ? 'acSignIn' : 'acHint'))}</p>`;
+  if (waiting.length) h += `<div class="blist waitlist">${waiting.map(id => { const x = info[id], pic = /^https:\/\/yt3\.(ggpht|googleusercontent)\.com\//.test(x.avatar) ? `<img src="${esc(x.avatar)}" alt="">` : '';
+    return `<div class="nrow"><span class="av" style="width:40px;height:40px;background:var(--surface2)">${pic}</span><span class="bmain"><b>${esc(x.name)}</b><small>${esc(t('acWaiting', {n: fmt(x.subs)}))}</small></span>
+      <button type="button" class="ghost" data-unwatch="${esc(id)}">${esc(t('remove'))}</button></div>`; }).join('')}</div>`;
+  return h + (list.length || !waiting.length ? channelsView(list, t('emptySaved')) : '');
+}
+
+/* ---------- trend alerts: a notification the moment a tracked trend takes off ---------- */
+const VAPID = /^[A-Za-z0-9_-]{80,100}$/.test(CFG.vapidKey || '') ? CFG.vapidKey : '';
+const b64bytes = x => Uint8Array.from(atob(x.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - x.length % 4) % 4)), c => c.charCodeAt(0));
+const alertsOn = () => !!LS.get('radar.alerts', false) && 'Notification' in window && Notification.permission === 'granted';
+async function savePushSub() {   // with the server worker set up, alerts arrive even when the app is closed
+  if (!VAPID || !USER || !FBX || !('serviceWorker' in navigator) || !alertsOn()) return;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: b64bytes(VAPID)});
+    await FBX.F.setDoc(FBX.F.doc(FBX.db, 'push', USER.uid), {sub: JSON.stringify(sub), keys: JSON.stringify(tracked().map(x => x.k)), lang: UI, t: FBX.F.serverTimestamp()}, {merge: true});
+  } catch (e) {}
+}
+async function toggleAlerts() {
+  if (alertsOn()) {
+    LS.set('radar.alerts', false);
+    try {
+      if (USER && FBX) await FBX.F.deleteDoc(FBX.F.doc(FBX.db, 'push', USER.uid));
+      const sub = 'serviceWorker' in navigator && await (await navigator.serviceWorker.ready).pushManager.getSubscription();
+      if (sub) await sub.unsubscribe();
+    } catch (e) {}
+  } else {
+    if (!('Notification' in window)) return toast(t('alNoSupport'));
+    if (await Notification.requestPermission() !== 'granted') return toast(t('alBlocked'));
+    LS.set('radar.alerts', true);
+    await savePushSub();
+    toast(t(VAPID && USER ? 'alOnPush' : 'alOnLocal'));
+  }
+  renderContent();
+  if ($('#dlg').open && $('#dlgBody').dataset.mode === 'trend' && TREND_OPEN) openTrend(TREND_OPEN);
+}
+function checkLocalAlerts() {   // while the site or app is open: notify about tracked trends that just took off (at most once in 3 days each)
+  if (!alertsOn() || !DATA || !('serviceWorker' in navigator)) return;
+  const told = LS.get('radar.told', {}), now = Date.now();
+  for (const x of tracked()) {
+    const s = trendByKey(x.k);
+    if (!trendHot(s) || told[x.k] > now - 3 * 86400e3) continue;
+    told[x.k] = now;
+    navigator.serviceWorker.ready.then(reg => reg.showNotification(t('alTitle', {x: x.l}),
+      {body: t('alBody', {n: s.r, x: fmtX(Math.min(s.lift, 99))}), tag: x.k, icon: 'icons/icon-192.png', data: {url: '#trend/' + encodeURIComponent(x.k)}})).catch(() => {});
+  }
+  LS.set('radar.told', told);
+}
+const alertBtn = () => `<button type="button" class="chip ${alertsOn() ? 'on' : ''}" data-alerts>${IC.bell}${esc(t(alertsOn() ? 'alOn' : 'alEnable'))}</button>`;
+
+/* ---------- AI idea writer (the server worker calls Claude; needs sign-in, and Pro once Pro is paid) ---------- */
+const AI_URL = httpsOk(CFG.aiUrl) ? CFG.aiUrl.replace(/\/+$/, '') : '';
+let TREND_OPEN = '';
+async function aiIdeas(topic, examples, box) {
+  if (!box) return;
+  if (!isPro()) { box.innerHTML = lockCard(t('aiT')); return; }
+  if (!USER) { box.innerHTML = `<p class="pbtip">${esc(t('aiSignIn'))}</p>` + (FB ? `<button type="button" class="pillbtn" data-signin>${GICON}${esc(t('signInG'))}</button>` : ''); return; }
+  box.innerHTML = `<p class="pbtip aiwait">${IC.sparkle}${esc(t('aiWorking'))}</p>`;
+  try {
+    const r = await fetch(AI_URL + '/ai', {method: 'POST', headers: {'content-type': 'application/json', authorization: 'Bearer ' + await USER.getIdToken()},
+      body: JSON.stringify({topic: String(topic).slice(0, 120), examples: examples.slice(0, 8), lang: UI})});
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) { box.innerHTML = `<p class="pbtip">${esc(t({401: 'aiSignIn', 402: 'aiPro', 429: 'aiLimit', 422: 'aiRefused', 503: 'aiBusy'}[r.status] || 'aiFail'))}</p>`; return; }
+    box.innerHTML = `<div class="ailist">${(d.ideas || []).slice(0, 8).map(x => `<div class="aiidea"><b>${esc(x.title)}</b><p><span>${esc(t('aiHook'))}:</span> ${esc(x.hook)}</p>
+      <ol>${(x.beats || []).slice(0, 6).map(b => `<li>${esc(b)}</li>`).join('')}</ol>
+      <button type="button" class="ghost" data-copytext="${esc([x.title, x.hook].concat(x.beats || []).join('\n'))}">${esc(t('copy'))}</button></div>`).join('')}</div>`;
+  } catch (e) { box.innerHTML = `<p class="pbtip">${esc(t('aiFail'))}</p>`; }
 }
 
 /* ---------- terms, privacy and refunds ---------- */
@@ -4316,6 +4483,7 @@ function footHtml() {
   const lead = DATA && DATA.snapshot ? t('footSnap') + ' ' + t(DATA.web ? 'footWeb' : 'footLocal') : t(STATIC ? 'footWeb' : 'footLocal');
   return `<p>${esc(lead)}</p><nav class="flinks"><a href="#terms" data-tab="terms">${esc(t('fTerms'))}</a><a href="#privacy" data-tab="privacy">${esc(t('fPrivacy'))}</a>` +
     `<a href="#refunds" data-tab="refunds">${esc(t('fRefunds'))}</a><a href="#pro" data-tab="pro">Viral Radar Pro</a>` +
+    (httpsOk(CFG.affiliateUrl) ? `<a href="${esc(CFG.affiliateUrl)}" target="_blank" rel="noopener">${esc(t('fAffiliate'))}</a>` : '') +
     (CONTACT ? `<a href="mailto:${esc(CONTACT)}">${esc(t('fContact'))}</a>` : `<a href="https://github.com/sparyryan-collab/outlier-radar/issues" target="_blank" rel="noopener noreferrer">${esc(t('fContact'))}</a>`) +
     `</nav><p class="fsmall">${esc(t('fNotYt'))}</p>`;
 }
@@ -4400,7 +4568,7 @@ function renderContent() {
   else if (tab === 'playbook') el.innerHTML = playbookView();
   else if (tab === 'mine') el.innerHTML = mineView();
   else if (tab === 'topics') el.innerHTML = topicsView();
-  else if (tab === 'saved') el.innerHTML = pageHead('pSavedT', canLive() ? 'pSavedDLive' : 'pSavedD') + channelsView(DATA.channels.filter(isWatched).sort((a, b) => b.score - a.score), t('emptySaved'));
+  else if (tab === 'saved') el.innerHTML = savedView();
   else if (tab === 'trends') el.innerHTML = trendsView();
   else if (tab === 'tools') el.innerHTML = toolsView();
   else if (tab === 'pro') el.innerHTML = proView();
@@ -4488,6 +4656,13 @@ document.addEventListener('click', async e => {
   if (x.closest('[data-close]')) { x.closest('dialog').close(); return; }
   const tr = x.closest('[data-trend]');
   if (tr) { openTrend(tr.dataset.trend); return; }
+  if (x.closest('[data-addch]')) { const el = $('#addIn'); addChannel(el ? el.value : ''); return; }
+  const unw = x.closest('[data-unwatch]');
+  if (unw) { watchLocal.delete(unw.dataset.unwatch); LS.set('radar.watch', [...watchLocal]); const i = trackInfo(); delete i[unw.dataset.unwatch]; LS.set('radar.trackinfo', i); renderSide(); renderContent(); return; }
+  if (x.closest('[data-alerts]')) { if (isPro()) toggleAlerts(); else { if ($('#dlg').open) $('#dlg').close(); go('pro'); } return; }
+  const aib = x.closest('[data-ai]');
+  if (aib) { const s = trendByKey(aib.dataset.ai); aiIdeas(s.label.replace(/^#/, ''), s.vids.slice(0, 8).map(([v]) => v.t), $('#aiBox')); return; }
+  if (x.closest('[data-aitopic]')) { const el = $('#aiIn'); if (el && el.value.trim()) aiIdeas(el.value.trim(), [], $('#aiTopicBox')); return; }
   const tt = x.closest('[data-ttab]');
   if (tt) { S.ttab = tt.dataset.ttab; saveState(); if ($('#dlg').open) $('#dlg').close(); if (S.tab !== 'trends') go('trends'); else renderContent(); return; }
   const tc = x.closest('[data-tcat]');
@@ -4584,6 +4759,8 @@ document.addEventListener('click', async e => {
 document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('article[data-open-ch]')) { e.preventDefault(); openChannel(e.target.dataset.openCh); }
   if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('article[data-trend]')) { e.preventDefault(); openTrend(e.target.dataset.trend); }
+  if (e.key === 'Enter' && e.target.id === 'addIn') { e.preventDefault(); addChannel(e.target.value); }
+  if (e.key === 'Enter' && e.target.id === 'aiIn' && e.target.value.trim()) { e.preventDefault(); aiIdeas(e.target.value.trim(), [], $('#aiTopicBox')); }
   if (e.key === 'Escape') closePop();
   if (e.key === '/' && !e.ctrlKey && !e.metaKey && !(e.target.closest && e.target.closest('input, textarea, select, [contenteditable]')) && !document.querySelector('dialog[open]')) {
     e.preventDefault(); document.body.classList.add('msearch'); $('#fq').focus();
@@ -4869,8 +5046,9 @@ async function refresh() {
     lastSig = sig;
     const first = !DATA || DATA.lite;   // the light file may have drawn the first screen
     DATA = d;
-    if (first) { render(); afterFirstData(); return; }
-    if (!$('#dlg').open && !['playbook', 'mine', 'tools'].includes(S.tab)) render(true); else renderSide();
+    if (first) { render(); afterFirstData(); checkLocalAlerts(); return; }
+    if (!$('#dlg').open && !['playbook', 'mine', 'tools', 'saved'].includes(S.tab)) render(true); else renderSide();
+    checkLocalAlerts();
   } catch (e) {
     const box = $('#side .livebox');
     if (box) box.innerHTML = `<span class="dot"></span><span>${esc(t(STATIC ? 'offlineWeb' : 'offline'))}</span>`;

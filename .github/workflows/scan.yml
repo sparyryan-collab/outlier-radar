@@ -8,6 +8,8 @@ name: Refresh site
 #   FIREBASE_API_KEY, FIREBASE_PROJECT_ID   switch on Google sign-in and sync (see web/README.md)
 #   PRO_GATE, PRO_PRICE, CHECKOUT_URL, MANAGE_URL   Viral Radar Pro: lock Pro features behind a subscription (see web/README.md)
 #   CONTACT_EMAIL  shown on the terms, privacy and refund pages
+#   VAPID_PUBLIC_KEY, AI_URL       trend alerts and the AI writer, served by the server worker (web/pay/worker.js)
+#   LEMON_STORE, AFFILIATE_URL     Lemon Squeezy affiliate tracking and the footer's affiliate sign-up link
 on:
   schedule:
     - cron: "4,19,34,49 * * * *"
@@ -49,6 +51,10 @@ jobs:
           CHECKOUT_URL: ${{ vars.CHECKOUT_URL }}
           MANAGE_URL: ${{ vars.MANAGE_URL }}
           CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
+          VAPID_PUBLIC_KEY: ${{ vars.VAPID_PUBLIC_KEY }}
+          AI_URL: ${{ vars.AI_URL }}
+          LEMON_STORE: ${{ vars.LEMON_STORE }}
+          AFFILIATE_URL: ${{ vars.AFFILIATE_URL }}
         run: python web/scanner/build_site.py _site
 
       - name: Restore profile pictures
@@ -68,6 +74,8 @@ jobs:
           SITE_URL: ${{ vars.SITE_URL }}
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
+          FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+          FIREBASE_API_KEY: ${{ vars.FIREBASE_API_KEY }}
         run: |
           OWNER_LC="$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')"
           export PREV_DATA_URL="${SITE_URL:-https://${OWNER_LC}.github.io/${REPO}}/data.json"
@@ -86,7 +94,7 @@ jobs:
         run: |
           OWNER_LC="$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')"
           export PREV_TRENDS_URL="${SITE_URL:-https://${OWNER_LC}.github.io/${REPO}}/trends.json"
-          python web/scanner/trends.py --out _site/trends.json
+          python web/scanner/trends.py --out _site/trends.json --data _site/data.json
 
       - name: Download any new profile pictures
         run: python web/scanner/sync_avatars.py _site/data.json _site/avatars 150
