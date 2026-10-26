@@ -809,6 +809,23 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .pf small{color:var(--muted);font-size:12.5px;line-height:1.45}
 .pctbl{max-width:640px}
 .pctbl td:nth-child(n+2),.pctbl th:nth-child(n+2){text-align:center;width:70px}
+/* ---- clipping permission and checklist ---- */
+.perm{border-radius:10px;padding:8px 10px;background:var(--surface);display:flex;flex-direction:column;gap:3px;font-size:13px}
+.perm b{display:inline-flex;gap:6px;align-items:center}
+.perm svg.i{width:14px;height:14px}
+.perm.allows{background:color-mix(in srgb,var(--good) 13%,transparent)}
+.perm.allows b{color:var(--good)}
+.perm.forbids{background:color-mix(in srgb,var(--bad) 12%,transparent)}
+.perm.forbids b{color:var(--bad)}
+.perm q{font-style:italic;color:var(--text);quotes:"“" "”";display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.perm small{color:var(--muted);font-size:12px}
+.perm .link{font-size:12px;color:var(--accent)}
+.cchk{border-top:1px solid var(--line);padding-top:8px}
+.cchk summary{cursor:pointer;font-weight:600;font-size:13.5px}
+.ckrow{display:flex;gap:8px;align-items:flex-start;font-size:13px;margin-top:8px;cursor:pointer}
+.ckrow input{margin-top:2px;width:16px;height:16px;accent-color:var(--good);flex:none}
+.ccbox{background:var(--card);box-shadow:0 0 0 1px var(--line);border-radius:14px;padding:14px;margin:0 0 14px;max-width:960px}
+.ccbox #ccOut .clcard{margin-top:10px;box-shadow:none;padding:0}
 /* ---- clip finder ---- */
 .cl3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 12px;max-width:960px}
 .cl3 div{background:var(--surface);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
@@ -1673,6 +1690,32 @@ Object.assign(T.th, {
   clLatest: 'วิดีโอยาวล่าสุด', clTopClip: 'คลิปเด่น · {v} วิว', clChannel: 'ช่องของเขา', clSearch: 'ดูคลิปบน YouTube',
   clWarn: 'ตัดคลิปเฉพาะครีเอเตอร์ที่อนุญาต หลายคนเปิดรับคนตัดคลิป (ดูคำว่า clipping program หรือ “feel free to clip” ในคำอธิบายช่อง) บางคนแจ้งลิขสิทธิ์ ใส่การตัดต่อ คำบรรยาย หรือความเห็นของคุณเอง และให้เครดิตเขาเสมอ',
   brClip: 'น่าตัดคลิปคนนี้'
+});
+Object.assign(T.en, {
+  pmYes: 'Allows clipping', pmNo: 'Says no re-uploads', pmAsk: 'Not stated: ask first',
+  pmAskD: 'Nothing about clipping in their channel or latest video descriptions. Message them or check their socials before you clip.',
+  pmPending: 'Not checked yet. The next scan reads their channel and video descriptions.',
+  pmInVideo: 'Written under one of their videos', pmInChannel: 'Written in their channel description',
+  ccT: 'Check any creator', ccD: 'Paste a channel link or @handle to see what they say about clipping.', ccGo: 'Check', ccNoKey: 'Checking creators needs YouTube search, which is off right now.',
+  clNoMatch: 'No creators match these filters yet. Turn one off to see more.',
+  clAllow: 'Allows clipping', ckT: 'Before you clip', ckReady: 'Ready to clip', ckMine: 'Your clipping checklist',
+  ck1: 'They allow clipping: it’s written in their descriptions, or you asked and they said yes',
+  ck2: 'You read their rules: how to credit them, where you may post, and any clipping-program terms',
+  ck3: 'Your clip adds something of yours: your own edit, captions, commentary or context',
+  ck4: 'You credit them in the title or description and link their channel'
+});
+Object.assign(T.th, {
+  pmYes: 'อนุญาตให้ตัดคลิป', pmNo: 'แจ้งว่าห้ามนำไปลงซ้ำ', pmAsk: 'ไม่ได้ระบุ: ขออนุญาตก่อน',
+  pmAskD: 'ไม่พบข้อความเรื่องการตัดคลิปในคำอธิบายช่องหรือวิดีโอล่าสุด ส่งข้อความถามหรือดูโซเชียลของเขาก่อนตัดคลิป',
+  pmPending: 'ยังไม่ได้ตรวจ การสแกนครั้งถัดไปจะอ่านคำอธิบายช่องและวิดีโอของเขา',
+  pmInVideo: 'เขียนไว้ใต้วิดีโอหนึ่งของเขา', pmInChannel: 'เขียนไว้ในคำอธิบายช่อง',
+  ccT: 'ตรวจครีเอเตอร์คนไหนก็ได้', ccD: 'วางลิงก์ช่องหรือ @แฮนเดิล เพื่อดูว่าเขาพูดถึงการตัดคลิปว่าอย่างไร', ccGo: 'ตรวจ', ccNoKey: 'การตรวจครีเอเตอร์ต้องใช้การค้นหา YouTube ซึ่งตอนนี้ปิดอยู่',
+  clNoMatch: 'ยังไม่มีครีเอเตอร์ที่ตรงกับตัวกรองนี้ ลองปิดตัวกรองเพื่อดูเพิ่ม',
+  clAllow: 'อนุญาตให้ตัดคลิป', ckT: 'ก่อนตัดคลิป', ckReady: 'พร้อมตัดคลิป', ckMine: 'เช็กลิสต์ตัดคลิปของคุณ',
+  ck1: 'เขาอนุญาตให้ตัดคลิป: เขียนไว้ในคำอธิบาย หรือคุณถามแล้วเขาตอบตกลง',
+  ck2: 'คุณอ่านกติกาของเขาแล้ว: วิธีให้เครดิต ลงที่ไหนได้บ้าง และเงื่อนไขของโปรแกรมตัดคลิป',
+  ck3: 'คลิปของคุณมีส่วนของคุณเอง: การตัดต่อ คำบรรยาย ความเห็น หรือบริบท',
+  ck4: 'ให้เครดิตเขาในชื่อคลิปหรือคำอธิบาย พร้อมลิงก์ไปที่ช่องของเขา'
 });
 Object.assign(T.en, {ytFrom: 'On YouTube’s trending chart'});
 Object.assign(T.th, {ytFrom: 'อยู่บนชาร์ตมาแรงของ YouTube'});
@@ -3779,7 +3822,7 @@ if (STATIC && 'serviceWorker' in navigator && (location.protocol === 'https:' ||
 /* ---------- Google sign-in + sync (Firebase Auth + Cloud Firestore on the free plan) ---------- */
 const FB = CFG.firebase && CFG.firebase.apiKey && CFG.firebase.projectId ? CFG.firebase : null;
 const FB_VER = '10.12.2';
-const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.tw', 'radar.trackinfo'];
+const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.tw', 'radar.trackinfo', 'radar.clipchk'];
 const GICON = '<svg viewBox="0 0 48 48" style="stroke:none"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.7 6c4.5-4.2 6.9-10.3 6.9-17.7z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.7-6c-2.1 1.4-4.9 2.3-8.2 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>';
 let FBX = null, USER = null, SYNC = {state: 'off', at: 0, err: ''}, syncTimer = null, applyingRemote = false, unsubSnap = null;
 const lsRaw = LS.set.bind(LS);
@@ -4217,6 +4260,61 @@ function ytTab() {
   return h + (items.length ? `<div class="blist">${gateList(items.map(row), t('ttYt'), cat === 'all' ? 10 : 3).join('')}</div>` : emptyBox(t('tNone'), '📈'));
 }
 /* ---------- clip finder: big creators few channels clip yet (researched by the scanner, see trends.py) ---------- */
+/* what creators write about clipping (the same patterns the scanner uses, see trends.py) */
+const ALLOW_RX = /clip(s|ping)? (program|campaign|team)|clippers? (wanted|welcome|needed)|join .{0,20}clipp|feel free to (clip|use)|you (can|may) clip|clip (my|our) (videos|content|streams?|podcasts?)|clips? (are|is) (allowed|welcome|encouraged)|get paid (to|for) clip|earn .{0,25}clipping|whop\.com\/\S*clip|content rewards|vyro|clipfarm|clipping (discord|server)|ตัดคลิป.{0,12}(ได้|อนุญาต|ฟรี)|อนุญาต.{0,12}ตัดคลิป|รับสมัคร.{0,12}ตัดคลิป|ตัดคลิป.{0,8}(ไปลง|ไปโพสต์)/i;
+const FORBID_RX = /(do not|don'?t|no) re-?upload|re-?upload(ing|s)? .{0,30}(not allowed|prohibited|forbidden|strike)|will be (taken down|struck|reported)|do not (steal|copy|repost) (my|our)|unauthori[sz]ed (use|re-?upload)|ห้าม.{0,10}(รีอัพ|นำไป|คัดลอก|ดัดแปลง|ตัดต่อ|reup)|ไม่อนุญาต.{0,16}(นำไป|ตัด|เผยแพร่)/i;
+function clipPermission(chDesc, videos) {   // a clear "no" anywhere wins over a "yes"
+  const found = {};
+  for (const [where, text, vid] of [['channel', chDesc || '', null]].concat(videos.map(v => ['video', v.desc || '', v.id]))) {
+    for (const [kind, rx] of [['forbids', FORBID_RX], ['allows', ALLOW_RX]]) {
+      const m = rx.exec(text);
+      if (m && !found[kind]) found[kind] = {allow: kind, allow_quote: (text.split('\n').find(l => l.includes(m[0])) || m[0]).trim().slice(0, 160), allow_where: where, allow_vid: vid};
+    }
+  }
+  return found.forbids || found.allows || {allow: 'unknown', allow_quote: '', allow_where: '', allow_vid: null};
+}
+function permBlock(c) {
+  const st = c.allow || 'unknown', video = c.allow_where === 'video' && vidOk(c.allow_vid);
+  const src = video ? `https://www.youtube.com/watch?v=${c.allow_vid}` : `https://www.youtube.com/channel/${c.ch}/about`;
+  return `<div class="perm ${st}"><b>${st === 'allows' ? IC.check : `<span aria-hidden="true">${st === 'forbids' ? '✕' : '?'}</span>`}${esc(t({allows: 'pmYes', forbids: 'pmNo', unknown: 'pmAsk'}[st]))}</b>` +
+    (c.allow_quote ? `<q>${esc(c.allow_quote)}</q><a class="link" href="${esc(src)}" target="_blank" rel="noopener noreferrer">${esc(t(video ? 'pmInVideo' : 'pmInChannel'))} ↗</a>` : `<small>${esc(t(c.allow ? 'pmAskD' : 'pmPending'))}</small>`) + '</div>';
+}
+const clipChecks = () => LS.get('radar.clipchk', {});
+function checklist(c) {
+  const mine = (clipChecks()[c.ch] || {}).c || [], done = [0, 1, 2, 3].filter(i => mine[i]).length;
+  return `<details class="cchk" ${done && done < 4 ? 'open' : ''}><summary>${esc(t('ckT'))} <span class="${done === 4 ? 'heatup' : 'pbmuted'}">${done === 4 ? '✓ ' + esc(t('ckReady')) : done + '/4'}</span></summary>` +
+    [1, 2, 3, 4].map((n, i) => `<label class="ckrow"><input type="checkbox" data-clipchk="${esc(c.ch)}" data-i="${i}" data-n="${esc(c.name)}" ${mine[i] ? 'checked' : ''}><span>${esc(t('ck' + n))}</span></label>`).join('') + '</details>';
+}
+let CHECKED_CREATOR = null;
+async function checkCreator(raw) {
+  const q = chFromInput(raw), box = $('#ccOut'), say = k => { if (box) box.innerHTML = `<p class="pbtip">${esc(t(k))}</p>`; };
+  if (!q) return say('acBad');
+  if (!getKey()) return say('ccNoKey');
+  say('acLooking');
+  try {
+    const ch = ((await ytApi('channels', Object.assign({part: 'snippet,statistics,contentDetails'}, q.id ? {id: q.id} : {forHandle: q.handle}))).items || [])[0];
+    if (!ch) return say('acNone');
+    const up = ((ch.contentDetails || {}).relatedPlaylists || {}).uploads;
+    let vids = [];
+    if (up) {
+      const ids = ((await ytApi('playlistItems', {part: 'contentDetails', playlistId: up, maxResults: 12})).items || []).map(x => x.contentDetails && x.contentDetails.videoId).filter(Boolean);
+      if (ids.length) vids = ((await ytApi('videos', {part: 'snippet', id: ids.join(',')})).items || []).map(v => ({id: v.id, desc: (v.snippet || {}).description || ''}));
+    }
+    const sn = ch.snippet || {};
+    CHECKED_CREATOR = Object.assign({ch: ch.id, name: String(sn.title || ch.id).slice(0, 80), avatar: ((sn.thumbnails || {}).default || {}).url || '', subs: +(ch.statistics || {}).subscriberCount || 0},
+      clipPermission(sn.description, vids));
+    renderChecked();
+  } catch (e) { say(e && e.quota ? 'kQuota' : 'acFail'); }
+}
+function renderChecked() {
+  const box = $('#ccOut'), c = CHECKED_CREATOR;
+  if (!box || !c) return;
+  const pic = /^https:\/\/yt3\.(ggpht|googleusercontent)\.com\//.test(c.avatar || '') ? `<img src="${esc(c.avatar)}" alt="">` : '';
+  box.innerHTML = `<article class="clcard"><div class="clhead"><span class="av" style="width:48px;height:48px;background:var(--surface2)">${pic}</span>
+    <div class="clname"><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))}</small></div>
+    <a class="pillbtn" href="${chUrl(c.ch)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('clChannel'))}</a></div>${permBlock(c)}${checklist(c)}</article>`;
+}
+
 const clipList = () => ((TRENDS || {}).clips || []).filter(c => !c.small && Array.isArray(c.ok));
 const fits3 = c => c.ok.every(Boolean);
 function clipCard(c) {
@@ -4230,26 +4328,32 @@ function clipCard(c) {
     <div class="clhead"><span class="av" style="width:48px;height:48px;background:var(--surface2)">${pic}</span>
       <div class="clname"><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))}${(c.regions || []).length ? ' · ' + esc(c.regions.join(' · ')) : ''}</small></div>
       <div class="clscore ${fits3(c) ? 'all' : ''}"><b>${c.score}</b><small>${esc(t(fits3(c) ? 'clAll3' : 'clScore'))}</small></div></div>
-    ${c.invites ? `<span class="tag good clinv">${IC.check}${esc(t('clInvites'))}</span>` : ''}
+    ${permBlock(c)}
     <div class="clchks">${chk(c.ok[0], 'clAT', t('clAudV', {n: fmt(c.subs)}))}${chk(c.ok[1], 'clFT', few)}${chk(c.ok[2], 'clVT', vir)}</div>
     <div class="clvids">${c.latest ? `<button type="button" class="clv" data-play="${esc(c.latest.id)}" data-c=""><img loading="lazy" src="${thumb(c.latest.id)}" alt=""><small>${esc(t('clLatest'))}</small></button>` : ''}
       ${c.clip_top ? `<button type="button" class="clv short" data-play="${esc(c.clip_top.id)}" data-c=""><img loading="lazy" src="${thumb(c.clip_top.id)}" alt=""><small>${esc(t('clTopClip', {v: fmt(c.clip_top.v)}))}</small></button>` : ''}</div>
     <div class="btns"><a class="pillbtn" href="${chUrl(c.ch)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('clChannel'))}</a>
       <a class="ghost" href="https://www.youtube.com/results?search_query=${encodeURIComponent(c.name + ' clips')}&sp=EgIYAQ%253D%253D" target="_blank" rel="noopener noreferrer">${IC.search}${esc(t('clSearch'))}</a></div>
+    ${checklist(c)}
   </article>`;
 }
 function clipsTab() {
   const all = clipList();
   if (!all.length) return emptyBox(t(STATIC ? 'clWait' : 'ytWeb'));
-  const reg = S.creg || 'all', only = !!S.call3;
-  const list = all.filter(c => (reg === 'all' || (c.regions || []).includes(reg)) && (!only || fits3(c)))
-    .sort((a, b) => b.ok.filter(Boolean).length - a.ok.filter(Boolean).length || b.score - a.score);
+  const reg = S.creg || 'all', only = !!S.call3, allowOnly = !!S.callow;
+  const list = all.filter(c => (reg === 'all' || (c.regions || []).includes(reg)) && (!only || fits3(c)) && (!allowOnly || c.allow === 'allows'))
+    .sort((a, b) => (a.allow === 'forbids') - (b.allow === 'forbids') || b.ok.filter(Boolean).length - a.ok.filter(Boolean).length || b.score - a.score);
+  const mine = Object.entries(clipChecks()).filter(([, r]) => r && (r.c || []).some(Boolean));
   return `<p class="pbtip">${esc(t('clD'))}</p>
+    ${mine.length ? `<div class="twrow"><b>${esc(t('ckMine'))}</b>${mine.map(([ch, r]) => { const d = r.c.filter(Boolean).length; return `<span class="chip ${d === 4 ? 'on' : ''}">${d === 4 ? IC.check : ''}${esc(r.n || ch)} <span class="pbmuted">${d}/4</span></span>`; }).join('')}</div>` : ''}
+    <div class="ccbox"><h3 class="subhead" style="margin:0 0 4px">${esc(t('ccT'))}</h3><p class="pbtip" style="margin:0 0 8px">${esc(t('ccD'))}</p>
+      <div class="addch"><input id="ccIn" placeholder="${esc(t('acPh'))}" autocomplete="off"><button type="button" class="pillbtn red" data-ccgo>${esc(t('ccGo'))}</button></div><div id="ccOut"></div></div>
     <div class="cl3">${['clA', 'clF', 'clV'].map((k, i) => `<div><b>${i + 1}. ${esc(t(k + 'T'))}</b><small>${esc(t(k + 'D'))}</small></div>`).join('')}</div>
     <div class="ytbar"><div class="seg">${[['all', 'topicAll'], ['TH', 'cTH'], ['US', 'cUS']].map(([r, k]) => `<button type="button" data-creg="${r}" aria-pressed="${reg === r}">${esc(t(k))}</button>`).join('')}</div>
-      <button type="button" class="chip" data-call3 aria-pressed="${only}">${esc(t('clOnly3'))}</button></div>
+      <button type="button" class="chip" data-call3 aria-pressed="${only}">${esc(t('clOnly3'))}</button>
+      <button type="button" class="chip" data-callow aria-pressed="${allowOnly}">${esc(t('clAllow'))}</button></div>
     <div class="note clwarn">${esc(t('clWarn'))}</div>` +
-    (list.length ? `<div class="clgrid">${gateList(list.map(clipCard), t('ttClips'), 3).join('')}</div>` : emptyBox(t('tNone')));
+    (list.length ? `<div class="clgrid">${gateList(list.map(clipCard), t('ttClips'), 3).join('')}</div>` : emptyBox(t('clNoMatch')));
 }
 
 function wikiItems(lang) {
@@ -4767,6 +4871,8 @@ document.addEventListener('click', async e => {
   const creg = x.closest('[data-creg]');
   if (creg) { S.creg = creg.dataset.creg; saveState(); renderContent(); return; }
   if (x.closest('[data-call3]')) { S.call3 = !S.call3; saveState(); renderContent(); return; }
+  if (x.closest('[data-callow]')) { S.callow = !S.callow; saveState(); renderContent(); return; }
+  if (x.closest('[data-ccgo]')) { const el = $('#ccIn'); checkCreator(el ? el.value : ''); return; }
   const tc = x.closest('[data-tcat]');
   if (tc) { S.tcat = tc.dataset.tcat; saveState(); renderContent(); return; }
   const treg = x.closest('[data-treg]');
@@ -4862,6 +4968,7 @@ document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('article[data-open-ch]')) { e.preventDefault(); openChannel(e.target.dataset.openCh); }
   if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('article[data-trend]')) { e.preventDefault(); openTrend(e.target.dataset.trend); }
   if (e.key === 'Enter' && e.target.id === 'addIn') { e.preventDefault(); addChannel(e.target.value); }
+  if (e.key === 'Enter' && e.target.id === 'ccIn') { e.preventDefault(); checkCreator(e.target.value); }
   if (e.key === 'Enter' && e.target.id === 'aiIn' && e.target.value.trim()) { e.preventDefault(); aiIdeas(e.target.value.trim(), [], $('#aiTopicBox')); }
   if (e.key === 'Escape') closePop();
   if (e.key === '/' && !e.ctrlKey && !e.metaKey && !(e.target.closest && e.target.closest('input, textarea, select, [contenteditable]')) && !document.querySelector('dialog[open]')) {
@@ -4902,6 +5009,16 @@ document.addEventListener('change', e => {
   S[map[id][0]] = map[id][1]; shown.channels = 15; shown.videos = 60; shown.live = 60; saveState(); render();
 });
 document.addEventListener('change', e => {
+  const ck = e.target.closest && e.target.closest('[data-clipchk]');
+  if (ck) {   // the "Before you clip" checklist, saved per creator (and synced when signed in)
+    const all = clipChecks(), r = all[ck.dataset.clipchk] || {c: [false, false, false, false]};
+    r.c[+ck.dataset.i] = ck.checked; r.n = ck.dataset.n; r.t = Date.now();
+    all[ck.dataset.clipchk] = r;
+    LS.set('radar.clipchk', all);
+    const y = window.scrollY;
+    renderContent(); renderChecked(); window.scrollTo(0, y);
+    return;
+  }
   if (e.target.id === 'tyCat') { S.tycat = e.target.value; saveState(); renderContent(); }
   if (e.target.id === 'btTopic') { S.bttopic = e.target.value; saveState(); renderContent(); }
 });

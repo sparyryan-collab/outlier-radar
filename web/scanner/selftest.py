@@ -156,6 +156,10 @@ def run_scan(tmp, offset, prev=None, port=0):
     return json.loads(out.read_text(encoding="utf-8")), out
 
 
+def data_clip_ok(trends_json):
+    return all("allow" in c for c in trends_json["clips"] if not c.get("small"))
+
+
 def main():
     srv = HTTPServer(("127.0.0.1", 0), Fake)
     port = srv.server_address[1]
@@ -278,6 +282,14 @@ def main():
         cands = trends_mod.clip_candidates({"US": {"music": [{"ch": "UCa", "cht": "Star", "d": 900, "v": 1}], "games": [{"ch": "UCb", "cht": "Gamer Joe", "d": 1800, "v": 5},
                                                                                                                        {"ch": "UCc", "cht": "Workpoint TV", "d": 1800, "v": 9}, {"ch": "UCd", "cht": "Joe Clips", "d": 50, "v": 9}]}})
         assert [c["ch"] for c in cands] == ["UCb"], [c["ch"] for c in cands]   # no music charts, broadcasters or Shorts-only entries
+        perm = trends_mod.clip_permission
+        assert perm("Gaming every day!" + chr(10) + "Feel free to clip my streams, just credit me.", [])[:3] == ("allows", "Feel free to clip my streams, just credit me.", "channel")
+        assert perm("", [{"id": "v1", "desc": "Join the clipping program: whop.com/joe-clips"}])[::3] == ("allows", "v1")
+        assert perm("Feel free to clip", [{"id": "v2", "desc": "Do not reupload this video."}])[0] == "forbids", "a clear no wins"
+        assert perm("ช่องเกมสนุก ๆ ตัดคลิปได้เลย ใส่เครดิตด้วย", [])[0] == "allows"
+        assert perm("ห้ามรีอัพโหลดคลิปของช่อง", [])[0] == "forbids"
+        assert perm("New videos every Friday", [{"id": "v3", "desc": "Thanks for watching"}])[0] == "unknown"
+        assert data_clip_ok(t7), "researched creators carry the permission check"
         print(f"clip finder OK: researched {bq['name']} ({bq['clippers']} clipper, score {bq['score']}), skipped labels and broadcasters, one search per creator per week")
     print("ALL CHECKS PASSED")
 

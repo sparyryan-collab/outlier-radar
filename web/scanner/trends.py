@@ -114,7 +114,27 @@ NOT_CLIPPABLE = {"music", "news", "sports", "animation"}    # labels, newsrooms,
 BRANDS = re.compile(r"vevo|records|official|music|news|\btv\b|studios?|pictures|films?\b|netflix|disney|marvel|warner|universal|sony|hbo|paramount|"
                     r"\bnba\b|\bnfl\b|fifa|uefa|premier league|espn|\bbbc\b|\bcnn\b|\bfox\b|ch3|one31|gmm|workpoint|thairath|amarin|\bch ?7|mono29|pptv|true4u|"
                     r"channel ?[0-9]|ช่อง ?[0-9]|ไทยรัฐ|อมรินทร์|เวิร์คพอยท์", re.I)
-INVITES = re.compile(r"clip(s|ping)? (program|campaign)|clippers?\b|feel free to clip|you can clip|clip my (videos|streams)|whop\.com|vyro|content rewards", re.I)
+# What creators write about clipping, in their channel description or under their videos (English and Thai)
+ALLOW_RX = re.compile(r"clip(s|ping)? (program|campaign|team)|clippers? (wanted|welcome|needed)|join .{0,20}clipp|feel free to (clip|use)|you (can|may) clip|"
+                      r"clip (my|our) (videos|content|streams?|podcasts?)|clips? (are|is) (allowed|welcome|encouraged)|get paid (to|for) clip|earn .{0,25}clipping|"
+                      r"whop\.com/\S*clip|content rewards|vyro|clipfarm|clipping (discord|server)|"
+                      r"ตัดคลิป.{0,12}(ได้|อนุญาต|ฟรี)|อนุญาต.{0,12}ตัดคลิป|รับสมัคร.{0,12}ตัดคลิป|ตัดคลิป.{0,8}(ไปลง|ไปโพสต์)", re.I)
+FORBID_RX = re.compile(r"(do not|don'?t|no) re-?upload|re-?upload(ing|s)? .{0,30}(not allowed|prohibited|forbidden|strike)|will be (taken down|struck|reported)|"
+                       r"do not (steal|copy|repost) (my|our)|unauthori[sz]ed (use|re-?upload)|"
+                       r"ห้าม.{0,10}(รีอัพ|นำไป|คัดลอก|ดัดแปลง|ตัดต่อ|reup)|ไม่อนุญาต.{0,16}(นำไป|ตัด|เผยแพร่)", re.I)
+INVITES = ALLOW_RX
+
+
+def clip_permission(channel_desc, videos):
+    """('allows'|'forbids'|'unknown', quote, where, video id). A clear 'no' anywhere wins over a 'yes'."""
+    found = {}
+    for where, text, vid in [("channel", channel_desc or "", None)] + [("video", v.get("desc") or "", v.get("id")) for v in videos]:
+        for kind, rx in (("forbids", FORBID_RX), ("allows", ALLOW_RX)):
+            m = rx.search(text)
+            if m and kind not in found:
+                line = next((ln for ln in text.splitlines() if m.group(0) in ln), m.group(0)).strip()
+                found[kind] = (kind, line[:160], where, vid)
+    return found.get("forbids") or found.get("allows") or ("unknown", "", "", None)
 
 
 def pacific_day(ts):
@@ -191,12 +211,13 @@ def research_clips(yt, cands, prev_clips, quota, t):
         clips = sorted(named if len(named) >= 3 else shorts, key=lambda x: -x["v"])
         views = sorted(x["v"] for x in clips)
         uploads = (((it.get("contentDetails") or {}).get("relatedPlaylists") or {}).get("uploads"))
-        long30, hours, latest = 0, 0.0, None
+        long30, hours, latest, descs = 0, 0.0, None, []
         if uploads:
             pl = yt.call("playlistItems", part="contentDetails", playlistId=uploads, maxResults=25).get("items", [])
             vids = [x["contentDetails"]["videoId"] for x in pl if x.get("contentDetails", {}).get("videoId")]
             if vids:
                 for v in yt.call("videos", part="snippet,contentDetails,statistics", id=",".join(vids)).get("items", []):
+                    descs.append({"id": v["id"], "desc": (v.get("snippet") or {}).get("description") or ""})
                     d, pub = parse_duration((v.get("contentDetails") or {}).get("duration")), iso_to_ts((v.get("snippet") or {}).get("publishedAt") or "") or 0
                     if d >= 240 and t - pub <= 30 * 86400:
                         long30 += 1
@@ -207,10 +228,31 @@ def research_clips(yt, cands, prev_clips, quota, t):
                "regions": sorted(c["regions"]), "cats": sorted(c["cats"]), "top": {k: c["video"].get(k) for k in ("id", "t", "v")}, "top_views": c["video"].get("v") or 0,
                "clips": len(clips), "clippers": len({x["ch"] for x in clips}), "clip_med": views[len(views) // 2] if views else 0,
                "clip_top": clips[0] if clips else None, "long30": long30, "long_hours": round(hours, 1), "latest": latest,
-               "invites": bool(INVITES.search(sn.get("description") or "")), "checked": int(t)}
+               "checked": int(t)}
+        rec["allow"], rec["allow_quote"], rec["allow_where"], rec["allow_vid"] = clip_permission(sn.get("description"), descs[:12])
+        rec["invites"] = rec["allow"] == "allows"
         rec["ok"], rec["score"] = clip_scores(rec)
         keep[c["ch"]] = rec
     return list(keep.values())
+
+
+def refresh_permissions(yt, clips, limit=20):
+    """Fills in the clipping-permission check for creators researched before it existed (no search needed: about 3 units each)."""
+    todo = [c for c in clips if not c.get("small") and "allow" not in c][:limit]
+    if not todo:
+        return
+    info = {it["id"]: it for it in yt.call("channels", part="snippet,contentDetails", id=",".join(c["ch"] for c in todo)).get("items", [])}
+    for c in todo:
+        it = info.get(c["ch"]) or {}
+        uploads = ((it.get("contentDetails") or {}).get("relatedPlaylists") or {}).get("uploads")
+        descs = []
+        if uploads:
+            vids = [x["contentDetails"]["videoId"] for x in yt.call("playlistItems", part="contentDetails", playlistId=uploads, maxResults=12).get("items", [])
+                    if x.get("contentDetails", {}).get("videoId")]
+            if vids:
+                descs = [{"id": v["id"], "desc": (v.get("snippet") or {}).get("description") or ""} for v in yt.call("videos", part="snippet", id=",".join(vids)).get("items", [])]
+        c["allow"], c["allow_quote"], c["allow_where"], c["allow_vid"] = clip_permission((it.get("snippet") or {}).get("description"), descs)
+        c["invites"] = c["allow"] == "allows"
 
 
 def now():
@@ -332,6 +374,7 @@ def main():
         cy = YouTube(key, int(os.environ.get("CLIP_BUDGET", "80")))
         try:
             out["clips"] = research_clips(cy, clip_candidates((out["yt"] or {}).get("regions")), out["clips"], clipq, t)
+            refresh_permissions(cy, out["clips"])
         except QuotaExceeded as e:
             print(f"clip research stopped: {e}", file=sys.stderr)
         except Exception as e:   # keep what was researched before
