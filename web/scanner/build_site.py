@@ -2,7 +2,7 @@
 """Build the hosted site folder: the dashboard page switched into web mode, plus the installable-app files. The scanner adds data.json.
 
 Usage: python build_site.py [output_dir]
-Optional env: BROWSER_KEY (a referrer-restricted API key), CUSTOM_DOMAIN, PRO_GATE / PRO_PRICE / CHECKOUT_URL (Viral Radar Pro),
+Optional env: BROWSER_KEY (a referrer-restricted API key), CUSTOM_DOMAIN, PRO_GATE / PRO_PRICE / CHECKOUT_URL / MANAGE_URL (Viral Radar Pro), CONTACT_EMAIL,
               FIREBASE_API_KEY + FIREBASE_PROJECT_ID (+ FIREBASE_AUTH_DOMAIN) to switch on Google sign-in and sync
 """
 import json
@@ -41,6 +41,9 @@ pro_price = os.environ.get("PRO_PRICE", "").strip()[:20]
 checkout = os.environ.get("CHECKOUT_URL", "").strip()
 cfg.update({"proGate": os.environ.get("PRO_GATE", "").strip().lower() in ("1", "true", "yes", "on"), "proPrice": pro_price or "$9.99",
             "checkoutUrl": checkout if re.fullmatch(r"https://[^\s\"'<>]{4,300}", checkout) else ""})
+manage, contact = os.environ.get("MANAGE_URL", "").strip(), os.environ.get("CONTACT_EMAIL", "").strip()
+cfg["manageUrl"] = manage if re.fullmatch(r"https://[^\s\"'<>]{4,300}", manage) else ""
+cfg["contact"] = contact if re.fullmatch(r"[^\s@<>\"']+@[^\s@<>\"']+\.[A-Za-z]{2,}", contact) else ""
 if checkout and not cfg["checkoutUrl"]:
     print("WARNING: CHECKOUT_URL must be a full https:// link; ignored", file=sys.stderr)
 

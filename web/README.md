@@ -170,20 +170,31 @@ Everything lands in `trends.json` next to `data.json`. If a run fails, the previ
 
 ## Viral Radar Pro (subscriptions)
 
-Pro features (full trend lists, the games/cartoons/YouTube/news boards, trend alerts, the tools page and CSV export) are marked with a PRO tag. By default they are free for everyone ("free while in beta"). To start charging:
+Pro features (full trend lists, the games/cartoons/YouTube/news boards, trend alerts, the Tools page and CSV export) carry a PRO tag. By default they are free for everyone ("free while in beta"). The site works with Lemon Squeezy, Paddle and Stripe, alone or together.
 
-1. Pick a payment provider that handles subscriptions and tax for you (a "merchant of record" such as Lemon Squeezy or Paddle is the easiest from Thailand; Stripe also works). Create a monthly product.
-2. Set repository variables: `PRO_PRICE` (for example `$9.99`), `CHECKOUT_URL` (the provider's checkout link; `{uid}` and `{email}` in it are replaced with the signed-in visitor's Firebase user id and email so the payment can be matched to the account), and `PRO_GATE` = `1` to switch the locks on.
-3. Add this to the Firestore rules (inside `match /databases/{database}/documents { ... }`) and publish:
+Which provider? Lemon Squeezy and Paddle are "merchants of record": they sell on your behalf and handle sales tax and VAT in every country, which is the least work from Thailand. Stripe is cheaper per payment, but you handle tax yourself. One provider is enough.
+
+1. **Create a monthly product** with your provider and copy its checkout link, with the visitor's account id added (the site replaces `{uid}` and `{email}`):
+   - Lemon Squeezy: `https://YOURSTORE.lemonsqueezy.com/buy/VARIANT_ID?checkout[custom][uid]={uid}&checkout[email]={email}`
+   - Stripe Payment Link: `https://buy.stripe.com/XXXX?client_reference_id={uid}&prefilled_email={email}`
+   - Paddle: open the checkout with `customData: {uid}` (Paddle.js) or a hosted checkout that passes custom data.
+2. **Deploy the payment worker** (`web/pay/worker.js`, a free Cloudflare Worker). It checks each webhook's signature and records Pro in Firestore `pro/<uid>` with an end date.
+   - Firebase console, Project settings, Service accounts, **Generate new private key** (a JSON file; keep it secret).
+   - Cloudflare dashboard, Workers & Pages, Create, Worker; paste `worker.js`, Deploy. Under Settings, Variables, add secrets: `FIREBASE_SA` (the whole JSON file) and the signing secret for each provider you use: `LEMON_SECRET`, `STRIPE_SECRET`, `PADDLE_SECRET`.
+   - In the provider's webhook settings, point at the worker: `https://<worker>.workers.dev/lemonsqueezy` (subscription events), `/stripe` (checkout.session.completed, customer.subscription.updated, customer.subscription.deleted) or `/paddle` (subscription events).
+   - `node web/pay/selftest.mjs` checks the worker with fake signed webhooks from all three providers.
+3. **Add this Firestore rule** (inside `match /databases/{database}/documents { ... }`) and publish:
    ```
    match /pro/{uid} {
      allow read: if request.auth != null && request.auth.uid == uid;
    }
    ```
-   Nobody can write these documents from the page. A paying user has a document `pro/<their uid>` with a field `until` (a timestamp). For testing, create one by hand in the Firebase console (Firestore, Start collection `pro`, document id = the user's uid from Authentication, field `until` of type timestamp).
-4. To grant and remove Pro automatically, the provider's webhook has to write that document with Firebase Admin credentials. That needs a small server function (for example a free Cloudflare Worker). The page itself never holds payment secrets.
+   Nobody can write `pro` documents from the page; only the worker can. To give someone Pro by hand (a tester or a friend), create `pro/<their uid>` in the Firebase console with a timestamp field `until`.
+4. **Set repository variables**: `PRO_PRICE` (for example `$9.99`), `CHECKOUT_URL` (from step 1), `MANAGE_URL` (optional: Stripe's customer-portal link; Lemon Squeezy sends its own portal link through the worker), `CONTACT_EMAIL` (shown on the terms, privacy and refund pages) and finally `PRO_GATE` = `1` to switch the locks on. Then run "Refresh site".
 
-Note: the locks run in the browser, and the data files are public, so they stop casual use rather than determined copying. Before charging, read the YouTube API Services Terms of Service and Developer Policies (your app must add value of its own beyond YouTube's data, and must say it isn't made by YouTube), and expect to apply for a higher quota once many people search.
+The site has terms of service, privacy and refund pages (footer links). They are a sensible starting point, not legal advice: read them, set `CONTACT_EMAIL`, and adjust the refund promise (7 days, first payment) if you want a different one.
+
+Note: the locks run in the browser and the data files are public, so they stop casual use rather than determined copying. Before charging, read the YouTube API Services Terms of Service and Developer Policies (your app must add value of its own beyond YouTube's data, and must say it isn't made by YouTube; the footer does), and expect to apply for a higher YouTube quota once many people search.
 
 ## Install it as an app
 
