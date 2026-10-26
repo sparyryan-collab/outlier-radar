@@ -650,6 +650,8 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 #btnLang svg{width:22px;height:22px}
 #lang2{min-width:44px}
 [dir=rtl] .lrow,[dir=rtl] #tour .tlang{text-align:right}
+[dir=rtl] [data-rail] svg,[dir=rtl] #tour .row2 svg,[dir=rtl] .ghost[data-open-ch] svg{transform:scaleX(-1)}
+[dir=rtl] :is(.ttop b,.bc b,.bmain b,.pb b,.vt,.short .t,.clname b,.frb b,.qn b,.mom q,.chname button,.ytbig b,.wcloud2 button,.chip){unicode-bidi:plaintext}
 [dir=rtl] #tour .bub .sk{right:auto;left:8px}
 [dir=rtl] #tour .bhead{padding-right:0;padding-left:30px}
 @media (prefers-reduced-motion:reduce){.stage *,#tour .hole,#tour .bub,#tour .ripple::before,#tour .ripple::after,#tour .tlogo{animation:none!important;transition:none!important}.confetti{display:none}}
@@ -5857,7 +5859,7 @@ document.addEventListener('click', async e => {
     return;
   }
   const rail = x.closest('[data-rail]');
-  if (rail) { const r = rail.closest('.shelfsec').querySelector('.rail'); r.scrollBy({left: +rail.dataset.rail * r.clientWidth * 0.85}); return; }
+  if (rail) { const r = rail.closest('.shelfsec').querySelector('.rail'); r.scrollBy({left: +rail.dataset.rail * r.clientWidth * 0.85 * (document.documentElement.dir === 'rtl' ? -1 : 1)}); return; }
   if (x.closest('[data-livesearch]')) { startSearch(S.q); return; }
   if (x.closest('[data-clearq]')) { S.q = ''; render(); return; }
   if (x.closest('[data-changekey]')) { openKeyDialog(); return; }
