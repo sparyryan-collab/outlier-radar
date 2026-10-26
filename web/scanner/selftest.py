@@ -66,10 +66,21 @@ class Fake(BaseHTTPRequestHandler):
         q = urllib.parse.parse_qs(u.query)
         path = u.path.rsplit("/", 1)[-1]
         Fake.calls[path] = Fake.calls.get(path, 0) + 1
+        if u.path.startswith("/wiki/"):   # Wikimedia's most-read list for a day (no key)
+            day = int(u.path.rstrip("/").rsplit("/", 1)[-1])
+            arts = [{"article": "Main_Page", "views": 900000}, {"article": "Big_Event", "views": 5000 * day}, {"article": "Steady_Page", "views": 3000}]
+            return self.reply(200, {"items": [{"articles": arts}]})
         if q.get("key") != ["testkey"]:
             return self.reply(403, {"error": {"message": "bad key", "errors": [{"reason": "keyInvalid"}]}})
         if path == "search":
             return self.reply(200, {"items": [{"id": {"videoId": i}} for i in search_ids()]})
+        if path == "videos" and q.get("chart"):   # YouTube's trending chart; one category has no chart in this country
+            if q.get("videoCategoryId") == ["28"]:
+                return self.reply(404, {"error": {"message": "The requested video chart is not supported or is not available."}})
+            order = ["tA", "tB", "tC"] if not WORLD["extra"] else ["tC", "tA", "tD"]
+            return self.reply(200, {"items": [{"id": (i + "_" * 11)[:11], "snippet": {"title": f"Trending {i}", "channelId": cid(9), "channelTitle": "Chart Channel",
+                                                                                      "publishedAt": NOW.strftime("%Y-%m-%dT%H:%M:%SZ")},
+                                               "statistics": {"viewCount": "1000"}, "contentDetails": {"duration": "PT40S"}} for i in order]})
         if path == "videos":
             vs = all_videos()
             items = []
@@ -189,6 +200,31 @@ def main():
         assert "wrong" not in (r.stdout + r.stderr), "the API key must never be printed"
         assert len(json.loads(out3.read_text(encoding="utf-8"))["channels"]) == 3
         print("bad-key run OK: data kept, non-zero exit, key not leaked")
+
+        # trend feeds: YouTube charts by country and category, Wikipedia's most-read list, history between runs
+        def run_trends(key, prev=None, offset=0):
+            out = Path(tmp) / f"trends{offset}{key}.json"
+            env = dict(os.environ, YT_API_BASE=f"http://127.0.0.1:{port}", WIKI_BASE=f"http://127.0.0.1:{port}/wiki", YT_API_KEY=key,
+                       TRENDS_YT_EVERY="0", SCAN_TIME_OFFSET=str(offset), PREV_TRENDS_URL=prev.resolve().as_uri() if prev else "", PYTHONIOENCODING="utf-8")
+            r = subprocess.run([sys.executable, str(HERE / "trends.py"), "--out", str(out)], env=env, capture_output=True, text=True, encoding="utf-8", cwd=tmp)
+            assert r.returncode == 0 and out.exists(), (r.returncode, r.stdout, r.stderr)
+            assert key not in (r.stdout + r.stderr), "the API key must never be printed"
+            return json.loads(out.read_text(encoding="utf-8")), out
+        WORLD.update(extra=False)
+        t1, f1 = run_trends("testkey")
+        th = t1["yt"]["regions"]["TH"]
+        assert set(t1["yt"]["regions"]) == {"TH", "US"} and "tech" not in th and len(th["all"]) == 3, list(th)
+        assert all(x["pr"] is None and x["f"] and x["d"] == 40 for x in th["all"]), th["all"][0]
+        wiki = t1["wiki"]["en"]["items"]
+        assert [w["a"] for w in wiki] == ["Big_Event", "Steady_Page"] and wiki[0]["pv"] and wiki[0]["v"] > wiki[0]["pv"], wiki   # Main_Page dropped; yesterday vs the day before
+        WORLD.update(extra=True)
+        t2, f2 = run_trends("testkey", prev=f1, offset=3600)
+        ranks = {x["id"][:2]: (x["r"], x["pr"]) for x in t2["yt"]["regions"]["US"]["all"]}
+        assert ranks == {"tC": (1, 3), "tA": (2, 1), "tD": (3, None)}, ranks   # climbed, dropped, new
+        assert t2["seen"][th["all"][0]["id"]] == th["all"][0]["f"], "first-seen time is kept between runs"
+        t3, _ = run_trends("wrong", prev=f2, offset=4 * 3600)
+        assert t3["yt"]["regions"] == t2["yt"]["regions"], "a refused key keeps the previous charts"
+        print(f"trends OK: {sum(len(v) for v in t1['yt']['regions'].values())} charts, rank changes tracked, Wikipedia filtered, bad key keeps old charts")
     print("ALL CHECKS PASSED")
 
 

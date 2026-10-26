@@ -6,6 +6,7 @@ name: Refresh site
 #   BROWSER_KEY    a referrer-restricted API key that lets every visitor use live search
 #   SITE_URL       only if your site address is not https://<you>.github.io/<repo>
 #   FIREBASE_API_KEY, FIREBASE_PROJECT_ID   switch on Google sign-in and sync (see web/README.md)
+#   PRO_GATE, PRO_PRICE, CHECKOUT_URL       Viral Radar Pro: lock Pro features behind a subscription (see web/README.md)
 on:
   schedule:
     - cron: "4,19,34,49 * * * *"
@@ -42,6 +43,9 @@ jobs:
           FIREBASE_API_KEY: ${{ vars.FIREBASE_API_KEY }}
           FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
           CUSTOM_DOMAIN: ${{ vars.CUSTOM_DOMAIN }}
+          PRO_GATE: ${{ vars.PRO_GATE }}
+          PRO_PRICE: ${{ vars.PRO_PRICE }}
+          CHECKOUT_URL: ${{ vars.CHECKOUT_URL }}
         run: python web/scanner/build_site.py _site
 
       - name: Restore profile pictures
@@ -68,6 +72,18 @@ jobs:
 
       - name: Fall back to the seed data if the scan produced nothing
         run: test -f _site/data.json || cp web/seed/data.json _site/data.json
+
+      - name: Collect trend feeds (YouTube charts by country and category, Wikipedia's most-read)
+        continue-on-error: true
+        env:
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}
+          SITE_URL: ${{ vars.SITE_URL }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          OWNER_LC="$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')"
+          export PREV_TRENDS_URL="${SITE_URL:-https://${OWNER_LC}.github.io/${REPO}}/trends.json"
+          python web/scanner/trends.py --out _site/trends.json
 
       - name: Download any new profile pictures
         run: python web/scanner/sync_avatars.py _site/data.json _site/avatars 150

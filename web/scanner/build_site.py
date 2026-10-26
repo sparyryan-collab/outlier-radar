@@ -2,7 +2,7 @@
 """Build the hosted site folder: the dashboard page switched into web mode, plus the installable-app files. The scanner adds data.json.
 
 Usage: python build_site.py [output_dir]
-Optional env: BROWSER_KEY (a referrer-restricted API key), CUSTOM_DOMAIN,
+Optional env: BROWSER_KEY (a referrer-restricted API key), CUSTOM_DOMAIN, PRO_GATE / PRO_PRICE / CHECKOUT_URL (Viral Radar Pro),
               FIREBASE_API_KEY + FIREBASE_PROJECT_ID (+ FIREBASE_AUTH_DOMAIN) to switch on Google sign-in and sync
 """
 import json
@@ -36,6 +36,13 @@ if fb_key or fb_project:
                            "authDomain": os.environ.get("FIREBASE_AUTH_DOMAIN", "").strip() or f"{fb_project}.firebaseapp.com"}
     else:
         print("WARNING: FIREBASE_API_KEY / FIREBASE_PROJECT_ID look wrong (the key starts with AIza; the project id is lowercase letters, digits and dashes); sign-in stays off", file=sys.stderr)
+
+pro_price = os.environ.get("PRO_PRICE", "").strip()[:20]
+checkout = os.environ.get("CHECKOUT_URL", "").strip()
+cfg.update({"proGate": os.environ.get("PRO_GATE", "").strip().lower() in ("1", "true", "yes", "on"), "proPrice": pro_price or "$9.99",
+            "checkoutUrl": checkout if re.fullmatch(r"https://[^\s\"'<>]{4,300}", checkout) else ""})
+if checkout and not cfg["checkoutUrl"]:
+    print("WARNING: CHECKOUT_URL must be a full https:// link; ignored", file=sys.stderr)
 
 swaps = [
     ("window.RADAR_STATIC = false/*__STATIC__*/", "window.RADAR_STATIC = true"),

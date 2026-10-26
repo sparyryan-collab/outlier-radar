@@ -158,6 +158,33 @@ Signing in with Google keeps your saved channels, Playbook, upload log and My ch
 
 The Firebase apiKey is meant to be in the web page (it only identifies the project); the rules in step 5 are what protect the data.
 
+## Trends
+
+The Trends page combines three sources:
+
+- **Rising on Shorts**: worked out in the page from every tracked Short. A word, phrase or hashtag counts as rising when far more new Shorts used it in the last 3 days than in the 18 days before, from several channels, with real views behind it. Games and cartoons/characters get their own boards from curated name lists.
+- **YouTube trending charts**: `web/scanner/trends.py` (run by the workflow after each scan) reads YouTube's `mostPopular` chart for Thailand and the USA in 12 categories. Each chart costs 1 unit, about 24 units every 3 hours, from the scanner's key. It keeps each video's previous rank, so the page can show what climbed and what's new.
+- **News & curiosity**: Wikipedia's most-read articles yesterday (English and Thai) from the open Wikimedia pageviews API, compared with the day before.
+
+Everything lands in `trends.json` next to `data.json`. If a run fails, the previous feeds are kept.
+
+## Viral Radar Pro (subscriptions)
+
+Pro features (full trend lists, the games/cartoons/YouTube/news boards, trend alerts, the tools page and CSV export) are marked with a PRO tag. By default they are free for everyone ("free while in beta"). To start charging:
+
+1. Pick a payment provider that handles subscriptions and tax for you (a "merchant of record" such as Lemon Squeezy or Paddle is the easiest from Thailand; Stripe also works). Create a monthly product.
+2. Set repository variables: `PRO_PRICE` (for example `$9.99`), `CHECKOUT_URL` (the provider's checkout link; `{uid}` and `{email}` in it are replaced with the signed-in visitor's Firebase user id and email so the payment can be matched to the account), and `PRO_GATE` = `1` to switch the locks on.
+3. Add this to the Firestore rules (inside `match /databases/{database}/documents { ... }`) and publish:
+   ```
+   match /pro/{uid} {
+     allow read: if request.auth != null && request.auth.uid == uid;
+   }
+   ```
+   Nobody can write these documents from the page. A paying user has a document `pro/<their uid>` with a field `until` (a timestamp). For testing, create one by hand in the Firebase console (Firestore, Start collection `pro`, document id = the user's uid from Authentication, field `until` of type timestamp).
+4. To grant and remove Pro automatically, the provider's webhook has to write that document with Firebase Admin credentials. That needs a small server function (for example a free Cloudflare Worker). The page itself never holds payment secrets.
+
+Note: the locks run in the browser, and the data files are public, so they stop casual use rather than determined copying. Before charging, read the YouTube API Services Terms of Service and Developer Policies (your app must add value of its own beyond YouTube's data, and must say it isn't made by YouTube), and expect to apply for a higher quota once many people search.
+
 ## Install it as an app
 
 On Android and desktop Chrome or Edge, the site offers "📲 Install the app" in the menu. On iPhone or iPad: Share, then "Add to Home Screen". The installed app opens full screen and still shows the last data when offline.

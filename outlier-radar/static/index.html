@@ -110,7 +110,7 @@ svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .sidefoot{margin:12px;color:var(--muted);font-size:11px;line-height:1.5}
 body.mini #side{width:76px;padding:4px}
 body.mini .nav{flex-direction:column;gap:4px;height:68px;justify-content:center;padding:0;font-size:10px;text-align:center}
-body.mini .nav .n,body.mini .sidesec,body.mini .sidefoot,body.mini .navh{display:none}
+body.mini .nav .n,body.mini .sidesec,body.mini .sidefoot,body.mini .navh,body.mini .nav .protag{display:none}
 main{flex:1;min-width:0;padding:0 24px 48px}
 
 /* ---- topic chips + filters ---- */
@@ -703,11 +703,115 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 #player .bult em{background:#f1f1f1}
 #player .antitle{color:#f1f1f1}
 
+/* ---- trends ---- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.tcard{border-radius:16px;background:var(--card);box-shadow:0 0 0 1px var(--line);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:box-shadow .2s,transform .2s}
+.tcard:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.rail .tcard{flex:0 0 250px}
+.tbody{padding:10px 12px 12px;display:flex;flex-direction:column;gap:5px}
+.ttop{display:flex;gap:8px;align-items:baseline;justify-content:space-between}
+.ttop b{font-size:15.5px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tbody small{color:var(--muted);font-size:12px;line-height:1.4}
+.lift{color:var(--good);font-weight:700;font-size:12.5px;white-space:nowrap}
+.tfoot{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.spk{display:block;flex:none}
+.spk rect{fill:color-mix(in srgb,var(--muted) 40%,transparent)}
+.spk rect.now{fill:var(--series-1)}
+.tcat{font-size:11.5px;color:var(--muted);background:var(--surface);border-radius:999px;padding:0 8px;line-height:20px;white-space:nowrap}
+.tcat.on{color:#b07800;background:color-mix(in srgb,#ffb000 20%,transparent)}
+.tcats{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:2px 0 8px}
+.tcats::-webkit-scrollbar{display:none}
+.tcats .chip{flex:none}
+.ttabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:4px 0 12px;border-bottom:1px solid var(--line)}
+.ttabs::-webkit-scrollbar{display:none}
+.ttabs button{flex:none;border:0;background:none;padding:10px 12px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.ttabs button[aria-selected=true]{color:var(--text);border-bottom-color:var(--text)}
+.twrow{display:flex;gap:8px;align-items:center;overflow-x:auto;scrollbar-width:none;margin:0 0 12px}
+.twrow::-webkit-scrollbar{display:none}
+.twrow b{flex:none;font-size:13px}
+.twrow .chip{flex:none}
+.chip.hot{box-shadow:inset 0 0 0 2px var(--good)}
+.brief{border-radius:18px;padding:14px 16px;margin:4px 0 14px;background:linear-gradient(120deg,color-mix(in srgb,#ffb000 14%,var(--bg)),color-mix(in srgb,var(--red) 10%,var(--bg)))}
+.brh{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:10px}
+.brh b{font-size:16px}
+.brh small{color:var(--muted);font-size:12.5px}
+.brgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.brcell{display:flex;gap:10px;align-items:flex-start;text-align:left;border:0;border-radius:12px;background:color-mix(in srgb,var(--bg) 70%,transparent);padding:10px 12px;min-width:0}
+.brcell:hover{background:var(--bg)}
+.brcell .em{font-size:22px;line-height:1.2}
+.brcell span{min-width:0;display:flex;flex-direction:column}
+.brcell small{color:var(--muted);font-size:11.5px}
+.brcell b{font-size:14px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.blist{display:flex;flex-direction:column;gap:2px;max-width:960px}
+.brow,.yrow2,.nrow,.nfrow{display:flex;gap:12px;align-items:center;width:100%;text-align:left;border:0;background:transparent;border-radius:12px;padding:8px}
+.brow:hover,.yrow2:hover,.nfrow:hover{background:var(--hover)}
+.bnum{width:24px;flex:none;text-align:center;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.bthumbs{display:flex;gap:2px;flex:none;border-radius:8px;overflow:hidden}
+.bthumbs img{width:30px;height:52px;object-fit:cover;display:block;background:var(--surface)}
+.bmain{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.bmain b{font-size:14px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bmain small{color:var(--muted);font-size:12px;line-height:1.4}
+.bmain a:hover b{text-decoration:underline}
+.bside{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+.yrow2 img{width:96px;height:54px;object-fit:cover;border-radius:8px;flex:none;background:var(--surface)}
+.mv{font-size:11px;font-weight:700;width:34px;flex:none;text-align:center;color:var(--muted)}
+.mv.up{color:var(--good)}
+.mv.down{color:var(--bad)}
+.mv.new{color:#fff;background:var(--red);border-radius:6px;line-height:18px}
+.ytbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 6px}
+.ytbar select,.tool select{height:34px;border:1px solid var(--line);border-radius:18px;padding:0 10px;background:var(--bg)}
+.ilist{display:flex;flex-direction:column;gap:6px}
+.irow{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--surface);border-radius:10px;padding:6px 6px 6px 12px;font-size:13.5px}
+.dbars{display:flex;gap:3px;align-items:flex-end;height:90px;margin-top:8px}
+.dbars i{flex:1;background:color-mix(in srgb,var(--muted) 40%,transparent);border-radius:4px 4px 0 0;min-height:2px}
+.dbars i.now{background:var(--series-1)}
+.dbl{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:4px}
+.lockcard{display:flex;gap:12px;align-items:center;flex-wrap:wrap;border-radius:14px;padding:12px 14px;margin:8px 0;background:linear-gradient(120deg,color-mix(in srgb,#ffb000 16%,var(--bg)),color-mix(in srgb,var(--red) 12%,var(--bg)))}
+.lockcard .em{font-size:24px}
+.lockcard div{flex:1;min-width:180px;display:flex;flex-direction:column}
+.lockcard small{color:var(--muted);font-size:12.5px}
+.lockblur{filter:blur(5px);pointer-events:none;user-select:none;opacity:.7}
+.protag{display:inline-block;vertical-align:middle;font-size:10px;font-weight:800;letter-spacing:.04em;color:#fff;background:linear-gradient(120deg,#ffb000,#ff0033);border-radius:6px;padding:0 5px;line-height:16px;margin-left:4px}
+.pillbtn.pro{background:linear-gradient(120deg,#ffb000,#ff0033);color:#fff}
+.pillbtn.pro:hover{filter:brightness(1.06)}
+.procard{display:flex;gap:12px;align-items:center;width:100%;border:0;text-align:left;border-radius:14px;padding:12px 14px;margin:10px 0 4px;color:#fff;background:linear-gradient(120deg,#ffb000,#ff0033)}
+.procard .em{font-size:24px}
+.procard span:nth-child(2){flex:1;display:flex;flex-direction:column}
+.procard small{opacity:.9;font-size:12.5px}
+.tool{background:var(--card);box-shadow:0 0 0 1px var(--line);border-radius:16px;padding:16px 18px;margin:0 0 14px;max-width:960px}
+.tool h2{margin:0 0 4px;font-size:18px}
+.nfbar{width:120px;height:10px;flex:none;border-radius:0 4px 4px 0}
+.nfbar i{display:block;height:100%;background:var(--series-1);border-radius:0 4px 4px 0;min-width:3px}
+.nfscore{width:30px;text-align:right;font-variant-numeric:tabular-nums}
+#tcIn{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--bg);font:inherit;color:var(--text);resize:vertical}
+#tcIn:focus{outline:none;border-color:var(--accent)}
+.tcres{display:flex;gap:14px;align-items:center;margin:12px 0 8px}
+.tcres div:last-child{display:flex;flex-direction:column}
+.tcres small{color:var(--muted);font-size:12px}
+.tcl{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:4px 16px;font-size:13px}
+.tcl div{display:flex;gap:8px}
+.tcl .ok span{color:var(--good);font-weight:700}
+.tcl .no{color:var(--muted)}
+.prohero{text-align:center;border-radius:22px;padding:28px 20px 22px;margin:4px 0 18px;background:linear-gradient(140deg,color-mix(in srgb,#ffb000 20%,var(--bg)),color-mix(in srgb,var(--red) 16%,var(--bg)))}
+.prohero .crown{font-size:44px;line-height:1}
+.prohero h1{margin:6px 0 4px;font-size:28px}
+.prohero p{margin:0 auto 12px;max-width:560px;color:var(--muted)}
+.prohero small{display:block;color:var(--muted);margin-top:10px;font-size:12px}
+.price{display:flex;gap:6px;align-items:baseline;justify-content:center;margin:6px 0 14px}
+.price b{font-size:34px}
+.price span{color:var(--muted)}
+.probeta{display:inline-block;background:var(--bg);border-radius:12px;padding:10px 14px;font-weight:600;max-width:560px}
+.pfgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.pf{background:var(--surface);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.pf .em{font-size:22px}
+.pf small{color:var(--muted);font-size:12.5px;line-height:1.45}
+.pctbl{max-width:640px}
+.pctbl td:nth-child(n+2),.pctbl th:nth-child(n+2){text-align:center;width:70px}
 @media (max-width:1180px){.pillbtn .lbl{display:none}.pillbtn{padding:0 10px}}
 @media (max-width:1000px){
   #side{width:76px;padding:4px}
   #side .nav{flex-direction:column;gap:4px;height:68px;justify-content:center;padding:0;font-size:10px;text-align:center}
-  #side .nav .n,#side .sidesec,#side .sidefoot,#side .navh{display:none}
+  #side .nav .n,#side .sidesec,#side .sidefoot,#side .navh,#side .nav .protag{display:none}
   #player .pwrap{flex-direction:column;overflow:auto}
   #player .pvid{height:min(66vh,640px);margin:0 auto}
   #player .pside{width:auto;max-width:520px}
@@ -750,6 +854,15 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
   .rail .vcard{flex-basis:calc((100vw - 44px) / 2.3)}
   .rail .ccard{flex-basis:calc((100vw - 44px) / 1.8)}
   .rail .pcard{flex-basis:calc(100vw - 60px)}
+  #btnPro{display:none}
+  .rail .tcard{flex-basis:calc((100vw - 44px) / 1.5)}
+  .tgrid{grid-template-columns:1fr}
+  .brgrid{grid-template-columns:1fr 1fr}
+  .brcell{padding:8px 10px}
+  .yrow2 img{width:80px;height:45px}
+  .nfbar{width:56px}
+  .tool{padding:14px}
+  .prohero h1{font-size:24px}
   .rail .vcard .avlink,.vgrid .vcard .avlink{display:none}
   .vmeta{margin-top:8px}
   .vt{font-size:13.5px;line-height:1.35}
@@ -762,7 +875,7 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
   .filters>*{flex:none}
   #side,body.mini #side{position:fixed;inset:auto 0 0 0;top:auto;z-index:45;width:auto;height:56px;display:flex;padding:0;background:var(--bg);border-top:1px solid var(--line);overflow:hidden}
   #side>*{display:none}
-  #side>.nav[data-tab=home],#side>.nav[data-tab=week],#side>.nav[data-tab=videos],#side>.nav[data-tab=saved],#side>.nav[data-tab=more]{display:flex}
+  #side>.nav[data-tab=home],#side>.nav[data-tab=trends],#side>.nav[data-tab=videos],#side>.nav[data-tab=saved],#side>.nav[data-tab=more]{display:flex}
   #side .nav{height:56px;flex:1;min-width:0;border-radius:0;gap:2px;padding:0 2px;font-size:10px}
   #side .nav:hover{background:transparent}
   #side .nav .lbl{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -798,6 +911,7 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
     <button class="pillbtn" id="btnExport"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span class="lbl" id="exportLbl"></span></button>
     <button class="pillbtn" id="btnSettings"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span class="lbl" id="settingsLbl"></span></button>
     <button class="icon" id="btnSearchM" type="button"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+    <button class="pillbtn pro" id="btnPro" type="button" data-tab="pro">⭐<span class="lbl">Pro</span></button>
     <button class="icon" id="btnTheme" type="button"></button>
     <span id="acct"></span>
     <button class="icon" id="btnHelp" data-tab="help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.8M12 17.2h.01"/></svg></button>
@@ -1410,6 +1524,112 @@ Object.assign(T.th, {
   lenB1: 'ต่ำกว่า 20 วิ', lenB2: '20–40 วิ', lenB3: '40–60 วิ', lenB4: '1–3 นาที', lLikeRate: 'ไลก์ต่อ 1,000 วิว',
   privNote: 'เวลารับชม อัตราการดูจนจบ จำนวนการแสดงผล แหล่งที่มาของผู้ชม และข้อมูลผู้ชม เป็นข้อมูลส่วนตัวของเจ้าของช่อง YouTube จึงไม่เปิดให้คนอื่นดู'
 });
+Object.assign(T.en, {
+  nTrends: 'Trends', nTools: 'Tools', nPro: 'Go Pro', shTrend: '🚀 Trending now', shTrendD: 'Words and hashtags suddenly showing up in many new Shorts',
+  pTrendsT: 'Trends', pTrendsD: 'What’s going viral right now: rising on Shorts, games, cartoons, news and YouTube’s own trending charts.',
+  pToolsT: 'Creator tools', pToolsD: 'Find an open niche, pick the best time to post, test your title and export the data.',
+  ttRising: 'Rising on Shorts', ttGames: 'Games', ttToons: 'Cartoons & characters', ttYt: 'YouTube trending', ttNews: 'News & curiosity',
+  ttRisingD: 'Words and hashtags used by far more new Shorts in the last 3 days than in the 18 days before. Tap one to see the Shorts and ideas to ride it.',
+  ttGamesD: 'Games ranked by how fast new Shorts about them are appearing, plus how often they show up on YouTube’s trending charts.',
+  ttToonsD: 'Cartoons, anime and meme characters ranked the same way: new Shorts about them and their place on the trending charts.',
+  twT: 'Your tracked trends', twSteady: 'steady', twQuiet: 'quiet', twOn: '⭐ Track this trend', twOff: '✓ Tracking (tap to stop)',
+  tNone: 'Nothing here yet. Trends fill in as the scanner checks more channels.', tQuiet: 'no new Shorts in the last 3 days', tQuietD: 'No new Shorts about this in the last 3 days.',
+  tStats: '{n} new Shorts · {k} channels · typical {v} views', liftX: '{x}× usual', liftNew: 'brand new',
+  liftD: '{x}× more new Shorts than usual.', liftNewD: 'Brand new: almost nobody posted this before.', onCharts: '{n} on trending {f}', mvNew: 'NEW',
+  brT: 'Today’s viral brief', brD: 'The one thing to know in each area, updated through the day.', brShorts: 'Rising on Shorts', brGame: 'Hottest game',
+  brNews: 'People are reading about', brYt: '#1 trending {c}', wikiViews: '{n} reads yesterday', wikiNew: 'new in the top list',
+  ytWait: 'The trend feeds are on their way. They arrive with the next scan.', ytWeb: 'YouTube’s trending charts and the news feed are on the website version.',
+  cTH: 'Thailand', cUS: 'USA', ytCat: 'Category', ytShorts: 'Shorts only', ytD: 'YouTube’s trending chart, checked {ago}. ▲ climbed since the last check, NEW just arrived.',
+  ytSince: 'on trending since {ago}', yc_all: 'All categories', yc_games: '🎮 Gaming', yc_animation: '🎬 Film & animation', yc_entertainment: '🎭 Entertainment',
+  yc_comedy: '😂 Comedy', yc_music: '🎵 Music', yc_sports: '⚽ Sports', yc_news: '📰 News', yc_animals: '🐾 Pets & animals', yc_howto: '🛠️ Howto & style',
+  yc_tech: '🔬 Science & tech', yc_people: '🙂 People & blogs',
+  newsD: 'What people looked up on Wikipedia on {d}. A sudden jump in reads usually means a news story or a viral moment people want explained.',
+  newsRising: 'Suddenly popular', newsTop: 'Most read', newsYt: 'News trending on YouTube', tIdeasBtn: 'Short ideas',
+  tIdea1: 'POV: you just found out about {x}', tIdea2: '{x} explained in 30 seconds', tIdea3: 'I tried {x} so you don’t have to',
+  tIdea4: 'Ranking every {x} from worst to best', tIdea5: '{x}, but everything goes wrong', tIdea6: '3 things nobody tells you about {x}', copy: 'Copy',
+  tShorts3: 'New Shorts (3 days)', tChannels: 'Channels posting', tPerDay: 'New Shorts per day, last 2 weeks', today: 'today', tOnCharts: 'On YouTube’s trending charts',
+  tTop: 'Top Shorts riding it', tRide: 'Ideas to ride this trend', tSearch: 'Search YouTube for it',
+  lockT: '{x} is part of Pro', lockD: 'Unlock every trend, board and tool for {p} a month.', lockBtn: '⭐ See Pro',
+  proTagT: 'Part of Viral Radar Pro', proBetaT: 'Part of Viral Radar Pro, free while we’re in beta',
+  nfT: 'Niche finder', nfD: 'Topics where typical views are high but few channels post, so a newcomer has room. Tap one to browse it.',
+  nfStats: 'typical {v} views · {p}% of Shorts go viral · {c} channels posting · top 3 take {s}% of views',
+  btT: 'Best time to post', btD: 'When the Shorts that went viral were uploaded, shown in your own time zone.', btCap: 'from {n} viral Shorts', btFew: 'Not enough viral Shorts in this topic yet.',
+  tcT: 'Title checker', tcD: 'Type a title idea and see how it compares with titles that went viral.', tcPh: 'e.g. POV: you find a giant crab on the beach 🦀',
+  tcLen: 'Length: {n} characters (15–70 works best)', tcWords: '{n} words (3–12 works best)', tcHook: 'Opens with a hook or a question (POV, What if, I tried…)',
+  tcNum: 'Has a number', tcPower: 'Has a strong word (secret, giant, never, vs…)', tcEmoji: '{n} emoji (1–2 works best)', tcTags: '{n} hashtags (1–3 works best)',
+  tcCaps: 'Not too many ALL-CAPS words', tcTrendYes: 'Uses a rising trend: {x}', tcTrendNo: 'Add a rising trend word to ride the wave', tcGreat: 'Strong title',
+  tcOk: 'Good, could be stronger', tcWeak: 'Needs work', tcScore: 'Score out of 100, based on what viral Shorts titles have in common', tcSimilar: 'Viral Shorts with similar words',
+  exT: 'Export', exD: 'Download the data as a spreadsheet (CSV) to plan your content.', exCh: 'Channels', exShorts: 'Viral Shorts', exTrends: 'Rising trends',
+  proLead: 'Spot the next viral trend before everyone else: rising topics, games, cartoons and news, with tools that turn them into ideas.',
+  perMonth: 'per month', proCancel: 'Cancel anytime.', proBeta: 'Every Pro feature is free while Viral Radar is in beta. Later, Pro will be {p} a month.',
+  proYou: 'You have Pro until {d}. Thank you!', proSignIn: 'Sign in to subscribe', proSoon: 'Subscriptions open soon.', proBuy: 'Subscribe for {p} a month',
+  pf1T: 'Trend radar', pf1D: 'Every word and hashtag rising across thousands of new Shorts, refreshed all day.',
+  pf2T: 'Games & cartoons boards', pf2D: 'Which games, cartoons and meme characters are taking off right now.',
+  pf3T: 'YouTube trending charts', pf3D: 'Thailand and the USA, 12 categories, with what climbed and what’s new.',
+  pf4T: 'News & curiosity', pf4D: 'What people suddenly want explained, with ready-made Short ideas.',
+  pf5T: 'Trend alerts', pf5D: 'Track any trend; it lights up the moment it takes off.',
+  pf6T: 'Niche finder', pf6D: 'Topics with big views and few channels.', pf7T: 'Best time to post', pf7D: 'When viral Shorts in your topic were uploaded.',
+  pf8T: 'Title checker', pf8D: 'Score your title against what went viral.', pf9T: 'Export to spreadsheets', pf9D: 'Channels, viral Shorts and trends as CSV.',
+  pf10T: 'Studio-style analytics', pf10D: 'Charts for every video and channel.',
+  pcT: 'Free vs Pro', pcFree: 'Free', pcBrowse: 'Top picks, viral Shorts, channels, saved lists', pcSearch: 'YouTube search (15 a day)', pcAnalytics: 'Video and channel analytics',
+  pcTrendsTop: 'Top trends', pcTrendsAll: 'Every trend, with ideas to ride it', pcBoards: 'Games, cartoons, YouTube charts, news', pcAlerts: 'Trend alerts',
+  pcTools: 'Niche finder, best time to post, title checker', pcExport: 'CSV export',
+  proData: 'Viral Radar uses public YouTube numbers, YouTube’s trending charts and Wikipedia’s open reading statistics. It isn’t made by or affiliated with YouTube.',
+  proCard: 'Viral Radar Pro', proCardBeta: 'Free while in beta', proCardPrice: '{p} a month'
+});
+Object.assign(T.th, {
+  nTrends: 'เทรนด์', nTools: 'เครื่องมือ', nPro: 'อัปเกรด Pro', shTrend: '🚀 กำลังมาแรง', shTrendD: 'คำและแฮชแท็กที่จู่ ๆ ก็โผล่ในคลิปใหม่จำนวนมาก',
+  pTrendsT: 'เทรนด์', pTrendsD: 'อะไรกำลังไวรัลตอนนี้: คำที่มาแรงใน Shorts เกม การ์ตูน ข่าว และชาร์ตมาแรงของ YouTube',
+  pToolsT: 'เครื่องมือครีเอเตอร์', pToolsD: 'หาหมวดที่ยังมีที่ว่าง เลือกเวลาโพสต์ที่ดีที่สุด ทดสอบชื่อคลิป และส่งออกข้อมูล',
+  ttRising: 'มาแรงใน Shorts', ttGames: 'เกม', ttToons: 'การ์ตูนและตัวละคร', ttYt: 'มาแรงบน YouTube', ttNews: 'ข่าวและเรื่องที่คนสนใจ',
+  ttRisingD: 'คำและแฮชแท็กที่คลิปใหม่ใช้มากขึ้นมากใน 3 วันล่าสุด เทียบกับ 18 วันก่อนหน้า แตะเพื่อดูคลิปและไอเดียที่ใช้ตามเทรนด์ได้',
+  ttGamesD: 'จัดอันดับเกมตามความเร็วที่คลิปใหม่เกี่ยวกับเกมนั้นโผล่ขึ้นมา และจำนวนครั้งที่ติดชาร์ตมาแรงของ YouTube',
+  ttToonsD: 'จัดอันดับการ์ตูน อนิเมะ และตัวละครมีมแบบเดียวกัน: คลิปใหม่ที่เกี่ยวข้องและอันดับบนชาร์ตมาแรง',
+  twT: 'เทรนด์ที่ติดตามไว้', twSteady: 'ทรงตัว', twQuiet: 'เงียบ', twOn: '⭐ ติดตามเทรนด์นี้', twOff: '✓ กำลังติดตาม (แตะเพื่อเลิก)',
+  tNone: 'ยังไม่มีข้อมูล เทรนด์จะค่อย ๆ ขึ้นเมื่อระบบตรวจช่องมากขึ้น', tQuiet: 'ไม่มีคลิปใหม่ใน 3 วันล่าสุด', tQuietD: 'ไม่มีคลิปใหม่เกี่ยวกับเรื่องนี้ใน 3 วันล่าสุด',
+  tStats: 'คลิปใหม่ {n} คลิป · {k} ช่อง · ปกติ {v} วิว', liftX: '{x} เท่าของปกติ', liftNew: 'ใหม่ล่าสุด',
+  liftD: 'มีคลิปใหม่มากกว่าปกติ {x} เท่า', liftNewD: 'ใหม่ล่าสุด: แทบไม่มีใครเคยโพสต์มาก่อน', onCharts: 'ติดชาร์ต {n} คลิป {f}', mvNew: 'ใหม่',
+  brT: 'สรุปไวรัลวันนี้', brD: 'เรื่องเดียวที่ควรรู้ในแต่ละด้าน อัปเดตตลอดวัน', brShorts: 'มาแรงใน Shorts', brGame: 'เกมที่ร้อนแรงที่สุด',
+  brNews: 'คนกำลังอ่านเรื่อง', brYt: 'อันดับ 1 มาแรง {c}', wikiViews: 'คนอ่าน {n} ครั้งเมื่อวาน', wikiNew: 'เพิ่งติดอันดับ',
+  ytWait: 'ข้อมูลเทรนด์กำลังมา จะขึ้นหลังการสแกนครั้งถัดไป', ytWeb: 'ชาร์ตมาแรงของ YouTube และข่าว มีในเวอร์ชันเว็บไซต์',
+  cTH: 'ไทย', cUS: 'สหรัฐฯ', ytCat: 'หมวด', ytShorts: 'เฉพาะ Shorts', ytD: 'ชาร์ตมาแรงของ YouTube ตรวจเมื่อ {ago} ▲ คืออันดับขึ้นจากครั้งก่อน ใหม่ คือเพิ่งติดชาร์ต',
+  ytSince: 'ติดชาร์ตตั้งแต่ {ago}', yc_all: 'ทุกหมวด', yc_games: '🎮 เกม', yc_animation: '🎬 ภาพยนตร์และแอนิเมชัน', yc_entertainment: '🎭 บันเทิง',
+  yc_comedy: '😂 ตลก', yc_music: '🎵 เพลง', yc_sports: '⚽ กีฬา', yc_news: '📰 ข่าว', yc_animals: '🐾 สัตว์เลี้ยงและสัตว์', yc_howto: '🛠️ ฮาวทูและสไตล์',
+  yc_tech: '🔬 วิทยาศาสตร์และเทคโนโลยี', yc_people: '🙂 คนและบล็อก',
+  newsD: 'สิ่งที่คนค้นอ่านใน Wikipedia เมื่อ {d} ยอดอ่านที่พุ่งขึ้นกะทันหันมักหมายถึงข่าวหรือเหตุการณ์ไวรัลที่คนอยากให้ช่วยอธิบาย',
+  newsRising: 'จู่ ๆ ก็ดัง', newsTop: 'อ่านมากที่สุด', newsYt: 'ข่าวที่มาแรงบน YouTube', tIdeasBtn: 'ไอเดียคลิป',
+  tIdea1: 'POV: เพิ่งรู้เรื่อง {x}', tIdea2: 'อธิบาย {x} ใน 30 วินาที', tIdea3: 'ลอง {x} ให้ดู จะได้ไม่ต้องลองเอง',
+  tIdea4: 'จัดอันดับ {x} จากแย่สุดไปดีสุด', tIdea5: '{x} แต่ทุกอย่างพังหมด', tIdea6: '3 เรื่องเกี่ยวกับ {x} ที่ไม่มีใครบอก', copy: 'คัดลอก',
+  tShorts3: 'คลิปใหม่ (3 วัน)', tChannels: 'ช่องที่โพสต์', tPerDay: 'คลิปใหม่ต่อวัน 2 สัปดาห์ล่าสุด', today: 'วันนี้', tOnCharts: 'บนชาร์ตมาแรงของ YouTube',
+  tTop: 'คลิปเด่นที่เกาะเทรนด์นี้', tRide: 'ไอเดียทำคลิปตามเทรนด์นี้', tSearch: 'ค้นหาใน YouTube',
+  lockT: '{x} เป็นส่วนหนึ่งของ Pro', lockD: 'ปลดล็อกทุกเทรนด์ บอร์ด และเครื่องมือ ในราคา {p} ต่อเดือน', lockBtn: '⭐ ดู Pro',
+  proTagT: 'ส่วนหนึ่งของ Viral Radar Pro', proBetaT: 'ส่วนหนึ่งของ Viral Radar Pro ใช้ฟรีช่วงทดลอง',
+  nfT: 'ค้นหาหมวดที่ยังมีที่ว่าง', nfD: 'หมวดที่ยอดวิวปกติสูงแต่มีช่องโพสต์น้อย คนเริ่มใหม่จึงยังมีที่ยืน แตะเพื่อดูหมวดนั้น',
+  nfStats: 'ปกติ {v} วิว · {p}% ของคลิปไวรัล · {c} ช่องที่โพสต์ · 3 ช่องแรกได้วิว {s}%',
+  btT: 'เวลาโพสต์ที่ดีที่สุด', btD: 'คลิปที่ไวรัลถูกอัปโหลดตอนไหน แสดงตามเวลาของคุณ', btCap: 'จากคลิปไวรัล {n} คลิป', btFew: 'หมวดนี้ยังมีคลิปไวรัลไม่พอ',
+  tcT: 'ตรวจชื่อคลิป', tcD: 'พิมพ์ชื่อคลิปที่คิดไว้ แล้วดูว่าเทียบกับชื่อคลิปที่ไวรัลเป็นอย่างไร', tcPh: 'เช่น POV: เจอปูยักษ์ที่ชายหาด 🦀',
+  tcLen: 'ความยาว {n} ตัวอักษร (15–70 ดีที่สุด)', tcWords: '{n} คำ (3–12 ดีที่สุด)', tcHook: 'เปิดด้วยคำดึงดูดหรือคำถาม (POV, ถ้า…, ลอง…)',
+  tcNum: 'มีตัวเลข', tcPower: 'มีคำแรง ๆ (ลับ, ยักษ์, ไม่เคย, เทียบ…)', tcEmoji: 'อีโมจิ {n} ตัว (1–2 ดีที่สุด)', tcTags: 'แฮชแท็ก {n} อัน (1–3 ดีที่สุด)',
+  tcCaps: 'ไม่ใช้ตัวพิมพ์ใหญ่ทั้งคำมากเกินไป', tcTrendYes: 'ใช้คำที่กำลังมาแรง: {x}', tcTrendNo: 'ใส่คำที่กำลังมาแรงเพื่อเกาะกระแส', tcGreat: 'ชื่อดีมาก',
+  tcOk: 'ดี แต่ยังปรับได้อีก', tcWeak: 'ควรปรับปรุง', tcScore: 'คะแนนเต็ม 100 จากจุดร่วมของชื่อคลิป Shorts ที่ไวรัล', tcSimilar: 'คลิปไวรัลที่ใช้คำคล้ายกัน',
+  exT: 'ส่งออกข้อมูล', exD: 'ดาวน์โหลดข้อมูลเป็นสเปรดชีต (CSV) ไว้วางแผนคอนเทนต์', exCh: 'ช่อง', exShorts: 'คลิปไวรัล', exTrends: 'เทรนด์มาแรง',
+  proLead: 'เห็นเทรนด์ไวรัลถัดไปก่อนใคร: หัวข้อ เกม การ์ตูน และข่าวที่กำลังมาแรง พร้อมเครื่องมือที่เปลี่ยนเป็นไอเดียคลิปได้ทันที',
+  perMonth: 'ต่อเดือน', proCancel: 'ยกเลิกได้ทุกเมื่อ', proBeta: 'ทุกฟีเจอร์ Pro ใช้ฟรีระหว่างที่ Viral Radar อยู่ในช่วงทดลอง ต่อไป Pro จะมีราคา {p} ต่อเดือน',
+  proYou: 'คุณเป็นสมาชิก Pro ถึง {d} ขอบคุณมาก!', proSignIn: 'เข้าสู่ระบบเพื่อสมัคร', proSoon: 'เปิดรับสมัครเร็ว ๆ นี้', proBuy: 'สมัคร {p} ต่อเดือน',
+  pf1T: 'เรดาร์เทรนด์', pf1D: 'ทุกคำและแฮชแท็กที่มาแรงในคลิปใหม่หลายพันคลิป อัปเดตทั้งวัน',
+  pf2T: 'บอร์ดเกมและการ์ตูน', pf2D: 'เกม การ์ตูน และตัวละครมีมไหนกำลังพุ่งตอนนี้',
+  pf3T: 'ชาร์ตมาแรงของ YouTube', pf3D: 'ไทยและสหรัฐฯ 12 หมวด พร้อมดูว่าอะไรอันดับขึ้นและอะไรเพิ่งติดชาร์ต',
+  pf4T: 'ข่าวและเรื่องที่คนสนใจ', pf4D: 'เรื่องที่คนอยากรู้กะทันหัน พร้อมไอเดียคลิปสำเร็จรูป',
+  pf5T: 'แจ้งเตือนเทรนด์', pf5D: 'ติดตามเทรนด์ไหนก็ได้ ระบบจะไฮไลต์ทันทีที่มันพุ่ง',
+  pf6T: 'ค้นหาหมวดที่ยังมีที่ว่าง', pf6D: 'หมวดที่วิวเยอะแต่ช่องน้อย', pf7T: 'เวลาโพสต์ที่ดีที่สุด', pf7D: 'คลิปไวรัลในหมวดของคุณถูกโพสต์ตอนไหน',
+  pf8T: 'ตรวจชื่อคลิป', pf8D: 'ให้คะแนนชื่อคลิปเทียบกับคลิปที่ไวรัล', pf9T: 'ส่งออกเป็นสเปรดชีต', pf9D: 'ช่อง คลิปไวรัล และเทรนด์ เป็นไฟล์ CSV',
+  pf10T: 'สถิติแบบ Studio', pf10D: 'กราฟของทุกคลิปและทุกช่อง',
+  pcT: 'ฟรี กับ Pro', pcFree: 'ฟรี', pcBrowse: 'ช่องแนะนำ คลิปไวรัล ช่อง และรายการที่บันทึก', pcSearch: 'ค้นหา YouTube (วันละ 15 ครั้ง)', pcAnalytics: 'สถิติคลิปและช่อง',
+  pcTrendsTop: 'เทรนด์อันดับต้น ๆ', pcTrendsAll: 'ทุกเทรนด์ พร้อมไอเดียเกาะกระแส', pcBoards: 'เกม การ์ตูน ชาร์ต YouTube และข่าว', pcAlerts: 'แจ้งเตือนเทรนด์',
+  pcTools: 'ค้นหาหมวด เวลาโพสต์ ตรวจชื่อคลิป', pcExport: 'ส่งออก CSV',
+  proData: 'Viral Radar ใช้ตัวเลขสาธารณะของ YouTube ชาร์ตมาแรงของ YouTube และสถิติการอ่านแบบเปิดของ Wikipedia ไม่ได้จัดทำโดยหรือเกี่ยวข้องกับ YouTube',
+  proCard: 'Viral Radar Pro', proCardBeta: 'ใช้ฟรีช่วงทดลอง', proCardPrice: '{p} ต่อเดือน'
+});
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
     den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
@@ -1525,7 +1745,7 @@ const langName = c => (LN[c] ? LN[c][UI === 'th' ? 1 : 0] : c.toUpperCase());
 const topicName = tp => (UI === 'th' ? tp[3] : tp[2]);
 
 /* ---------- state ---------- */
-const TABS = ['home', 'week', 'videos', 'channels', 'live', 'ideas', 'topics', 'playbook', 'mine', 'saved', 'compare', 'help'];
+const TABS = ['home', 'trends', 'week', 'videos', 'channels', 'live', 'ideas', 'topics', 'tools', 'pro', 'playbook', 'mine', 'saved', 'compare', 'help'];
 const S = Object.assign({tab: 'home', q: '', topic: '', minScore: 0, maxSubs: 0, minMed: 0, lang: 'all', hideOne: true, tag: '', niche: '',
   sort: 'score', minX: 2, vsort: 'x', shelf: 'new', lsort: 'new', detail: false, cmp: []}, LS.get('radar.state4', {}));
 const hashTab = () => { const h = decodeURIComponent(location.hash.slice(1)); return TABS.includes(h) ? h : null; };
@@ -1609,6 +1829,9 @@ const ICON = {
   mine: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 15l3-4 3 2 4-5"/></svg>',
   tutorial: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z"/></svg>',
   tour: '<svg viewBox="0 0 24 24"><path d="M5 3.5l13 6.8-5.6 1.7-2 5.6z"/><path d="M12.5 12.2l5 5"/></svg>',
+  trends: '<svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>',
+  tools: '<svg viewBox="0 0 24 24"><path d="M14.5 5.5a4 4 0 0 0 4.9 4.9L21 12l-3 3-1.6-1.6a4 4 0 0 0-4.9-4.9zM12.5 11.5 4 20M6 14l4 4"/></svg>',
+  pro: '<svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z"/></svg>',
   moon: '<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>',
   sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M2.5 12h2M19.5 12h2M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>',
   lang: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>'
@@ -1845,6 +2068,7 @@ function homeView() {
   };
   const byScore = (a, b) => b.score - a.score;
   add('shPicks', 'shPicksD', picksList().filter(baseOk).map(pickCard), '');
+  add('shTrend', 'shTrendD', trendData().rising.filter(s => !S.topic || s.tops.has(S.topic)).slice(0, 12).map(trendCard), 'trends');
   add('shViral', 'shViralD', viralVideos(chs).slice(0, 24).map(([v, c]) => vCard(v, c)), 'videos');
   add('shTalk', 'shTalkD', talkedAbout(chs).slice(0, 24).map(([v, c]) => vCard(v, c, {talk: true})), 'talk');
   const fresh = liveVideos(chs), good = fresh.filter(([, c]) => c.score >= 40);
@@ -2073,7 +2297,7 @@ $('#sheet').addEventListener('close', () => {
 /* ---------- video player ---------- */
 function openPlayer(vid, chId) {
   if (!vidOk(vid)) return;
-  const c = findCh(chId), v = (c && c.series.find(s => s.id === vid)) || {id: vid, t: '', v: 0, x: 0};
+  const c = findCh(chId), v = (c && c.series.find(s => s.id === vid)) || Object.assign({id: vid, t: '', v: 0, x: 0}, YT_ITEMS.get(vid) || {});
   closePop();
   const g = grow(v);
   const facts = [['👁', t('views', {n: fmt(v.v)})]];
@@ -2838,10 +3062,11 @@ function openMore() {
   const st = statusInfo();
   const row = (attrs, icon, label) => `<button type="button" class="nav" ${attrs}>${icon}<span class="lbl">${esc(label)}</span></button>`;
   const tab = ([id, k]) => row(`data-tab="${id}" aria-current="${S.tab === id}"`, ICON[id], t(k));
-  body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('nMore'))}</h3>` + syncBlock() +
+  body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('nMore'))}</h3>` +
+    `<button type="button" class="procard" data-tab="pro"><span class="em">⭐</span><span><b>${esc(t('proCard'))}</b><small>${esc(isPro() && PRO.gate ? '✓' : PRO.gate ? t('proCardPrice', {p: PRO.price}) : t('proCardBeta'))}</small></span><span>→</span></button>` + syncBlock() +
     `<div class="mrow">${ICON.lang}<span>${esc(t('langT'))}</span><div class="seg"><button type="button" data-ui="en" aria-pressed="${UI === 'en'}">EN</button><button type="button" data-ui="th" aria-pressed="${UI === 'th'}">ไทย</button></div></div>` +
     `<h4 class="navh">${esc(t('mLearn'))}</h4>` + row('data-intro', ICON.tutorial, t('nTutorial')) + row('data-tour', ICON.tour, t('nTour')) + [['playbook', 'nPlaybook'], ['help', 'nHelp']].map(tab).join('') +
-    `<h4 class="navh">${esc(t('mExplore'))}</h4>` + [['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['mine', 'nMine'], ['compare', 'nCompare']].map(tab).join('') +
+    `<h4 class="navh">${esc(t('mExplore'))}</h4>` + [['week', 'nWeek'], ['tools', 'nTools'], ['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['mine', 'nMine'], ['compare', 'nCompare']].map(tab).join('') +
     `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + themeSec() + (canInstall() ? `<div class="sidesec">${installBtn()}</div>` : '') +
     `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div></div>`;
   if (!dlg.open) dlg.showModal();
@@ -3172,7 +3397,7 @@ function mineClick(x) {
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target && e.target.id === 'mineIn') connectMine(e.target.value); });
 
 /* ---------- backup / move to another device ---------- */
-const BK_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.scache'];
+const BK_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.scache', 'radar.tw'];
 function toB64(str) {
   const bytes = new TextEncoder().encode(str);
   let bin = '';
@@ -3314,7 +3539,7 @@ if (STATIC && 'serviceWorker' in navigator && (location.protocol === 'https:' ||
 /* ---------- Google sign-in + sync (Firebase Auth + Cloud Firestore on the free plan) ---------- */
 const FB = CFG.firebase && CFG.firebase.apiKey && CFG.firebase.projectId ? CFG.firebase : null;
 const FB_VER = '10.12.2';
-const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured'];
+const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.tw'];
 const GICON = '<svg viewBox="0 0 48 48" style="stroke:none"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.7 6c4.5-4.2 6.9-10.3 6.9-17.7z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.7-6c-2.1 1.4-4.9 2.3-8.2 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>';
 let FBX = null, USER = null, SYNC = {state: 'off', at: 0, err: ''}, syncTimer = null, applyingRemote = false, unsubSnap = null;
 const lsRaw = LS.set.bind(LS);
@@ -3357,6 +3582,7 @@ function onUser(u) {
   try { localStorage.setItem('radar.fbuser', USER ? '1' : ''); } catch (e) {}
   if (unsubSnap) { unsubSnap(); unsubSnap = null; }
   if (USER) firstSync().catch(syncErr); else SYNC = {state: 'off', at: 0, err: ''};
+  checkPro();
   renderAcct();
   if (DATA) renderSide();
 }
@@ -3457,6 +3683,419 @@ function acctClick(x) {
 }
 $('#dlg').addEventListener('close', () => { $('#dlgBody').dataset.mode = ''; });
 
+/* ---------- trends: what is rising on Shorts, from the titles and hashtags of every tracked Short ---------- */
+const TR_RECENT = 3 * 86400, TR_WINDOW = 21 * 86400, TR_DAYS = 14;
+const NOISE = new Set(['shorts', 'short', 'shortvideo', 'shortsvideo', 'shortsfeed', 'viral', 'viralvideo', 'viralshorts', 'fyp', 'foryou', 'foryoupage', 'trending', 'trend',
+  'youtube', 'youtubeshorts', 'ytshorts', 'subscribe', 'tiktok', 'reels', 'video', 'videos', 'new', 'best', 'part', 'episode', 'full', 'official', 'คลิป', 'ไวรัล', 'ติดเทรนด์', 'ฟีด']);
+const GENERIC = new Set(('make made makes making get got gets getting try tried trying see saw seen look looking like likes love loved good bad big small little real really very much many more most '
+  + 'every everyone someone people person thing things time times day days today first last one two three top wait end ever always never just only even still back now new old best worst '
+  + 'want need know think say said tell give take come came goes going went done doing let put keep found find watch watching guy girl boy man woman kid kids baby world life '
+  + 'pake kok masa baru cara bikin sama aja gak ga nggak udah lagi banget buat jadi kalau kalo mau bisa orang emang beli langsung pas sampai sampe kayak gini gitu '
+  + 'que como para por mas muy pero esto eso todo cuando donde quien hace hacer não mais muito isso tudo quando onde quem fazer '
+  + 'है के की में को से और ने बना दिया कर गया था थी हो रहा रही ये वो एक भी तो ही क्या कैसे लिए वाला वाली '
+  + 'ทำ ได้ ไป มา เลย แล้ว ก็ จะ คน ตัว ครั้ง วัน ดู ลอง อะไร ยังไง มาก สุด เขา เรา '
+  + 'và của là có không một những cho này được với người khi đã để tak dan yang ini itu ada untuk dengan tidak juga '
+  + 'happens happened happen poor rich star eyes water car fake funny cute crazy amazing insane epic part pov vs').split(' '));
+const termCache = new Map();
+function termsOf(title) {   // hashtags, words and two-word phrases in a title, once each
+  let out = termCache.get(title);
+  if (out) return out;
+  out = new Set((String(title).match(/#[\p{L}\p{N}_]{2,}/gu) || []).map(x => x.toLowerCase()).filter(x => !NOISE.has(x.slice(1))));
+  const ws = titleWords(title), ok = w => w && !isStop(w) && !NOISE.has(w) && !GENERIC.has(w);
+  ws.forEach((w, i) => { if (!ok(w)) return; out.add(w); if (ok(ws[i + 1])) out.add(w + ' ' + ws[i + 1]); });
+  termCache.set(title, out);
+  return out;
+}
+const TREND_CATS = [['all', '✨', 'All', 'ทั้งหมด'], ['games', '🎮', 'Games', 'เกม'], ['cartoons', '🎨', 'Cartoons & anime', 'การ์ตูนและอนิเมะ'],
+  ['memes', '🤪', 'Memes & challenges', 'มีมและชาเลนจ์'], ['news', '📰', 'News & events', 'ข่าวและเหตุการณ์'], ['music', '🎵', 'Music & dance', 'เพลงและการเต้น'],
+  ['food', '🍳', 'Food', 'อาหาร'], ['animals', '🐾', 'Animals', 'สัตว์'], ['sports', '⚽', 'Sports', 'กีฬา'], ['facts', '🧠', 'Facts', 'ความรู้'], ['other', '🔥', 'Everything else', 'อื่น ๆ']];
+const GAMES = [['Roblox', /roblox/i], ['Minecraft', /minecraft/i], ['Fortnite', /fortnite/i], ['GTA', /\bgta\b|grand theft auto/i], ['GTA 6', /\bgta ?(6|vi)\b/i],
+  ['Brawl Stars', /brawl ?stars/i], ['Free Fire', /free ?fire|ฟีฟาย/i], ['PUBG', /pubg/i], ['ROV', /\brov\b|arena of valor/i], ['Mobile Legends', /mobile legends|\bmlbb\b/i],
+  ['Valorant', /valorant/i], ['Genshin Impact', /genshin/i], ['Honkai', /honkai/i], ['Among Us', /among ?us/i], ['Poppy Playtime', /poppy playtime|huggy wuggy|catnap/i],
+  ['FNAF', /\bfnaf\b|five nights at freddy/i], ['Garten of Banban', /banban/i], ['Clash Royale', /clash royale/i], ['Clash of Clans', /clash of clans/i],
+  ['Pokémon', /pok[eé]mon|pikachu/i], ['Mario', /\bmario\b/i], ['Sonic', /\bsonic\b/i], ['Call of Duty', /call of duty|warzone/i], ['Apex Legends', /apex legends/i],
+  ['Overwatch', /overwatch/i], ['Counter-Strike', /counter[- ]?strike|\bcs2\b/i], ['Elden Ring', /elden ring/i], ['Silksong', /silksong|hollow knight/i],
+  ['Stardew Valley', /stardew/i], ['Terraria', /terraria/i], ['Subway Surfers', /subway surfers/i], ['Geometry Dash', /geometry dash/i], ['Rocket League', /rocket league/i],
+  ['EA FC / FIFA', /\bea ?fc\b|\bfifa\b|\bfc ?2[4-7]\b/i], ['eFootball', /efootball/i], ['NBA 2K', /nba ?2k/i], ['Blox Fruits', /blox fruits?/i], ['Brookhaven', /brookhaven/i],
+  ['Grow a Garden', /grow a garden/i], ['Steal a Brainrot', /steal a brainrot/i], ['99 Nights in the Forest', /99 nights/i], ['Dead Rails', /dead rails/i],
+  ['Bedwars', /bedwars/i], ['Stumble Guys', /stumble guys/i], ['Fall Guys', /fall guys/i], ['Honor of Kings', /honor of kings/i], ['Delta Force', /delta force/i],
+  ['Marvel Rivals', /marvel rivals/i], ['Wuthering Waves', /wuthering waves/i], ['Plants vs Zombies', /plants vs\.? zombies|\bpvz\b/i], ['Chess', /\bchess\b|หมากรุก/i]];
+const CARTOONS = [['Sprunki', /sprunki/i], ['Skibidi Toilet', /skibidi/i], ['Italian Brainrot', /brainrot|tralalero|tung ?tung|sahur|bombardiro|cappuccina|lirili|chimpanzini/i],
+  ['Labubu', /labubu/i], ['KPop Demon Hunters', /demon hunters|huntrix|saja boys/i], ['Bluey', /\bbluey\b/i], ['SpongeBob', /sponge ?bob/i], ['Peppa Pig', /peppa/i],
+  ['Cocomelon', /cocomelon/i], ['Doraemon', /doraemon|โดราเอม่อน/i], ['Shin-chan', /shin ?chan|ชินจัง/i], ['Pokémon', /pok[eé]mon|pikachu/i], ['Minions', /\bminions?\b/i],
+  ['Hello Kitty & Sanrio', /hello kitty|sanrio|kuromi|cinnamoroll|my melody/i], ['Demon Slayer', /demon slayer|kimetsu/i], ['One Piece', /one piece|luffy/i],
+  ['Naruto', /naruto/i], ['Dragon Ball', /dragon ?ball|goku/i], ['Jujutsu Kaisen', /jujutsu|gojo/i], ['Chainsaw Man', /chainsaw man/i], ['Spy x Family', /spy ?x ?family/i],
+  ['Smurfs', /\bsmurfs?\b/i], ['Toy Story', /toy story/i], ['Zootopia', /zootopia/i], ['Frozen', /\bfrozen\b|\belsa\b/i], ['Moana', /moana/i], ['Shrek', /shrek/i],
+  ['Garfield', /garfield/i], ['Tom and Jerry', /tom (and|&) jerry/i], ['The Amazing Digital Circus', /digital circus|pomni/i], ['Murder Drones', /murder drones/i],
+  ['Hazbin Hotel', /hazbin|helluva/i], ['Rainbow Friends', /rainbow friends/i], ['Siren Head', /siren head|cartoon cat/i], ['Stickman', /stick ?man/i],
+  ['Anime', /\banime\b|อนิเมะ/i], ['Cartoons', /cartoon|การ์ตูน/i]];
+const CAT_RX = [['games', new RegExp(GAMES.map(g => g[1].source).join('|') + '|gaming|gameplay|speedrun|เกม', 'i')],
+  ['cartoons', new RegExp(CARTOONS.map(g => g[1].source).join('|') + '|animation|animated|แอนิเมชัน', 'i')],
+  ['news', /\bnews\b|breaking|election|president|earthquake|flood|storm|typhoon|hurricane|ข่าว|ด่วน|เลือกตั้ง|น้ำท่วม|แผ่นดินไหว/i],
+  ['sports', /mbapp|haaland|yamal|ronaldo|messi|neymar|lebron|\bnba\b|\bnfl\b|football|soccer|f[uú]tbol|real madrid|barcelona|liverpool|chelsea|arsenal|man ?(united|city)|premier league|champions league|world cup|boxing|\bufc\b|\bwwe\b|ฟุตบอล|มวย/i],
+  ['music', /\bsong|music|dance|cover|remix|lyrics|k-?pop|blackpink|bts|เพลง|เต้น/i],
+  ['memes', /meme|challenge|\bpov\b|prank|sigma|rizz|aura|mewing|ชาเลนจ์|มีม/i]];
+const TOPIC_CAT = {animation: 'cartoons', games: 'games', funny: 'memes', food: 'food', animals: 'animals', sports: 'sports', facts: 'facts'};
+function trendCat(label, vids) {   // the trend's own words first, then what its channels are about, then its videos' titles
+  for (const [k, rx] of CAT_RX) if (rx.test(label)) return k;
+  const n = new Map();
+  vids.forEach(([, c]) => chTopics(c).forEach(k => { if (TOPIC_CAT[k]) n.set(TOPIC_CAT[k], (n.get(TOPIC_CAT[k]) || 0) + 1); }));
+  const top = [...n.entries()].sort((a, b) => b[1] - a[1])[0];
+  if (top && top[1] >= vids.length / 2) return top[0];
+  const titles = vids.slice(0, 8).map(([v]) => v.t).join(' ');
+  for (const [k, rx] of CAT_RX) if (rx.test(titles)) return k;
+  return top && top[1] >= vids.length / 3 ? top[0] : 'other';
+}
+const catOf = k => TREND_CATS.find(c => c[0] === k) || TREND_CATS[TREND_CATS.length - 1];
+const catName = k => { const c = catOf(k); return c[1] + ' ' + (UI === 'th' ? c[3] : c[2]); };
+function finishStats(s) {   // lift: Shorts per day in the last 3 days against the 18 days before
+  s.lift = (s.r / 3) / ((s.b + 1) / 18);
+  s.vids.sort((a, b) => b[0].v - a[0].v);
+  s.med = s.vids.length ? median(s.vids.map(([v]) => v.v)) : 0;
+  s.heat = Math.min(s.lift, 10) * s.chs.size ** 0.75 * Math.max(0.3, Math.log10(s.med + 10) - 3) ** 1.5;   // views count for a lot: a trend is only worth riding if it gets watched
+  return s;
+}
+const newStats = (key, label) => ({key, label, r: 0, b: 0, chs: new Set(), vids: [], days: new Array(TR_DAYS).fill(0)});
+function addVideo(s, v, c, age) {
+  const day = Math.floor(age / 86400);
+  if (day < TR_DAYS) s.days[TR_DAYS - 1 - day]++;
+  if (age <= TR_RECENT) { s.r++; s.chs.add(c.ch_id); s.vids.push([v, c]); } else s.b++;
+}
+function windowVideos() {   // [video, channel, age] for every Short uploaded in the last 3 weeks
+  const now = nowTs(), out = [];
+  for (const c of DATA.channels) for (const v of c.series) { const age = v.p ? now - v.p : -1; if (age >= 0 && age <= TR_WINDOW) out.push([v, c, age]); }
+  return out;
+}
+let TR = null;
+function trendData() {   // rising words, hashtags, games and characters; worked out once per data refresh
+  const sig = DATA.generated + ':' + DATA.channels.length;
+  if (TR && TR.sig === sig) return TR;
+  const win = windowVideos(), terms = new Map();
+  for (const [v, c, age] of win) for (const term of termsOf(v.t)) {
+    let s = terms.get(term);
+    if (!s) terms.set(term, s = newStats('t:' + term, term));
+    addVideo(s, v, c, age);
+  }
+  const rising = [];
+  for (const s of terms.values()) {   // phrases and hashtags are more telling than single words, so single words need more channels behind them
+    const phrase = s.label.includes(' ') || s.label.startsWith('#');
+    if (s.r < (phrase ? 3 : 4) || s.chs.size < (phrase ? 2 : 4) || finishStats(s).lift < (phrase ? 1.8 : 2.5) || s.med < (phrase ? 10000 : 50000)) continue;
+    if (phrase) s.heat *= 1.6;
+    rising.push(s);
+  }
+  rising.sort((a, b) => b.heat - a.heat);
+  const keep = [], words = s => s.label.replace(/#/g, '').split(' ');
+  for (const s of rising) {   // skip near-copies: "grow" next to "grow garden" with about the same Shorts
+    if (keep.some(k => (words(k).some(w => words(s).includes(w))) && Math.abs(k.r - s.r) <= Math.max(1, k.r * 0.3))) continue;
+    s.cat = trendCat(s.label, s.vids);
+    s.tops = new Set(s.vids.flatMap(([, c]) => [...chTopics(c)]));
+    keep.push(s);
+    if (keep.length >= 150) break;
+  }
+  const board = (list, pre) => list.map(([name, rx], i) => {
+    const s = newStats(pre + i, name);
+    for (const [v, c, age] of win) if (rx.test(v.t)) addVideo(s, v, c, age);
+    finishStats(s);
+    s.cat = pre === 'g:' ? 'games' : 'cartoons';
+    s.yt = ytMentions(rx);
+    s.score = (s.r ? s.heat : 0) + s.yt.length * 2;
+    return s;
+  }).filter(s => s.r || s.b || s.yt.length).sort((a, b) => b.score - a.score || b.r - a.r);
+  TR = {sig, terms, rising: keep, games: board(GAMES, 'g:'), toons: board(CARTOONS, 'c:')};
+  return TR;
+}
+function trendByKey(key) {
+  const T_ = trendData();
+  if (key.startsWith('g:')) return T_.games.find(s => s.key === key);
+  if (key.startsWith('c:')) return T_.toons.find(s => s.key === key);
+  const s = T_.terms.get(key.slice(2));
+  if (!s) return finishStats(newStats(key, key.slice(2)));
+  finishStats(s);
+  if (!s.cat) s.cat = trendCat(s.label, s.vids);
+  return s;
+}
+const trendHot = s => s.r >= 3 && s.lift >= 2;
+
+/* ---------- outside trend feeds (trends.json from the scanner): YouTube's charts and Wikipedia's most-read ---------- */
+let TRENDS = null;
+async function loadTrends() {
+  if (!STATIC) return;
+  try {
+    const r = await fetch('trends.json', {cache: 'no-cache'});
+    if (!r.ok) return;
+    TRENDS = await r.json();
+    if (TR) TR.sig = '';   // the boards count chart mentions too
+    if (DATA && ['trends', 'home'].includes(S.tab) && !$('#dlg').open) renderContent();
+  } catch (e) {}
+}
+const YT_CATS = ['all', 'games', 'animation', 'entertainment', 'comedy', 'music', 'sports', 'news', 'animals', 'howto', 'tech', 'people'];
+const ytChart = (region, cat) => ((((TRENDS || {}).yt || {}).regions || {})[region] || {})[cat] || [];
+function ytMentions(rx) {   // trending videos (any country or category) whose title matches
+  const seen = new Set(), out = [];
+  for (const region of ['TH', 'US']) for (const cat of YT_CATS) for (const x of ytChart(region, cat)) if (!seen.has(x.id) && rx.test(x.t)) { seen.add(x.id); out.push(Object.assign({region}, x)); }
+  return out;
+}
+const YT_ITEMS = new Map();   // trending videos the player can describe even though their channel isn't tracked
+const moveBadge = x => (x.pr == null ? `<span class="mv new">${esc(t('mvNew'))}</span>` : x.pr > x.r ? `<span class="mv up">▲${x.pr - x.r}</span>` : x.pr < x.r ? `<span class="mv down">▼${x.r - x.pr}</span>` : '<span class="mv">–</span>');
+
+/* ---------- Viral Radar Pro ---------- */
+const PRO = {gate: !!CFG.proGate, price: CFG.proPrice || '$9.99', checkout: /^https:\/\/[^\s"'<>]{4,300}$/.test(CFG.checkoutUrl || '') ? CFG.checkoutUrl : ''};
+let PRO_UNTIL = 0;
+const isPro = () => !PRO.gate || PRO_UNTIL > Date.now();
+const FREE_N = 5;
+const proTag = () => `<span class="protag" title="${esc(t(PRO.gate ? 'proTagT' : 'proBetaT'))}">PRO</span>`;
+const lockCard = what => `<div class="lockcard"><span class="em">🔒</span><div><b>${esc(t('lockT', {x: what}))}</b><small>${esc(t('lockD', {p: PRO.price}))}</small></div><button type="button" class="pillbtn pro" data-tab="pro">${esc(t('lockBtn'))}</button></div>`;
+const gateList = (items, what, n = FREE_N) => (isPro() || items.length <= n ? items : items.slice(0, n).concat([lockCard(what)]));
+async function checkPro() {   // a subscription is recorded in Firestore pro/{uid} by the payment provider's webhook; visitors can only read their own
+  PRO_UNTIL = 0;
+  if (PRO.gate && USER && FBX) {
+    try {
+      const s = await FBX.F.getDoc(FBX.F.doc(FBX.db, 'pro', USER.uid)), u = s.exists() ? s.data().until : 0;
+      PRO_UNTIL = u && u.toMillis ? u.toMillis() : +u || 0;
+    } catch (e) {}
+  }
+  if (DATA) render(true);
+}
+const checkoutLink = () => (PRO.checkout && USER ? PRO.checkout.replace('{uid}', encodeURIComponent(USER.uid)).replace('{email}', encodeURIComponent(USER.email || '')) : '');
+
+/* ---------- tracked trends: a watch list that lights up when something takes off ---------- */
+const tracked = () => LS.get('radar.tw', []).filter(x => x && x.k);
+const isTracked = key => tracked().some(x => x.k === key);
+function toggleTrack(key, label) {
+  const list = tracked();
+  LS.set('radar.tw', list.some(x => x.k === key) ? list.filter(x => x.k !== key) : [{k: key, l: label, a: Date.now()}].concat(list).slice(0, 50));
+}
+const hotTracked = () => (DATA ? tracked().filter(x => trendHot(trendByKey(x.k))).length : 0);
+
+/* ---------- pieces ---------- */
+function spark(days) {   // Shorts per day over two weeks; the last 3 days (the window that counts) in colour
+  const mx = Math.max(1, ...days), w = 84, h = 22, bw = w / days.length;
+  return `<svg class="spk" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">${days.map((n, i) => {
+    const bh = Math.max(n ? 2 : 1, (h - 1) * n / mx);
+    return `<rect x="${(i * bw + 0.5).toFixed(1)}" y="${(h - bh).toFixed(1)}" width="${(bw - 1.5).toFixed(1)}" height="${bh.toFixed(1)}" rx="1" class="${i >= days.length - 3 ? 'now' : ''}"/>`;
+  }).join('')}</svg>`;
+}
+const liftText = s => (s.b === 0 && s.r ? t('liftNew') : t('liftX', {x: fmtX(Math.min(s.lift, 99))}));
+function trendCard(s) {
+  const imgs = s.vids.slice(0, 3).map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('');
+  return `<article class="tcard" data-trend="${esc(s.key)}" tabindex="0" role="button" aria-label="${esc(s.label)}">
+    <div class="trio">${imgs}</div>
+    <div class="tbody"><div class="ttop"><b>${esc(s.label)}</b><span class="lift">▲ ${esc(liftText(s))}</span></div>
+    <small>${esc(t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)}))}</small>
+    <div class="tfoot">${spark(s.days)}<span class="tcat">${esc(catName(s.cat))}</span>${isTracked(s.key) ? '<span class="tcat on">★</span>' : ''}</div></div></article>`;
+}
+function boardRow(s, i) {
+  const imgs = s.vids.slice(0, 3).map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('');
+  const flags = [...new Set(s.yt.map(x => x.region))].map(r => (r === 'TH' ? '🇹🇭' : '🇺🇸')).join('');
+  return `<button type="button" class="brow" data-trend="${esc(s.key)}"><span class="bnum">${i + 1}</span><span class="bthumbs">${imgs}</span>
+    <span class="bmain"><b>${esc(s.label)}</b><small>${s.r ? esc(t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)})) : esc(t('tQuiet'))}${s.yt.length ? ' · ' + esc(t('onCharts', {n: s.yt.length, f: flags})) : ''}</small></span>
+    <span class="bside">${s.r ? `<span class="lift">▲ ${esc(liftText(s))}</span>` : ''}${spark(s.days)}</span></button>`;
+}
+function ideaList(x) {
+  return `<div class="ilist">${[1, 2, 3, 4, 5, 6].map(i => { const s = t('tIdea' + i, {x}); return `<div class="irow"><span>${esc(s)}</span><button type="button" class="ghost" data-copytext="${esc(s)}">${esc(t('copy'))}</button></div>`; }).join('')}</div>`;
+}
+
+/* ---------- the Trends page ---------- */
+const TTABS = [['rising', '🚀', 'ttRising'], ['games', '🎮', 'ttGames'], ['cartoons', '🎨', 'ttToons'], ['yt', '📈', 'ttYt'], ['news', '📰', 'ttNews']];
+function trendsView() {
+  const T_ = trendData(), tab = S.ttab || 'rising';
+  let h = pageHead('pTrendsT', 'pTrendsD') + briefHtml(T_);
+  const tw = tracked();
+  if (tw.length) {
+    h += `<div class="twrow"><b>⭐ ${esc(t('twT'))}</b>${tw.map(x => { const s = trendByKey(x.k); return `<button type="button" class="chip ${trendHot(s) ? 'hot' : ''}" data-trend="${esc(x.k)}">${esc(x.l)} <span class="${trendHot(s) ? 'heatup' : 'pbmuted'}">${esc(trendHot(s) ? '▲ ' + liftText(s) : s.r ? t('twSteady') : t('twQuiet'))}</span></button>`; }).join('')}</div>`;
+  }
+  h += `<div class="ttabs" role="tablist">${TTABS.map(([k, em, lk]) => `<button type="button" role="tab" data-ttab="${k}" aria-selected="${tab === k}">${em} ${esc(t(lk))}</button>`).join('')}</div>`;
+  if (tab === 'games' || tab === 'cartoons') {
+    const list = tab === 'games' ? T_.games : T_.toons;
+    h += `<p class="pbtip">${esc(t(tab === 'games' ? 'ttGamesD' : 'ttToonsD'))}</p>`;
+    h += list.length ? `<div class="blist">${gateList(list.slice(0, 40).map(boardRow), t(tab === 'games' ? 'ttGames' : 'ttToons')).join('')}</div>` : emptyBox(t('tNone'), '🔭');
+  } else if (tab === 'yt') h += ytTab();
+  else if (tab === 'news') h += newsTab();
+  else {
+    const cat = S.tcat || 'all', list = T_.rising.filter(s => cat === 'all' || s.cat === cat);
+    h += `<div class="tcats">${TREND_CATS.filter(c => c[0] === 'all' || T_.rising.some(s => s.cat === c[0])).map(c => `<button type="button" class="chip" data-tcat="${c[0]}" aria-pressed="${cat === c[0]}">${c[1]} ${esc(UI === 'th' ? c[3] : c[2])}</button>`).join('')}</div>`;
+    h += `<p class="pbtip">${esc(t('ttRisingD'))}</p>`;
+    h += list.length ? `<div class="tgrid">${gateList(list.slice(0, 60).map(trendCard), t('ttRising'), 6).join('')}</div>` : emptyBox(t('tNone'), '🔭');
+  }
+  return h;
+}
+function briefHtml(T_) {
+  const reg = S.treg || (UI === 'th' ? 'TH' : 'US'), wiki = wikiItems(UI === 'th' ? 'th' : 'en').filter(w => w.rise)[0], yt = ytChart(reg, 'all')[0];
+  const cells = [];
+  if (T_.rising[0]) cells.push(['🚀', t('brShorts'), T_.rising[0].label, '▲ ' + liftText(T_.rising[0]), `data-trend="${esc(T_.rising[0].key)}"`]);
+  const g = T_.games.find(s => s.r);
+  if (g) cells.push(['🎮', t('brGame'), g.label, t('tStats', {n: g.r, k: g.chs.size, v: fmt(g.med)}), `data-trend="${esc(g.key)}"`]);
+  if (wiki) cells.push(['📰', t('brNews'), wiki.title, t('wikiViews', {n: fmt(wiki.v)}), 'data-ttab="news"']);
+  if (yt) { YT_ITEMS.set(yt.id, yt); cells.push(['📈', t('brYt', {c: reg === 'TH' ? '🇹🇭' : '🇺🇸'}), yt.t, t('views', {n: fmt(yt.v || 0)}), `data-play="${esc(yt.id)}" data-c=""`]); }
+  if (!cells.length) return '';
+  return `<div class="brief"><div class="brh"><b>☀️ ${esc(t('brT'))}</b><small>${esc(t('brD'))}</small></div><div class="brgrid">${cells.map(([em, k, v, sub, attr]) =>
+    `<button type="button" class="brcell" ${attr}><span class="em">${em}</span><span><small>${esc(k)}</small><b>${esc(v)}</b><small>${esc(sub)}</small></span></button>`).join('')}</div></div>`;
+}
+function ytTab() {
+  const reg = S.treg || (UI === 'th' ? 'TH' : 'US'), cat = S.tycat || 'all', shortsOnly = !!S.tshorts;
+  if (!TRENDS || !TRENDS.yt || !TRENDS.yt.regions) return emptyBox(t(STATIC ? 'ytWait' : 'ytWeb'), '📈');
+  const items = ytChart(reg, cat).filter(x => !shortsOnly || (x.d || 1e9) <= 180);
+  items.forEach(x => YT_ITEMS.set(x.id, x));
+  let h = `<div class="ytbar"><div class="seg">${['TH', 'US'].map(r => `<button type="button" data-treg="${r}" aria-pressed="${reg === r}">${r === 'TH' ? '🇹🇭 ' + esc(t('cTH')) : '🇺🇸 ' + esc(t('cUS'))}</button>`).join('')}</div>
+    <select id="tyCat" aria-label="${esc(t('ytCat'))}">${YT_CATS.filter(c => ytChart(reg, c).length).map(c => `<option value="${c}" ${c === cat ? 'selected' : ''}>${esc(t('yc_' + c))}</option>`).join('')}</select>
+    <button type="button" class="chip" data-tshorts aria-pressed="${shortsOnly}">${esc(t('ytShorts'))}</button></div>
+    <p class="pbtip">${esc(t('ytD', {ago: ago(TRENDS.yt.updated)}))}</p>`;
+  const row = x => `<button type="button" class="yrow2" data-play="${esc(x.id)}" data-c=""><span class="bnum">${x.r}</span>${moveBadge(x)}<img loading="lazy" src="${thumb(x.id)}" alt="">
+    <span class="bmain"><b>${esc(x.t)}</b><small>${esc(x.cht)} · ${esc(t('views', {n: fmt(x.v || 0)}))}${x.p ? ' · ' + esc(ago(x.p)) : ''}${(x.d || 1e9) <= 180 ? ' · Shorts' : ''}</small>
+    <small>${esc(t('ytSince', {ago: ago(x.f)}))}</small></span></button>`;
+  return h + (items.length ? `<div class="blist">${gateList(items.map(row), t('ttYt'), cat === 'all' ? 10 : 3).join('')}</div>` : emptyBox(t('tNone'), '📈'));
+}
+function wikiItems(lang) {
+  const w = (((TRENDS || {}).wiki || {})[lang] || {}).items || [];
+  return w.map((x, i) => ({a: x.a, title: x.a.replace(/_/g, ' '), v: x.v, pv: x.pv, r: i + 1, rise: x.pv == null || x.v >= x.pv * 1.5, ratio: x.pv ? x.v / x.pv : null}));
+}
+function newsTab() {
+  const lang = S.wlang || (UI === 'th' ? 'th' : 'en'), items = wikiItems(lang), day = ((((TRENDS || {}).wiki || {})[lang]) || {}).day;
+  if (!items.length) return emptyBox(t(STATIC ? 'ytWait' : 'ytWeb'), '📰');
+  const rising = items.filter(x => x.rise), steady = items.filter(x => !x.rise);
+  const row = x => `<div class="nrow"><span class="bnum">${x.r}</span><span class="bmain"><a href="https://${lang}.wikipedia.org/wiki/${encodeURIComponent(x.a)}" target="_blank" rel="noopener noreferrer"><b>${esc(x.title)}</b></a>
+    <small>${esc(t('wikiViews', {n: fmt(x.v)}))}${x.pv == null ? ' · ' + esc(t('wikiNew')) : x.ratio >= 1.5 ? ' · ▲ ' + esc(t('liftX', {x: fmtX(x.ratio)})) : ''}</small></span>
+    <button type="button" class="ghost" data-ideas="${esc(x.title)}">💡 ${esc(t('tIdeasBtn'))}</button></div>`;
+  let h = `<div class="ytbar"><div class="seg">${[['en', 'English'], ['th', 'ไทย']].map(([l, n]) => `<button type="button" data-wlang="${l}" aria-pressed="${lang === l}">${n}</button>`).join('')}</div></div>
+    <p class="pbtip">${esc(t('newsD', {d: day || ''}))}</p>`;
+  h += `<h3 class="subhead" style="margin-top:6px">🔥 ${esc(t('newsRising'))}</h3><div class="blist">${gateList(rising.map(row), t('ttNews')).join('') || emptyBox(t('tNone'))}</div>`;
+  if (steady.length) h += `<h3 class="subhead">👀 ${esc(t('newsTop'))}</h3><div class="blist">${gateList(steady.map(row), t('ttNews'), 3).join('')}</div>`;
+  const news = ytChart(S.treg || (UI === 'th' ? 'TH' : 'US'), 'news').slice(0, 5);
+  if (news.length) {
+    news.forEach(x => YT_ITEMS.set(x.id, x));
+    h += `<h3 class="subhead">📺 ${esc(t('newsYt'))}</h3><div class="blist">${news.map(x => `<button type="button" class="yrow2" data-play="${esc(x.id)}" data-c=""><span class="bnum">${x.r}</span>${moveBadge(x)}<img loading="lazy" src="${thumb(x.id)}" alt=""><span class="bmain"><b>${esc(x.t)}</b><small>${esc(x.cht)} · ${esc(t('views', {n: fmt(x.v || 0)}))}</small></span></button>`).join('')}</div>`;
+  }
+  return h;
+}
+
+/* ---------- one trend up close ---------- */
+function openTrend(key) {
+  const s = trendByKey(key);
+  if (!s) return;
+  const dlg = $('#dlg'), body = $('#dlgBody'), label = s.label;
+  body.onclick = null; body.dataset.mode = 'trend';
+  const days = s.days, mx = Math.max(1, ...days), start = nowTs() - (TR_DAYS - 1) * 86400;
+  const bars = days.map((n, i) => `<i class="${i >= TR_DAYS - 3 ? 'now' : ''}" style="height:${Math.max(n ? 6 : 2, 100 * n / mx).toFixed(0)}%" title="${esc(shortDate(start + i * 86400))}: ${n}"></i>`).join('');
+  const best = s.vids[0];
+  const locked = !isPro();
+  body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
+    <h3>${esc(label)} <span class="tcat">${esc(catName(s.cat || 'other'))}</span></h3>
+    <p class="pbtip">${s.r ? esc((s.b === 0 ? t('liftNewD') : t('liftD', {x: fmtX(Math.min(s.lift, 99))})) + ' ' + t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)})) : esc(t('tQuietD'))}</p>
+    <div class="mcards">${mcard(t('tShorts3'), String(s.r))}${mcard(t('tChannels'), String(s.chs.size))}${mcard(t('lTypical'), fmt(s.med))}${best ? mcard(t('lBest'), fmt(best[0].v)) : ''}</div>
+    <div class="chartbox" style="margin-top:12px"><h4>${esc(t('tPerDay'))}</h4><div class="dbars">${bars}</div><div class="dbl"><span>${esc(shortDate(start))}</span><span>${esc(t('today'))}</span></div></div>
+    ${(s.yt || []).length ? `<h4 class="antitle" style="margin-top:14px">📈 ${esc(t('tOnCharts'))}</h4><div class="blist">${s.yt.slice(0, 5).map(x => { YT_ITEMS.set(x.id, x); return `<button type="button" class="yrow2" data-play="${esc(x.id)}" data-c=""><span class="bnum">${x.region === 'TH' ? '🇹🇭' : '🇺🇸'}</span><img loading="lazy" src="${thumb(x.id)}" alt=""><span class="bmain"><b>${esc(x.t)}</b><small>${esc(x.cht)} · ${esc(t('views', {n: fmt(x.v || 0)}))}</small></span></button>`; }).join('')}</div>` : ''}
+    ${s.vids.length ? `<h4 class="antitle" style="margin-top:14px">🔥 ${esc(t('tTop'))}</h4><div class="vgrid">${s.vids.slice(0, locked ? 4 : 12).map(([v, c]) => vCard(v, c, {showWhen: true})).join('')}</div>${locked && s.vids.length > 4 ? lockCard(t('tTop')) : ''}` : ''}
+    <h4 class="antitle" style="margin-top:14px">💡 ${esc(t('tRide'))}</h4>${locked ? lockCard(t('tRide')) : ideaList(label.replace(/^#/, ''))}
+    <div class="pbfoot" style="margin-top:14px"><button type="button" class="pillbtn ${isTracked(key) ? '' : 'red'}" data-twatch="${esc(key)}" data-tl="${esc(label)}">${esc(t(isTracked(key) ? 'twOff' : 'twOn'))} ${proTag()}</button>
+      ${canSearch() ? `<button type="button" class="pillbtn" data-tsearch="${esc(label.replace(/^#/, ''))}">🔎 ${esc(t('tSearch'))}</button>` : ''}</div>`;
+  if (!dlg.open) dlg.showModal();
+  body.scrollTop = 0;
+}
+
+/* ---------- creator tools ---------- */
+function weekGrid(ps) {   // a week grid of upload times in the viewer's own time zone; returns the grid and the busiest slot
+  const g = Array.from({length: 7}, () => Array(6).fill(0));
+  ps.forEach(p => { const d = new Date(p * 1000); g[(d.getDay() + 6) % 7][Math.floor(d.getHours() / 4)]++; });
+  const mx = Math.max(1, ...g.flat()), loc = UI === 'th' ? 'th-TH' : 'en-US';
+  const day = i => new Intl.DateTimeFormat(loc, {weekday: 'short'}).format(new Date(2024, 0, 1 + i));   // 1 Jan 2024 was a Monday
+  const hr = h => new Intl.DateTimeFormat(loc, {hour: 'numeric'}).format(new Date(2024, 0, 1, h % 24));
+  let best = [0, 0];
+  g.forEach((row, d) => row.forEach((n, b) => { if (n > g[best[0]][best[1]]) best = [d, b]; }));
+  const lvl = n => (!n ? '' : 'l' + Math.max(1, Math.ceil(4 * n / mx)));
+  const cells = g.map((row, d) => `<span class="dy">${esc(day(d))}</span>` + row.map((n, b) => `<i class="${lvl(n)}" title="${esc(`${day(d)} ${hr(b * 4)}–${hr(b * 4 + 4)} · ${t('uploadsN', {n})}`)}"></i>`).join('')).join('');
+  return {html: `<div class="hmap" role="img"><span></span>${[0, 1, 2, 3, 4, 5].map(b => `<span class="hd">${esc(hr(b * 4))}</span>`).join('')}${cells}</div>`,
+    best: t('timesBest', {d: day(best[0]), h: `${hr(best[1] * 4)}–${hr(best[1] * 4 + 4)}`})};
+}
+function niches() {   // demand (typical views) against supply (how many channels post), per topic, over the last two weeks
+  const now = nowTs();
+  return TOPICS.map(tp => {
+    const chs = DATA.channels.filter(c => chTopics(c).has(tp[0])), vids = [];
+    chs.forEach(c => c.series.forEach(v => { if (v.p && now - v.p <= 14 * 86400) vids.push([v, c]); }));
+    if (vids.length < 8) return null;
+    const views = vids.map(([v]) => v.v), active = new Set(vids.map(([, c]) => c.ch_id)).size, med = median(views);
+    const viral = vids.filter(([v]) => v.x >= 3).length / vids.length;
+    const byCh = new Map(); vids.forEach(([v, c]) => byCh.set(c.ch_id, (byCh.get(c.ch_id) || 0) + v.v));
+    const tot = views.reduce((a, b) => a + b, 0), top3 = [...byCh.values()].sort((a, b) => b - a).slice(0, 3).reduce((a, b) => a + b, 0) / Math.max(1, tot);
+    return {tp, med, viral, active, n: vids.length, top3, raw: Math.log10(med + 10) * (1 + 4 * viral) * (1.2 - top3) / Math.sqrt(active + 1)};
+  }).filter(Boolean).map((r, i, all) => Object.assign(r, {score: Math.round(100 * r.raw / Math.max(...all.map(x => x.raw)))})).sort((a, b) => b.score - a.score);
+}
+const HOOKS = /^(pov|what if|i tried|day \d+|how|why|this|never|watch|wait|when|if you|don'?t|stop|the (most|best|worst)|ranking|can you|เมื่อ|ถ้า|ลอง|วิธี|ทำไม|ห้าม|อย่า|รู้ไหม)/i;
+const POWER = /secret|crazy|insane|impossible|never|giant|tiny|vs|versus|surprising|shocking|hidden|real|actually|finally|only|ไม่เคย|ลับ|สุด|ที่สุด|จริง|ห้าม|เทียบ/i;
+function checkTitle(raw) {
+  const s = raw.trim();
+  if (!s) return '';
+  const words = titleWords(s), tags = s.match(/#[\p{L}\p{N}_]+/gu) || [], emo = s.match(EMO_G) || [];
+  const rising = trendData().rising.slice(0, 80).filter(r => termsOf(s).has(r.label));
+  const checks = [
+    [s.length >= 15 && s.length <= 70, t('tcLen', {n: s.length})],
+    [words.length >= 3 && words.length <= 12, t('tcWords', {n: words.length})],
+    [HOOKS.test(s) || /[?？]/.test(s), t('tcHook')],
+    [/\d/.test(s), t('tcNum')],
+    [POWER.test(s), t('tcPower')],
+    [emo.length >= 1 && emo.length <= 2, t('tcEmoji', {n: emo.length})],
+    [tags.length >= 1 && tags.length <= 3, t('tcTags', {n: tags.length})],
+    [!/\b[A-Z]{3,}\b.*\b[A-Z]{3,}\b.*\b[A-Z]{3,}\b/.test(s), t('tcCaps')],
+    [rising.length > 0, rising.length ? t('tcTrendYes', {x: rising.map(r => r.label).join(', ')}) : t('tcTrendNo')]
+  ];
+  const score = Math.round(100 * checks.reduce((a, [ok], i) => a + (ok ? [12, 10, 16, 10, 10, 8, 8, 6, 20][i] : 0), 0) / 100);
+  const kw = new Set(words.filter(w => !isStop(w) && !NOISE.has(w)));
+  const similar = kw.size ? videoPool(DATA.channels).filter(([v]) => v.x >= 2 && titleWords(v.t).some(w => kw.has(w)))
+    .sort((a, b) => Math.min(b[0].x, 50) * Math.log10(b[0].v) - Math.min(a[0].x, 50) * Math.log10(a[0].v)).slice(0, 5) : [];
+  return `<div class="tcres"><div class="ring" style="--p:${score};--c:${scoreColor(score)}"><span>${score}</span></div><div><b>${esc(t(score >= 75 ? 'tcGreat' : score >= 50 ? 'tcOk' : 'tcWeak'))}</b><small>${esc(t('tcScore'))}</small></div></div>
+    <div class="tcl">${checks.map(([ok, txt]) => `<div class="${ok ? 'ok' : 'no'}"><span>${ok ? '✓' : '•'}</span>${esc(txt)}</div>`).join('')}</div>
+    ${similar.length ? `<h4 class="antitle" style="margin-top:12px">${esc(t('tcSimilar'))}</h4><div class="tcsim">${similar.map(([v, c]) => `<button type="button" class="yrow2" data-play="${esc(v.id)}" data-c="${esc(c.ch_id)}"><img loading="lazy" src="${thumb(v.id)}" alt=""><span class="bmain"><b>${esc(v.t)}</b><small>${esc(c.name)} · ${esc(t('views', {n: fmt(v.v)}))} · ${esc(xText(v.x))}</small></span></button>`).join('')}</div>` : ''}`;
+}
+function csvCell(x) { const s = String(x == null ? '' : x); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function downloadCsv(name, rows) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['﻿' + rows.map(r => r.map(csvCell).join(',')).join('\n')], {type: 'text/csv;charset=utf-8'}));
+  a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+function exportCsv(kind) {
+  const day = new Date().toISOString().slice(0, 10);
+  if (kind === 'channels') downloadCsv(`viral-radar-channels-${day}.csv`, [['name', 'channel_url', 'subscribers', 'typical_views', 'score', 'language', 'topics']]
+    .concat(DATA.channels.filter(baseOk).sort((a, b) => b.score - a.score).map(c => [c.name, chUrl(c.ch_id), c.subs, Math.round(c.med_recent), Math.round(c.score), c.lang, [...chTopics(c)].join(' ')])));
+  if (kind === 'shorts') downloadCsv(`viral-radar-viral-shorts-${day}.csv`, [['title', 'video_url', 'channel', 'views', 'times_usual', 'uploaded']]
+    .concat(viralVideos(DATA.channels.filter(baseOk)).slice(0, 500).map(([v, c]) => [v.t, vidUrl(v.id), c.name, v.v, v.x, v.p ? new Date(v.p * 1000).toISOString().slice(0, 10) : ''])));
+  if (kind === 'trends') downloadCsv(`viral-radar-trends-${day}.csv`, [['trend', 'category', 'shorts_last_3_days', 'channels', 'times_usual', 'typical_views']]
+    .concat(trendData().rising.map(s => [s.label, s.cat, s.r, s.chs.size, Math.round(s.lift * 10) / 10, Math.round(s.med)])));
+}
+function toolsView() {
+  let h = pageHead('pToolsT', 'pToolsD');
+  if (!isPro()) h += lockCard(t('nTools'));
+  const rows = niches();
+  const sec = (em, k, d, body) => `<section class="tool"><h2>${em} ${esc(t(k))} ${proTag()}</h2><p class="pbtip">${esc(t(d))}</p>${body}</section>`;
+  if (!isPro()) return h + `<div class="lockblur" aria-hidden="true">${sec('🧭', 'nfT', 'nfD', '<div class="blist">' + rows.slice(0, 4).map(r => `<div class="nrow"><b>${r.tp[1]} ${esc(topicName(r.tp))}</b></div>`).join('') + '</div>')}</div>`;
+  h += sec('🧭', 'nfT', 'nfD', `<div class="blist">${rows.map((r, i) => `<button type="button" class="nfrow" data-topic="${r.tp[0]}" data-go="home"><span class="bnum">${i + 1}</span>
+    <span class="bmain"><b>${r.tp[1]} ${esc(topicName(r.tp))}</b><small>${esc(t('nfStats', {v: fmt(r.med), p: Math.round(100 * r.viral), c: r.active, s: Math.round(100 * r.top3)}))}</small></span>
+    <span class="nfbar"><i style="width:${r.score}%"></i></span><b class="nfscore">${r.score}</b></button>`).join('')}</div>`);
+  const tp = S.bttopic || '', pool = videoPool(DATA.channels.filter(c => !tp || chTopics(c).has(tp))).filter(([v]) => v.p && v.x >= 2.5);
+  const grid = pool.length >= 6 ? weekGrid(pool.map(([v]) => v.p)) : null;
+  h += sec('⏰', 'btT', 'btD', `<select id="btTopic" aria-label="${esc(t('btT'))}"><option value="">${esc(t('topicAll'))}</option>${TOPICS.map(x => `<option value="${x[0]}" ${tp === x[0] ? 'selected' : ''}>${x[1]} ${esc(topicName(x))}</option>`).join('')}</select>
+    ${grid ? `<div class="chartbox" style="margin-top:10px">${grid.html}<small class="cap">${esc(grid.best)} · ${esc(t('btCap', {n: pool.length}))}</small></div>` : `<p class="pbmuted">${esc(t('btFew'))}</p>`}`);
+  h += sec('✍️', 'tcT', 'tcD', `<textarea id="tcIn" rows="2" placeholder="${esc(t('tcPh'))}">${esc(S.tctext || '')}</textarea><div id="tcOut">${checkTitle(S.tctext || '')}</div>`);
+  h += sec('📤', 'exT', 'exD', `<div class="btns">${[['channels', 'exCh'], ['shorts', 'exShorts'], ['trends', 'exTrends']].map(([k, lk]) => `<button type="button" class="pillbtn" data-csv="${k}">⬇️ ${esc(t(lk))}</button>`).join('')}</div>`);
+  return h;
+}
+
+/* ---------- the Pro page ---------- */
+function proView() {
+  const feats = [['🚀', 'pf1'], ['🎮', 'pf2'], ['📈', 'pf3'], ['📰', 'pf4'], ['⭐', 'pf5'], ['🧭', 'pf6'], ['⏰', 'pf7'], ['✍️', 'pf8'], ['📤', 'pf9'], ['📊', 'pf10']];
+  const rows = [['pcBrowse', 1, 1], ['pcSearch', 1, 1], ['pcAnalytics', 1, 1], ['pcTrendsTop', 1, 1], ['pcTrendsAll', 0, 1], ['pcBoards', 0, 1], ['pcAlerts', 0, 1], ['pcTools', 0, 1], ['pcExport', 0, 1]];
+  let cta;
+  if (!PRO.gate) cta = `<div class="probeta">🎉 ${esc(t('proBeta', {p: PRO.price}))}</div>`;
+  else if (isPro()) cta = `<div class="probeta">✅ ${esc(t('proYou', {d: new Date(PRO_UNTIL).toLocaleDateString(UI === 'th' ? 'th-TH' : 'en-US')}))}</div>`;
+  else if (!USER) cta = FB ? `<button type="button" class="pillbtn big pro" data-signin>${esc(t('proSignIn'))}</button>` : `<p class="pbmuted">${esc(t('proSoon'))}</p>`;
+  else cta = checkoutLink() ? `<a class="pillbtn big pro" href="${esc(checkoutLink())}" target="_blank" rel="noopener">${esc(t('proBuy', {p: PRO.price}))}</a>` : `<p class="pbmuted">${esc(t('proSoon'))}</p>`;
+  return `<section class="prohero"><div class="crown">⭐</div><h1>Viral Radar Pro</h1><p>${esc(t('proLead'))}</p>
+      <div class="price"><b>${esc(PRO.price)}</b><span>${esc(t('perMonth'))}</span></div>${cta}<small>${esc(t('proCancel'))}</small></section>
+    <div class="pfgrid">${feats.map(([em, k]) => `<div class="pf"><span class="em">${em}</span><b>${esc(t(k + 'T'))}</b><small>${esc(t(k + 'D'))}</small></div>`).join('')}</div>
+    <h3 class="subhead">${esc(t('pcT'))}</h3>
+    <table class="tbl pctbl"><tr><th></th><th>${esc(t('pcFree'))}</th><th>Pro</th></tr>${rows.map(([k, f, p]) => `<tr><td>${esc(t(k))}</td><td>${f ? '✓' : '–'}</td><td>${p ? '✓' : '–'}</td></tr>`).join('')}</table>
+    <p class="anote">${esc(t('proData'))}</p>`;
+}
+
 /* ---------- appearance: follow the device, or always light / dark (kept on this device only) ---------- */
 const PHONE_Q = '(max-width: 760px), (pointer: coarse) and (max-width: 1024px)';   // phones and tablets start in dark mode until something else is picked
 const themeMode = () => LS.get('radar.theme', matchMedia(PHONE_Q).matches ? 'dark' : 'auto');
@@ -3499,10 +4138,10 @@ function renderSide() {
   const saved = DATA.channels.filter(isWatched).length, fresh = liveVideos(DATA.channels).length, st = statusInfo();
   const nav = (id, key, n, hot) => `<button type="button" class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(key))}</span>${n ? `<span class="n ${hot ? 'hot' : ''}">${n > 999 ? fmt(n) : n}</span>` : ''}</button>`;
   const navh = k => `<h4 class="navh">${esc(t(k))}</h4>`;
-  $('#side').innerHTML = nav('home', 'nHome') + nav('week', 'nWeek') + nav('videos', 'nVideos') + nav('channels', 'nChannels') + nav('live', 'nLive', fresh, true) +
+  $('#side').innerHTML = nav('home', 'nHome') + nav('trends', 'nTrends', hotTracked(), true) + nav('week', 'nWeek') + nav('videos', 'nVideos') + nav('channels', 'nChannels') + nav('live', 'nLive', fresh, true) +
     nav('ideas', 'nIdeas') + nav('topics', 'nTopics') + '<hr class="navsep">' + navh('sYou') + nav('saved', 'nSaved', saved) + nav('mine', 'nMine') + nav('compare', 'nCompare', S.cmp.length) +
-    '<hr class="navsep">' + navh('nMore') + nav('playbook', 'nPlaybook', PB_STEPS.length - Object.values(PB.done).filter(Boolean).length || null) +
-    `<button type="button" class="nav" data-intro>${ICON.tutorial}<span class="lbl">${esc(t('nTutorial'))}</span></button>` + nav('help', 'nHelp') + nav('more', 'nMore') +
+    '<hr class="navsep">' + navh('nMore') + nav('tools', 'nTools').replace('</span></button>', `</span>${proTag()}</button>`) + nav('playbook', 'nPlaybook', PB_STEPS.length - Object.values(PB.done).filter(Boolean).length || null) +
+    `<button type="button" class="nav" data-intro>${ICON.tutorial}<span class="lbl">${esc(t('nTutorial'))}</span></button>` + nav('help', 'nHelp') + nav('pro', 'nPro') + nav('more', 'nMore') +
     `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + themeSec() +
     `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div>${canInstall() ? `<div style="margin:10px 12px 0">${installBtn()}</div>` : ''}</div>` + syncBlock();
 }
@@ -3538,6 +4177,9 @@ function renderContent() {
   else if (tab === 'mine') el.innerHTML = mineView();
   else if (tab === 'topics') el.innerHTML = topicsView();
   else if (tab === 'saved') el.innerHTML = pageHead('pSavedT', canLive() ? 'pSavedDLive' : 'pSavedD') + channelsView(DATA.channels.filter(isWatched).sort((a, b) => b.score - a.score), t('emptySaved'));
+  else if (tab === 'trends') el.innerHTML = trendsView();
+  else if (tab === 'tools') el.innerHTML = toolsView();
+  else if (tab === 'pro') el.innerHTML = proView();
   else if (tab === 'help') el.innerHTML = helpView();
   else el.innerHTML = homeView();
   el.querySelectorAll('.rail').forEach((r, i) => { if (rails[i]) { r.style.scrollBehavior = 'auto'; r.scrollLeft = rails[i]; r.style.scrollBehavior = ''; } });
@@ -3618,6 +4260,36 @@ document.addEventListener('click', async e => {
   if (cl) { if (await copyText(location.origin + location.pathname + '#' + cl.dataset.copylink)) toast(t('copied')); return; }
   if (x.closest('[data-tab="more"]')) { openMore(); return; }
   if (x.closest('[data-close]')) { x.closest('dialog').close(); return; }
+  const tr = x.closest('[data-trend]');
+  if (tr) { openTrend(tr.dataset.trend); return; }
+  const tt = x.closest('[data-ttab]');
+  if (tt) { S.ttab = tt.dataset.ttab; saveState(); if ($('#dlg').open) $('#dlg').close(); if (S.tab !== 'trends') go('trends'); else renderContent(); return; }
+  const tc = x.closest('[data-tcat]');
+  if (tc) { S.tcat = tc.dataset.tcat; saveState(); renderContent(); return; }
+  const treg = x.closest('[data-treg]');
+  if (treg) { S.treg = treg.dataset.treg; saveState(); renderContent(); return; }
+  if (x.closest('[data-tshorts]')) { S.tshorts = !S.tshorts; saveState(); renderContent(); return; }
+  const wl = x.closest('[data-wlang]');
+  if (wl) { S.wlang = wl.dataset.wlang; saveState(); renderContent(); return; }
+  const tw = x.closest('[data-twatch]');
+  if (tw) {
+    if (!isPro()) { $('#dlg').close(); go('pro'); return; }
+    toggleTrack(tw.dataset.twatch, tw.dataset.tl); openTrend(tw.dataset.twatch); renderSide(); if (S.tab === 'trends') renderContent(); return;
+  }
+  const ts = x.closest('[data-tsearch]');
+  if (ts) { $('#dlg').close(); S.q = ts.dataset.tsearch; startSearch(S.q); return; }
+  const idb = x.closest('[data-ideas]');
+  if (idb) {
+    const body = $('#dlgBody');
+    body.onclick = null; body.dataset.mode = 'ideas';
+    body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>💡 ${esc(idb.dataset.ideas)}</h3>` + (isPro() ? ideaList(idb.dataset.ideas) : lockCard(t('tRide')));
+    if (!$('#dlg').open) $('#dlg').showModal();
+    return;
+  }
+  const ct = x.closest('[data-copytext]');
+  if (ct) { if (await copyText(ct.dataset.copytext)) toast(t('copied')); return; }
+  const csv = x.closest('[data-csv]');
+  if (csv) { if (isPro()) exportCsv(csv.dataset.csv); else go('pro'); return; }
   const play = x.closest('[data-play]');
   if (play) {
     if (e.ctrlKey || e.metaKey || e.shiftKey || e.button || location.protocol === 'file:') return;   // new tab, or a saved file (YouTube won't play embeds there)
@@ -3685,6 +4357,7 @@ document.addEventListener('click', async e => {
 });
 document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('article[data-open-ch]')) { e.preventDefault(); openChannel(e.target.dataset.openCh); }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('article[data-trend]')) { e.preventDefault(); openTrend(e.target.dataset.trend); }
   if (e.key === 'Escape') closePop();
 });
 window.addEventListener('scroll', closePop, true);
@@ -3719,6 +4392,16 @@ document.addEventListener('change', e => {
   const map = {fLvl: ['minScore', +v], fSubs: ['maxSubs', +v], fMed: ['minMed', +v], fSort: ['sort', v], fX: ['minX', +v], fVSort: ['vsort', v], fLang: ['lang', v], fShelf: ['shelf', v], fLSort: ['lsort', v]};
   if (!map[id]) return;
   S[map[id][0]] = map[id][1]; shown.channels = 15; shown.videos = 60; shown.live = 60; saveState(); render();
+});
+document.addEventListener('change', e => {
+  if (e.target.id === 'tyCat') { S.tycat = e.target.value; saveState(); renderContent(); }
+  if (e.target.id === 'btTopic') { S.bttopic = e.target.value; saveState(); renderContent(); }
+});
+document.addEventListener('input', e => {
+  if (e.target.id !== 'tcIn') return;
+  S.tctext = e.target.value.slice(0, 200);
+  const out = $('#tcOut');
+  if (out) out.innerHTML = checkTitle(S.tctext);
 });
 for (const d of ['dlg', 'sheet', 'player']) $('#' + d).addEventListener('close', closePop);
 $('#btnScan').addEventListener('click', async () => { await api('/api/scan'); setTimeout(refresh, 800); });
@@ -3958,7 +4641,7 @@ async function refresh() {
     const first = !DATA || DATA.lite;   // the light file may have drawn the first screen
     DATA = d;
     if (first) { render(); afterFirstData(); return; }
-    if (!$('#dlg').open && !['playbook', 'mine'].includes(S.tab)) render(true); else renderSide();
+    if (!$('#dlg').open && !['playbook', 'mine', 'tools'].includes(S.tab)) render(true); else renderSide();
   } catch (e) {
     const box = $('#side .livebox');
     if (box) box.innerHTML = `<span class="dot"></span><span>${esc(t(STATIC ? 'offlineWeb' : 'offline'))}</span>`;
@@ -3971,7 +4654,7 @@ function afterFirstData() {
 }
 if (!hashTab() && !/^#(ch|compare)\//.test(location.hash)) history.replaceState(null, '', '#' + S.tab);
 applyStaticText();
-if (LIVE) { if (STATIC) loadLite(); refresh(); setInterval(refresh, STATIC ? 60000 : 15000); } else { render(); afterFirstData(); }
+if (LIVE) { if (STATIC) { loadLite(); loadTrends(); setInterval(loadTrends, 10 * 60e3); } refresh(); setInterval(refresh, STATIC ? 60000 : 15000); } else { render(); afterFirstData(); }
 renderAcct();
 if (FB && LS.get('radar.fbuser', 0)) fbLoad().catch(() => {});   // signed in before on this device: restore the session and sync
 </script>
