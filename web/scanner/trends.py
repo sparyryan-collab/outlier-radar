@@ -123,6 +123,148 @@ FORBID_RX = re.compile(r"(do not|don'?t|no) re-?upload|re-?upload(ing|s)? .{0,30
                        r"do not (steal|copy|repost) (my|our)|unauthori[sz]ed (use|re-?upload)|"
                        r"ห้าม.{0,10}(รีอัพ|นำไป|คัดลอก|ดัดแปลง|ตัดต่อ|reup)|ไม่อนุญาต.{0,16}(นำไป|ตัด|เผยแพร่)", re.I)
 INVITES = ALLOW_RX
+PAID_RX = re.compile(r"whop|vyro|content rewards|clipfarm|get paid|paid (per|for)|earn|per (1k|1,000|thousand|million) views|\bcpm\b|\$\s?\d|campaign|ค่าจ้าง|รายได้|จ่ายเงิน", re.I)
+
+# Creators who invite clippers: a few searches a day for clipping-program phrases, kept only when their own words say so
+DISCOVER_PER_DAY = int(os.environ.get("DISCOVER_PER_DAY", "4"))
+DISCOVER_QUERIES = [("channel", "clipping program"), ("video", "join my clipping program"), ("channel", "clippers wanted"), ("video", "feel free to clip"),
+                    ("channel", "clip my streams"), ("video", "content rewards clipping"), ("channel", "ตัดคลิป อนุญาต"), ("video", "รับสมัครคนตัดคลิป")]
+ALLOWED_KEEP_DAYS, ALLOWED_MIN_SUBS, ALLOWED_MAX = 45, 100_000, 150
+
+# The moments worth clipping, read from a video's own comments: viewers write timestamps ("12:34 I lost it") at the parts they loved
+TS_RX = re.compile(r"(?<![\d:])(?:(\d{1,2}):)?([0-5]?\d):([0-5]\d)(?![\d:])")
+CHAPTER_RX = re.compile(r"^\s*[\[(]?((?:\d{1,2}:)?[0-5]?\d:[0-5]\d)[\])]?\s*[-–—:|.)]?\s*(\S.{1,79}?)\s*$")
+WORD_RX = re.compile(r"[^\W\d_]{4,}")
+STOPWORDS = set("this that with from have what when they them were your just like about there their would could should because really video videos part full "
+                "clip clips shorts short episode official best moment moments funny lmao time times guys going know think people thing things love loved after "
+                "before while where which here than then some more most much very into over only even still also back being been dont didnt cant wont youre "
+                "thats isnt".split())
+MOMENT_VIDEOS, MOMENTS_KEEP, HEAT_BUCKETS = 3, 6, 32
+MOMENTS_PER_DAY = int(os.environ.get("MOMENTS_PER_DAY", "40"))   # daily re-reads of a creator's newest videos (about 5 units each)
+
+
+def to_sec(m):
+    return int(m.group(1) or 0) * 3600 + int(m.group(2)) * 60 + int(m.group(3))
+
+
+def video_chapters(desc, d):
+    """Chapters the creator wrote in the description (0:00 Intro, 4:12 The fight, ...)."""
+    out = []
+    for line in (desc or "").splitlines():
+        m = CHAPTER_RX.match(line)
+        if m:
+            sec = to_sec(TS_RX.search(m.group(1)))
+            if sec < d:
+                out.append((sec, m.group(2).strip()))
+    return sorted(out) if len(out) >= 2 else []
+
+
+def words_of(s, drop=()):
+    return {w for w in (x.lower() for x in WORD_RX.findall(s or "")) if w not in STOPWORDS and w not in drop}
+
+
+def clean_comment(text):
+    s = re.sub(r"https?://\S+", " ", TS_RX.sub(" ", text or ""))
+    s = re.sub(r"\s+", " ", s).strip(" -–—:|,.")
+    return s[:110] + ("…" if len(s) > 110 else "")
+
+
+def heat_strip(marks, d):
+    """Where in the video viewers point, as a row of digits (0 = nobody, 9 = the busiest part)."""
+    b = [0.0] * HEAT_BUCKETS
+    for m in marks:
+        b[min(HEAT_BUCKETS - 1, int(m[0] / max(d, 1) * HEAT_BUCKETS))] += m[1]
+    top = max(b) or 1
+    return "".join(str(min(9, math.ceil(9 * x / top))) if x else "0" for x in b)
+
+
+def clip_matches(tokens, clip_titles):
+    """How many Shorts already made about the creator look like this (two shared key words, or one long one)."""
+    n = 0
+    for title in clip_titles:
+        shared = tokens & words_of(title)
+        if len(shared) >= 2 or any(len(w) >= 7 for w in shared):
+            n += 1
+    return n
+
+
+def video_moments(v, items, clip_titles, name_words):
+    """The parts of one long video that viewers point to in its comments, and how many Shorts already cover each."""
+    d, marks, texts = v["d"], [], []
+    for it in items:
+        s = ((it.get("snippet") or {}).get("topLevelComment") or {}).get("snippet") or {}
+        text, likes = s.get("textOriginal") or s.get("textDisplay") or "", int(s.get("likeCount") or 0)
+        secs = [x for x in (to_sec(m) for m in TS_RX.finditer(text)) if 0 < x < d]
+        if not secs:
+            continue
+        w = (1 + math.log2(1 + likes)) / (len(secs) if len(secs) > 2 else 1)   # a long list of timestamps is a table of contents, not a reaction
+        texts.append((clean_comment(text), likes))
+        marks += [(x, w, len(texts) - 1, len(secs) <= 2) for x in secs]
+    marks.sort()
+    groups, cur = [], []
+    for m in marks:   # timestamps within 30 seconds of each other point at the same moment
+        if cur and m[0] - cur[0][0] > 30:
+            groups.append(cur)
+            cur = []
+        cur.append(m)
+    if cur:
+        groups.append(cur)
+    chaps, out = video_chapters(v.get("desc"), d), []
+    for g in groups:
+        core = [m for m in g if m[3]] or g   # where reactions point; timestamp lists only add weight
+        weight, who = sum(m[1] for m in g), {m[2] for m in core}
+        if len(who) < 2 and weight < 4:
+            continue
+        first, last = core[0][0], core[-1][0]
+        s = max(0, first - 3)
+        e = min(d, s + 58, max(last + 15, s + 30))
+        quote = max((texts[i] for i in who if len(texts[i][0]) >= 3), key=lambda x: x[1], default=("", 0))[0]
+        chap = next((c for sec, c in reversed(chaps) if sec <= first), "")
+        out.append({"v": v["id"], "s": s, "e": e, "n": len(who), "w": round(weight, 1), "q": quote, "c": chap[:80],
+                    "comp": None if clip_titles is None else clip_matches(words_of(quote + " " + chap, name_words), clip_titles)})
+    return out, heat_strip(marks, d) if marks else ""
+
+
+def moment_score(m, views):
+    """0-100: how many viewers point at it, how big the video is, and how few Shorts cover it yet."""
+    reach = min(1, max(0.3, (math.log10(max(views, 1)) - 4) / 2.5))
+    crowd = 0.8 if m["comp"] is None else 1 if m["comp"] == 0 else 0.6 if m["comp"] == 1 else 0.35   # None: the Shorts about them weren't kept (researched before)
+    return round(100 * (1 - math.exp(-m["w"] / 8)) * reach * crowd)
+
+
+def find_moments(yt, longs, clip_titles, name):
+    """Reads the top comments of a creator's biggest recent long videos (1 unit each); returns the best moments and a summary of each video."""
+    name_words, moments, mvids = words_of(name), [], {}
+    for v in sorted(longs, key=lambda x: -x["v"])[:MOMENT_VIDEOS]:
+        try:
+            items = yt.call("commentThreads", part="snippet", videoId=v["id"], order="relevance", maxResults=100, textFormat="plainText").get("items", [])
+        except ApiError:   # comments turned off
+            items = []
+        ms, heat = video_moments(v, items, clip_titles, name_words)
+        for m in ms:
+            m["sc"] = moment_score(m, v["v"])
+        moments += sorted(ms, key=lambda m: -m["sc"])[:3]
+        mvids[v["id"]] = {"t": v["t"][:140], "v": v["v"], "d": v["d"], "p": v["p"], "h": heat,
+                          "cv": None if clip_titles is None else clip_matches(words_of(v["t"], name_words), clip_titles)}
+    return sorted(moments, key=lambda m: -m["sc"])[:MOMENTS_KEEP], mvids
+
+
+def long_uploads(yt, uploads, t, n=25):
+    """A creator's newest uploads: (long videos from the last 30 days, every video's description, the newest long video)."""
+    longs, descs = [], []
+    if not uploads:
+        return longs, descs
+    vids = [x["contentDetails"]["videoId"] for x in yt.call("playlistItems", part="contentDetails", playlistId=uploads, maxResults=n).get("items", [])
+            if x.get("contentDetails", {}).get("videoId")]
+    if vids:
+        for v in yt.call("videos", part="snippet,contentDetails,statistics", id=",".join(vids)).get("items", []):
+            sn = v.get("snippet") or {}
+            descs.append({"id": v["id"], "desc": sn.get("description") or ""})
+            d, pub = parse_duration((v.get("contentDetails") or {}).get("duration")), iso_to_ts(sn.get("publishedAt") or "") or 0
+            if d >= 240 and t - pub <= 30 * 86400:
+                longs.append({"id": v["id"], "t": (sn.get("title") or "")[:140], "v": int((v.get("statistics") or {}).get("viewCount") or 0), "d": d, "p": int(pub),
+                              "desc": sn.get("description") or ""})
+    return longs, descs
 
 
 def clip_permission(channel_desc, videos):
@@ -180,9 +322,9 @@ def clip_scores(c):
 
 
 def research_clips(yt, cands, prev_clips, quota, t):
-    """Researches the next few creators (one Shorts search each) and keeps every result for a week."""
+    """Researches the next few creators (one Shorts search each; creators who invite clippers first) and keeps every result for a week."""
     keep = {c["ch"]: c for c in prev_clips if t - c.get("checked", 0) < CLIP_KEEP_DAYS * 86400}
-    todo = sorted((c for c in cands if c["ch"] not in keep), key=lambda c: -(c["video"].get("v") or 0))
+    todo = sorted((c for c in cands if c["ch"] not in keep), key=lambda c: (not c.get("allowed"), -((c.get("video") or {}).get("v") or c.get("subs") or 0)))
     todo = todo[:max(0, min(CLIP_PER_RUN, CLIP_PER_DAY - quota["used"]))]
     if not todo:
         return list(keep.values())
@@ -195,7 +337,7 @@ def research_clips(yt, cands, prev_clips, quota, t):
         sn, st = it.get("snippet") or {}, it.get("statistics") or {}
         subs = 0 if st.get("hiddenSubscriberCount") else int(st.get("subscriberCount") or 0)
         name = sn.get("title") or c["name"]
-        if subs < CLIP_MIN_SUBS:
+        if subs < (ALLOWED_MIN_SUBS if c.get("allowed") else CLIP_MIN_SUBS):
             keep[c["ch"]] = {"ch": c["ch"], "checked": int(t), "small": True}
             continue
         quota["used"] += 1
@@ -211,27 +353,22 @@ def research_clips(yt, cands, prev_clips, quota, t):
         clips = sorted(named if len(named) >= 3 else shorts, key=lambda x: -x["v"])
         views = sorted(x["v"] for x in clips)
         uploads = (((it.get("contentDetails") or {}).get("relatedPlaylists") or {}).get("uploads"))
-        long30, hours, latest, descs = 0, 0.0, None, []
-        if uploads:
-            pl = yt.call("playlistItems", part="contentDetails", playlistId=uploads, maxResults=25).get("items", [])
-            vids = [x["contentDetails"]["videoId"] for x in pl if x.get("contentDetails", {}).get("videoId")]
-            if vids:
-                for v in yt.call("videos", part="snippet,contentDetails,statistics", id=",".join(vids)).get("items", []):
-                    descs.append({"id": v["id"], "desc": (v.get("snippet") or {}).get("description") or ""})
-                    d, pub = parse_duration((v.get("contentDetails") or {}).get("duration")), iso_to_ts((v.get("snippet") or {}).get("publishedAt") or "") or 0
-                    if d >= 240 and t - pub <= 30 * 86400:
-                        long30 += 1
-                        hours += d / 3600
-                        if not latest or pub > latest["p"]:
-                            latest = {"id": v["id"], "t": ((v.get("snippet") or {}).get("title") or "")[:140], "v": int((v.get("statistics") or {}).get("viewCount") or 0), "p": int(pub)}
+        longs, descs = long_uploads(yt, uploads, t)
+        newest = max(longs, key=lambda x: x["p"], default=None)
+        video = c.get("video") or max(longs, key=lambda x: x["v"], default=None) or {}   # creators found by their invitation have no chart video
         rec = {"ch": c["ch"], "name": name[:80], "avatar": ((sn.get("thumbnails") or {}).get("default") or {}).get("url", ""), "subs": subs,
-               "regions": sorted(c["regions"]), "cats": sorted(c["cats"]), "top": {k: c["video"].get(k) for k in ("id", "t", "v")}, "top_views": c["video"].get("v") or 0,
+               "regions": sorted(c["regions"]), "cats": sorted(c["cats"]), "top": {k: video.get(k) for k in ("id", "t", "v")}, "top_views": video.get("v") or 0,
                "clips": len(clips), "clippers": len({x["ch"] for x in clips}), "clip_med": views[len(views) // 2] if views else 0,
-               "clip_top": clips[0] if clips else None, "long30": long30, "long_hours": round(hours, 1), "latest": latest,
-               "checked": int(t)}
+               "clip_top": clips[0] if clips else None, "long30": len(longs), "long_hours": round(sum(x["d"] for x in longs) / 3600, 1),
+               "latest": {k: newest[k] for k in ("id", "t", "v", "p")} if newest else None, "checked": int(t), "ct": [x["t"][:60] for x in clips[:12]]}
         rec["allow"], rec["allow_quote"], rec["allow_where"], rec["allow_vid"] = clip_permission(sn.get("description"), descs[:12])
         rec["invites"] = rec["allow"] == "allows"
+        rec["paid"] = rec["invites"] and bool(PAID_RX.search(rec["allow_quote"]))
+        if c.get("allowed"):
+            rec["found_by"] = "invite"
         rec["ok"], rec["score"] = clip_scores(rec)
+        rec["moments"], rec["mvids"] = find_moments(yt, longs, [x["t"] for x in clips], name)
+        rec["mchecked"] = int(t)
         keep[c["ch"]] = rec
     return list(keep.values())
 
@@ -253,6 +390,52 @@ def refresh_permissions(yt, clips, limit=20):
                 descs = [{"id": v["id"], "desc": (v.get("snippet") or {}).get("description") or ""} for v in yt.call("videos", part="snippet", id=",".join(vids)).get("items", [])]
         c["allow"], c["allow_quote"], c["allow_where"], c["allow_vid"] = clip_permission((it.get("snippet") or {}).get("description"), descs)
         c["invites"] = c["allow"] == "allows"
+
+
+def refresh_moments(yt, clips, quota, t, per_run=3):
+    """Re-reads the newest videos and their comments for creators researched earlier, about once a day each (creators who invite clippers first)."""
+    todo = sorted((c for c in clips if not c.get("small") and t - c.get("mchecked", 0) >= 86400), key=lambda c: (c.get("allow") != "allows", -c.get("score", 0)))
+    todo = todo[:max(0, min(per_run, MOMENTS_PER_DAY - quota.get("moments", 0)))]
+    if not todo:
+        return
+    info = {it["id"]: it for it in yt.call("channels", part="contentDetails", id=",".join(c["ch"] for c in todo)).get("items", [])}
+    for c in todo:
+        quota["moments"] = quota.get("moments", 0) + 1
+        longs, _ = long_uploads(yt, (((info.get(c["ch"]) or {}).get("contentDetails") or {}).get("relatedPlaylists") or {}).get("uploads"), t, n=15)
+        c["moments"], c["mvids"] = find_moments(yt, longs, c.get("ct"), c.get("name") or "")
+        newest = max(longs, key=lambda x: x["p"], default=None)
+        if newest:
+            c["latest"] = {k: newest[k] for k in ("id", "t", "v", "p")}
+        c["mchecked"] = int(t)
+
+
+def discover_allowed(yt, prev, quota, t, turn):
+    """One search for a clipping-program phrase (they take turns); a creator is kept only when their own channel or video description invites clippers."""
+    keep = {c["ch"]: c for c in prev if t - c.get("found", 0) < ALLOWED_KEEP_DAYS * 86400}
+    hour = (t % 86400) / 86400
+    if quota.get("disc", 0) >= min(DISCOVER_PER_DAY, int(DISCOVER_PER_DAY * hour) + 1):   # spread over the day
+        return list(keep.values()), turn
+    kind, q = DISCOVER_QUERIES[turn % len(DISCOVER_QUERIES)]
+    quota["disc"], turn = quota.get("disc", 0) + 1, turn + 1
+    found, evidence = yt.call("search", part="id", type=kind, q=q, maxResults=50).get("items", []), {}
+    if kind == "channel":
+        chs = [x["id"]["channelId"] for x in found if x.get("id", {}).get("channelId")]
+    else:
+        ids = [x["id"]["videoId"] for x in found if x.get("id", {}).get("videoId")]
+        for v in (yt.call("videos", part="snippet", id=",".join(ids)).get("items", []) if ids else []):
+            sn = v.get("snippet") or {}
+            if sn.get("channelId") and ALLOW_RX.search(sn.get("description") or ""):
+                evidence.setdefault(sn["channelId"], []).append({"id": v["id"], "desc": sn.get("description") or ""})
+        chs = list(evidence)
+    chs = [ch for ch in dict.fromkeys(chs) if ch not in keep][:50]
+    for it in (yt.call("channels", part="snippet,statistics", id=",".join(chs)).get("items", []) if chs else []):
+        sn, st = it.get("snippet") or {}, it.get("statistics") or {}
+        subs = 0 if st.get("hiddenSubscriberCount") else int(st.get("subscriberCount") or 0)
+        allow, quote, where, vid = clip_permission(sn.get("description"), evidence.get(it["id"], []))
+        if subs >= ALLOWED_MIN_SUBS and allow == "allows":
+            keep[it["id"]] = {"ch": it["id"], "name": (sn.get("title") or "")[:80], "avatar": ((sn.get("thumbnails") or {}).get("default") or {}).get("url", ""),
+                              "subs": subs, "quote": quote, "where": where, "vid": vid, "paid": bool(PAID_RX.search(quote)), "found": int(t)}
+    return sorted(keep.values(), key=lambda c: -c["subs"])[:ALLOWED_MAX], turn
 
 
 def now():
@@ -347,7 +530,8 @@ def main():
     prev = load_prev(os.environ.get("PREV_TRENDS_URL", ""))
     yt_prev, wiki_prev = prev.get("yt") or {}, prev.get("wiki") or {}
     seen = {k: v for k, v in (prev.get("seen") or {}).items() if isinstance(v, (int, float)) and t - v < SEEN_DAYS * 86400}
-    out = {"generated": int(t), "yt": yt_prev, "wiki": wiki_prev, "hot": prev.get("hot") or {}, "clips": prev.get("clips") or []}
+    out = {"generated": int(t), "yt": yt_prev, "wiki": wiki_prev, "hot": prev.get("hot") or {}, "clips": prev.get("clips") or [],
+           "allowed": prev.get("allowed") or [], "disc_i": int(prev.get("disc_i") or 0)}
     clipq = prev.get("clipq") or {}
     if clipq.get("day") != pacific_day(t):
         clipq = {"day": pacific_day(t), "used": 0}
@@ -370,11 +554,21 @@ def main():
         print(f"YouTube charts: {yt.used} units")
     elif not key:
         print("no YT_API_KEY: keeping the previous YouTube charts", file=sys.stderr)
-    if key:   # clip opportunities: a few more creators each run
-        cy = YouTube(key, int(os.environ.get("CLIP_BUDGET", "80")))
+    if key:   # clip opportunities: creators who invite clippers, a few more creators researched each run, and their best moments
+        cy = YouTube(key, int(os.environ.get("CLIP_BUDGET", "120")))
         try:
-            out["clips"] = research_clips(cy, clip_candidates((out["yt"] or {}).get("regions")), out["clips"], clipq, t)
+            out["allowed"], out["disc_i"] = discover_allowed(cy, out["allowed"], clipq, t, out["disc_i"])
+        except QuotaExceeded as e:
+            print(f"clipping-program search stopped: {e}", file=sys.stderr)
+        except Exception as e:
+            print(f"clipping-program search failed: {type(e).__name__}: {e}", file=sys.stderr)
+        try:
+            cands = {c["ch"]: c for c in clip_candidates((out["yt"] or {}).get("regions"))}
+            for a in out["allowed"]:
+                cands.setdefault(a["ch"], {"ch": a["ch"], "name": a["name"], "regions": set(), "cats": set(), "video": None, "subs": a["subs"]})["allowed"] = True
+            out["clips"] = research_clips(cy, list(cands.values()), out["clips"], clipq, t)
             refresh_permissions(cy, out["clips"])
+            refresh_moments(cy, out["clips"], clipq, t)
         except QuotaExceeded as e:
             print(f"clip research stopped: {e}", file=sys.stderr)
         except Exception as e:   # keep what was researched before

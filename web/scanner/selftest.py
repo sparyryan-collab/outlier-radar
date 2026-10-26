@@ -29,7 +29,13 @@ def vid(c, i):
 
 
 WORLD = {"extra": False, "bump": 0}
-CHANNELS = {cid(1): {"name": "Small Hit Channel", "subs": 20000, "base": 400000}, cid(2): {"name": "Big Quiet Channel", "subs": 5000000, "base": 30000}}
+CHANNELS = {cid(1): {"name": "Small Hit Channel", "subs": 20000, "base": 400000}, cid(2): {"name": "Big Quiet Channel", "subs": 5000000, "base": 30000},
+            cid(3): {"name": "Clip Friendly Streamer", "subs": 2000000, "base": 2000000,
+                     "desc": "Streams every night." + chr(10) + "Feel free to clip my streams! Paid clipping program on whop.com/streamer-clips"}}
+# viewers' comments on channel 3's long video: three point at the big fail (2:15), a timestamp list, a comment with no time, two at the ending
+COMMENTS = [("2:15 I can't stop laughing at the big fail", 340), ("2:20 the fail lmao", 120), ("2:18 💀💀💀", 50), ("0:00 1:00 2:00 3:00 4:00 5:00", 5),
+            ("great video", 900), ("7:30 the Q and A ending got me", 10), ("7:41 wait what", 3)]
+CHAPTERS = "Streaming highlights" + chr(10) + "0:00 Intro" + chr(10) + "2:10 The big fail" + chr(10) + "6:00 Questions and answers"
 
 
 def channel_videos(n):
@@ -46,7 +52,7 @@ def channel_videos(n):
 
 
 def all_videos():
-    return {v["id"]: v for n in (1, 2) for v in channel_videos(n)}
+    return {v["id"]: v for n in (1, 2, 3) for v in channel_videos(n)}
 
 
 def search_ids():
@@ -75,7 +81,14 @@ class Fake(BaseHTTPRequestHandler):
         if q.get("key") != ["testkey"]:
             return self.reply(403, {"error": {"message": "bad key", "errors": [{"reason": "keyInvalid"}]}})
         if path == "search":
+            if q.get("type") == ["channel"]:   # a search for creators with a clipping program
+                return self.reply(200, {"items": [{"id": {"kind": "youtube#channel", "channelId": c}} for c in (cid(3), cid(1))]})
             return self.reply(200, {"items": [{"id": {"videoId": i}} for i in search_ids()]})
+        if path == "commentThreads":   # channel 3's long video has timestamp comments; channel 2 turned comments off
+            if q["videoId"][0] == vid(2, 5):
+                return self.reply(403, {"error": {"message": "The video identified by the videoId parameter has disabled comments.", "errors": [{"reason": "commentsDisabled"}]}})
+            rows = COMMENTS if q["videoId"][0] == vid(3, 5) else []
+            return self.reply(200, {"items": [{"snippet": {"topLevelComment": {"snippet": {"textOriginal": c, "likeCount": n}}}} for c, n in rows]})
         if path == "videos" and q.get("chart"):   # YouTube's trending chart; one category has no chart in this country
             if q.get("videoCategoryId") == ["28"]:
                 return self.reply(404, {"error": {"message": "The requested video chart is not supported or is not available."}})
@@ -97,8 +110,9 @@ class Fake(BaseHTTPRequestHandler):
             for i in q["id"][0].split(","):
                 if i in vs:
                     v = vs[i]
-                    items.append({"id": i, "snippet": {"title": f"Video {i} 🐱 what if", "channelId": cid(v["n"]), "channelTitle": CHANNELS[cid(v["n"])]["name"],
-                                                       "publishedAt": v["pub"].strftime("%Y-%m-%dT%H:%M:%SZ")},
+                    title = "Big fail had him laughing 😂 what if" if i == vid(1, 13) else f"Video {i} 🐱 what if"
+                    items.append({"id": i, "snippet": {"title": title, "channelId": cid(v["n"]), "channelTitle": CHANNELS[cid(v["n"])]["name"],
+                                                       "publishedAt": v["pub"].strftime("%Y-%m-%dT%H:%M:%SZ"), "description": CHAPTERS if i == vid(3, 5) else ""},
                                   "statistics": {"viewCount": str(v["views"]), "likeCount": str(v["views"] // 40), "commentCount": str(v["views"] // 2000)},
                                   "contentDetails": {"duration": v["dur"]}})
             return self.reply(200, {"items": items})
@@ -107,7 +121,7 @@ class Fake(BaseHTTPRequestHandler):
             for c in q["id"][0].split(","):
                 if c in CHANNELS:
                     items.append({"id": c, "snippet": {"title": CHANNELS[c]["name"], "customUrl": "@" + CHANNELS[c]["name"].replace(" ", "").lower(),
-                                                       "description": "A test channel about cats", "thumbnails": {"medium": {"url": "https://yt3.ggpht.com/test=s240"}},
+                                                       "description": CHANNELS[c].get("desc", "A test channel about cats"), "thumbnails": {"medium": {"url": "https://yt3.ggpht.com/test=s240"}},
                                                        "publishedAt": "2026-08-01T00:00:00Z"},
                                   "statistics": {"subscriberCount": str(CHANNELS[c]["subs"])}, "contentDetails": {"relatedPlaylists": {"uploads": "UU" + c[2:]}}})
             return self.reply(200, {"items": items})
@@ -229,9 +243,9 @@ def main():
         print(f"tracked channels OK: kept {len(names4)} with KEEP_CHANNELS=1 (the tracked one is pinned)")
 
         # trend feeds: YouTube charts by country and category, Wikipedia's most-read list, history between runs
-        def run_trends(key, prev=None, offset=0, data=None):
+        def run_trends(key, prev=None, offset=0, data=None, disc="0"):
             out = Path(tmp) / f"trends{offset}{key}.json"
-            env = dict(os.environ, YT_API_BASE=f"http://127.0.0.1:{port}", WIKI_BASE=f"http://127.0.0.1:{port}/wiki", YT_API_KEY=key,
+            env = dict(os.environ, YT_API_BASE=f"http://127.0.0.1:{port}", WIKI_BASE=f"http://127.0.0.1:{port}/wiki", YT_API_KEY=key, DISCOVER_PER_DAY=disc,
                        TRENDS_YT_EVERY="0", SCAN_TIME_OFFSET=str(offset), PREV_TRENDS_URL=prev.resolve().as_uri() if prev else "", PYTHONIOENCODING="utf-8")
             r = subprocess.run([sys.executable, str(HERE / "trends.py"), "--out", str(out)] + (["--data", str(data)] if data else []), env=env, capture_output=True, text=True, encoding="utf-8", cwd=tmp)
             assert r.returncode == 0 and out.exists(), (r.returncode, r.stdout, r.stderr)
@@ -290,7 +304,36 @@ def main():
         assert perm("ห้ามรีอัพโหลดคลิปของช่อง", [])[0] == "forbids"
         assert perm("New videos every Friday", [{"id": "v3", "desc": "Thanks for watching"}])[0] == "unknown"
         assert data_clip_ok(t7), "researched creators carry the permission check"
+        assert bq["moments"] == [] and bq["mvids"][vid(2, 5)]["h"] == "", "comments turned off: no moments, nothing breaks"
         print(f"clip finder OK: researched {bq['name']} ({bq['clippers']} clipper, score {bq['score']}), skipped labels and broadcasters, one search per creator per week")
+
+        # creators who invite clippers: found by a clipping-program search, checked in their own words, researched first, with the moments viewers point to
+        WORLD.update(longchart=True)
+        t8, f8 = run_trends("testkey", prev=f6, offset=7 * 3600 + 120, disc="4")
+        al = t8["allowed"]
+        assert [a["ch"] for a in al] == [cid(3)] and al[0]["paid"] and al[0]["quote"].startswith("Feel free to clip"), al   # the small channel with no invitation is dropped
+        assert t8["disc_i"] == 1 and t8["clipq"]["disc"] == 1 and t8["clipq"]["used"] == 2, t8["clipq"]
+        cf = next(c for c in t8["clips"] if c["ch"] == cid(3))
+        assert cf["found_by"] == "invite" and cf["allow"] == "allows" and cf["paid"] and cf["ct"], {k: cf.get(k) for k in ("found_by", "allow", "paid")}
+        ms = {m["s"]: m for m in cf["moments"]}
+        assert set(ms) == {132, 447}, cf["moments"]                                # 3 seconds before the first reaction; the timestamp list doesn't move it
+        fail, end = ms[132], ms[447]
+        assert fail["n"] == 3 and fail["c"] == "The big fail" and fail["q"] == "I can't stop laughing at the big fail" and fail["e"] == 162, fail
+        assert fail["comp"] == 1 and end["comp"] == 0 and end["c"] == "Questions and answers" and end["n"] == 2, (fail, end)   # one Short already covers the fail
+        assert cf["moments"][0]["sc"] >= cf["moments"][1]["sc"] > 0, cf["moments"]
+        heat = cf["mvids"][vid(3, 5)]["h"]
+        assert len(heat) == 32 and heat[6] == "9" and heat[0] == "0", heat   # 2:15 of 12:00 falls in bucket 6
+        t9, _ = run_trends("testkey", prev=f8, offset=7 * 3600 + 180, disc="4")
+        assert t9["clipq"]["disc"] <= 4 and t9["allowed"] == t8["allowed"], "already-known creators are kept"
+        WORLD.update(longchart=False)
+        assert trends_mod.video_chapters("0:00 Intro" + chr(10) + "1:02:03 Late part" + chr(10) + "no time here", 4000) == [(0, "Intro"), (3723, "Late part")]
+        assert trends_mod.clean_comment("12:34 lol https://x.y/z   this part!") == "lol this part!"
+
+        class NoComments:
+            def call(self, path, **kw):
+                raise trends_mod.ApiError("HTTP 403 on commentThreads: disabled")
+        assert trends_mod.find_moments(NoComments(), [{"id": "abc", "t": "x", "v": 9, "d": 600, "p": 0}], [], "Joe") == ([], {"abc": {"t": "x", "v": 9, "d": 600, "p": 0, "h": "", "cv": 0}})
+        print(f"invites OK: found {al[0]['name']} by its clipping program and researched it first; moments at 2:12 (1 Short already) and 7:27 (none yet)")
     print("ALL CHECKS PASSED")
 
 

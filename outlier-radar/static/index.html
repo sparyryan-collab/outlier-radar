@@ -809,23 +809,83 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .pf small{color:var(--muted);font-size:12.5px;line-height:1.45}
 .pctbl{max-width:640px}
 .pctbl td:nth-child(n+2),.pctbl th:nth-child(n+2){text-align:center;width:70px}
-/* ---- clipping permission and checklist ---- */
-.perm{border-radius:10px;padding:8px 10px;background:var(--surface);display:flex;flex-direction:column;gap:3px;font-size:13px}
-.perm b{display:inline-flex;gap:6px;align-items:center}
-.perm svg.i{width:14px;height:14px}
-.perm.allows{background:color-mix(in srgb,var(--good) 13%,transparent)}
-.perm.allows b{color:var(--good)}
-.perm.forbids{background:color-mix(in srgb,var(--bad) 12%,transparent)}
-.perm.forbids b{color:var(--bad)}
-.perm q{font-style:italic;color:var(--text);quotes:"“" "”";display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.perm small{color:var(--muted);font-size:12px}
-.perm .link{font-size:12px;color:var(--accent)}
-.cchk{border-top:1px solid var(--line);padding-top:8px}
-.cchk summary{cursor:pointer;font-weight:600;font-size:13.5px}
-.ckrow{display:flex;gap:8px;align-items:flex-start;font-size:13px;margin-top:8px;cursor:pointer}
-.ckrow input{margin-top:2px;width:16px;height:16px;accent-color:var(--good);flex:none}
-.ccbox{background:var(--card);box-shadow:0 0 0 1px var(--line);border-radius:14px;padding:14px;margin:0 0 14px;max-width:960px}
+/* ---- clip finder: automatic checks, moments, creators who invite clippers ---- */
+.acheck{display:flex;flex-direction:column;gap:8px;background:var(--surface);border-radius:12px;padding:10px 12px}
+.ackhead{display:flex;gap:10px;align-items:center;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.ackhead b{display:block;font-size:13.5px}
+.ackhead small{color:var(--muted);font-size:11.5px;line-height:1.35;display:block}
+.ring.sm{width:42px;height:42px;flex:none}
+.ring.sm span{width:34px;height:34px;font-size:11.5px}
+.ack{display:flex;gap:9px;align-items:flex-start;font-size:13px}
+.ack b{display:block;font-weight:600}
+.ack small{display:block;color:var(--muted);font-size:12px;line-height:1.4}
+.ack.none b{color:var(--muted)}
+.ack q{font-style:italic;color:var(--text);quotes:"“" "”"}
+.ack .link{color:var(--accent);white-space:nowrap}
+.acki{width:18px;height:18px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--line);flex:none;display:grid;place-items:center;margin-top:1px;font-size:11px;font-weight:800}
+.acki.yes{background:var(--good);box-shadow:none;color:#fff}
+.acki.yes svg.i{width:12px;height:12px;stroke-width:3}
+.acki.no{background:var(--bad);box-shadow:none;color:#fff}
+.momsec,.frsec{background:var(--card);box-shadow:0 0 0 1px var(--line);border-radius:16px;padding:14px 14px 10px;margin:0 0 14px}
+.momhead{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}
+.momhead .ico{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex:none;color:#fff;background:linear-gradient(135deg,#ff0033,#ff7a00)}
+.momhead .ico.good{background:linear-gradient(135deg,#0f9d58,#34c27a)}
+.momhead .ico svg.i{width:20px;height:20px}
+.momhead h3{margin:0;font-size:16px}
+.momhead p{margin:2px 0 0;color:var(--muted);font-size:12.5px;line-height:1.45;max-width:760px}
+.momrail{gap:12px}
+.momrail>.mom{flex:0 0 272px}
+.momrail>.lockcard{flex:0 0 280px;margin:0}
+.mom{display:grid;grid-template-columns:132px minmax(0,1fr);gap:8px 10px;align-items:start;background:var(--surface);border-radius:12px;padding:8px}
+.mom>.btns{grid-column:1/-1}
+.mom.hero{display:flex;flex-direction:column;gap:0;padding:0;overflow:hidden}
+.mom.hero>.btns{padding:0 10px 10px}
+.momth{position:relative;border:0;padding:0;background:var(--surface2);border-radius:8px;overflow:hidden;width:100%;aspect-ratio:16/9;cursor:pointer}
+.mom.hero .momth{width:100%;border-radius:0}
+.momth img{width:100%;height:100%;object-fit:cover;display:block}
+.momth .mt{position:absolute;left:6px;bottom:6px;background:rgba(0,0,0,.82);color:#fff;font-size:11.5px;font-weight:600;padding:1px 6px;border-radius:4px;font-variant-numeric:tabular-nums}
+.momth .pl{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:opacity .15s;background:rgba(0,0,0,.25)}
+.momth .pl svg{width:34px;height:34px;fill:#fff;stroke:none}
+.momth:hover .pl{opacity:1}
+.mombody{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.mom.hero .mombody{padding:8px 10px 10px}
+.momch{display:flex;gap:6px;align-items:center;font-size:12.5px;min-width:0}
+.momch b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.momch .tag{display:inline-flex;gap:3px;align-items:center;font-size:10.5px}
+.momch .tag svg.i{width:11px;height:11px}
+.mom q{font-size:13.5px;font-weight:500;line-height:1.35;quotes:"“" "”";display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mommeta{display:flex;gap:6px 10px;flex-wrap:wrap;align-items:center;font-size:11.5px;color:var(--muted)}
+.mommeta .chap{background:var(--bg);border-radius:6px;padding:1px 6px;color:var(--text);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mommeta .pt{display:inline-flex;gap:4px;align-items:center}
+.mommeta .pt svg.i{width:13px;height:13px}
+.comp{display:inline-flex;gap:3px;align-items:center;border-radius:6px;padding:1px 6px;background:var(--bg);color:var(--muted);font-weight:600}
+.comp svg.i{width:11px;height:11px}
+.comp.ok{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good)}
+.comp.some{background:color-mix(in srgb,#e8a200 18%,transparent);color:#b07800}
+:root[data-theme=dark] .comp.some{color:#f2b84b}
+.heat{width:100%;height:26px;display:block;stroke:none}
+.heat rect{fill:var(--surface2)}
+.heat rect.lv{fill:color-mix(in srgb,var(--accent) 50%,var(--surface2))}
+.heat rect.on{fill:var(--red)}
+.mom .btns{gap:4px;flex-wrap:wrap}
+.mom .btns .pillbtn,.mom .btns .ghost{height:32px;font-size:12.5px;padding:0 10px}
+.mom .btns svg{width:16px;height:16px}
+.clmoms{display:flex;flex-direction:column;gap:8px}
+.clmoms h5{margin:0;font-size:13.5px;display:flex;gap:6px;align-items:center}
+.clmoms h5 svg.i{width:16px;height:16px;color:var(--red)}
+.frgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.frc{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border-radius:12px;padding:10px}
+.frb{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.frb b{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.frb small{color:var(--muted);font-size:12px}
+.frb q{font-size:12.5px;font-style:italic;quotes:"“" "”";display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.frbtn{display:flex;gap:2px;align-items:center;flex-wrap:wrap;margin-top:2px;font-size:12px}
+.frbtn .ghost{height:28px;font-size:12px;padding:0 8px;color:var(--accent)}
+.ccbox{background:var(--card);box-shadow:0 0 0 1px var(--line);border-radius:14px;padding:14px;margin:0 0 14px}
 .ccbox #ccOut .clcard{margin-top:10px;box-shadow:none;padding:0}
+.clcard.flash{animation:flash 1.8s}
+@keyframes flash{0%,40%{box-shadow:0 0 0 3px var(--accent)}100%{box-shadow:0 0 0 1px var(--line)}}
+@media (max-width:760px){.momrail>.mom{flex-basis:80vw}.mom{grid-template-columns:112px minmax(0,1fr)}.frgrid{grid-template-columns:1fr}}
 /* ---- clip finder ---- */
 .cl3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 12px;max-width:960px}
 .cl3 div{background:var(--surface);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
@@ -1667,55 +1727,73 @@ Object.assign(T.th, {
 });
 Object.assign(T.en, {
   ttClips: 'Clip finder', clWait: 'Researching creators. This list fills in over the next day, as each scan checks a few more.',
-  clD: 'Big creators whose videos few channels clip into Shorts yet. Picked from YouTube’s trending charts, then checked against the last 30 days of Shorts about them.',
+  clD: 'Big creators few channels clip yet, whether they allow it, and the exact moments worth clipping. Everything here is checked automatically from YouTube.',
   clAT: 'Big audience', clAD: 'Lots of people already want their content (1M+ subscribers).',
   clFT: 'Few clippers', clFD: '8 or fewer channels posted Shorts of them in the last 30 days.',
   clVT: 'Clips go viral', clVD: 'Their clips get big views (50K+ typical) and they post enough long videos to clip from.',
   clAudV: '{n} subscribers', clFewV: '{k} channels posted {n} clips this month', clFewNone: 'Nobody posted clips this month',
-  clVirV: 'clips typically get {v} views', clVirTop: 'their trending video has {v} views', clMat: '{n} long videos this month ({h} h)',
+  clVirV: 'clips typically get {v} views', clVirTop: 'their trending video has {v} views', clVirBig: 'their biggest recent video has {v} views', clMat: '{n} long videos this month ({h} h)',
   clOnly3: 'Fits all 3', clAll3: 'fits all 3', clScore: 'opportunity', clInvites: 'Invites clippers in their description',
   clLatest: 'Latest long video', clTopClip: 'Top clip · {v} views', clChannel: 'Their channel', clSearch: 'See clips on YouTube',
-  clWarn: 'Only clip creators who allow it. Many invite clippers (look for a clipping program or “feel free to clip” in their description); others file copyright claims. Add your own edit, captions or commentary, and credit them.',
+  clWarn: 'Only clip creators who allow it. A green tick means their own words invite clippers; a blank circle means they haven’t said, so ask them first. Add your own edit, captions or commentary, and credit them.',
   brClip: 'Clip this creator'
 });
 Object.assign(T.th, {
   ttClips: 'หาคนให้คลิป', clWait: 'กำลังตรวจครีเอเตอร์ รายการนี้จะค่อย ๆ เพิ่มขึ้นในวันนี้ เพราะการสแกนแต่ละรอบจะตรวจเพิ่มทีละไม่กี่คน',
-  clD: 'ครีเอเตอร์ใหญ่ที่ยังมีช่องตัดคลิปไปลง Shorts ไม่มาก คัดจากชาร์ตมาแรงของ YouTube แล้วตรวจกับคลิป Shorts ที่เกี่ยวกับพวกเขาใน 30 วันล่าสุด',
+  clD: 'ครีเอเตอร์ใหญ่ที่ยังมีคนตัดคลิปน้อย เขาอนุญาตไหม และช่วงไหนน่าตัดที่สุด ทุกอย่างตรวจอัตโนมัติจากข้อมูล YouTube',
   clAT: 'ฐานคนดูใหญ่', clAD: 'มีคนอยากดูคอนเทนต์ของเขาอยู่แล้วจำนวนมาก (ผู้ติดตาม 1 ล้านขึ้นไป)',
   clFT: 'คนตัดคลิปน้อย', clFD: 'มีไม่เกิน 8 ช่องที่ลง Shorts ของเขาใน 30 วันล่าสุด',
   clVT: 'คลิปมีโอกาสไวรัล', clVD: 'คลิปของเขาได้วิวสูง (ปกติ 50K ขึ้นไป) และมีวิดีโอยาวมากพอให้ตัด',
   clAudV: 'ผู้ติดตาม {n}', clFewV: '{k} ช่องลงคลิป {n} คลิปในเดือนนี้', clFewNone: 'เดือนนี้ยังไม่มีใครลงคลิป',
-  clVirV: 'คลิปได้วิวปกติ {v}', clVirTop: 'วิดีโอที่ติดชาร์ตมี {v} วิว', clMat: 'วิดีโอยาว {n} เรื่องในเดือนนี้ ({h} ชม.)',
+  clVirV: 'คลิปได้วิวปกติ {v}', clVirTop: 'วิดีโอที่ติดชาร์ตมี {v} วิว', clVirBig: 'วิดีโอล่าสุดที่ดังที่สุดมี {v} วิว', clMat: 'วิดีโอยาว {n} เรื่องในเดือนนี้ ({h} ชม.)',
   clOnly3: 'ผ่านครบ 3 ข้อ', clAll3: 'ผ่านครบ 3 ข้อ', clScore: 'โอกาส', clInvites: 'เปิดรับคนตัดคลิปในคำอธิบายช่อง',
   clLatest: 'วิดีโอยาวล่าสุด', clTopClip: 'คลิปเด่น · {v} วิว', clChannel: 'ช่องของเขา', clSearch: 'ดูคลิปบน YouTube',
-  clWarn: 'ตัดคลิปเฉพาะครีเอเตอร์ที่อนุญาต หลายคนเปิดรับคนตัดคลิป (ดูคำว่า clipping program หรือ “feel free to clip” ในคำอธิบายช่อง) บางคนแจ้งลิขสิทธิ์ ใส่การตัดต่อ คำบรรยาย หรือความเห็นของคุณเอง และให้เครดิตเขาเสมอ',
+  clWarn: 'ตัดคลิปเฉพาะครีเอเตอร์ที่อนุญาต เครื่องหมายถูกสีเขียวแปลว่าเขาเขียนเชิญคนตัดคลิปเอง วงกลมว่างแปลว่าเขายังไม่ได้บอก ให้ถามเขาก่อน ใส่การตัดต่อ คำบรรยาย หรือความเห็นของคุณเอง และให้เครดิตเขาเสมอ',
   brClip: 'น่าตัดคลิปคนนี้'
 });
 Object.assign(T.en, {
   pmYes: 'Allows clipping', pmNo: 'Says no re-uploads', pmAsk: 'Not stated: ask first',
-  pmAskD: 'Nothing about clipping in their channel or latest video descriptions. Message them or check their socials before you clip.',
+  pmAskD: 'Not stated in their channel or latest 12 video descriptions. Ask them before you clip.',
   pmPending: 'Not checked yet. The next scan reads their channel and video descriptions.',
   pmInVideo: 'Written under one of their videos', pmInChannel: 'Written in their channel description',
   ccT: 'Check any creator', ccD: 'Paste a channel link or @handle to see what they say about clipping.', ccGo: 'Check', ccNoKey: 'Checking creators needs YouTube search, which is off right now.',
   clNoMatch: 'No creators match these filters yet. Turn one off to see more.',
-  clAllow: 'Allows clipping', ckT: 'Before you clip', ckReady: 'Ready to clip', ckMine: 'Your clipping checklist',
-  ck1: 'They allow clipping: it’s written in their descriptions, or you asked and they said yes',
-  ck2: 'You read their rules: how to credit them, where you may post, and any clipping-program terms',
-  ck3: 'Your clip adds something of yours: your own edit, captions, commentary or context',
-  ck4: 'You credit them in the title or description and link their channel'
+  clAllow: 'Allows clipping', clAllT: 'Every creator, checked', clByInvite: 'invites clippers',
+  ackT: 'Checked for you', ackD: 'Filled in automatically from YouTube. A blank circle means it couldn’t be confirmed.',
+  ackPaid: 'Pays clippers', ackPaidD: 'Their invitation mentions a paid clipping program', ackPaidNo: 'No paid clipping program mentioned',
+  ackMat: 'Fresh long videos', ackMom: 'Unclipped moments', ackMomV: '{n} moments viewers love that no Short covers yet', ackMomV1: '1 moment viewers love that no Short covers yet',
+  ackMomTaken: 'Shorts already cover every standout moment', ackMomNone: 'No moment stands out in the comments yet', ackMomWait: 'Their comments are read on the next scan',
+  ackNeedSearch: 'Count the Shorts about them to check this (uses 1 search)', ccComp: 'Count competing Shorts', ccBusy: 'Counting…', momReading: 'Reading viewers’ comments…',
+  momT: 'Best moments to clip right now', momD: 'Parts of big creators’ videos that viewers point to in the comments (“12:34 I lost it”), with how many Shorts already cover each.',
+  momHere: 'Moments to clip', momWatch: 'Watch the moment', momCopy: 'Copy clip plan', momPoint: '{n} viewers point here', momNoQuote: 'A moment viewers keep pointing to',
+  momWait: 'Moments appear as the scanner reads the comments on creators’ newest videos.',
+  comp0: 'No Shorts of it yet', comp1: '1 Short already', compN: '{n} Shorts already', compU: 'Shorts not counted yet', pFrom: 'Starts at {t}, the moment viewers point to',
+  cpTitle: 'Clip from {c}: “{v}”', cpTime: 'From {a} to {b} ({n} seconds):', cpWhy: 'Why: {n} viewers point to it (“{q}”)',
+  cpComp0: 'Competition: no Shorts of this moment yet', cpCompN: 'Competition: {n} Shorts look like this moment', cpCompU: 'Competition: not counted yet', cpCredit: 'Credit: {c} · {u}',
+  frT: 'Creators who invite clippers', frD: 'Found automatically: their own channel or video descriptions say clipping is welcome. Re-checked every week.',
+  frSee: 'See the research', frQueued: 'Research queued', frAll: 'Show all {n}', frLess: 'Show fewer', frNone: 'Searching for creators with clipping programs. The first ones appear within a day.'
 });
 Object.assign(T.th, {
   pmYes: 'อนุญาตให้ตัดคลิป', pmNo: 'แจ้งว่าห้ามนำไปลงซ้ำ', pmAsk: 'ไม่ได้ระบุ: ขออนุญาตก่อน',
-  pmAskD: 'ไม่พบข้อความเรื่องการตัดคลิปในคำอธิบายช่องหรือวิดีโอล่าสุด ส่งข้อความถามหรือดูโซเชียลของเขาก่อนตัดคลิป',
+  pmAskD: 'ไม่ได้ระบุไว้ในคำอธิบายช่องหรือวิดีโอล่าสุด 12 คลิป ถามเขาก่อนตัดคลิป',
   pmPending: 'ยังไม่ได้ตรวจ การสแกนครั้งถัดไปจะอ่านคำอธิบายช่องและวิดีโอของเขา',
   pmInVideo: 'เขียนไว้ใต้วิดีโอหนึ่งของเขา', pmInChannel: 'เขียนไว้ในคำอธิบายช่อง',
   ccT: 'ตรวจครีเอเตอร์คนไหนก็ได้', ccD: 'วางลิงก์ช่องหรือ @แฮนเดิล เพื่อดูว่าเขาพูดถึงการตัดคลิปว่าอย่างไร', ccGo: 'ตรวจ', ccNoKey: 'การตรวจครีเอเตอร์ต้องใช้การค้นหา YouTube ซึ่งตอนนี้ปิดอยู่',
   clNoMatch: 'ยังไม่มีครีเอเตอร์ที่ตรงกับตัวกรองนี้ ลองปิดตัวกรองเพื่อดูเพิ่ม',
-  clAllow: 'อนุญาตให้ตัดคลิป', ckT: 'ก่อนตัดคลิป', ckReady: 'พร้อมตัดคลิป', ckMine: 'เช็กลิสต์ตัดคลิปของคุณ',
-  ck1: 'เขาอนุญาตให้ตัดคลิป: เขียนไว้ในคำอธิบาย หรือคุณถามแล้วเขาตอบตกลง',
-  ck2: 'คุณอ่านกติกาของเขาแล้ว: วิธีให้เครดิต ลงที่ไหนได้บ้าง และเงื่อนไขของโปรแกรมตัดคลิป',
-  ck3: 'คลิปของคุณมีส่วนของคุณเอง: การตัดต่อ คำบรรยาย ความเห็น หรือบริบท',
-  ck4: 'ให้เครดิตเขาในชื่อคลิปหรือคำอธิบาย พร้อมลิงก์ไปที่ช่องของเขา'
+  clAllow: 'อนุญาตให้ตัดคลิป', clAllT: 'ครีเอเตอร์ทั้งหมด ตรวจให้แล้ว', clByInvite: 'เปิดรับคนตัดคลิป',
+  ackT: 'ระบบตรวจให้แล้ว', ackD: 'ระบบกรอกให้อัตโนมัติจากข้อมูล YouTube วงกลมว่างแปลว่ายืนยันไม่ได้',
+  ackPaid: 'จ่ายเงินคนตัดคลิป', ackPaidD: 'คำเชิญของเขาพูดถึงโปรแกรมตัดคลิปแบบได้เงิน', ackPaidNo: 'ไม่พบโปรแกรมตัดคลิปแบบได้เงิน',
+  ackMat: 'มีวิดีโอยาวใหม่ ๆ', ackMom: 'ช่วงที่ยังไม่มีคนตัด', ackMomV: '{n} ช่วงที่คนดูชอบแต่ยังไม่มี Shorts', ackMomV1: '1 ช่วงที่คนดูชอบแต่ยังไม่มี Shorts',
+  ackMomTaken: 'ทุกช่วงเด่นมี Shorts แล้ว', ackMomNone: 'ยังไม่มีช่วงไหนโดดเด่นในคอมเมนต์', ackMomWait: 'จะอ่านคอมเมนต์ในการสแกนครั้งถัดไป',
+  ackNeedSearch: 'นับ Shorts ที่เกี่ยวกับเขาเพื่อตรวจข้อนี้ (ใช้การค้นหา 1 ครั้ง)', ccComp: 'นับ Shorts คู่แข่ง', ccBusy: 'กำลังนับ…', momReading: 'กำลังอ่านคอมเมนต์ของคนดู…',
+  momT: 'ช่วงที่น่าตัดคลิปที่สุดตอนนี้', momD: 'ช่วงในวิดีโอของครีเอเตอร์ใหญ่ที่คนดูพูดถึงในคอมเมนต์ (“12:34 ขำมาก”) พร้อมจำนวน Shorts ที่ตัดช่วงนั้นไปแล้ว',
+  momHere: 'ช่วงที่น่าตัด', momWatch: 'ดูช่วงนี้', momCopy: 'คัดลอกแผนตัดคลิป', momPoint: 'คนดู {n} คนชี้ช่วงนี้', momNoQuote: 'ช่วงที่คนดูพูดถึงบ่อย',
+  momWait: 'ช่วงเด่นจะขึ้นเมื่อระบบอ่านคอมเมนต์ในวิดีโอใหม่ล่าสุดของครีเอเตอร์',
+  comp0: 'ยังไม่มี Shorts', comp1: 'มี Shorts แล้ว 1 คลิป', compN: 'มี Shorts แล้ว {n} คลิป', compU: 'ยังไม่ได้นับ Shorts', pFrom: 'เริ่มที่ {t} ช่วงที่คนดูพูดถึง',
+  cpTitle: 'คลิปจาก {c}: “{v}”', cpTime: 'ตั้งแต่ {a} ถึง {b} ({n} วินาที):', cpWhy: 'เหตุผล: คนดู {n} คนพูดถึงช่วงนี้ (“{q}”)',
+  cpComp0: 'คู่แข่ง: ยังไม่มี Shorts ของช่วงนี้', cpCompN: 'คู่แข่ง: มี Shorts คล้ายช่วงนี้ {n} คลิป', cpCompU: 'คู่แข่ง: ยังไม่ได้นับ', cpCredit: 'เครดิต: {c} · {u}',
+  frT: 'ครีเอเตอร์ที่เปิดรับคนตัดคลิป', frD: 'ระบบหาให้อัตโนมัติ: คำอธิบายช่องหรือวิดีโอของเขาเขียนว่ายินดีให้ตัดคลิป ตรวจซ้ำทุกสัปดาห์',
+  frSee: 'ดูผลการตรวจ', frQueued: 'รอคิวตรวจ', frAll: 'ดูทั้งหมด {n}', frLess: 'ย่อลง', frNone: 'กำลังค้นหาครีเอเตอร์ที่มีโปรแกรมตัดคลิป รายชื่อแรกจะขึ้นภายในหนึ่งวัน'
 });
 Object.assign(T.en, {ytFrom: 'On YouTube’s trending chart'});
 Object.assign(T.th, {ytFrom: 'อยู่บนชาร์ตมาแรงของ YouTube'});
@@ -2577,7 +2655,7 @@ $('#sheet').addEventListener('close', () => {
 });
 
 /* ---------- video player ---------- */
-function openPlayer(vid, chId) {
+function openPlayer(vid, chId, start = 0) {
   if (!vidOk(vid)) return;
   const c = findCh(chId), v = (c && c.series.find(s => s.id === vid)) || Object.assign({id: vid, t: '', v: 0, x: 0}, YT_ITEMS.get(vid) || {});
   closePop();
@@ -2588,14 +2666,15 @@ function openPlayer(vid, chId) {
   if (v.d) facts.push([IC.clock, t('pLen', {d: fmtDur(v.d)})]);
   if (v.p) facts.push([IC.calendar, t('pUp', {ago: ago(v.p)})]);
   if (accelerating(v)) facts.push([IC.rocket, t('pAccel')]);
+  if (start) facts.unshift([IC.scissors, t('pFrom', {t: tsText(start)})]);
   $('#playerBody').innerHTML = `<div class="pwrap"><button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
-    <div class="pvid"><iframe src="https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&playsinline=1&rel=0" title="${esc(v.t)}"
+    <div class="pvid"><iframe src="https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&playsinline=1&rel=0${start ? '&start=' + Math.floor(start) : ''}" title="${esc(v.t)}"
       allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
     <div class="pside"><h3>${esc(v.t)}</h3>
       ${!c && v.cht ? `<div class="pch" style="cursor:default"><span><b>${esc(v.cht)}</b><small>${esc(t('ytFrom'))}</small></span></div>` : ''}
       ${c ? `<button type="button" class="pch" data-closeplayer data-open-ch="${esc(c.ch_id)}">${avatarEl(c, 42)}<span><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))} · ${esc(t('pSeeCh'))} →</small></span></button>` : ''}
       <div class="pfacts">${facts.map(([e, s]) => `<div><span class="em">${e}</span><span>${esc(s)}</span></div>`).join('')}</div>
-      <div class="btns"><a class="pillbtn red" href="${vidUrl(vid)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>
+      <div class="btns"><a class="pillbtn red" href="${start ? `https://www.youtube.com/watch?v=${vid}&amp;t=${Math.floor(start)}s` : vidUrl(vid)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>
         ${c && needsTr(c) && v.t ? `<a class="pillbtn" href="${trUrl(v.t)}" target="_blank" rel="noopener noreferrer">${IC.globe}${esc(t('translate'))}</a>` : ''}<button type="button" class="pillbtn" data-tear="${esc(vid)}" data-c="${esc(chId || '')}">${esc(t('tearBtn'))}</button></div>
       ${vidStats(v, c)}
       <span class="hint">${esc(t('pNoEmbed'))}</span></div></div>`;
@@ -3822,7 +3901,7 @@ if (STATIC && 'serviceWorker' in navigator && (location.protocol === 'https:' ||
 /* ---------- Google sign-in + sync (Firebase Auth + Cloud Firestore on the free plan) ---------- */
 const FB = CFG.firebase && CFG.firebase.apiKey && CFG.firebase.projectId ? CFG.firebase : null;
 const FB_VER = '10.12.2';
-const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.tw', 'radar.trackinfo', 'radar.clipchk'];
+const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.tw', 'radar.trackinfo'];
 const GICON = '<svg viewBox="0 0 48 48" style="stroke:none"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.7 6c4.5-4.2 6.9-10.3 6.9-17.7z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.7-6c-2.1 1.4-4.9 2.3-8.2 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>';
 let FBX = null, USER = null, SYNC = {state: 'off', at: 0, err: ''}, syncTimer = null, applyingRemote = false, unsubSnap = null;
 const lsRaw = LS.set.bind(LS);
@@ -4273,18 +4352,146 @@ function clipPermission(chDesc, videos) {   // a clear "no" anywhere wins over a
   }
   return found.forbids || found.allows || {allow: 'unknown', allow_quote: '', allow_where: '', allow_vid: null};
 }
-function permBlock(c) {
-  const st = c.allow || 'unknown', video = c.allow_where === 'video' && vidOk(c.allow_vid);
+const PAID_RX = /whop|vyro|content rewards|clipfarm|get paid|paid (per|for)|earn|per (1k|1,000|thousand|million) views|\bcpm\b|\$\s?\d|campaign|ค่าจ้าง|รายได้|จ่ายเงิน/i;
+const viralOnly = c => (c.clips >= 3 ? c.clip_med >= 50000 : (c.top_views || 0) >= 1e6);
+const freshMoments = c => (c.moments || []).filter(m => m.comp === 0);
+const tsText = sec => { const x = Math.max(0, Math.round(sec)), h = Math.floor(x / 3600), m = Math.floor(x % 3600 / 60), r = String(x % 60).padStart(2, '0'); return h ? `${h}:${String(m).padStart(2, '0')}:${r}` : `${m}:${r}`; };
+function clipAv(c, size) {
+  const pic = /^https:\/\/yt3\.(ggpht|googleusercontent)\.com\//.test(c.avatar || '') ? `<img src="${esc(c.avatar)}" alt="" loading="lazy">` : '';
+  return `<span class="av" style="width:${size}px;height:${size}px;font-size:${Math.round(size * 0.42)}px;background:var(--surface2)"><b>${esc(([...(c.name || '?')][0] || '?').toUpperCase())}</b>${pic}</span>`;
+}
+/* the checks Viral Radar fills in by itself; a blank circle means it couldn't confirm it */
+function autoChecks(c) {
+  const st = c.allow || 'pending', video = c.allow_where === 'video' && vidOk(c.allow_vid);
   const src = video ? `https://www.youtube.com/watch?v=${c.allow_vid}` : `https://www.youtube.com/channel/${c.ch}/about`;
-  return `<div class="perm ${st}"><b>${st === 'allows' ? IC.check : `<span aria-hidden="true">${st === 'forbids' ? '✕' : '?'}</span>`}${esc(t({allows: 'pmYes', forbids: 'pmNo', unknown: 'pmAsk'}[st]))}</b>` +
-    (c.allow_quote ? `<q>${esc(c.allow_quote)}</q><a class="link" href="${esc(src)}" target="_blank" rel="noopener noreferrer">${esc(t(video ? 'pmInVideo' : 'pmInChannel'))} ↗</a>` : `<small>${esc(t(c.allow ? 'pmAskD' : 'pmPending'))}</small>`) + '</div>';
+  const proof = c.allow_quote ? `<q>${esc(c.allow_quote)}</q> <a class="link" href="${esc(src)}" target="_blank" rel="noopener noreferrer">${esc(t(video ? 'pmInVideo' : 'pmInChannel'))} ↗</a>` : '';
+  const rows = [st === 'allows' ? ['yes', t('pmYes'), proof] : st === 'forbids' ? ['no', t('pmNo'), proof] : ['none', t('pmYes'), esc(t(st === 'pending' ? 'pmPending' : 'pmAskD'))],
+    c.paid ? ['yes', t('ackPaid'), esc(t('ackPaidD'))] : ['none', t('ackPaid'), esc(t('ackPaidNo'))],
+    [c.subs >= 1e6 ? 'yes' : 'none', t('clAT'), esc(t('clAudV', {n: fmt(c.subs)}))]];
+  if (c.ok) rows.push([c.ok[1] ? 'yes' : 'none', t('clFT'), esc(c.clips ? t('clFewV', {k: c.clippers, n: c.clips}) : t('clFewNone'))],
+    [viralOnly(c) ? 'yes' : 'none', t('clVT'), esc(c.clips >= 3 ? t('clVirV', {v: fmt(c.clip_med)}) : t((c.regions || []).length ? 'clVirTop' : 'clVirBig', {v: fmt(c.top_views)}))]);
+  else rows.push(['none', t('clFT'), esc(t('ackNeedSearch'))], ['none', t('clVT'), esc(t('ackNeedSearch'))]);
+  rows.push([c.long30 >= 2 ? 'yes' : 'none', t('ackMat'), esc(t('clMat', {n: c.long30 || 0, h: c.long_hours || 0}))]);
+  const fm = freshMoments(c);
+  rows.push(c.moments == null ? ['none', t('ackMom'), esc(t(c.mbusy ? 'momReading' : 'ackMomWait'))] : fm.length ? ['yes', t('ackMom'), esc(t(fm.length === 1 ? 'ackMomV1' : 'ackMomV', {n: fm.length}))]
+    : ['none', t('ackMom'), esc(t(c.moments.length ? 'ackMomTaken' : 'ackMomNone'))]);
+  return rows;
 }
-const clipChecks = () => LS.get('radar.clipchk', {});
-function checklist(c) {
-  const mine = (clipChecks()[c.ch] || {}).c || [], done = [0, 1, 2, 3].filter(i => mine[i]).length;
-  return `<details class="cchk" ${done && done < 4 ? 'open' : ''}><summary>${esc(t('ckT'))} <span class="${done === 4 ? 'heatup' : 'pbmuted'}">${done === 4 ? '✓ ' + esc(t('ckReady')) : done + '/4'}</span></summary>` +
-    [1, 2, 3, 4].map((n, i) => `<label class="ckrow"><input type="checkbox" data-clipchk="${esc(c.ch)}" data-i="${i}" data-n="${esc(c.name)}" ${mine[i] ? 'checked' : ''}><span>${esc(t('ck' + n))}</span></label>`).join('') + '</details>';
+function checkList(c) {
+  const rows = autoChecks(c), yes = rows.filter(r => r[0] === 'yes').length, n = rows.length;
+  const ico = st => (st === 'yes' ? `<span class="acki yes">${IC.check}</span>` : st === 'no' ? '<span class="acki no">✕</span>' : '<span class="acki"></span>');
+  return `<div class="acheck"><div class="ackhead"><span class="ring sm" style="--p:${Math.round(100 * yes / n)};--c:${yes >= n - 1 ? 'var(--good)' : yes >= 4 ? '#e8a200' : 'var(--muted)'}"><span>${yes}/${n}</span></span>` +
+    `<span><b>${esc(t('ackT'))}</b><small>${esc(t('ackD'))}</small></span></div>` +
+    rows.map(([st, title, d]) => `<div class="ack ${st}">${ico(st)}<span><b>${esc(title)}</b><small>${d}</small></span></div>`).join('') + '</div>';
 }
+
+/* ---------- moments worth clipping: where viewers point in the comments ("12:34 I lost it"), and how many Shorts cover each ---------- */
+function heatSvg(h, d, a, b) {
+  if (!h || !d) return '';
+  const n = h.length, lo = a / d * n, hi = b / d * n;
+  return `<svg class="heat" viewBox="0 0 ${n * 4} 26" preserveAspectRatio="none" aria-hidden="true">${[...h].map((x, i) => {
+    const v = +x, hh = v ? 5 + 21 * v / 9 : 2;
+    return `<rect x="${i * 4 + 0.5}" y="${(26 - hh).toFixed(1)}" width="3" height="${hh.toFixed(1)}" rx="1" class="${i + 1 > lo && i < hi ? 'on' : v ? 'lv' : ''}"/>`;
+  }).join('')}</svg>`;
+}
+const compBadge = n => (n == null ? `<span class="comp">${esc(t('compU'))}</span>` : n === 0 ? `<span class="comp ok">${IC.check}${esc(t('comp0'))}</span>`
+  : `<span class="comp some">${esc(t(n === 1 ? 'comp1' : 'compN', {n}))}</span>`);
+function clipPlan(m, c) {
+  const v = (c.mvids || {})[m.v] || {};
+  return [t('cpTitle', {c: c.name, v: v.t || ''}), t('cpTime', {a: tsText(m.s), b: tsText(m.e), n: Math.round(m.e - m.s)}) + ` https://youtu.be/${m.v}?t=${m.s}`,
+    m.q ? t('cpWhy', {n: m.n, q: m.q}) : '', t(m.comp == null ? 'cpCompU' : m.comp === 0 ? 'cpComp0' : 'cpCompN', {n: m.comp}),
+    t('cpCredit', {c: c.name, u: `https://www.youtube.com/channel/${c.ch}`})].filter(Boolean).join('\n');
+}
+function momentCard(m, c, hero) {
+  const v = (c.mvids || {})[m.v] || {}, label = m.q || m.c || t('momNoQuote');
+  YT_ITEMS.set(m.v, {id: m.v, t: v.t || '', v: v.v || 0, d: v.d, p: v.p, cht: c.name});
+  return `<div class="mom${hero ? ' hero' : ''}">
+    <button type="button" class="momth" data-play="${esc(m.v)}" data-s="${m.s}" data-c="" aria-label="${esc(t('momWatch'))}"><img loading="lazy" src="${thumb(m.v)}" alt="">
+      <span class="mt">${tsText(m.s)} – ${tsText(m.e)}</span><span class="pl">${ICON.play}</span></button>
+    <div class="mombody">${hero ? `<div class="momch">${clipAv(c, 22)}<b>${esc(c.name)}</b>${c.allow === 'allows' ? `<span class="tag good">${IC.check}${esc(t('pmYes'))}</span>` : ''}</div>` : ''}
+      <q>${esc(label)}</q>
+      <div class="mommeta">${m.c && m.q ? `<span class="chap">${esc(m.c)}</span>` : ''}<span class="pt">${IC.eye}${esc(t('momPoint', {n: m.n}))}</span>${compBadge(m.comp)}</div>
+      ${heatSvg(v.h, v.d, m.s, m.e)}</div>
+    <div class="btns"><button type="button" class="pillbtn red" data-play="${esc(m.v)}" data-s="${m.s}" data-c="">${ICON.play}${esc(t('momWatch'))}</button>
+        <a class="ghost" href="https://www.youtube.com/watch?v=${esc(m.v)}&amp;t=${m.s}s" target="_blank" rel="noopener noreferrer">YouTube ↗</a>
+        <button type="button" class="ghost" data-copytext="${esc(clipPlan(m, c))}">${esc(t('momCopy'))}</button></div></div>`;
+}
+function bestMoments() {   // every creator's moments, the ones who invite clippers and nobody has clipped yet first
+  const out = [];
+  for (const c of clipList()) if (c.allow !== 'forbids') for (const m of c.moments || []) out.push([m, c, m.sc * (c.allow === 'allows' ? 1.3 : 1) * (m.comp === 0 ? 1 : 0.8)]);
+  return out.sort((a, b) => b[2] - a[2]);
+}
+
+/* ---------- creators who invite clippers: found by the scanner's clipping-program searches, plus researched creators who say so ---------- */
+function friendlyList() {
+  const m = new Map();
+  for (const a of (TRENDS || {}).allowed || []) m.set(a.ch, {ch: a.ch, name: a.name, avatar: a.avatar, subs: a.subs, quote: a.quote, where: a.where, vid: a.vid, paid: a.paid});
+  for (const c of clipList()) if (c.allow === 'allows') {
+    const o = m.get(c.ch) || {};
+    m.set(c.ch, Object.assign(o, {ch: c.ch, name: c.name, avatar: c.avatar, subs: c.subs, quote: c.allow_quote, where: c.allow_where, vid: c.allow_vid, paid: c.paid || o.paid, rec: c}));
+  }
+  return [...m.values()].sort((x, y) => y.subs - x.subs);
+}
+function friendlyCard(f) {
+  const video = f.where === 'video' && vidOk(f.vid), src = video ? `https://www.youtube.com/watch?v=${f.vid}` : `https://www.youtube.com/channel/${f.ch}/about`;
+  return `<div class="frc">${clipAv(f, 44)}<div class="frb"><b>${esc(f.name)}</b><small>${esc(t('subscribers', {n: fmt(f.subs)}))}${f.paid ? ` · <span class="heatup">${esc(t('ackPaid'))}</span>` : ''}</small>
+    ${f.quote ? `<q>${esc(f.quote)}</q>` : ''}<div class="frbtn">${f.rec ? `<button type="button" class="ghost" data-clfocus="${esc(f.ch)}">${esc(t('frSee'))}</button>` : `<span class="pbmuted">${esc(t('frQueued'))}</span>`}
+    <a class="ghost" href="${esc(src)}" target="_blank" rel="noopener noreferrer">${esc(t(video ? 'pmInVideo' : 'pmInChannel'))} ↗</a></div></div></div>`;
+}
+
+/* ---------- check any creator: the same checks, run in the browser with the site's key ---------- */
+const nameHit = (name, title) => {
+  const n = String(name || '').toLowerCase(), tl = String(title || '').toLowerCase(), squash = x => x.replace(/[^\p{L}\p{N}]/gu, '');
+  return (squash(n) && squash(tl).includes(squash(n))) || (n.match(/[\p{L}\p{N}]{5,}/gu) || []).some(w => tl.includes(w));
+};
+const TS_RX = /(?<![\d:])(?:(\d{1,2}):)?([0-5]?\d):([0-5]\d)(?![\d:])/g;
+const CHAPTER_RX = /^\s*[\[(]?((?:\d{1,2}:)?[0-5]?\d:[0-5]\d)[\])]?\s*[-–—:|.)]?\s*(\S.{1,79}?)\s*$/;
+const STOPW = new Set(('this that with from have what when they them were your just like about there their would could should because really video videos part full ' +
+  'clip clips shorts short episode official best moment moments funny lmao time times guys going know think people thing things love loved after before while where ' +
+  'which here than then some more most much very into over only even still also back being been dont didnt cant wont youre thats isnt').split(' '));
+const tsSec = m => (+(m[1] || 0)) * 3600 + (+m[2]) * 60 + (+m[3]);
+const wordsOf = (str, drop) => new Set((String(str || '').match(/[^\P{L}]{4,}/gu) || []).map(w => w.toLowerCase()).filter(w => !STOPW.has(w) && !(drop && drop.has(w))));
+const clipMatches = (tokens, titles) => titles.filter(tl => { const sh = [...wordsOf(tl)].filter(w => tokens.has(w)); return sh.length >= 2 || sh.some(w => w.length >= 7); }).length;
+function videoMoments(v, items, titles, nameWords) {   // the same steps as the scanner's video_moments (trends.py)
+  const d = v.d, marks = [], texts = [];
+  for (const it of items) {
+    const sn = ((it.snippet || {}).topLevelComment || {}).snippet || {}, text = sn.textOriginal || sn.textDisplay || '', likes = +sn.likeCount || 0;
+    const secs = [...text.matchAll(TS_RX)].map(tsSec).filter(x => x > 0 && x < d);
+    if (!secs.length) continue;
+    const w = (1 + Math.log2(1 + likes)) / (secs.length > 2 ? secs.length : 1);
+    let clean = text.replace(TS_RX, ' ').replace(/https?:\/\/\S+/g, ' ').replace(/\s+/g, ' ').trim().replace(/^[-–—:|,.\s]+|[-–—:|,.\s]+$/g, '');
+    if (clean.length > 110) clean = clean.slice(0, 110) + '…';
+    texts.push([clean, likes]);
+    secs.forEach(x => marks.push([x, w, texts.length - 1, secs.length <= 2]));
+  }
+  marks.sort((x, y) => x[0] - y[0]);
+  const groups = [];
+  for (const m of marks) { const g = groups[groups.length - 1]; if (g && m[0] - g[0][0] <= 30) g.push(m); else groups.push([m]); }
+  const chaps = [];
+  for (const line of String(v.desc || '').split('\n')) { const m = CHAPTER_RX.exec(line); if (m) { const sec = tsSec([...m[1].matchAll(TS_RX)][0]); if (sec < d) chaps.push([sec, m[2].trim()]); } }
+  if (chaps.length < 2) chaps.length = 0;
+  chaps.sort((x, y) => x[0] - y[0]);
+  const out = [];
+  for (const g of groups) {
+    const core = g.filter(m => m[3]).length ? g.filter(m => m[3]) : g, weight = g.reduce((a2, m) => a2 + m[1], 0), who = new Set(core.map(m => m[2]));
+    if (who.size < 2 && weight < 4) continue;
+    const first = core[0][0], last = core[core.length - 1][0], st = Math.max(0, first - 3), en = Math.min(d, st + 58, Math.max(last + 15, st + 30));
+    const best = [...who].map(i => texts[i]).filter(x => x[0].length >= 3).sort((x, y) => y[1] - x[1])[0], quote = best ? best[0] : '';
+    const chap = (chaps.filter(x => x[0] <= first).pop() || [0, ''])[1];
+    out.push({v: v.id, s: st, e: en, n: who.size, w: Math.round(weight * 10) / 10, q: quote, c: chap.slice(0, 80), comp: titles ? clipMatches(wordsOf(quote + ' ' + chap, nameWords), titles) : null});
+  }
+  const bk = new Array(32).fill(0);
+  marks.forEach(m => { bk[Math.min(31, Math.floor(m[0] / Math.max(d, 1) * 32))] += m[1]; });
+  const top = Math.max(...bk) || 1;
+  return [out, marks.length ? bk.map(x => (x ? Math.min(9, Math.ceil(9 * x / top)) : 0)).join('') : ''];
+}
+const momentScore = (m, views) => Math.round(100 * (1 - Math.exp(-m.w / 8)) * Math.min(1, Math.max(0.3, (Math.log10(Math.max(views, 1)) - 4) / 2.5)) *
+  (m.comp == null ? 0.8 : m.comp === 0 ? 1 : m.comp === 1 ? 0.6 : 0.35));
+const clipScore = c => {
+  const a = Math.min(1, Math.max(0, (Math.log10(Math.max(c.subs, 1)) - 5.5) / 2)), f = 1 - Math.min(1, c.clippers / 25);
+  const v = Math.min(1, Math.max(0, (Math.log10(Math.max(c.clips >= 3 ? c.clip_med : (c.top_views || 1), 1)) - 3.5) / 2.5)) * (c.long30 >= 2 ? 1 : 0.6);
+  return Math.round(100 * (0.35 * a + 0.4 * f + 0.25 * v));
+};
 let CHECKED_CREATOR = null;
 async function checkCreator(raw) {
   const q = chFromInput(raw), box = $('#ccOut'), say = k => { if (box) box.innerHTML = `<p class="pbtip">${esc(t(k))}</p>`; };
@@ -4294,61 +4501,103 @@ async function checkCreator(raw) {
   try {
     const ch = ((await ytApi('channels', Object.assign({part: 'snippet,statistics,contentDetails'}, q.id ? {id: q.id} : {forHandle: q.handle}))).items || [])[0];
     if (!ch) return say('acNone');
-    const up = ((ch.contentDetails || {}).relatedPlaylists || {}).uploads;
-    let vids = [];
+    const sn = ch.snippet || {}, up = ((ch.contentDetails || {}).relatedPlaylists || {}).uploads, longs = [], descs = [];
     if (up) {
-      const ids = ((await ytApi('playlistItems', {part: 'contentDetails', playlistId: up, maxResults: 12})).items || []).map(x => x.contentDetails && x.contentDetails.videoId).filter(Boolean);
-      if (ids.length) vids = ((await ytApi('videos', {part: 'snippet', id: ids.join(',')})).items || []).map(v => ({id: v.id, desc: (v.snippet || {}).description || ''}));
+      const ids = ((await ytApi('playlistItems', {part: 'contentDetails', playlistId: up, maxResults: 25})).items || []).map(x => x.contentDetails && x.contentDetails.videoId).filter(Boolean);
+      if (ids.length) for (const v of (await ytApi('videos', {part: 'snippet,contentDetails,statistics', id: ids.join(',')})).items || []) {
+        const vs = v.snippet || {}, d = parseDur((v.contentDetails || {}).duration), pub = Date.parse(vs.publishedAt || '') / 1000 || 0;
+        descs.push({id: v.id, desc: vs.description || ''});
+        if (d >= 240 && nowTs() - pub <= 30 * 86400) longs.push({id: v.id, t: String(vs.title || '').slice(0, 140), v: +(v.statistics || {}).viewCount || 0, d, p: pub, desc: vs.description || ''});
+      }
     }
-    const sn = ch.snippet || {};
-    CHECKED_CREATOR = Object.assign({ch: ch.id, name: String(sn.title || ch.id).slice(0, 80), avatar: ((sn.thumbnails || {}).default || {}).url || '', subs: +(ch.statistics || {}).subscriberCount || 0},
-      clipPermission(sn.description, vids));
+    const perm = clipPermission(sn.description, descs.slice(0, 12)), newest = longs.slice().sort((x, y) => y.p - x.p)[0];
+    CHECKED_CREATOR = Object.assign({ch: ch.id, name: String(sn.title || ch.id).slice(0, 80), avatar: ((sn.thumbnails || {}).default || {}).url || '', subs: +(ch.statistics || {}).subscriberCount || 0,
+      long30: longs.length, long_hours: Math.round(longs.reduce((x, v) => x + v.d, 0) / 360) / 10, longs, latest: newest || null, top_views: Math.max(0, ...longs.map(v => v.v)), mine: true},
+      perm, {paid: perm.allow === 'allows' && PAID_RX.test(perm.allow_quote)});
     renderChecked();
+    if (isPro() && longs.length) await checkedMoments(CHECKED_CREATOR);
   } catch (e) { say(e && e.quota ? 'kQuota' : 'acFail'); }
 }
+async function checkedMoments(c) {   // reads the top comments of their two biggest recent long videos (1 unit each)
+  c.mbusy = true; renderChecked();
+  const nameWords = wordsOf(c.name), moments = [], mvids = {};
+  for (const v of c.longs.slice().sort((x, y) => y.v - x.v).slice(0, 2)) {
+    let items = [];
+    try { items = (await ytApi('commentThreads', {part: 'snippet', videoId: v.id, order: 'relevance', maxResults: 100, textFormat: 'plainText'})).items || []; }
+    catch (e) { if (e && e.quota) break; }   // comments turned off
+    const [ms, heat] = videoMoments(v, items, c.ct || null, nameWords);
+    ms.forEach(m => { m.sc = momentScore(m, v.v); });
+    moments.push(...ms.sort((x, y) => y.sc - x.sc).slice(0, 3));
+    mvids[v.id] = {t: v.t, v: v.v, d: v.d, p: v.p, h: heat};
+  }
+  Object.assign(c, {moments: moments.sort((x, y) => y.sc - x.sc).slice(0, 6), mvids, mbusy: false});
+  if (CHECKED_CREATOR === c) renderChecked();
+}
+async function checkedCompetition() {   // one search: the Shorts other channels posted about them in the last 30 days
+  const c = CHECKED_CREATOR;
+  if (!c || c.cbusy) return;
+  if (limited() && !takeFreeSearch()) { toast(t('sLimit')); return; }
+  c.cbusy = true; renderChecked();
+  try {
+    const since = new Date(Date.now() - 30 * 86400e3).toISOString().replace(/\.\d+Z$/, 'Z');
+    const ids = ((await ytApi('search', {part: 'id', type: 'video', videoDuration: 'short', order: 'viewCount', q: c.name, publishedAfter: since, maxResults: 50})).items || [])
+      .map(x => x.id && x.id.videoId).filter(Boolean);
+    const shorts = !ids.length ? [] : ((await ytApi('videos', {part: 'snippet,statistics,contentDetails', id: ids.join(',')})).items || [])
+      .filter(v => (v.snippet || {}).channelId !== c.ch && parseDur((v.contentDetails || {}).duration) <= 180)
+      .map(v => ({id: v.id, t: String((v.snippet || {}).title || '').slice(0, 140), v: +(v.statistics || {}).viewCount || 0, ch: (v.snippet || {}).channelId, cht: (v.snippet || {}).channelTitle || ''}));
+    const named = shorts.filter(x => nameHit(c.name, x.t)), clips = (named.length >= 3 ? named : shorts).sort((x, y) => y.v - x.v), views = clips.map(x => x.v);
+    Object.assign(c, {clips: clips.length, clippers: new Set(clips.map(x => x.ch)).size, clip_med: views.length ? median(views) : 0, clip_top: clips[0] || null, ct: clips.slice(0, 12).map(x => x.t)});
+    c.ok = [c.subs >= 1e6, c.clippers <= 8, viralOnly(c) && c.long30 >= 2];
+    c.score = clipScore(c);
+    const nameWords = wordsOf(c.name);
+    (c.moments || []).forEach(m => { m.comp = clipMatches(wordsOf(m.q + ' ' + m.c, nameWords), c.ct); m.sc = momentScore(m, ((c.mvids || {})[m.v] || {}).v || 0); });
+  } catch (e) {
+    if (limited()) refundFreeSearch();
+    toast(t(e && e.quota ? 'kQuota' : 'acFail'));
+  }
+  c.cbusy = false; renderChecked();
+}
 function renderChecked() {
-  const box = $('#ccOut'), c = CHECKED_CREATOR;
-  if (!box || !c) return;
-  const pic = /^https:\/\/yt3\.(ggpht|googleusercontent)\.com\//.test(c.avatar || '') ? `<img src="${esc(c.avatar)}" alt="">` : '';
-  box.innerHTML = `<article class="clcard"><div class="clhead"><span class="av" style="width:48px;height:48px;background:var(--surface2)">${pic}</span>
-    <div class="clname"><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))}</small></div>
-    <a class="pillbtn" href="${chUrl(c.ch)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('clChannel'))}</a></div>${permBlock(c)}${checklist(c)}</article>`;
+  const box = $('#ccOut');
+  if (box && CHECKED_CREATOR) box.innerHTML = clipCard(CHECKED_CREATOR);
 }
 
 const clipList = () => ((TRENDS || {}).clips || []).filter(c => !c.small && Array.isArray(c.ok));
-const fits3 = c => c.ok.every(Boolean);
+const fits3 = c => Array.isArray(c.ok) && c.ok.every(Boolean);
 function clipCard(c) {
-  const pic = /^https:\/\/yt3\.(ggpht|googleusercontent)\.com\//.test(c.avatar || '') ? `<img src="${esc(c.avatar)}" alt="">` : '';
-  const chk = (ok, k, val) => `<div class="clchk ${ok ? 'ok' : ''}">${ok ? IC.check : '<span class="dot0"></span>'}<span><b>${esc(t(k))}</b><small>${esc(val)}</small></span></div>`;
-  const few = c.clips ? t('clFewV', {k: c.clippers, n: c.clips}) : t('clFewNone');
-  const vir = (c.clips >= 3 ? t('clVirV', {v: fmt(c.clip_med)}) : t('clVirTop', {v: fmt(c.top_views)})) + ' · ' + t('clMat', {n: c.long30, h: c.long_hours});
   if (c.clip_top) YT_ITEMS.set(c.clip_top.id, c.clip_top);
   if (c.latest) YT_ITEMS.set(c.latest.id, Object.assign({cht: c.name}, c.latest));
-  return `<article class="clcard">
-    <div class="clhead"><span class="av" style="width:48px;height:48px;background:var(--surface2)">${pic}</span>
-      <div class="clname"><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))}${(c.regions || []).length ? ' · ' + esc(c.regions.join(' · ')) : ''}</small></div>
-      <div class="clscore ${fits3(c) ? 'all' : ''}"><b>${c.score}</b><small>${esc(t(fits3(c) ? 'clAll3' : 'clScore'))}</small></div></div>
-    ${permBlock(c)}
-    <div class="clchks">${chk(c.ok[0], 'clAT', t('clAudV', {n: fmt(c.subs)}))}${chk(c.ok[1], 'clFT', few)}${chk(c.ok[2], 'clVT', vir)}</div>
+  const sub = [t('subscribers', {n: fmt(c.subs)})].concat(c.regions || []).concat(c.found_by === 'invite' ? [t('clByInvite')] : []).join(' · ');
+  const score = c.ok ? `<div class="clscore ${fits3(c) ? 'all' : ''}"><b>${c.score}</b><small>${esc(t(fits3(c) ? 'clAll3' : 'clScore'))}</small></div>`
+    : `<button type="button" class="pillbtn" data-cccomp ${c.cbusy ? 'disabled' : ''}>${IC.search}${esc(t(c.cbusy ? 'ccBusy' : 'ccComp'))}</button>`;
+  const moms = c.moments || [];
+  const momHtml = c.mine && !isPro() ? `<div class="clmoms"><h5>${IC.scissors}${esc(t('momHere'))} ${proTag()}</h5>${lockCard(t('momT'))}</div>`
+    : moms.length ? `<div class="clmoms"><h5>${IC.scissors}${esc(t('momHere'))} ${proTag()}</h5>${gateList(moms.slice(0, 3).map(m => momentCard(m, c, false)), t('momT'), 1).join('')}</div>` : '';
+  return `<article class="clcard" id="cl-${esc(c.ch)}">
+    <div class="clhead">${clipAv(c, 48)}<div class="clname"><b>${esc(c.name)}</b><small>${esc(sub)}</small></div>${score}</div>
+    ${checkList(c)}${momHtml}
     <div class="clvids">${c.latest ? `<button type="button" class="clv" data-play="${esc(c.latest.id)}" data-c=""><img loading="lazy" src="${thumb(c.latest.id)}" alt=""><small>${esc(t('clLatest'))}</small></button>` : ''}
       ${c.clip_top ? `<button type="button" class="clv short" data-play="${esc(c.clip_top.id)}" data-c=""><img loading="lazy" src="${thumb(c.clip_top.id)}" alt=""><small>${esc(t('clTopClip', {v: fmt(c.clip_top.v)}))}</small></button>` : ''}</div>
     <div class="btns"><a class="pillbtn" href="${chUrl(c.ch)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('clChannel'))}</a>
-      <a class="ghost" href="https://www.youtube.com/results?search_query=${encodeURIComponent(c.name + ' clips')}&sp=EgIYAQ%253D%253D" target="_blank" rel="noopener noreferrer">${IC.search}${esc(t('clSearch'))}</a></div>
-    ${checklist(c)}
+      <a class="ghost" href="https://www.youtube.com/results?search_query=${encodeURIComponent(c.name + ' clips')}&amp;sp=EgIYAQ%253D%253D" target="_blank" rel="noopener noreferrer">${IC.search}${esc(t('clSearch'))}</a></div>
   </article>`;
 }
 function clipsTab() {
-  const all = clipList();
-  if (!all.length) return emptyBox(t(STATIC ? 'clWait' : 'ytWeb'));
+  const all = clipList(), fr = friendlyList(), bm = bestMoments();
+  if (!all.length && !fr.length) return emptyBox(t(STATIC ? 'clWait' : 'ytWeb'));
   const reg = S.creg || 'all', only = !!S.call3, allowOnly = !!S.callow;
   const list = all.filter(c => (reg === 'all' || (c.regions || []).includes(reg)) && (!only || fits3(c)) && (!allowOnly || c.allow === 'allows'))
-    .sort((a, b) => (a.allow === 'forbids') - (b.allow === 'forbids') || b.ok.filter(Boolean).length - a.ok.filter(Boolean).length || b.score - a.score);
-  const mine = Object.entries(clipChecks()).filter(([, r]) => r && (r.c || []).some(Boolean));
+    .sort((x, y) => (x.allow === 'forbids') - (y.allow === 'forbids') || (y.allow === 'allows') - (x.allow === 'allows') ||
+      autoChecks(y).filter(r => r[0] === 'yes').length - autoChecks(x).filter(r => r[0] === 'yes').length || y.score - x.score);
+  const frShown = S.cfall ? fr : fr.slice(0, 6);
   return `<p class="pbtip">${esc(t('clD'))}</p>
-    ${mine.length ? `<div class="twrow"><b>${esc(t('ckMine'))}</b>${mine.map(([ch, r]) => { const d = r.c.filter(Boolean).length; return `<span class="chip ${d === 4 ? 'on' : ''}">${d === 4 ? IC.check : ''}${esc(r.n || ch)} <span class="pbmuted">${d}/4</span></span>`; }).join('')}</div>` : ''}
+    <section class="momsec"><div class="momhead"><span class="ico">${IC.scissors}</span><div><h3>${esc(t('momT'))} ${proTag()}</h3><p>${esc(t('momD'))}</p></div></div>
+      ${bm.length ? `<div class="rail momrail">${gateList(bm.slice(0, 12).map(([m, c]) => momentCard(m, c, true)), t('momT'), 1).join('')}</div>` : `<p class="pbtip">${esc(t('momWait'))}</p>`}</section>
+    <section class="frsec"><div class="momhead"><span class="ico good">${IC.check}</span><div><h3>${esc(t('frT'))} <span class="pbmuted">${fr.length || ''}</span></h3><p>${esc(t('frD'))}</p></div></div>
+      ${fr.length ? `<div class="frgrid">${frShown.map(friendlyCard).join('')}</div>${fr.length > 6 ? `<button type="button" class="more" data-cfall>${esc(S.cfall ? t('frLess') : t('frAll', {n: fr.length}))}</button>` : ''}` : `<p class="pbtip">${esc(t('frNone'))}</p>`}</section>
     <div class="ccbox"><h3 class="subhead" style="margin:0 0 4px">${esc(t('ccT'))}</h3><p class="pbtip" style="margin:0 0 8px">${esc(t('ccD'))}</p>
       <div class="addch"><input id="ccIn" placeholder="${esc(t('acPh'))}" autocomplete="off"><button type="button" class="pillbtn red" data-ccgo>${esc(t('ccGo'))}</button></div><div id="ccOut"></div></div>
-    <div class="cl3">${['clA', 'clF', 'clV'].map((k, i) => `<div><b>${i + 1}. ${esc(t(k + 'T'))}</b><small>${esc(t(k + 'D'))}</small></div>`).join('')}</div>
+    <h3 class="subhead">${esc(t('clAllT'))}</h3>
     <div class="ytbar"><div class="seg">${[['all', 'topicAll'], ['TH', 'cTH'], ['US', 'cUS']].map(([r, k]) => `<button type="button" data-creg="${r}" aria-pressed="${reg === r}">${esc(t(k))}</button>`).join('')}</div>
       <button type="button" class="chip" data-call3 aria-pressed="${only}">${esc(t('clOnly3'))}</button>
       <button type="button" class="chip" data-callow aria-pressed="${allowOnly}">${esc(t('clAllow'))}</button></div>
@@ -4872,6 +5121,15 @@ document.addEventListener('click', async e => {
   if (creg) { S.creg = creg.dataset.creg; saveState(); renderContent(); return; }
   if (x.closest('[data-call3]')) { S.call3 = !S.call3; saveState(); renderContent(); return; }
   if (x.closest('[data-callow]')) { S.callow = !S.callow; saveState(); renderContent(); return; }
+  if (x.closest('[data-cfall]')) { S.cfall = !S.cfall; saveState(); renderContent(); return; }
+  if (x.closest('[data-cccomp]')) { checkedCompetition(); return; }
+  const clf = x.closest('[data-clfocus]');
+  if (clf) {   // jump to that creator's research, clearing filters that hide it
+    Object.assign(S, {creg: 'all', call3: false, callow: false}); saveState(); renderContent();
+    const el = document.getElementById('cl-' + clf.dataset.clfocus);
+    if (el) { el.scrollIntoView({block: 'center', behavior: 'smooth'}); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1800); }
+    return;
+  }
   if (x.closest('[data-ccgo]')) { const el = $('#ccIn'); checkCreator(el ? el.value : ''); return; }
   const tc = x.closest('[data-tcat]');
   if (tc) { S.tcat = tc.dataset.tcat; saveState(); renderContent(); return; }
@@ -4902,7 +5160,7 @@ document.addEventListener('click', async e => {
   const play = x.closest('[data-play]');
   if (play) {
     if (e.ctrlKey || e.metaKey || e.shiftKey || e.button || location.protocol === 'file:') return;   // new tab, or a saved file (YouTube won't play embeds there)
-    e.preventDefault(); openPlayer(play.dataset.play, play.dataset.c); return;
+    e.preventDefault(); openPlayer(play.dataset.play, play.dataset.c, +play.dataset.s || 0); return;
   }
   if (x.closest('[data-closeplayer]')) $('#player').close();
   const och = x.closest('[data-open-ch]');
@@ -5009,16 +5267,6 @@ document.addEventListener('change', e => {
   S[map[id][0]] = map[id][1]; shown.channels = 15; shown.videos = 60; shown.live = 60; saveState(); render();
 });
 document.addEventListener('change', e => {
-  const ck = e.target.closest && e.target.closest('[data-clipchk]');
-  if (ck) {   // the "Before you clip" checklist, saved per creator (and synced when signed in)
-    const all = clipChecks(), r = all[ck.dataset.clipchk] || {c: [false, false, false, false]};
-    r.c[+ck.dataset.i] = ck.checked; r.n = ck.dataset.n; r.t = Date.now();
-    all[ck.dataset.clipchk] = r;
-    LS.set('radar.clipchk', all);
-    const y = window.scrollY;
-    renderContent(); renderChecked(); window.scrollTo(0, y);
-    return;
-  }
   if (e.target.id === 'tyCat') { S.tycat = e.target.value; saveState(); renderContent(); }
   if (e.target.id === 'btTopic') { S.bttopic = e.target.value; saveState(); renderContent(); }
 });
