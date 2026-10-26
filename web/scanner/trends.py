@@ -11,6 +11,7 @@ Whatever fails, the previous feeds are kept, so the site never loses its trends 
 import argparse
 import datetime as dt
 import json
+import math
 import os
 import re
 import sys
@@ -105,6 +106,113 @@ SKIP_WIKI = re.compile(r"^(Main_Page$|หน้าหลัก$|Special:|Wikiped
 ADULT = re.compile(r"xxx|porn|xvideos|xnxx|onlyfans|hentai|nude|เย็ด|โป๊|ควย|^หี$", re.I)   # bots and adult pages crowd these lists
 
 
+# ---------- clip opportunities ----------
+CLIP_PER_RUN = int(os.environ.get("CLIP_PER_RUN", "6"))     # creators researched per run (one YouTube search each)
+CLIP_PER_DAY = int(os.environ.get("CLIP_PER_DAY", "30"))    # Google allows about 100 searches a day; the scanner uses at most 45
+CLIP_KEEP_DAYS, CLIP_MIN_SUBS = 7, 300_000
+NOT_CLIPPABLE = {"music", "news", "sports", "animation"}    # labels, newsrooms, leagues and studios strike re-uploads
+BRANDS = re.compile(r"vevo|records|official|music|news|\btv\b|studios?|pictures|films?\b|netflix|disney|marvel|warner|universal|sony|hbo|paramount|"
+                    r"\bnba\b|\bnfl\b|fifa|uefa|premier league|espn|\bbbc\b|\bcnn\b|\bfox\b|ch3|one31|gmm|workpoint|thairath|amarin|\bch ?7|mono29|pptv|true4u|"
+                    r"channel ?[0-9]|ช่อง ?[0-9]|ไทยรัฐ|อมรินทร์|เวิร์คพอยท์", re.I)
+INVITES = re.compile(r"clip(s|ping)? (program|campaign)|clippers?\b|feel free to clip|you can clip|clip my (videos|streams)|whop\.com|vyro|content rewards", re.I)
+
+
+def pacific_day(ts):
+    try:
+        from zoneinfo import ZoneInfo
+        return dt.datetime.fromtimestamp(ts, ZoneInfo("America/Los_Angeles")).strftime("%Y-%m-%d")
+    except Exception:
+        return dt.datetime.fromtimestamp(ts - 8 * 3600, dt.timezone.utc).strftime("%Y-%m-%d")
+
+
+def clip_candidates(regions):
+    """Creators behind long videos on the trending charts (the biggest video per channel), minus brands and broadcasters."""
+    found = {}
+    for region, cats in (regions or {}).items():
+        for cat, items in cats.items():
+            for x in items:
+                if not x.get("ch") or (x.get("d") or 0) < 240:
+                    continue
+                c = found.setdefault(x["ch"], {"ch": x["ch"], "name": x.get("cht") or "", "regions": set(), "cats": set(), "video": x})
+                c["regions"].add(region)
+                c["cats"].add(cat)
+                if (x.get("v") or 0) > (c["video"].get("v") or 0):
+                    c["video"] = x
+    return [c for c in found.values() if not (c["cats"] & NOT_CLIPPABLE) and not BRANDS.search(c["name"])]
+
+
+def name_hit(name, title):
+    n = re.sub(r"[^\w]", "", (name or "").lower())
+    words = [w for w in re.findall(r"\w{5,}", (name or "").lower())]
+    tl = (title or "").lower()
+    return (n and n in re.sub(r"[^\w]", "", tl)) or any(w in tl for w in words)
+
+
+def clip_scores(c):
+    """The three checks: a big audience, few clippers, and clips that go viral (with enough long videos to clip from)."""
+    big = c["subs"] >= 1_000_000
+    few = c["clippers"] <= 8
+    viral = (c["clip_med"] >= 50_000 if c["clips"] >= 3 else (c.get("top_views") or 0) >= 1_000_000) and c["long30"] >= 2
+    a = min(1, max(0, (math.log10(max(c["subs"], 1)) - 5.5) / 2))
+    f = 1 - min(1, c["clippers"] / 25)
+    v = min(1, max(0, (math.log10(max(c["clip_med"] if c["clips"] >= 3 else (c.get("top_views") or 1), 1)) - 3.5) / 2.5)) * (1 if c["long30"] >= 2 else 0.6)
+    return [big, few, viral], round(100 * (0.35 * a + 0.4 * f + 0.25 * v))
+
+
+def research_clips(yt, cands, prev_clips, quota, t):
+    """Researches the next few creators (one Shorts search each) and keeps every result for a week."""
+    keep = {c["ch"]: c for c in prev_clips if t - c.get("checked", 0) < CLIP_KEEP_DAYS * 86400}
+    todo = sorted((c for c in cands if c["ch"] not in keep), key=lambda c: -(c["video"].get("v") or 0))
+    todo = todo[:max(0, min(CLIP_PER_RUN, CLIP_PER_DAY - quota["used"]))]
+    if not todo:
+        return list(keep.values())
+    info = {it["id"]: it for it in yt.call("channels", part="snippet,statistics,contentDetails", id=",".join(c["ch"] for c in todo)).get("items", [])}
+    since = dt.datetime.fromtimestamp(t - 30 * 86400, dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    for c in todo:
+        it = info.get(c["ch"])
+        if not it:
+            continue
+        sn, st = it.get("snippet") or {}, it.get("statistics") or {}
+        subs = 0 if st.get("hiddenSubscriberCount") else int(st.get("subscriberCount") or 0)
+        name = sn.get("title") or c["name"]
+        if subs < CLIP_MIN_SUBS:
+            keep[c["ch"]] = {"ch": c["ch"], "checked": int(t), "small": True}
+            continue
+        quota["used"] += 1
+        found = yt.call("search", part="id", type="video", videoDuration="short", order="viewCount", q=name, publishedAfter=since, maxResults=50)
+        ids = [x["id"]["videoId"] for x in found.get("items", []) if x.get("id", {}).get("videoId")]
+        shorts = []
+        if ids:
+            for v in yt.call("videos", part="snippet,statistics,contentDetails", id=",".join(ids)).get("items", []):
+                vs, vt = v.get("snippet") or {}, v.get("statistics") or {}
+                if vs.get("channelId") != c["ch"] and parse_duration((v.get("contentDetails") or {}).get("duration")) <= 180:
+                    shorts.append({"id": v["id"], "t": (vs.get("title") or "")[:140], "v": int(vt.get("viewCount") or 0), "ch": vs.get("channelId"), "cht": (vs.get("channelTitle") or "")[:80]})
+        named = [x for x in shorts if name_hit(name, x["t"])]
+        clips = sorted(named if len(named) >= 3 else shorts, key=lambda x: -x["v"])
+        views = sorted(x["v"] for x in clips)
+        uploads = (((it.get("contentDetails") or {}).get("relatedPlaylists") or {}).get("uploads"))
+        long30, hours, latest = 0, 0.0, None
+        if uploads:
+            pl = yt.call("playlistItems", part="contentDetails", playlistId=uploads, maxResults=25).get("items", [])
+            vids = [x["contentDetails"]["videoId"] for x in pl if x.get("contentDetails", {}).get("videoId")]
+            if vids:
+                for v in yt.call("videos", part="snippet,contentDetails,statistics", id=",".join(vids)).get("items", []):
+                    d, pub = parse_duration((v.get("contentDetails") or {}).get("duration")), iso_to_ts((v.get("snippet") or {}).get("publishedAt") or "") or 0
+                    if d >= 240 and t - pub <= 30 * 86400:
+                        long30 += 1
+                        hours += d / 3600
+                        if not latest or pub > latest["p"]:
+                            latest = {"id": v["id"], "t": ((v.get("snippet") or {}).get("title") or "")[:140], "v": int((v.get("statistics") or {}).get("viewCount") or 0), "p": int(pub)}
+        rec = {"ch": c["ch"], "name": name[:80], "avatar": ((sn.get("thumbnails") or {}).get("default") or {}).get("url", ""), "subs": subs,
+               "regions": sorted(c["regions"]), "cats": sorted(c["cats"]), "top": {k: c["video"].get(k) for k in ("id", "t", "v")}, "top_views": c["video"].get("v") or 0,
+               "clips": len(clips), "clippers": len({x["ch"] for x in clips}), "clip_med": views[len(views) // 2] if views else 0,
+               "clip_top": clips[0] if clips else None, "long30": long30, "long_hours": round(hours, 1), "latest": latest,
+               "invites": bool(INVITES.search(sn.get("description") or "")), "checked": int(t)}
+        rec["ok"], rec["score"] = clip_scores(rec)
+        keep[c["ch"]] = rec
+    return list(keep.values())
+
+
 def now():
     return time.time() + float(os.environ.get("SCAN_TIME_OFFSET", "0"))
 
@@ -197,7 +305,10 @@ def main():
     prev = load_prev(os.environ.get("PREV_TRENDS_URL", ""))
     yt_prev, wiki_prev = prev.get("yt") or {}, prev.get("wiki") or {}
     seen = {k: v for k, v in (prev.get("seen") or {}).items() if isinstance(v, (int, float)) and t - v < SEEN_DAYS * 86400}
-    out = {"generated": int(t), "yt": yt_prev, "wiki": wiki_prev, "hot": prev.get("hot") or {}}
+    out = {"generated": int(t), "yt": yt_prev, "wiki": wiki_prev, "hot": prev.get("hot") or {}, "clips": prev.get("clips") or []}
+    clipq = prev.get("clipq") or {}
+    if clipq.get("day") != pacific_day(t):
+        clipq = {"day": pacific_day(t), "used": 0}
     if args.data:
         hot = hot_trends(args.data, t)
         if hot is not None:
@@ -217,6 +328,16 @@ def main():
         print(f"YouTube charts: {yt.used} units")
     elif not key:
         print("no YT_API_KEY: keeping the previous YouTube charts", file=sys.stderr)
+    if key:   # clip opportunities: a few more creators each run
+        cy = YouTube(key, int(os.environ.get("CLIP_BUDGET", "80")))
+        try:
+            out["clips"] = research_clips(cy, clip_candidates((out["yt"] or {}).get("regions")), out["clips"], clipq, t)
+        except QuotaExceeded as e:
+            print(f"clip research stopped: {e}", file=sys.stderr)
+        except Exception as e:   # keep what was researched before
+            print(f"clip research failed: {type(e).__name__}: {e}", file=sys.stderr)
+        print(f"clip research: {cy.searches} searches, {cy.used} units")
+    out["clipq"] = clipq
 
     if t - (wiki_prev.get("checked") or 0) >= WIKI_EVERY:
         try:
@@ -229,7 +350,8 @@ def main():
     out["seen"] = seen
     Path(args.out).write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     charts = sum(len(v) for v in (out["yt"].get("regions") or {}).values())
-    print(f"trends: {charts} YouTube charts, Wikipedia {', '.join(k for k in WIKIS if k in out['wiki']) or 'none'}, {len(out['hot'])} hot trends")
+    print(f"trends: {charts} YouTube charts, Wikipedia {', '.join(k for k in WIKIS if k in out['wiki']) or 'none'}, {len(out['hot'])} hot trends, "
+          f"{sum(1 for c in out['clips'] if not c.get('small'))} clip creators")
 
 
 if __name__ == "__main__":

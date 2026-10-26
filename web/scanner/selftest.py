@@ -79,6 +79,14 @@ class Fake(BaseHTTPRequestHandler):
         if path == "videos" and q.get("chart"):   # YouTube's trending chart; one category has no chart in this country
             if q.get("videoCategoryId") == ["28"]:
                 return self.reply(404, {"error": {"message": "The requested video chart is not supported or is not available."}})
+            if WORLD.get("longchart"):   # a big creator's long video on the chart, plus a record label that must be skipped
+                if q.get("videoCategoryId", [""])[0] in ("10", "25", "17", "1"):   # music, news, sports and film charts don't list them
+                    return self.reply(200, {"items": []})
+                return self.reply(200, {"items": [
+                    {"id": "longvideo01", "snippet": {"title": "Big Quiet podcast", "channelId": cid(2), "channelTitle": "Big Quiet Channel", "publishedAt": NOW.strftime("%Y-%m-%dT%H:%M:%SZ")},
+                     "statistics": {"viewCount": "2500000"}, "contentDetails": {"duration": "PT45M"}},
+                    {"id": "longvideo02", "snippet": {"title": "New single", "channelId": cid(7), "channelTitle": "Some Records", "publishedAt": NOW.strftime("%Y-%m-%dT%H:%M:%SZ")},
+                     "statistics": {"viewCount": "9000000"}, "contentDetails": {"duration": "PT4M30S"}}]})
             order = ["tA", "tB", "tC"] if not WORLD["extra"] else ["tC", "tA", "tD"]
             return self.reply(200, {"items": [{"id": (i + "_" * 11)[:11], "snippet": {"title": f"Trending {i}", "channelId": cid(9), "channelTitle": "Chart Channel",
                                                                                       "publishedAt": NOW.strftime("%Y-%m-%dT%H:%M:%SZ")},
@@ -101,7 +109,7 @@ class Fake(BaseHTTPRequestHandler):
                     items.append({"id": c, "snippet": {"title": CHANNELS[c]["name"], "customUrl": "@" + CHANNELS[c]["name"].replace(" ", "").lower(),
                                                        "description": "A test channel about cats", "thumbnails": {"medium": {"url": "https://yt3.ggpht.com/test=s240"}},
                                                        "publishedAt": "2026-08-01T00:00:00Z"},
-                                  "statistics": {"subscriberCount": str(CHANNELS[c]["subs"])}})
+                                  "statistics": {"subscriberCount": str(CHANNELS[c]["subs"])}, "contentDetails": {"relatedPlaylists": {"uploads": "UU" + c[2:]}}})
             return self.reply(200, {"items": items})
         if path == "channelSections":   # channel 1 features channel 2 (already known, so nothing new is added)
             ch = q["channelId"][0]
@@ -251,6 +259,26 @@ def main():
         assert t5["hot"] == hot, "without this run's data the previous hot list is kept"
         assert t3["yt"]["regions"] == t2["yt"]["regions"], "a refused key keeps the previous charts"
         print(f"trends OK: {sum(len(v) for v in t1['yt']['regions'].values())} charts, rank changes tracked, Wikipedia filtered, bad key keeps old charts, {len(hot)} hot trends")
+
+        # clip opportunities: a big creator on the charts, how many channels clip them, how their clips do
+        WORLD.update(longchart=True)
+        t6, f6 = run_trends("testkey", prev=Path(tmp) / "trends18000testkey.json", offset=7 * 3600)
+        clips = [c for c in t6["clips"] if not c.get("small")]
+        assert [c["name"] for c in clips] == ["Big Quiet Channel"], [c.get("name") for c in t6["clips"]]   # the record label is never researched
+        bq = clips[0]
+        assert bq["subs"] == 5000000 and bq["clippers"] == 1 and bq["clips"] >= 3, bq   # channel 1's Shorts are the only clips found
+        assert bq["clip_top"]["ch"] == cid(1) and bq["clip_med"] > 0 and bq["top"]["id"] == "longvideo01", bq
+        assert bq["ok"][0] and bq["ok"][1] and 0 < bq["score"] <= 100, (bq["ok"], bq["score"])   # big audience and few clippers
+        assert t6["clipq"]["used"] == 1, t6["clipq"]
+        t7, _ = run_trends("testkey", prev=f6, offset=7 * 3600 + 60)
+        assert t7["clipq"]["used"] == 1 and t7["clips"] == t6["clips"], "a creator researched this week isn't searched again"
+        WORLD.update(longchart=False)
+        sys.path.insert(0, str(HERE))
+        import trends as trends_mod
+        cands = trends_mod.clip_candidates({"US": {"music": [{"ch": "UCa", "cht": "Star", "d": 900, "v": 1}], "games": [{"ch": "UCb", "cht": "Gamer Joe", "d": 1800, "v": 5},
+                                                                                                                       {"ch": "UCc", "cht": "Workpoint TV", "d": 1800, "v": 9}, {"ch": "UCd", "cht": "Joe Clips", "d": 50, "v": 9}]}})
+        assert [c["ch"] for c in cands] == ["UCb"], [c["ch"] for c in cands]   # no music charts, broadcasters or Shorts-only entries
+        print(f"clip finder OK: researched {bq['name']} ({bq['clippers']} clipper, score {bq['score']}), skipped labels and broadcasters, one search per creator per week")
     print("ALL CHECKS PASSED")
 
 

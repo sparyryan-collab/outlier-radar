@@ -809,6 +809,37 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .pf small{color:var(--muted);font-size:12.5px;line-height:1.45}
 .pctbl{max-width:640px}
 .pctbl td:nth-child(n+2),.pctbl th:nth-child(n+2){text-align:center;width:70px}
+/* ---- clip finder ---- */
+.cl3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 12px;max-width:960px}
+.cl3 div{background:var(--surface);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.cl3 small{color:var(--muted);font-size:12px;line-height:1.4}
+.clwarn{max-width:960px;margin:0 0 14px}
+.clgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.clcard{background:var(--card);box-shadow:0 0 0 1px var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.clhead{display:flex;gap:12px;align-items:center}
+.clname{flex:1;min-width:0;display:flex;flex-direction:column}
+.clname b{font-size:15.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.clname small{color:var(--muted);font-size:12px}
+.clscore{display:flex;flex-direction:column;align-items:center;min-width:64px;border-radius:12px;padding:6px 8px;background:var(--surface)}
+.clscore b{font-size:20px;line-height:1.1;font-variant-numeric:tabular-nums}
+.clscore small{font-size:10.5px;color:var(--muted);text-align:center}
+.clscore.all{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good)}
+.clscore.all small{color:var(--good)}
+.clinv{align-self:flex-start;display:inline-flex;gap:4px;align-items:center}
+.clinv svg.i{width:13px;height:13px}
+.clchks{display:flex;flex-direction:column;gap:6px}
+.clchk{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--muted)}
+.clchk b{display:block;color:var(--muted);font-weight:600}
+.clchk small{font-size:12px}
+.clchk.ok{color:var(--text)}
+.clchk.ok b{color:var(--text)}
+.clchk.ok svg.i{color:var(--good);flex:none;margin-top:1px}
+.clchk .dot0{width:16px;height:16px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--line);flex:none;margin-top:1px}
+.clvids{display:flex;gap:8px}
+.clv{border:0;padding:0;background:none;display:flex;flex-direction:column;gap:4px;text-align:left}
+.clv img{width:150px;height:84px;object-fit:cover;border-radius:8px;background:var(--surface)}
+.clv.short img{width:56px;height:84px}
+.clv small{font-size:11px;color:var(--muted);max-width:150px}
 /* ---- add channel, alerts, AI writer ---- */
 .addch{display:flex;gap:8px;max-width:640px;margin:4px 0 6px}
 .addch input{flex:1;min-width:0;height:40px;padding:0 14px;border:1px solid var(--line);border-radius:20px;background:var(--bg);outline:none}
@@ -958,6 +989,8 @@ svg.i{width:16px;height:16px;flex:none;vertical-align:-3px}
   .nfbar{width:56px}
   .tool{padding:14px}
   .prohero h1{font-size:24px}
+  .cl3{grid-template-columns:1fr}
+  .clgrid{grid-template-columns:1fr}
   .rail .vcard .avlink,.vgrid .vcard .avlink{display:none}
   .vmeta{margin-top:8px}
   .vt{font-size:13.5px;line-height:1.35}
@@ -1615,6 +1648,32 @@ Object.assign(T.th, {
   aiPro: 'AI ช่วยคิดไอเดียเป็นส่วนหนึ่งของ Pro', aiLimit: 'ใช้ไอเดียจาก AI ของวันนี้ครบแล้ว พรุ่งนี้ใช้ได้อีก', aiRefused: 'AI คิดไอเดียสำหรับหัวข้อนี้ไม่ได้ ลองหัวข้ออื่น',
   aiBusy: 'AI ไม่ว่างอยู่ ลองใหม่ในอีกสักครู่', aiFail: 'AI ไม่ตอบกลับ ลองใหม่อีกครั้ง', fAffiliate: 'หารายได้กับเรา'
 });
+Object.assign(T.en, {
+  ttClips: 'Clip finder', clWait: 'Researching creators. This list fills in over the next day, as each scan checks a few more.',
+  clD: 'Big creators whose videos few channels clip into Shorts yet. Picked from YouTube’s trending charts, then checked against the last 30 days of Shorts about them.',
+  clAT: 'Big audience', clAD: 'Lots of people already want their content (1M+ subscribers).',
+  clFT: 'Few clippers', clFD: '8 or fewer channels posted Shorts of them in the last 30 days.',
+  clVT: 'Clips go viral', clVD: 'Their clips get big views (50K+ typical) and they post enough long videos to clip from.',
+  clAudV: '{n} subscribers', clFewV: '{k} channels posted {n} clips this month', clFewNone: 'Nobody posted clips this month',
+  clVirV: 'clips typically get {v} views', clVirTop: 'their trending video has {v} views', clMat: '{n} long videos this month ({h} h)',
+  clOnly3: 'Fits all 3', clAll3: 'fits all 3', clScore: 'opportunity', clInvites: 'Invites clippers in their description',
+  clLatest: 'Latest long video', clTopClip: 'Top clip · {v} views', clChannel: 'Their channel', clSearch: 'See clips on YouTube',
+  clWarn: 'Only clip creators who allow it. Many invite clippers (look for a clipping program or “feel free to clip” in their description); others file copyright claims. Add your own edit, captions or commentary, and credit them.',
+  brClip: 'Clip this creator'
+});
+Object.assign(T.th, {
+  ttClips: 'หาคนให้คลิป', clWait: 'กำลังตรวจครีเอเตอร์ รายการนี้จะค่อย ๆ เพิ่มขึ้นในวันนี้ เพราะการสแกนแต่ละรอบจะตรวจเพิ่มทีละไม่กี่คน',
+  clD: 'ครีเอเตอร์ใหญ่ที่ยังมีช่องตัดคลิปไปลง Shorts ไม่มาก คัดจากชาร์ตมาแรงของ YouTube แล้วตรวจกับคลิป Shorts ที่เกี่ยวกับพวกเขาใน 30 วันล่าสุด',
+  clAT: 'ฐานคนดูใหญ่', clAD: 'มีคนอยากดูคอนเทนต์ของเขาอยู่แล้วจำนวนมาก (ผู้ติดตาม 1 ล้านขึ้นไป)',
+  clFT: 'คนตัดคลิปน้อย', clFD: 'มีไม่เกิน 8 ช่องที่ลง Shorts ของเขาใน 30 วันล่าสุด',
+  clVT: 'คลิปมีโอกาสไวรัล', clVD: 'คลิปของเขาได้วิวสูง (ปกติ 50K ขึ้นไป) และมีวิดีโอยาวมากพอให้ตัด',
+  clAudV: 'ผู้ติดตาม {n}', clFewV: '{k} ช่องลงคลิป {n} คลิปในเดือนนี้', clFewNone: 'เดือนนี้ยังไม่มีใครลงคลิป',
+  clVirV: 'คลิปได้วิวปกติ {v}', clVirTop: 'วิดีโอที่ติดชาร์ตมี {v} วิว', clMat: 'วิดีโอยาว {n} เรื่องในเดือนนี้ ({h} ชม.)',
+  clOnly3: 'ผ่านครบ 3 ข้อ', clAll3: 'ผ่านครบ 3 ข้อ', clScore: 'โอกาส', clInvites: 'เปิดรับคนตัดคลิปในคำอธิบายช่อง',
+  clLatest: 'วิดีโอยาวล่าสุด', clTopClip: 'คลิปเด่น · {v} วิว', clChannel: 'ช่องของเขา', clSearch: 'ดูคลิปบน YouTube',
+  clWarn: 'ตัดคลิปเฉพาะครีเอเตอร์ที่อนุญาต หลายคนเปิดรับคนตัดคลิป (ดูคำว่า clipping program หรือ “feel free to clip” ในคำอธิบายช่อง) บางคนแจ้งลิขสิทธิ์ ใส่การตัดต่อ คำบรรยาย หรือความเห็นของคุณเอง และให้เครดิตเขาเสมอ',
+  brClip: 'น่าตัดคลิปคนนี้'
+});
 Object.assign(T.en, {ytFrom: 'On YouTube’s trending chart'});
 Object.assign(T.th, {ytFrom: 'อยู่บนชาร์ตมาแรงของ YouTube'});
 Object.assign(T.en, {legalUpdated: 'Last updated {d}', contactGh: 'open a message on GitHub', fTerms: 'Terms', fPrivacy: 'Privacy', fRefunds: 'Refunds', fContact: 'Contact',
@@ -1982,6 +2041,7 @@ const IC = {
   bell: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 6.5 2.5 8.5 2.5 8.5h-17S6 15.5 6 9M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>',
   sparkle: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>',
   plus: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  scissors: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4"/></svg>',
   flameF: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 6.5 6.5 6.5 13a6.5 6.5 0 0 1-13 0c0-3.5 2.2-5.6 3.3-6.6 0 2.3 1 3.6 2.3 3.6 0-3.4-1-6.6.9-10z"/></svg>'
 };
 const TOPIC_IC = {animals: 'paw', animation: 'film', ai: 'chip', games: 'gamepad', satisfying: 'wave', facts: 'bulb', funny: 'smile', food: 'utensils', diy: 'wrench',
@@ -4103,7 +4163,7 @@ function ideaList(x) {
 }
 
 /* ---------- the Trends page ---------- */
-const TTABS = [['rising', '🚀', 'ttRising'], ['games', '🎮', 'ttGames'], ['cartoons', '🎨', 'ttToons'], ['yt', '📈', 'ttYt'], ['news', '📰', 'ttNews']];
+const TTABS = [['rising', '🚀', 'ttRising'], ['clips', '✂️', 'ttClips'], ['games', '🎮', 'ttGames'], ['cartoons', '🎨', 'ttToons'], ['yt', '📈', 'ttYt'], ['news', '📰', 'ttNews']];
 function trendsView() {
   const T_ = trendData(), tab = S.ttab || 'rising';
   TREND_OPEN = '';
@@ -4118,6 +4178,7 @@ function trendsView() {
     h += `<p class="pbtip">${esc(t(tab === 'games' ? 'ttGamesD' : 'ttToonsD'))}</p>`;
     h += list.length ? `<div class="blist">${gateList(list.slice(0, 40).map(boardRow), t(tab === 'games' ? 'ttGames' : 'ttToons')).join('')}</div>` : emptyBox(t('tNone'), '🔭');
   } else if (tab === 'yt') h += ytTab();
+  else if (tab === 'clips') h += clipsTab();
   else if (tab === 'news') h += newsTab();
   else {
     const cat = S.tcat || 'all', list = T_.rising.filter(s => cat === 'all' || s.cat === cat);
@@ -4134,6 +4195,8 @@ function briefHtml(T_) {
   const g = T_.games.find(s => s.r);
   if (g) cells.push([IC.gamepad, t('brGame'), g.label, t('tStats', {n: g.r, k: g.chs.size, v: fmt(g.med)}), `data-trend="${esc(g.key)}"`]);
   if (wiki) cells.push([IC.news, t('brNews'), wiki.title, t('wikiViews', {n: fmt(wiki.v)}), 'data-ttab="news"']);
+  const clip = clipList().filter(fits3).sort((a, b) => b.score - a.score)[0];
+  if (clip) cells.push([IC.scissors, t('brClip'), clip.name, t('clAudV', {n: fmt(clip.subs)}) + ' · ' + (clip.clips ? t('clFewV', {k: clip.clippers, n: clip.clips}) : t('clFewNone')), 'data-ttab="clips"']);
   if (yt) { YT_ITEMS.set(yt.id, yt); cells.push([IC.trend, t('brYt', {c: t(reg === 'TH' ? 'cTH' : 'cUS')}), yt.t, t('views', {n: fmt(yt.v || 0)}), `data-play="${esc(yt.id)}" data-c=""`]); }
   if (!cells.length) return '';
   return `<div class="brief"><div class="brh"><b>${esc(t('brT'))}</b><small>${esc(t('brD'))}</small></div><div class="brgrid">${cells.map(([em, k, v, sub, attr]) =>
@@ -4153,6 +4216,42 @@ function ytTab() {
     <small>${esc(t('ytSince', {ago: ago(x.f)}))}</small></span></button>`;
   return h + (items.length ? `<div class="blist">${gateList(items.map(row), t('ttYt'), cat === 'all' ? 10 : 3).join('')}</div>` : emptyBox(t('tNone'), '📈'));
 }
+/* ---------- clip finder: big creators few channels clip yet (researched by the scanner, see trends.py) ---------- */
+const clipList = () => ((TRENDS || {}).clips || []).filter(c => !c.small && Array.isArray(c.ok));
+const fits3 = c => c.ok.every(Boolean);
+function clipCard(c) {
+  const pic = /^https:\/\/yt3\.(ggpht|googleusercontent)\.com\//.test(c.avatar || '') ? `<img src="${esc(c.avatar)}" alt="">` : '';
+  const chk = (ok, k, val) => `<div class="clchk ${ok ? 'ok' : ''}">${ok ? IC.check : '<span class="dot0"></span>'}<span><b>${esc(t(k))}</b><small>${esc(val)}</small></span></div>`;
+  const few = c.clips ? t('clFewV', {k: c.clippers, n: c.clips}) : t('clFewNone');
+  const vir = (c.clips >= 3 ? t('clVirV', {v: fmt(c.clip_med)}) : t('clVirTop', {v: fmt(c.top_views)})) + ' · ' + t('clMat', {n: c.long30, h: c.long_hours});
+  if (c.clip_top) YT_ITEMS.set(c.clip_top.id, c.clip_top);
+  if (c.latest) YT_ITEMS.set(c.latest.id, Object.assign({cht: c.name}, c.latest));
+  return `<article class="clcard">
+    <div class="clhead"><span class="av" style="width:48px;height:48px;background:var(--surface2)">${pic}</span>
+      <div class="clname"><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))}${(c.regions || []).length ? ' · ' + esc(c.regions.join(' · ')) : ''}</small></div>
+      <div class="clscore ${fits3(c) ? 'all' : ''}"><b>${c.score}</b><small>${esc(t(fits3(c) ? 'clAll3' : 'clScore'))}</small></div></div>
+    ${c.invites ? `<span class="tag good clinv">${IC.check}${esc(t('clInvites'))}</span>` : ''}
+    <div class="clchks">${chk(c.ok[0], 'clAT', t('clAudV', {n: fmt(c.subs)}))}${chk(c.ok[1], 'clFT', few)}${chk(c.ok[2], 'clVT', vir)}</div>
+    <div class="clvids">${c.latest ? `<button type="button" class="clv" data-play="${esc(c.latest.id)}" data-c=""><img loading="lazy" src="${thumb(c.latest.id)}" alt=""><small>${esc(t('clLatest'))}</small></button>` : ''}
+      ${c.clip_top ? `<button type="button" class="clv short" data-play="${esc(c.clip_top.id)}" data-c=""><img loading="lazy" src="${thumb(c.clip_top.id)}" alt=""><small>${esc(t('clTopClip', {v: fmt(c.clip_top.v)}))}</small></button>` : ''}</div>
+    <div class="btns"><a class="pillbtn" href="${chUrl(c.ch)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('clChannel'))}</a>
+      <a class="ghost" href="https://www.youtube.com/results?search_query=${encodeURIComponent(c.name + ' clips')}&sp=EgIYAQ%253D%253D" target="_blank" rel="noopener noreferrer">${IC.search}${esc(t('clSearch'))}</a></div>
+  </article>`;
+}
+function clipsTab() {
+  const all = clipList();
+  if (!all.length) return emptyBox(t(STATIC ? 'clWait' : 'ytWeb'));
+  const reg = S.creg || 'all', only = !!S.call3;
+  const list = all.filter(c => (reg === 'all' || (c.regions || []).includes(reg)) && (!only || fits3(c)))
+    .sort((a, b) => b.ok.filter(Boolean).length - a.ok.filter(Boolean).length || b.score - a.score);
+  return `<p class="pbtip">${esc(t('clD'))}</p>
+    <div class="cl3">${['clA', 'clF', 'clV'].map((k, i) => `<div><b>${i + 1}. ${esc(t(k + 'T'))}</b><small>${esc(t(k + 'D'))}</small></div>`).join('')}</div>
+    <div class="ytbar"><div class="seg">${[['all', 'topicAll'], ['TH', 'cTH'], ['US', 'cUS']].map(([r, k]) => `<button type="button" data-creg="${r}" aria-pressed="${reg === r}">${esc(t(k))}</button>`).join('')}</div>
+      <button type="button" class="chip" data-call3 aria-pressed="${only}">${esc(t('clOnly3'))}</button></div>
+    <div class="note clwarn">${esc(t('clWarn'))}</div>` +
+    (list.length ? `<div class="clgrid">${gateList(list.map(clipCard), t('ttClips'), 3).join('')}</div>` : emptyBox(t('tNone')));
+}
+
 function wikiItems(lang) {
   const w = (((TRENDS || {}).wiki || {})[lang] || {}).items || [];
   return w.map((x, i) => ({a: x.a, title: x.a.replace(/_/g, ' '), v: x.v, pv: x.pv, r: i + 1, rise: x.pv == null || x.v >= x.pv * 1.5, ratio: x.pv ? x.v / x.pv : null}));
@@ -4665,6 +4764,9 @@ document.addEventListener('click', async e => {
   if (x.closest('[data-aitopic]')) { const el = $('#aiIn'); if (el && el.value.trim()) aiIdeas(el.value.trim(), [], $('#aiTopicBox')); return; }
   const tt = x.closest('[data-ttab]');
   if (tt) { S.ttab = tt.dataset.ttab; saveState(); if ($('#dlg').open) $('#dlg').close(); if (S.tab !== 'trends') go('trends'); else renderContent(); return; }
+  const creg = x.closest('[data-creg]');
+  if (creg) { S.creg = creg.dataset.creg; saveState(); renderContent(); return; }
+  if (x.closest('[data-call3]')) { S.call3 = !S.call3; saveState(); renderContent(); return; }
   const tc = x.closest('[data-tcat]');
   if (tc) { S.tcat = tc.dataset.tcat; saveState(); renderContent(); return; }
   const treg = x.closest('[data-treg]');
