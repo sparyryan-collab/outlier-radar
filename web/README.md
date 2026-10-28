@@ -186,7 +186,7 @@ One free Cloudflare Worker, `web/pay/worker.js`, does everything the static site
 
 | Part | Variables |
 |---|---|
-| Fresh data every 15 minutes (GitHub's own timer only manages about every 2 hours) | `GITHUB_TOKEN`: on GitHub, Settings, Developer settings, Fine-grained tokens, Generate: only this repository, permission **Actions: Read and write**. `GITHUB_REPO`: `sparyryan-collab/outlier-radar` |
+| Fresh data every 15 minutes (GitHub's own timer manages only a few runs a day) | `GITHUB_TOKEN`: on GitHub, Settings, Developer settings, Fine-grained tokens, Generate: only this repository, permission **Actions: Read and write**. `GITHUB_REPO`: `sparyryan-collab/outlier-radar` |
 | Payments | `FIREBASE_SA` (the service account JSON) plus each provider's signing secret, see "Viral Radar Pro" |
 | Trend alerts (phone and desktop notifications, even with the app closed) | Run `node web/pay/vapid.mjs` once. Put `VAPID_PUBLIC_KEY` in the worker **and** as a GitHub repository variable; `VAPID_PRIVATE_JWK` in the worker only (secret). Also `VAPID_SUBJECT` (`mailto:` your email), `SITE_URL` (the site's address) and `FIREBASE_SA` |
 | AI idea writer | `ANTHROPIC_API_KEY` (from https://console.anthropic.com; usage is billed by Anthropic), `FIREBASE_SA`, `ALLOWED_ORIGIN` (the site's origin, for example `https://sparyryan-collab.github.io`), and the GitHub repository variable `AI_URL` = the worker's address (`https://viral-radar.<you>.workers.dev`). Optional: `AI_MODEL` (default `claude-opus-5-5`), `AI_DAILY` (requests per person per day, default 20), `AI_GLOBAL_DAILY` (all people together, default 300), `PRO_GATE` = `1` once Pro is paid. Counting happens before each request, so parallel requests can't slip past the limits |
