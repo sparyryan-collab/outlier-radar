@@ -115,7 +115,7 @@ Typing in the search box always filters the channels already on the site. Search
    - API restrictions: **Restrict key**, then tick only **YouTube Data API v3**. Save.
 4. In a terminal in the repository folder: `gh variable set BROWSER_KEY` (paste the key when asked), then `gh workflow run "Refresh site"`.
 
-How the quota is protected: Google gives each project about 100 searches a day (a bucket of their own) plus 10,000 units for everything else. The scanner uses up to 45 of its project's searches and `trends.py` up to 34 more, which is why visitors' searches must come from another project or through the worker. Each device also counts 15 searches a day, a device's own searches reopen free for a week, and any topic a signed-in visitor searched in the last 24 hours opens free for everyone (shared through Firestore). When searches run out, the search bar says when they come back (midnight Pacific time) and everything else keeps working.
+How the quota is protected: Google gives each project about 100 searches a day (a bucket of their own) plus 10,000 units for everything else. The scanner uses up to 45 of its project's searches and `trends.py` up to 34 more, which is why visitors' searches must come from another project or through the worker. Each device also counts 15 searches a day, and a device's own searches reopen free for a week. Searches are shared too: with the worker, any topic someone searched in the last 6 hours is answered from the worker's cache without spending any of the site's YouTube searches, and visitors can't write to that cache. Without the worker, a topic a signed-in visitor searched in the last 24 hours opens free for everyone through Firestore. When searches run out, the search bar says when they come back (midnight Pacific time) and everything else keeps working.
 
 Anyone who wants more can still add their own key from the How to use page; it stays in their browser.
 
@@ -130,7 +130,7 @@ Signing in with Google keeps your saved channels, Playbook, upload log and My ch
 5. In Firestore, open **Rules**, replace everything with the contents of `web/firestore.rules` from this repository, and click **Publish**. Check it took: the Rules tab should show `allow create: if request.auth != null && valid();` under `searches`. If the console still shows `allow read, write: if true` (test mode), everyone can read and change everything.
    What each part allows:
    - `users`: each signed-in person reads and writes only their own synced settings.
-   - `searches`: anyone can read shared search results; only a signed-in person can save one, in the expected shape, and it can't be replaced until it is 20 hours old.
+   - `searches`: anyone can read shared search results; only a signed-in person can save one, in the expected shape, and it can't be replaced until it is 20 hours old. (A signed-in person could still save made-up results, so the page stops using this collection once the server worker handles searches.)
    - `pro`: people can read only their own subscription status. Nobody can write it from the page; only the server worker can.
    - `push`: each person manages only their own alert subscription.
    - `track`: anyone can see which channels visitors asked the site to follow; a signed-in person can add a channel once.
