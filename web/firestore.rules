@@ -1,0 +1,42 @@
+// Viral Radar's Firestore security rules. Publish them in the Firebase console: Firestore Database > Rules > paste > Publish.
+// Collections the server worker writes (billing, rate, ailimit, meta) need no rule: its service account bypasses these rules,
+// and anything without a rule is closed to everyone else.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // each signed-in person reads and writes only their own synced settings
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+    // shared search results: anyone can read them; only a signed-in person can save one, in the expected shape,
+    // and a saved result can't be replaced until it is 20 hours old
+    match /searches/{id} {
+      function valid() {
+        let d = request.resource.data;
+        return id.matches('q[0-9a-f]{40}')
+          && d.keys().hasOnly(['q', 'c', 'n', 't'])
+          && d.q is string && d.q.size() > 0 && d.q.size() <= 120
+          && d.c is string && d.c.size() <= 400000
+          && d.n is int && d.n >= 1 && d.n <= 15
+          && d.t == request.time;
+      }
+      allow get: if true;
+      allow create: if request.auth != null && valid();
+      allow update: if request.auth != null && valid() && resource.data.t < request.time - duration.value(20, 'h');
+    }
+    // subscription status: people read only their own; only the server worker writes it
+    match /pro/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+    }
+    // each person manages only their own alert subscription
+    match /push/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+    // channels visitors asked the scanner to follow: anyone can see the list; a signed-in person can add a channel once
+    match /track/{id} {
+      allow get, list: if true;
+      allow create: if request.auth != null && id.matches('UC[A-Za-z0-9_-]{22}')
+        && request.resource.data.keys().hasOnly(['t']) && request.resource.data.t == request.time;
+    }
+  }
+}

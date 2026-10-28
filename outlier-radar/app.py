@@ -232,27 +232,45 @@ def q(sql, params=(), one=False, commit=False):
 # ----------------------------------------------------------------------------------------------
 # scoring
 # ----------------------------------------------------------------------------------------------
-def compute_metrics(vids, subs):
-    """vids: newest-first list of {'id','t','v'}. Returns metrics dict or None."""
+SETTLE_SECONDS = 7 * 86400   # a Short this young is still collecting most of its views: too new to judge
+
+
+def compute_metrics(vids, subs, now=None):
+    """vids: newest-first list of {'id','t','v'} (plus 'p', the upload time, when known). Returns a metrics dict or None.
+
+    Every comparison uses "settled" Shorts (at least 7 days old) so a fresh upload never looks like a flop. Without upload
+    times (the PC app's yt-dlp lists) the 3 newest stand in for the unsettled ones, as before. The same rules are written in
+    JavaScript in static/index.html (computeMetrics); web/scanner/parity.mjs checks that both give the same answers."""
     views = [x["v"] for x in vids]
     n = len(views)
     if n < 6:
         return None
-    med_recent = statistics.median(views[:12])
-    med_all = statistics.median(views)
+    now = time.time() if now is None else now
+    if sum(1 for x in vids if x.get("p")) >= 0.8 * n:
+        settled = [x["v"] for x in vids if not x.get("p") or now - x["p"] >= SETTLE_SECONDS]
+    else:
+        settled = views[3:]
+    pool = settled if len(settled) >= 3 else views
+    base = pool[:12]
+    med_recent = statistics.median(base)        # "usual views": the middle of the newest settled Shorts
+    med_all = statistics.median(pool)
     mx = max(views)
-    share_100k = sum(v >= 100_000 for v in views) / n
-    share_1m = sum(v >= 1_000_000 for v in views) / n
-    mid = views[3:12] or views
-    old = views[12:] or views
-    trend = (statistics.median(mid) + 1) / (statistics.median(old) + 1)
+    share_100k = sum(v >= 100_000 for v in pool) / len(pool)
+    share_1m = sum(v >= 1_000_000 for v in pool) / len(pool)
+    if len(settled) >= 8:                       # momentum needs two groups of at least 4 settled Shorts
+        k = min(6, len(settled) // 2)
+        newer, older = settled[:k], settled[k:k + 12]
+        trend = (statistics.median(newer) + 1) / (statistics.median(older) + 1)
+        mom_n = len(newer) + len(older)
+    else:
+        trend, mom_n = None, len(settled)
     peak_vs_med = mx / max(med_all, 1)
-    ratio = med_recent / max(subs or 0, 1000)
+    ratio = med_recent / subs if subs and subs > 0 else None   # hidden or unknown subscriber counts earn no points here
 
     engine = 30 * clip((math.log10(max(med_recent, 1)) - 4.7) / (6.0 - 4.7), 0, 1)       # 50K -> 0, 1M -> 30
-    leverage = 35 * clip(math.log10(max(ratio, 1)) / math.log10(30), 0, 1)                # 1 view/sub -> 0, 30+ -> 35
+    leverage = 35 * clip(math.log10(max(ratio, 1)) / math.log10(30), 0, 1) if ratio is not None else 0   # 1 view/sub -> 0, 30+ -> 35
     consistency = 15 * share_100k + 10 * clip(share_1m / 0.25, 0, 1)
-    trend_s = 10 * clip((math.log2(max(trend, 0.05)) + 1) / 2, 0, 1)                      # 0.5x -> 0, 1x -> 5, 2x+ -> 10
+    trend_s = 10 * clip((math.log2(max(trend, 0.05)) + 1) / 2, 0, 1) if trend is not None else 5   # 0.5x -> 0, 1x -> 5, 2x+ -> 10; unknown -> 5
     fluke = -15 if peak_vs_med > 30 else (-8 if peak_vs_med > 15 else 0)
     score = clip(engine + leverage + consistency + trend_s + fluke, 0, 100)
 
@@ -263,17 +281,18 @@ def compute_metrics(vids, subs):
         tags.append("One-hit")
     if subs and subs < 25_000 and med_recent >= 200_000:
         tags.append("Tiny & huge")
-    if trend >= 1.4:
+    if trend is not None and trend >= 1.4:
         tags.append("Rising")
-    elif trend <= 0.6:
+    elif trend is not None and trend <= 0.6:
         tags.append("Fading")
 
-    for x in vids:
-        x["x"] = round(x["v"] / max(med_all, 1000), 1)
+    for x in vids:   # times its channel's usual views: the same baseline the page prints as "usual"
+        x["x"] = round(x["v"] / max(med_recent, 1000), 1)
     return {
         "n": n, "med_recent": med_recent, "med_all": med_all, "max_views": mx, "share_100k": round(share_100k, 2),
-        "share_1m": round(share_1m, 2), "trend": round(trend, 2), "peak_vs_med": round(peak_vs_med, 1),
-        "ratio": round(ratio, 1), "score": round(score, 1), "tags": tags,
+        "share_1m": round(share_1m, 2), "trend": round(trend, 2) if trend is not None else None, "peak_vs_med": round(peak_vs_med, 1),
+        "ratio": round(ratio, 1) if ratio is not None else None, "score": round(score, 1), "tags": tags,
+        "base_n": len(base), "settled_n": len(settled), "mom_n": mom_n, "top_share": round(mx / max(sum(views), 1), 3),
     }
 
 

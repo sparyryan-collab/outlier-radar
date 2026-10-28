@@ -24,6 +24,10 @@ class ApiError(Exception):
     pass
 
 
+class SearchQuotaExceeded(ApiError):
+    """The 100-a-day search.list bucket is empty. Every other method still works, so callers carry on without searching."""
+
+
 def parse_duration(iso):
     """ISO 8601 duration like PT1M5S -> seconds."""
     m = re.fullmatch(r"P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?", iso or "")
@@ -31,6 +35,17 @@ def parse_duration(iso):
         return 10 ** 6
     d, h, mi, s = (int(x or 0) for x in m.groups())
     return d * 86400 + h * 3600 + mi * 60 + s
+
+
+def orientation(player):
+    """'v', 'h' or 's' from the embedded player's width and height, or None when YouTube didn't say."""
+    try:
+        w, h = int(player.get("embedWidth") or 0), int(player.get("embedHeight") or 0)
+    except (TypeError, ValueError):
+        return None
+    if w <= 0 or h <= 0:
+        return None
+    return "v" if w < h * 0.9 else "h" if w > h * 1.1 else "s"
 
 
 def iso_to_ts(s):
@@ -66,6 +81,8 @@ class YouTube:
                 except Exception:
                     body = ""
                 if e.code == 403 and "quota" in body.lower():
+                    if path == "search":   # searches have their own bucket: only searching stops
+                        raise SearchQuotaExceeded("YouTube says today's searches are used up")
                     self.used = self.budget
                     raise QuotaExceeded("YouTube says today's quota is used up")
                 if e.code in (500, 502, 503) and attempt < 2:
@@ -91,12 +108,15 @@ class YouTube:
         data = self.call("search", **params)
         return [i["id"]["videoId"] for i in data.get("items", []) if i.get("id", {}).get("videoId")]
 
-    def videos(self, ids):
-        """Details for up to 50 video ids per call (1 unit each call)."""
+    def videos(self, ids, player=False):
+        """Details for up to 50 video ids per call (1 unit each call, whatever parts are asked for).
+        player=True also asks for the embedded player's size, which Google documents is returned when the video's
+        aspect ratio is known; it becomes "o": "v" (vertical), "h" (horizontal) or "s" (square)."""
         out = {}
         ids = list(dict.fromkeys(ids))
+        extra = {"part": "snippet,statistics,contentDetails,player", "maxHeight": 480} if player else {"part": "snippet,statistics,contentDetails"}
         for i in range(0, len(ids), 50):
-            data = self.call("videos", part="snippet,statistics,contentDetails", id=",".join(ids[i:i + 50]))
+            data = self.call("videos", id=",".join(ids[i:i + 50]), **extra)
             for it in data.get("items", []):
                 st = it.get("statistics", {})
                 if "viewCount" not in st:
@@ -106,6 +126,7 @@ class YouTube:
                     "ch": it["snippet"].get("channelTitle"), "dur": parse_duration(it.get("contentDetails", {}).get("duration")),
                     "p": iso_to_ts(it["snippet"].get("publishedAt", "")),
                     "l": int(st["likeCount"]) if "likeCount" in st else None, "c": int(st["commentCount"]) if "commentCount" in st else None,
+                    "o": orientation(it.get("player") or {}),
                 }
         return out
 

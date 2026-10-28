@@ -2,7 +2,7 @@
 """Build the hosted site folder: the dashboard page switched into web mode, plus the installable-app files. The scanner adds data.json.
 
 Usage: python build_site.py [output_dir]
-Optional env: BROWSER_KEY (a referrer-restricted API key), CUSTOM_DOMAIN, PRO_GATE / PRO_PRICE / CHECKOUT_URL / MANAGE_URL (Viral Radar Pro), CONTACT_EMAIL,
+Optional env: API_URL (the server worker: visitors' YouTube searches go through it), BROWSER_KEY (a website-restricted key in its own project), CUSTOM_DOMAIN, PRO_GATE / PRO_PRICE / CHECKOUT_URL / MANAGE_URL (Viral Radar Pro), CONTACT_EMAIL,
               VAPID_PUBLIC_KEY (alerts), AI_URL (the server worker), LEMON_STORE / AFFILIATE_URL (affiliates),
               FIREBASE_API_KEY + FIREBASE_PROJECT_ID (+ FIREBASE_AUTH_DOMAIN) to switch on Google sign-in and sync
 """
@@ -49,6 +49,11 @@ vapid, ai_url = os.environ.get("VAPID_PUBLIC_KEY", "").strip(), os.environ.get("
 lemon_store, affiliate = os.environ.get("LEMON_STORE", "").strip(), os.environ.get("AFFILIATE_URL", "").strip()
 cfg["vapidKey"] = vapid if re.fullmatch(r"[A-Za-z0-9_-]{80,100}", vapid) else ""
 cfg["aiUrl"] = ai_url if re.fullmatch(r"https://[A-Za-z0-9.-]+(/[^\s\"'<>]*)?", ai_url) else ""
+api_url = os.environ.get("API_URL", "").strip().rstrip("/")
+cfg["apiUrl"] = api_url if re.fullmatch(r"https://[A-Za-z0-9.-]+(/[^\s\"'<>]*)?", api_url) else ""
+if cfg["apiUrl"] and cfg["browserKey"]:
+    print("NOTE: API_URL is set, so visitors search through the server worker; BROWSER_KEY is no longer needed in the page", file=sys.stderr)
+    cfg["browserKey"] = ""
 cfg["affiliateUrl"] = affiliate if re.fullmatch(r"https://[^\s\"'<>]{4,300}", affiliate) else ""
 lemon_store = lemon_store if re.fullmatch(r"[a-z0-9-]{2,40}", lemon_store) else ""
 cfg["packs"] = sorted(f.stem for f in (STATIC / "i18n").glob("*.json")) if (STATIC / "i18n").is_dir() else []   # hand-made language packs
@@ -71,9 +76,9 @@ if "firebase" in cfg:   # Google sign-in (Firebase Auth) and sync (Cloud Firesto
         ("connect-src 'self' https://www.googleapis.com", "connect-src 'self' https://www.googleapis.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com"),
         ("frame-src https://www.youtube-nocookie.com", f"frame-src https://www.youtube-nocookie.com https://{auth_host} https://accounts.google.com"),
     ]
-if cfg["aiUrl"]:   # the AI writer is called from the page
-    ai_origin = re.match(r"https://[^/]+", cfg["aiUrl"]).group(0)
-    swaps.append(("connect-src 'self' https://www.googleapis.com", f"connect-src 'self' https://www.googleapis.com {ai_origin}"))
+for url in dict.fromkeys(u for u in (cfg["aiUrl"], cfg["apiUrl"]) if u):   # the AI writer and the YouTube proxy are called from the page
+    origin = re.match(r"https://[^/]+", url).group(0)
+    swaps.append(("connect-src 'self' https://www.googleapis.com", f"connect-src 'self' https://www.googleapis.com {origin}"))
 if lemon_store:   # Lemon Squeezy's affiliate tracking script
     swaps += [("script-src 'unsafe-inline'", "script-src 'unsafe-inline' https://lmsqueezy.com"),
               ("connect-src 'self' https://www.googleapis.com", "connect-src 'self' https://www.googleapis.com https://lmsqueezy.com https://*.lemonsqueezy.com"),

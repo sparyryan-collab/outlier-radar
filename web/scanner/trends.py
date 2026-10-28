@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Trend feeds for the site: what's trending on YouTube by country and category, and what people are reading about on Wikipedia.
 
-Usage: python trends.py --out _site/trends.json
-Env:   YT_API_KEY (the scanner's key), PREV_TRENDS_URL (the live site's trends.json, which carries the history between runs)
+Usage: python trends.py --out _site/trends.json [--data _site/data.json] [--state state/]
+Env:   YT_API_KEY (the scanner's key), PREV_TRENDS_URL (the live site's trends.json), STATE_DIR (the private folder the workflow caches)
+
+History between runs comes from the saved state folder or the live site, whichever is newer. If neither can be read the script
+refuses to run (exit code 2) rather than publish feeds that start from nothing; ALLOW_SEED=1 allows a fresh start on a new site.
 
 Standard library only. Each YouTube chart costs 1 unit (about 24 per refresh), and charts refresh at most every 3 hours.
 Wikipedia's daily most-read lists are open data (CC0) from the Wikimedia pageviews API and refresh every 6 hours.
@@ -16,11 +19,15 @@ import os
 import re
 import sys
 import time
+import unicodedata
 import urllib.request
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))   # works however Python is started (including isolated mode)
-from yt_api import ApiError, QuotaExceeded, YouTube, iso_to_ts, parse_duration  # noqa: E402
+from yt_api import ApiError, QuotaExceeded, SearchQuotaExceeded, YouTube, iso_to_ts, parse_duration  # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[2]
+TRENDS_DAILY_UNITS = int(os.environ.get("TRENDS_DAILY_UNITS", "1200"))   # this script's share of the 10,000 daily units (scan.py keeps to 8,000)
 
 REGIONS = ["TH", "US"]
 CATEGORIES = {"all": None, "games": "20", "animation": "1", "entertainment": "24", "comedy": "23", "music": "10",
@@ -32,44 +39,123 @@ WIKIS = {"en": "en.wikipedia", "th": "th.wikipedia"}
 UA = "ViralRadar/1.0 (https://github.com/sparyryan-collab/outlier-radar)"   # Wikimedia asks every client to name itself
 KEEP, WIKI_KEEP, SEEN_DAYS = 25, 40, 14
 # The page's games and cartoons boards; names must match the GAMES and CARTOONS lists in index.html (they are the alert keys)
-GAMES = [("Roblox", r"roblox"), ("Minecraft", r"minecraft"), ("Fortnite", r"fortnite"), ("GTA", r"\bgta\b|grand theft auto"), ("GTA 6", r"\bgta ?(6|vi)\b"),
-         ("Brawl Stars", r"brawl ?stars"), ("Free Fire", r"free ?fire|ฟีฟาย"), ("PUBG", r"pubg"), ("ROV", r"\brov\b|arena of valor"), ("Mobile Legends", r"mobile legends|\bmlbb\b"),
-         ("Valorant", r"valorant"), ("Genshin Impact", r"genshin"), ("Honkai", r"honkai"), ("Among Us", r"among ?us"), ("Poppy Playtime", r"poppy playtime|huggy wuggy|catnap"),
-         ("FNAF", r"\bfnaf\b|five nights at freddy"), ("Garten of Banban", r"banban"), ("Clash Royale", r"clash royale"), ("Clash of Clans", r"clash of clans"),
-         ("Pokémon", r"pok[eé]mon|pikachu"), ("Mario", r"\bmario\b"), ("Sonic", r"\bsonic\b"), ("Call of Duty", r"call of duty|warzone"), ("Apex Legends", r"apex legends"),
-         ("Overwatch", r"overwatch"), ("Counter-Strike", r"counter[- ]?strike|\bcs2\b"), ("Elden Ring", r"elden ring"), ("Silksong", r"silksong|hollow knight"),
-         ("Stardew Valley", r"stardew"), ("Terraria", r"terraria"), ("Subway Surfers", r"subway surfers"), ("Geometry Dash", r"geometry dash"), ("Rocket League", r"rocket league"),
-         ("EA FC / FIFA", r"\bea ?fc\b|\bfifa\b|\bfc ?2[4-7]\b"), ("eFootball", r"efootball"), ("NBA 2K", r"nba ?2k"), ("Blox Fruits", r"blox fruits?"), ("Brookhaven", r"brookhaven"),
-         ("Grow a Garden", r"grow a garden"), ("Steal a Brainrot", r"steal a brainrot"), ("99 Nights in the Forest", r"99 nights"), ("Dead Rails", r"dead rails"), ("Forsaken", r"forsaken"),
-         ("Bedwars", r"bedwars"), ("Stumble Guys", r"stumble guys"), ("Fall Guys", r"fall guys"), ("Honor of Kings", r"honor of kings"), ("Delta Force", r"delta force"),
-         ("Marvel Rivals", r"marvel rivals"), ("Wuthering Waves", r"wuthering waves"), ("Plants vs Zombies", r"plants vs\.? zombies|\bpvz\b"), ("Chess", r"\bchess\b|หมากรุก")]
-CARTOONS = [("Sprunki", r"sprunki"), ("Skibidi Toilet", r"skibidi"), ("Italian Brainrot", r"brainrot|tralalero|tung ?tung|sahur|bombardiro|cappuccina|lirili|chimpanzini"),
-            ("Labubu", r"labubu"), ("KPop Demon Hunters", r"demon hunters|huntrix|saja boys"), ("Bluey", r"\bbluey\b"), ("SpongeBob", r"sponge ?bob"), ("Peppa Pig", r"peppa"),
-            ("Cocomelon", r"cocomelon"), ("Doraemon", r"doraemon|โดราเอม่อน"), ("Shin-chan", r"shin ?chan|ชินจัง"), ("Pokémon", r"pok[eé]mon|pikachu"), ("Minions", r"\bminions?\b"),
-            ("Hello Kitty & Sanrio", r"hello kitty|sanrio|kuromi|cinnamoroll|my melody"), ("Demon Slayer", r"demon slayer|kimetsu"), ("One Piece", r"one piece|luffy"),
-            ("Naruto", r"naruto"), ("Dragon Ball", r"dragon ?ball|goku"), ("Jujutsu Kaisen", r"jujutsu|gojo"), ("Chainsaw Man", r"chainsaw man"), ("Spy x Family", r"spy ?x ?family"),
-            ("Smurfs", r"\bsmurfs?\b"), ("Toy Story", r"toy story"), ("Zootopia", r"zootopia"), ("Frozen", r"\bfrozen\b|\belsa\b"), ("Moana", r"moana"), ("Shrek", r"shrek"),
-            ("Garfield", r"garfield"), ("Tom and Jerry", r"tom (and|&) jerry"), ("The Amazing Digital Circus", r"digital circus|pomni"), ("Murder Drones", r"murder drones"),
-            ("Hazbin Hotel", r"hazbin|helluva"), ("Rainbow Friends", r"rainbow friends"), ("Siren Head", r"siren head|cartoon cat"), ("Stickman", r"stick ?man"),
-            ("Anime", r"\banime\b|อนิเมะ"), ("Cartoons", r"cartoon|การ์ตูน")]
+def load_words():
+    """Word lists and the curated game and cartoon names, from the trendWords block in index.html (the page reads the same block)."""
+    html = (ROOT / "outlier-radar" / "static" / "index.html").read_text(encoding="utf-8")
+    m = re.search(r'<script type="application/json" id="trendWords">(.*?)</script>', html, re.S)
+    return json.loads(m.group(1))
+
+
+_LISTS = load_words()
+GAMES = [tuple(x) for x in _LISTS["games"]]
+CARTOONS = [tuple(x) for x in _LISTS["cartoons"]]
+WORDS = {k: set(_LISTS[k]) for k in ("noise", "generic", "stop")}
 RECENT, WINDOW = 3 * 86400, 21 * 86400
-NO_SPACES = re.compile(r"[฀-๿぀-ヿ㐀-鿿가-힯]")   # scripts without spaces: only their hashtags are counted here
+NO_SPACES = re.compile(r"[฀-๿぀-ヿ㐀-鿿가-힯]")   # scripts without spaces (Thai, Japanese, Chinese, Korean): only their hashtags count
+CASED = re.compile(r"[A-Za-zÀ-ɏḀ-ỿͰ-ϿЀ-ӿ]")   # Latin, Greek and Cyrillic letters: scripts with capital letters
+DROP_MARKS = re.compile("[\ufe0e\ufe0f\u200d\u20e3]")   # emoji variation selectors, joiners and keycaps
+APOS = str.maketrans({"\u2019": "'", "\u2018": "'", "\u02bc": "'"})
+
+
+def _word_char(c, tag=False):
+    return c.isalnum() or unicodedata.category(c).startswith("M") or (c == "_" if tag else c == "'")
+
+
+def _runs(text):
+    out, cur = [], []
+    for c in text:
+        if _word_char(c):
+            cur.append(c)
+        elif cur:
+            out.append("".join(cur))
+            cur = []
+    if cur:
+        out.append("".join(cur))
+    return out
+
+
+def split_title(title):
+    """(hashtags, word tokens with their case) the way the page splits a title for trends."""
+    t = DROP_MARKS.sub("", str(title or "").translate(APOS))
+    tags, rest, i = [], [], 0
+    while i < len(t):
+        if t[i] == "#":
+            j = i + 1
+            while j < len(t) and _word_char(t[j], True):
+                j += 1
+            if j - i - 1 >= 2:
+                tags.append(t[i:j].lower())
+                rest.append(" ")
+                i = j
+                continue
+        rest.append(t[i])
+        i += 1
+    toks = []
+    for w in _runs("".join(rest)):
+        w = w.strip("'")
+        if w and any(c.isalnum() for c in w):
+            toks.append(w)
+    return tags, toks
+
+
+def word_ok(w):
+    return bool(w) and len(w) >= 2 and not re.fullmatch(r"[0-9]+", w) and w not in WORDS["stop"] and w not in WORDS["noise"] and w not in WORDS["generic"]
 
 
 def title_terms(title):
     """Hashtags, words and two-word phrases, lowercased, the way the page counts them (words only for languages that use spaces)."""
-    t = (title or "").lower()
-    out = set(re.findall(r"#\w{2,}", t))
-    words = [w for w in re.findall(r"[^\W\d_][\w'’]*", re.sub(r"#\w+", " ", t)) if not NO_SPACES.search(w)]
+    tags, toks = split_title(title)
+    out = {x for x in tags if x[1:] not in WORDS["noise"]}
+    words = [None if NO_SPACES.search(w) else w.lower() for w in toks]
     for i, w in enumerate(words):
+        if not word_ok(w):
+            continue
         out.add(w)
-        if i + 1 < len(words):
+        if i + 1 < len(words) and word_ok(words[i + 1]):
             out.add(w + " " + words[i + 1])
     return out
 
 
+def caps_in(title):
+    """Is the title an ordinary sentence (not ALL CAPS or Title Case), and which words in it start with a capital?"""
+    _, toks = split_title(title)
+    cased = [w for w in toks if w.lower() != w.upper()]
+    caps = [w for w in cased if w[0].isupper()]
+    return len(cased) >= 3 and len(caps) / len(cased) <= 0.6, {w.lower() for i, w in enumerate(toks) if i > 0 and w[0].isupper()}
+
+
+def coverage_weight(series, now):
+    """How much one channel's older uploads count toward a term's baseline. Only its newest 24 Shorts are kept, so a channel that posts
+    several a day shows no history past a few days; its baseline is scaled up to 18 days, or the channel is left out when there is
+    too little history to tell what is new. Returns None to leave the channel out."""
+    dated = [v["p"] for v in series if v.get("p")]
+    if not dated:
+        return None
+    days = 21.0 if len(series) < 24 else min(21.0, (now - min(dated)) / 86400)
+    if days < 4:
+        return None
+    return 1.0 if days >= 21 else min(6.0, 18 / (days - 3))
+
+
+def trend_ref(c, now):
+    """Ages count from the channel's own last check, so a channel checked yesterday still has a full 3-day window.
+    A channel not checked for 2 days can't say what is recent and is left out (None)."""
+    ref = c.get("last_probe") or now
+    return None if now - ref > 2 * 86400 else ref
+
+
+def lift_of(r, b):
+    """Shorts in the last 3 days against what the 18 days before predict, pulled toward 1 when the counts are small."""
+    return (r + 2) / (b / 6 + 2)
+
+
+def is_hot(r, chans, lift):
+    return r >= 4 and chans >= 2 and lift >= 2
+
+
 def hot_trends(data_path, t):
-    """Trends taking off right now: at least 3 new Shorts from 2+ channels in 3 days, at least twice the usual rate. Keys match the page's."""
+    """Trends taking off right now (the alert list): at least 4 new Shorts from 2+ channels in 3 days and twice the usual rate.
+    Keys and rules match the page's, so an alert never names a trend the page doesn't show as hot."""
     try:
         data = json.loads(Path(data_path).read_text(encoding="utf-8"))
     except Exception:
@@ -78,29 +164,36 @@ def hot_trends(data_path, t):
     stats = {}
     boards = [("g:" + n, re.compile(rx, re.I)) for n, rx in GAMES] + [("c:" + n, re.compile(rx, re.I)) for n, rx in CARTOONS]
 
-    def add(key, age, ch):
-        s = stats.setdefault(key, [0, 0, set()])
+    def add(key, age, ch, w):
+        s = stats.setdefault(key, [0, 0.0, set()])
         if age <= RECENT:
             s[0] += 1
             s[2].add(ch)
         else:
-            s[1] += 1
+            s[1] += w
     for c in data.get("channels", []):
-        for v in c.get("series", []):
-            age = now - (v.get("p") or 0)
+        series = c.get("series", [])
+        ref = trend_ref(c, now)
+        w = None if ref is None else coverage_weight(series, ref)
+        if w is None:
+            continue
+        for v in series:
+            age = ref - (v.get("p") or 0)
             if not v.get("p") or age < 0 or age > WINDOW:
                 continue
             for term in title_terms(v.get("t")):
-                add("t:" + term, age, c["ch_id"])
+                add("t:" + term, age, c["ch_id"], w)
             for key, rx in boards:
                 if rx.search(v.get("t") or ""):
-                    add(key, age, c["ch_id"])
+                    add(key, age, c["ch_id"], w)
     hot = {}
     for key, (r, b, chs) in stats.items():
-        lift = (r / 3) / ((b + 1) / 18)
-        if r >= 3 and len(chs) >= 2 and lift >= 2:
+        lift = lift_of(r, b)
+        if is_hot(r, len(chs), lift):
             hot[key] = [r, round(lift, 1), key[2:]]
     return dict(sorted(hot.items(), key=lambda kv: -kv[1][0] * min(kv[1][1], 10))[:4000])
+
+
 SKIP_WIKI = re.compile(r"^(Main_Page$|หน้าหลัก$|Special:|Wikipedia:|File:|Portal:|Help:|Category:|Template:|Talk:|User:|"
                        r"พิเศษ:|วิกิพีเดีย:|ไฟล์:|สถานีย่อย:|หมวดหมู่:|แม่แบบ:|-$|Search$|Cleopatra$|\.)", re.I)
 ADULT = re.compile(r"xxx|porn|xvideos|xnxx|onlyfans|hentai|nude|เย็ด|โป๊|ควย|^หี$", re.I)   # bots and adult pages crowd these lists
@@ -129,7 +222,7 @@ PAID_RX = re.compile(r"whop|vyro|content rewards|clipfarm|get paid|paid (per|for
 DISCOVER_PER_DAY = int(os.environ.get("DISCOVER_PER_DAY", "4"))
 DISCOVER_QUERIES = [("channel", "clipping program"), ("video", "join my clipping program"), ("channel", "clippers wanted"), ("video", "feel free to clip"),
                     ("channel", "clip my streams"), ("video", "content rewards clipping"), ("channel", "ตัดคลิป อนุญาต"), ("video", "รับสมัครคนตัดคลิป")]
-ALLOWED_KEEP_DAYS, ALLOWED_MIN_SUBS, ALLOWED_MAX = 45, 100_000, 150
+ALLOWED_KEEP_DAYS, ALLOWED_MIN_SUBS, ALLOWED_MAX = 28, 100_000, 150   # kept only while re-checked within 28 days
 
 # The moments worth clipping, read from a video's own comments: viewers write timestamps ("12:34 I lost it") at the parts they loved
 TS_RX = re.compile(r"(?<![\d:])(?:(\d{1,2}):)?([0-5]?\d):([0-5]\d)(?![\d:])")
@@ -279,12 +372,21 @@ def clip_permission(channel_desc, videos):
     return found.get("forbids") or found.get("allows") or ("unknown", "", "", None)
 
 
-def pacific_day(ts):
+def pacific_now(ts):
     try:
         from zoneinfo import ZoneInfo
-        return dt.datetime.fromtimestamp(ts, ZoneInfo("America/Los_Angeles")).strftime("%Y-%m-%d")
+        return dt.datetime.fromtimestamp(ts, ZoneInfo("America/Los_Angeles"))
     except Exception:
-        return dt.datetime.fromtimestamp(ts - 8 * 3600, dt.timezone.utc).strftime("%Y-%m-%d")
+        return dt.datetime.fromtimestamp(ts - 8 * 3600, dt.timezone.utc)
+
+
+def pacific_day(ts):
+    return pacific_now(ts).strftime("%Y-%m-%d")
+
+
+def day_fraction(ts):
+    t = pacific_now(ts)
+    return (t.hour * 3600 + t.minute * 60 + t.second) / 86400
 
 
 def clip_candidates(regions):
@@ -325,7 +427,7 @@ def research_clips(yt, cands, prev_clips, quota, t):
     """Researches the next few creators (one Shorts search each; creators who invite clippers first) and keeps every result for a week."""
     keep = {c["ch"]: c for c in prev_clips if t - c.get("checked", 0) < CLIP_KEEP_DAYS * 86400}
     todo = sorted((c for c in cands if c["ch"] not in keep), key=lambda c: (not c.get("allowed"), -((c.get("video") or {}).get("v") or c.get("subs") or 0)))
-    todo = todo[:max(0, min(CLIP_PER_RUN, CLIP_PER_DAY - quota["used"]))]
+    todo = todo[:max(0, min(CLIP_PER_RUN, CLIP_PER_DAY - quota["used"]))] if not quota.get("search_out") else []
     if not todo:
         return list(keep.values())
     info = {it["id"]: it for it in yt.call("channels", part="snippet,statistics,contentDetails", id=",".join(c["ch"] for c in todo)).get("items", [])}
@@ -340,8 +442,12 @@ def research_clips(yt, cands, prev_clips, quota, t):
         if subs < (ALLOWED_MIN_SUBS if c.get("allowed") else CLIP_MIN_SUBS):
             keep[c["ch"]] = {"ch": c["ch"], "checked": int(t), "small": True}
             continue
+        try:
+            found = yt.call("search", part="id", type="video", videoDuration="short", order="viewCount", q=name, publishedAfter=since, maxResults=50)
+        except SearchQuotaExceeded:   # the day's searches are gone: keep what is researched, try the rest tomorrow
+            quota["search_out"] = True
+            break
         quota["used"] += 1
-        found = yt.call("search", part="id", type="video", videoDuration="short", order="viewCount", q=name, publishedAfter=since, maxResults=50)
         ids = [x["id"]["videoId"] for x in found.get("items", []) if x.get("id", {}).get("videoId")]
         shorts = []
         if ids:
@@ -411,13 +517,34 @@ def refresh_moments(yt, clips, quota, t, per_run=3):
 
 def discover_allowed(yt, prev, quota, t, turn):
     """One search for a clipping-program phrase (they take turns); a creator is kept only when their own channel or video description invites clippers."""
-    keep = {c["ch"]: c for c in prev if t - c.get("found", 0) < ALLOWED_KEEP_DAYS * 86400}
-    hour = (t % 86400) / 86400
-    if quota.get("disc", 0) >= min(DISCOVER_PER_DAY, int(DISCOVER_PER_DAY * hour) + 1):   # spread over the day
+    keep = {c["ch"]: c for c in prev if t - c.get("checked", c.get("found", 0)) < ALLOWED_KEEP_DAYS * 86400}
+    stale = [c for c in keep.values() if t - c.get("checked", c.get("found", 0)) >= 7 * 86400][:50]
+    if stale:   # weekly re-check of what they say and how big they are (1 unit for up to 50 creators)
+        info = {it["id"]: it for it in yt.call("channels", part="snippet,statistics", id=",".join(c["ch"] for c in stale)).get("items", [])}
+        for c in stale:
+            it = info.get(c["ch"])
+            sn, st = (it or {}).get("snippet") or {}, (it or {}).get("statistics") or {}
+            subs = 0 if st.get("hiddenSubscriberCount") else int(st.get("subscriberCount") or 0)
+            still = it is not None and subs >= ALLOWED_MIN_SUBS
+            if still and c.get("where") == "channel":   # their invitation was in the channel description: it must still be there
+                allow, quote, _, _ = clip_permission(sn.get("description"), [])
+                still = allow == "allows"
+                if still:
+                    c["quote"], c["paid"] = quote, bool(PAID_RX.search(quote))
+            if not still:
+                keep.pop(c["ch"], None)
+                continue
+            c.update(subs=subs, name=(sn.get("title") or c.get("name", ""))[:80], checked=int(t),
+                     avatar=((sn.get("thumbnails") or {}).get("default") or {}).get("url", c.get("avatar", "")))
+    if quota.get("search_out") or quota.get("disc", 0) >= min(DISCOVER_PER_DAY, int(DISCOVER_PER_DAY * day_fraction(t)) + 1):   # spread over the Pacific day
         return list(keep.values()), turn
     kind, q = DISCOVER_QUERIES[turn % len(DISCOVER_QUERIES)]
+    try:
+        found, evidence = yt.call("search", part="id", type=kind, q=q, maxResults=50).get("items", []), {}
+    except SearchQuotaExceeded:
+        quota["search_out"] = True
+        return list(keep.values()), turn
     quota["disc"], turn = quota.get("disc", 0) + 1, turn + 1
-    found, evidence = yt.call("search", part="id", type=kind, q=q, maxResults=50).get("items", []), {}
     if kind == "channel":
         chs = [x["id"]["channelId"] for x in found if x.get("id", {}).get("channelId")]
     else:
@@ -434,7 +561,7 @@ def discover_allowed(yt, prev, quota, t, turn):
         allow, quote, where, vid = clip_permission(sn.get("description"), evidence.get(it["id"], []))
         if subs >= ALLOWED_MIN_SUBS and allow == "allows":
             keep[it["id"]] = {"ch": it["id"], "name": (sn.get("title") or "")[:80], "avatar": ((sn.get("thumbnails") or {}).get("default") or {}).get("url", ""),
-                              "subs": subs, "quote": quote, "where": where, "vid": vid, "paid": bool(PAID_RX.search(quote)), "found": int(t)}
+                              "subs": subs, "quote": quote, "where": where, "vid": vid, "paid": bool(PAID_RX.search(quote)), "found": int(t), "checked": int(t)}
     return sorted(keep.values(), key=lambda c: -c["subs"])[:ALLOWED_MAX], turn
 
 
@@ -447,15 +574,29 @@ def get_json(url, timeout=30):
         return json.load(r)
 
 
-def load_prev(url):
-    if not url:
-        return {}
-    try:
-        data = get_json(url)
-        return data if isinstance(data, dict) else {}
-    except Exception as e:
-        print(f"no previous trends ({type(e).__name__}); starting fresh", file=sys.stderr)
-        return {}
+def load_prev(url, state_dir, allow_seed):
+    """The newest previous trends: the saved state folder or the live site. Returns (data, source) or (None, reason)."""
+    found = []
+    if state_dir and (Path(state_dir) / "trends.json").exists():
+        try:
+            d = json.loads((Path(state_dir) / "trends.json").read_text(encoding="utf-8"))
+            if isinstance(d, dict) and d.get("generated"):
+                found.append((d["generated"], 1, d, "saved state"))
+        except Exception as e:
+            print(f"saved trends unreadable ({type(e).__name__})", file=sys.stderr)
+    if url:
+        try:
+            d = get_json(url)
+            if isinstance(d, dict) and d.get("generated"):
+                found.append((d["generated"], 0, d, "live site"))
+        except Exception as e:
+            print(f"no previous trends from the site ({type(e).__name__})", file=sys.stderr)
+    if found:
+        _, _, d, source = max(found, key=lambda x: (x[0], x[1]))
+        return d, source
+    if allow_seed:
+        return {}, "fresh start"
+    return None, "no saved trends and the live site could not be read"
 
 
 def chart_item(it, rank):
@@ -525,9 +666,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
     ap.add_argument("--data", default="", help="this run's data.json, for the hot-trend list alerts use")
+    ap.add_argument("--state", default=os.environ.get("STATE_DIR", ""), help="private folder kept between runs (the workflow caches it)")
     args = ap.parse_args()
     t = now()
-    prev = load_prev(os.environ.get("PREV_TRENDS_URL", ""))
+    prev, source = load_prev(os.environ.get("PREV_TRENDS_URL", ""), args.state, os.environ.get("ALLOW_SEED", "").strip().lower() in ("1", "true", "yes"))
+    if prev is None:
+        print(f"REFUSING TO RUN: {source}. Nothing was written, so the site keeps its last good trends.", file=sys.stderr)
+        sys.exit(2)
+    print(f"trends history from {source}")
     yt_prev, wiki_prev = prev.get("yt") or {}, prev.get("wiki") or {}
     seen = {k: v for k, v in (prev.get("seen") or {}).items() if isinstance(v, (int, float)) and t - v < SEEN_DAYS * 86400}
     out = {"generated": int(t), "yt": yt_prev, "wiki": wiki_prev, "hot": prev.get("hot") or {}, "clips": prev.get("clips") or [],
@@ -535,14 +681,17 @@ def main():
     clipq = prev.get("clipq") or {}
     if clipq.get("day") != pacific_day(t):
         clipq = {"day": pacific_day(t), "used": 0}
+
+    def units_left():
+        return max(0, TRENDS_DAILY_UNITS - clipq.get("units", 0))
     if args.data:
         hot = hot_trends(args.data, t)
         if hot is not None:
             out["hot"] = hot
 
     key = os.environ.get("YT_API_KEY", "").strip()
-    if key and t - (yt_prev.get("updated") or 0) >= YT_EVERY:
-        yt = YouTube(key, int(os.environ.get("TRENDS_BUDGET", "40")))
+    if key and t - (yt_prev.get("updated") or 0) >= YT_EVERY and units_left() >= 24:
+        yt = YouTube(key, min(int(os.environ.get("TRENDS_BUDGET", "40")), units_left()))
         try:
             regions = youtube_charts(yt, yt_prev.get("regions") or {}, seen, t)
             if any(regions.values()):
@@ -551,11 +700,12 @@ def main():
             print(f"YouTube charts skipped: {e}", file=sys.stderr)
         except Exception as e:   # keep the previous charts
             print(f"YouTube charts failed: {type(e).__name__}: {e}", file=sys.stderr)
+        clipq["units"] = clipq.get("units", 0) + yt.used
         print(f"YouTube charts: {yt.used} units")
     elif not key:
         print("no YT_API_KEY: keeping the previous YouTube charts", file=sys.stderr)
-    if key:   # clip opportunities: creators who invite clippers, a few more creators researched each run, and their best moments
-        cy = YouTube(key, int(os.environ.get("CLIP_BUDGET", "120")))
+    if key and units_left() > 0:   # clip opportunities: creators who invite clippers, a few more creators researched each run, and their best moments
+        cy = YouTube(key, min(int(os.environ.get("CLIP_BUDGET", "120")), units_left()))
         try:
             out["allowed"], out["disc_i"] = discover_allowed(cy, out["allowed"], clipq, t, out["disc_i"])
         except QuotaExceeded as e:
@@ -573,7 +723,8 @@ def main():
             print(f"clip research stopped: {e}", file=sys.stderr)
         except Exception as e:   # keep what was researched before
             print(f"clip research failed: {type(e).__name__}: {e}", file=sys.stderr)
-        print(f"clip research: {cy.searches} searches, {cy.used} units")
+        clipq["units"] = clipq.get("units", 0) + cy.used
+        print(f"clip research: {cy.searches} searches, {cy.used} units (today {clipq['units']}/{TRENDS_DAILY_UNITS})")
     out["clipq"] = clipq
 
     if t - (wiki_prev.get("checked") or 0) >= WIKI_EVERY:
@@ -585,7 +736,12 @@ def main():
             print(f"Wikipedia failed: {type(e).__name__}: {e}", file=sys.stderr)
 
     out["seen"] = seen
-    Path(args.out).write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    text = json.dumps(out, ensure_ascii=False, separators=(",", ":"))
+    for path in [Path(args.out)] + ([Path(args.state) / "trends.json"] if args.state else []):   # the site, and the copy the next run starts from
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = path.with_suffix(".json.tmp")
+        tmp.write_text(text, encoding="utf-8")
+        tmp.replace(path)
     charts = sum(len(v) for v in (out["yt"].get("regions") or {}).values())
     print(f"trends: {charts} YouTube charts, Wikipedia {', '.join(k for k in WIKIS if k in out['wiki']) or 'none'}, {len(out['hot'])} hot trends, "
           f"{sum(1 for c in out['clips'] if not c.get('small'))} clip creators")

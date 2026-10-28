@@ -1392,6 +1392,40 @@ svg.i{width:16px;height:16px;flex:none;vertical-align:-3px}
   .gl dd{margin-bottom:10px}
   .hsec{padding:16px}
 }
+
+/* added after the 28 Oct 2026 data audit: freshness, signal strength, editor's notes, beta note, data status, boards */
+.fresh{font-size:12px;color:var(--muted);background:var(--surface2);border-radius:999px;padding:2px 8px;white-space:nowrap}
+.fresh.stale{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.weak{display:inline-block;font-size:12px;color:var(--warn);margin:4px 0 2px}
+p.weak{margin:4px 0 10px}
+.pnote .pdate{display:block;font-size:11.5px;font-weight:600;color:var(--muted);margin-bottom:2px;letter-spacing:.01em}
+.note b{display:block}
+.betanote{display:flex;gap:8px;align-items:center;background:color-mix(in srgb,var(--good) 12%,transparent);color:var(--text);border-radius:12px;padding:10px 14px;margin:0 0 16px;font-size:14px}
+.betanote .i{color:var(--good);flex:none}
+.dstatus{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:0 0 18px}
+.dstatus h2{font-size:17px;margin:0 0 10px}
+.dsgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:6px}
+.dsgrid div{background:var(--surface2);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.dsgrid span{font-size:12.5px;color:var(--muted)}
+.dsgrid b{font-size:18px;font-variant-numeric:tabular-nums}
+.boards{margin:0 0 22px}
+.board{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:10px}
+.bdhead{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.bdhead b{font-size:15px}
+.bdhead small{color:var(--muted)}
+.bdhead .ghost{margin-left:auto}
+.board textarea{width:100%;margin-top:8px;resize:vertical;min-height:44px;background:var(--surface2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;font-size:14px}
+.bditems{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.bditem{display:flex;align-items:center;gap:6px}
+.bdopen{flex:1;min-width:0;display:flex;align-items:center;gap:8px;text-align:left;background:var(--surface2);border:0;border-radius:10px;padding:8px 10px;color:var(--text);cursor:pointer;font:inherit;font-size:14px}
+.bdopen span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bdopen:hover{background:var(--hover)}
+.bdic svg{width:16px;height:16px;display:block;fill:none;stroke:currentColor;stroke-width:2}
+.bdpick{max-width:420px;width:calc(100% - 32px);border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--text);padding:20px}
+.bdpick::backdrop{background:rgba(0,0,0,.45)}
+.bdpick h3{margin:0 0 4px}
+.bdpick .blist{margin:10px 0}
+.bdpick .nrow{width:100%;text-align:left;background:var(--surface2);border:0;color:var(--text);cursor:pointer}
 </style>
 </head>
 <body>
@@ -1429,6 +1463,7 @@ svg.i{width:16px;height:16px;flex:none;vertical-align:-3px}
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="tray"></div>
 
+<script type="application/json" id="trendWords">{"noise":["best","episode","foryou","foryoupage","full","fyp","new","official","part","reels","short","shorts","shortsfeed","shortsvideo","shortvideo","subscribe","tiktok","trend","trending","video","videos","viral","viralshorts","viralvideo","youtube","youtubeshorts","ytshorts","คลิป","ติดเทรนด์","ฟีด","ไวรัล"],"generic":["ada","aja","always","amazing","baby","back","bad","banget","baru","beli","best","big","bikin","bisa","boy","buat","came","car","cara","cho","come","como","crazy","cuando","cute","có","của","dan","day","days","dengan","doing","donde","done","emang","end","epic","eso","esto","even","ever","every","everyone","eyes","fake","fazer","find","first","found","funny","ga","gak","get","gets","getting","gini","girl","gitu","give","goes","going","good","got","guy","hace","hacer","happen","happened","happens","ini","insane","isso","itu","jadi","juga","just","kalau","kalo","kayak","keep","khi","không","kid","kids","know","kok","lagi","langsung","last","let","life","like","likes","little","look","looking","love","loved","là","made","mais","make","makes","making","man","many","mas","masa","mau","more","most","much","muito","muy","một","need","never","new","nggak","người","những","now","này","não","old","onde","one","only","orang","pake","para","part","pas","people","pero","person","poor","por","pov","put","quando","que","quem","quien","real","really","rich","said","sama","sampai","sampe","saw","say","see","seen","small","someone","star","still","tak","take","tell","thing","things","think","three","tidak","time","times","today","todo","top","tried","try","trying","tudo","two","udah","untuk","very","vs","và","với","wait","want","watch","watching","water","went","woman","world","worst","yang","đã","được","để","एक","और","कर","की","के","कैसे","को","क्या","गया","तो","था","थी","दिया","ने","बना","भी","में","ये","रहा","रही","लिए","वाला","वाली","वो","से","ही","है","हो","ก็","คน","ครั้ง","จะ","ดู","ตัว","ทำ","มา","มาก","ยังไง","ลอง","วัน","สุด","อะไร","เขา","เรา","เลย","แล้ว","ได้","ไป"],"stop":["a","aber","about","ada","adalah","akan","al","all","ama","an","anche","and","ang","anh","apa","are","aren't","as","at","atau","au","auch","auf","aus","aux","avec","ay","ba","bagaimana","be","bei","belum","ben","bir","bisa","biz","bu","but","bạn","can","can't","cant","ce","cette","che","cho","chị","come","como","con","could","cuando","các","có","cómo","cũng","của","da","daha","dahil","dan","dans","dari","das","de","del","della","dem","den","dengan","der","des","di","dia","dich","did","didn't","die","din","dir","do","doesn't","don't","dont","dos","du","e","ein","eine","el","ela","ele","elle","em","en","er","era","es","eso","est","esta","este","et","eu","fakta","foi","for","from","fue","für","gibi","gli","gì","hay","he","he'll","he's","her","hindi","his","how","i'd","i'll","i'm","i've","ich","if","ihr","il","ile","im","in","ini","into","is","isn't","isso","ist","it","it's","ito","its","itu","ive","iyan","iyon","için","je","juga","just","ka","kadar","kalau","kami","kamu","karena","kayo","ke","kenapa","khi","không","ko","kung","la","lang","las","le","lebih","les","let's","lets","leur","lo","los","lui","là","lại","ma","mais","mas","may","mereka","mes","meu","mga","mi","mich","mir","mit","mo","molto","mon","muito","muy","my","mà","más","một","na","naman","nas","ne","ng","người","như","nhưng","những","ni","nicht","no","noch","non","nos","not","nous","nur","nào","này","não","o","of","olan","oldu","on","one","os","our","out","over","pada","para","pas","per","pero","più","plus","po","por","porque","pour","que","qui","qué","ra","rin","rất","sa","sangat","sao","saya","schon","se","sen","ses","seu","she","she'll","she's","si","sich","sie","sila","siya","siz","so","son","sonra","su","sua","sudah","sur","sus","são","ta","talaga","tayo","tem","tes","than","that","that's","thats","the","their","them","then","there","there's","they","they'll","they're","they've","this","thì","tidak","to","ton","très","tu","tôi","từ","um","uma","un","una","und","une","uns","untuk","up","ur","var","ve","você","von","vous","và","vào","với","wala","was","wasn't","we","we'll","we're","we've","wenn","weren't","what","what's","whats","when","who","why","wie","will","wir","with","won't","wont","would","y","ya","yang","yok","you","you'd","you'll","you're","you've","your","youre","yun","yung","zu","zum","zur","çok","è","é","önce","đã","đó","được","đến","để","şu","а","без","больше","будет","бы","был","была","были","было","быть","в","вас","вот","все","всегда","всего","всех","вы","где","да","даже","два","для","до","его","ее","ей","ему","если","есть","еще","же","за","здесь","и","из","или","их","к","как","какой","когда","кто","куда","ли","лучше","меня","мне","много","может","можно","мой","моя","мы","на","над","надо","нас","не","него","ней","нет","ни","никогда","них","ничего","но","ну","о","один","он","она","они","от","перед","по","под","после","потом","потому","почти","при","про","раз","с","сам","свою","себе","себя","сейчас","совсем","так","такой","там","тебя","тем","теперь","то","тогда","того","тоже","только","том","тот","три","тут","ты","у","уже","хорошо","чего","чем","через","что","чтобы","эти","это","этого","этой","этом","этот","эту","я","أنا","أنت","أو","إذا","إلى","التي","الذي","بعد","ثم","حتى","ذلك","على","عن","عند","في","قبل","قد","كان","كانت","كل","لا","لم","لن","ما","مع","من","نحن","هذا","هذه","هو","هي","يا","अपना","अपनी","अपने","अब","आप","इन","इस","उन","उस","एक","ऐसा","ऐसी","ऐसे","और","कब","कर","करते","करने","कहाँ","का","कि","किया","की","कुछ","के","कैसे","को","कौन","क्या","क्यों","गई","गए","गया","जब","जो","तब","तुम","तो","था","थी","थे","नहीं","ने","पर","फिर","बहुत","बाद","भी","में","मैं","यह","या","ये","रहा","रही","रहे","लिए","लेकिन","वह","वाला","वाली","वाले","वो","सब","सबसे","साथ","से","हम","ही","है","हैं","हो","होता","होती","होते"],"games":[["Roblox","roblox"],["Minecraft","minecraft"],["Fortnite","fortnite"],["GTA","\\bgta\\b|grand theft auto"],["GTA 6","\\bgta ?(6|vi)\\b"],["Brawl Stars","brawl ?stars"],["Free Fire","free ?fire|ฟีฟาย"],["PUBG","pubg"],["ROV","\\brov\\b|arena of valor"],["Mobile Legends","mobile legends|\\bmlbb\\b"],["Valorant","valorant"],["Genshin Impact","genshin"],["Honkai","honkai"],["Among Us","among ?us"],["Poppy Playtime","poppy playtime|huggy wuggy|catnap"],["FNAF","\\bfnaf\\b|five nights at freddy"],["Garten of Banban","banban"],["Clash Royale","clash royale"],["Clash of Clans","clash of clans"],["Pokémon","pok[eé]mon|pikachu"],["Mario","\\bmario\\b"],["Sonic","\\bsonic\\b"],["Call of Duty","call of duty|warzone"],["Apex Legends","apex legends"],["Overwatch","overwatch"],["Counter-Strike","counter[- ]?strike|\\bcs2\\b"],["Elden Ring","elden ring"],["Silksong","silksong|hollow knight"],["Stardew Valley","stardew"],["Terraria","terraria"],["Subway Surfers","subway surfers"],["Geometry Dash","geometry dash"],["Rocket League","rocket league"],["EA FC / FIFA","\\bea ?fc\\b|\\bfifa\\b|\\bfc ?2[4-7]\\b"],["eFootball","efootball"],["NBA 2K","nba ?2k"],["Blox Fruits","blox fruits?"],["Brookhaven","brookhaven"],["Grow a Garden","grow a garden"],["Steal a Brainrot","steal a brainrot"],["99 Nights in the Forest","99 nights"],["Dead Rails","dead rails"],["Forsaken","forsaken"],["Bedwars","bedwars"],["Stumble Guys","stumble guys"],["Fall Guys","fall guys"],["Honor of Kings","honor of kings"],["Delta Force","delta force"],["Marvel Rivals","marvel rivals"],["Wuthering Waves","wuthering waves"],["Plants vs Zombies","plants vs\\.? zombies|\\bpvz\\b"],["Chess","\\bchess\\b|หมากรุก"]],"cartoons":[["Sprunki","sprunki"],["Skibidi Toilet","skibidi"],["Italian Brainrot","brainrot|tralalero|tung ?tung|sahur|bombardiro|cappuccina|lirili|chimpanzini"],["Labubu","labubu"],["KPop Demon Hunters","demon hunters|huntrix|saja boys"],["Bluey","\\bbluey\\b"],["SpongeBob","sponge ?bob"],["Peppa Pig","peppa"],["Cocomelon","cocomelon"],["Doraemon","doraemon|โดราเอม่อน"],["Shin-chan","shin ?chan|ชินจัง"],["Pokémon","pok[eé]mon|pikachu"],["Minions","\\bminions?\\b"],["Hello Kitty & Sanrio","hello kitty|sanrio|kuromi|cinnamoroll|my melody"],["Demon Slayer","demon slayer|kimetsu"],["One Piece","one piece|luffy"],["Naruto","naruto"],["Dragon Ball","dragon ?ball|goku"],["Jujutsu Kaisen","jujutsu|gojo"],["Chainsaw Man","chainsaw man"],["Spy x Family","spy ?x ?family"],["Smurfs","\\bsmurfs?\\b"],["Toy Story","toy story"],["Zootopia","zootopia"],["Frozen","\\bfrozen\\b|\\belsa\\b"],["Moana","moana"],["Shrek","shrek"],["Garfield","garfield"],["Tom and Jerry","tom (and|&) jerry"],["The Amazing Digital Circus","digital circus|pomni"],["Murder Drones","murder drones"],["Hazbin Hotel","hazbin|helluva"],["Rainbow Friends","rainbow friends"],["Siren Head","siren head|cartoon cat"],["Stickman","stick ?man"],["Anime","\\banime\\b|อนิเมะ"],["Cartoons","cartoon|การ์ตูน"]]}</script>
 <script>window.RADAR_STATIC = false/*__STATIC__*/; window.RADAR_CFG = {}/*__CFG__*/;</script>
 <script>
 const SNAP = null/*__SNAPSHOT__*/;
@@ -1436,7 +1471,7 @@ const STATIC = window.RADAR_STATIC === true;   // hosted website: reads data.jso
 const CFG = window.RADAR_CFG || {};
 const LIVE = !SNAP;                            // live data (local app or hosted site) rather than an embedded snapshot
 const SERVER = LIVE && !STATIC;                // talks to the local app's API
-let DATA = SNAP;
+let DATA = SNAP ? prepData(SNAP) : SNAP;
 const $ = (s, el = document) => el.querySelector(s);
 const LS = {
   get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
@@ -1620,7 +1655,7 @@ const T = {
     emptyCh: 'ไม่มีช่องที่ตรงกับตัวกรองนี้ ลองเลือก “ทุกระดับ” หรือหมวดอื่น', emptyFirst: 'กำลังสแกนครั้งแรก ช่องจะทยอยขึ้นที่นี่เมื่อตรวจเสร็จ (ใช้เวลาไม่กี่นาที)',
     emptyVid: 'ไม่พบคลิปที่ตรงกัน ลองลดตัวกรอง “เท่าของปกติ” หรือเลือกหมวดอื่น', emptyLive: 'ไม่มีคลิปใหม่ใน 3 วันที่ผ่านมาสำหรับตัวกรองนี้ คลิปใหม่จะขึ้นที่นี่เมื่อระบบตรวจช่องซ้ำ',
     emptySaved: 'ยังไม่ได้บันทึกช่องไหน กด “บันทึก” ที่ช่องที่ชอบ แล้วช่องจะมาอยู่ที่นี่', emptyNiche: 'หมวดหมู่จะปรากฏเมื่อมีช่องที่ให้คะแนนแล้ว',
-    footWeb: 'ตัวเลขมาจากข้อมูลทางการของ YouTube และอัปเดตเองตลอดทั้งวัน ยอดวิวบน YouTube เองอาจช้ากว่าจริงเล็กน้อย ใช้เว็บนี้เพื่อเรียนรู้ว่าอะไรได้ผล แล้วสร้างผลงานของคุณเอง อย่าก๊อปหรืออัปโหลดคลิปของคนอื่นซ้ำ',
+    footWeb: 'ตัวเลขมาจากข้อมูลทางการของ YouTube และอัปเดตเองหลายครั้งต่อวัน ยอดวิวบน YouTube เองอาจช้ากว่าจริงเล็กน้อย ใช้เว็บนี้เพื่อเรียนรู้ว่าอะไรได้ผล แล้วสร้างผลงานของคุณเอง อย่าก๊อปหรืออัปโหลดคลิปของคนอื่นซ้ำ',
     footLocal: 'ข้อมูลสาธารณะของ YouTube ผ่าน yt-dlp (ไม่เป็นทางการ อาจใช้ไม่ได้หรือถูกจำกัดความเร็ว) ยอดวิวอัปเดตช้ากว่าจริง ใช้เพื่อหารูปแบบที่ควรศึกษาและทำให้ดีกว่า ไม่ใช่เพื่อลอกช่อง',
     footSnap: 'นี่คือสำเนาผลลัพธ์ที่บันทึกไว้ ตัวเลขหยุดอยู่ที่เวลาที่แสดงในเมนู',
     dTrack: 'ติดตามช่องที่ต้องการ', dTrackD: 'วาง @handle หรือลิงก์ช่อง ระบบจะให้คะแนนทันทีและเพิ่มไว้ในที่บันทึกไว้', dTrackPh: '@handle หรือ https://www.youtube.com/@...',
@@ -2279,6 +2314,9 @@ Object.assign(T.th, {
   const lead = /^(?:[#*0-9]️?⃣|\p{Extended_Pictographic}|\p{Regional_Indicator})(?:️|‍\p{Extended_Pictographic}|\p{Regional_Indicator}|\p{Extended_Pictographic})*\s*/u;
   for (const L of [T.en, T.th]) for (const k of Object.keys(L)) if (typeof L[k] === 'string') { const v = L[k].replace(lead, ''); if (v) L[k] = v; }
 })();
+// Wording added or corrected after the 28 Oct 2026 data audit (the language packs carry the same keys)
+Object.assign(T.en, {lNewShorts: "New to Shorts", newShortsBadge: "🌱 New to Shorts", wOneHit2: "Careful: its best Short has {p} of all the views we can see.", pGrowH: "+{n} views per hour over the last {h} h", growTip: "Measured over {h} h, {ago}", tooNew: "Too new to judge", lCreated: "Channel created", gCreated: "When the channel was created on YouTube. A channel can exist long before its first Short.", agoV: "{a} ago", lFirstShort: "Oldest Short we checked", gFirstShort: "The oldest of the newest Shorts we checked (up to 24). When a channel has fewer than 24 Shorts, this is usually its first one.", momNA: "not enough history yet", typicalFoot: "middle of {n} Shorts over a week old", typicalFootAll: "middle of its {n} newest Shorts", checkedAgo: "checked {ago}", stPub: "Published {ago} · {p} of channels checked in the last day", dsT: "Data status", dsPub: "Last published", dsFresh: "Channels checked in the last 24 hours", dsMed: "Typical time since a channel was checked", dsMedV: "about {n} h", dsQuota: "YouTube API units used today", dsSearch: "Scanner searches used today", dsGap: "GitHub has been starting a refresh about every {h} h.", dsNote: "Every number comes from YouTube’s official API. Hot channels are re-checked every few hours, the rest about once a day.", weakSig: "Weak signal: {n} Shorts from {k} channels", pickDate: "Editor’s note · {d}", edPick: "Editor’s pick", betaBanner: "Beta: every feature is free while Viral Radar is in beta.", bdT: "Boards", bdD: "One board per video idea: collect channels, Shorts, trends and notes. Boards sync when you sign in.", bdNew: "New board", bdNamePh: "Board name, e.g. “Dinosaur what-ifs”", bdEmpty: "No boards yet. Make one, then use “Save to board” on any channel, Short or trend.", bdAdd: "Save to board", bdAdded: "Saved to “{b}”", bdNotesPh: "Notes: hooks, ideas, links…", bdDelete: "Delete board", bdRemove: "Remove from board", bdItems: "{n} saved", gTypical: "The middle value of the channel’s newest Shorts that are at least a week old: half got more, half got less. One lucky video can’t inflate it, and brand-new uploads don’t drag it down.", gGrow: "Views gained per hour between our last two checks. It only shows when both checks were recent, so it describes what is happening now.", gTrend: "Usual views of the channel’s newer Shorts divided by its older ones, counting only Shorts at least a week old. Above 1× means it is growing. With fewer than 8 such Shorts there isn’t enough history to say.", wNew: "New to Shorts: all {n} of its Shorts came out in the last {d} days.", pmYes: "Description invites clippers", clAllow: "Invites clippers", momPoint: "{n} comments point here", comp0: "No matching clip found", comp1: "1 similar clip found", compN: "{n} similar clips found", cpWhy: "Why: {n} comments point to it (“{q}”)", cpComp0: "Competition: no matching titles among the clips we checked", cpCompN: "Competition: {n} clip titles match this moment", ackMomV: "{n} moments viewers point to, with no matching clip found", ackMomV1: "1 moment viewers point to, with no matching clip found", ackMomTaken: "Every standout moment already has matching clips", mNow: "average since upload", tcScore: "Rules-of-thumb score out of 100. It checks habits common in popular titles; it is not a prediction.", pf1D: "Every word and hashtag rising across thousands of new Shorts, refreshed several times a day.", footWeb: "Numbers come from YouTube’s official data and refresh several times a day; each channel shows when it was last checked. Use this to learn what works, then make something original. Don’t copy or re-upload other people’s videos."});
+Object.assign(T.th, {lNewShorts: "เพิ่งเริ่มทำคลิปสั้น", newShortsBadge: "🌱 เพิ่งเริ่มทำคลิปสั้น", wOneHit2: "ระวัง: คลิปที่ดีที่สุดคลิปเดียวมีวิวถึง {p} ของวิวทั้งหมดที่เราเห็น", pGrowH: "วิวเพิ่ม +{n} ต่อชั่วโมง ในช่วง {h} ชม. ที่ผ่านมา", growTip: "วัดในช่วง {h} ชม. · {ago}", tooNew: "ใหม่เกินกว่าจะตัดสิน", lCreated: "สร้างช่องเมื่อ", gCreated: "วันที่ช่องถูกสร้างบน YouTube ช่องอาจมีมานานก่อนลงคลิปสั้นคลิปแรก", agoV: "{a}ที่แล้ว", lFirstShort: "คลิปสั้นเก่าสุดที่เราตรวจ", gFirstShort: "คลิปที่เก่าที่สุดในบรรดาคลิปสั้นล่าสุดที่เราตรวจ (สูงสุด 24 คลิป) ถ้าช่องมีคลิปสั้นไม่ถึง 24 คลิป มักจะเป็นคลิปแรกของช่อง", momNA: "ข้อมูลย้อนหลังยังไม่พอ", typicalFoot: "ค่ากลางจาก {n} คลิปที่อายุเกิน 1 สัปดาห์", typicalFootAll: "ค่ากลางจาก {n} คลิปล่าสุด", checkedAgo: "ตรวจเมื่อ {ago}", stPub: "เผยแพร่เมื่อ {ago} · ตรวจช่องแล้ว {p} ใน 1 วันที่ผ่านมา", dsT: "สถานะข้อมูล", dsPub: "เผยแพร่ล่าสุด", dsFresh: "ช่องที่ตรวจใน 24 ชั่วโมงที่ผ่านมา", dsMed: "เวลาโดยทั่วไปนับจากการตรวจช่องครั้งล่าสุด", dsMedV: "ประมาณ {n} ชม.", dsQuota: "หน่วย YouTube API ที่ใช้วันนี้", dsSearch: "การค้นหาของระบบสแกนวันนี้", dsGap: "GitHub เริ่มรอบอัปเดตประมาณทุก {h} ชม.", dsNote: "ตัวเลขทุกตัวมาจาก API ทางการของ YouTube ช่องที่กำลังมาแรงจะถูกตรวจซ้ำทุกไม่กี่ชั่วโมง ช่องอื่นประมาณวันละครั้ง", weakSig: "สัญญาณอ่อน: {n} คลิปจาก {k} ช่อง", pickDate: "ความเห็นทีมงาน · {d}", edPick: "ทีมงานเลือก", betaBanner: "ช่วงเบต้า: ทุกฟีเจอร์ใช้ฟรีระหว่างที่ Viral Radar อยู่ในช่วงเบต้า", bdT: "บอร์ดไอเดีย", bdD: "หนึ่งบอร์ดต่อหนึ่งไอเดียคลิป รวมช่อง คลิปสั้น เทรนด์ และโน้ตไว้ที่เดียว บอร์ดจะซิงก์เมื่อคุณเข้าสู่ระบบ", bdNew: "บอร์ดใหม่", bdNamePh: "ชื่อบอร์ด เช่น “ถ้าไดโนเสาร์…”", bdEmpty: "ยังไม่มีบอร์ด สร้างบอร์ดแล้วกด “บันทึกลงบอร์ด” ที่ช่อง คลิป หรือเทรนด์ไหนก็ได้", bdAdd: "บันทึกลงบอร์ด", bdAdded: "บันทึกลง “{b}” แล้ว", bdNotesPh: "โน้ต: ฮุก ไอเดีย ลิงก์…", bdDelete: "ลบบอร์ด", bdRemove: "เอาออกจากบอร์ด", bdItems: "บันทึกไว้ {n} รายการ", gTypical: "ค่ากลางของวิวจากคลิปสั้นล่าสุดของช่องที่อายุอย่างน้อย 1 สัปดาห์ ครึ่งหนึ่งได้มากกว่า อีกครึ่งได้น้อยกว่า คลิปฮิตคลิปเดียวดันตัวเลขขึ้นไม่ได้ และคลิปที่เพิ่งลงก็ไม่ดึงให้ต่ำลง", gGrow: "วิวที่เพิ่มต่อชั่วโมงระหว่างการตรวจ 2 ครั้งล่าสุด แสดงเฉพาะเมื่อตรวจทั้งสองครั้งไม่นานมานี้ จึงบอกสิ่งที่เกิดขึ้นตอนนี้", gTrend: "วิวปกติของคลิปที่ใหม่กว่าหารด้วยของคลิปที่เก่ากว่า โดยนับเฉพาะคลิปที่อายุอย่างน้อย 1 สัปดาห์ มากกว่า 1× แปลว่าช่องกำลังโต ถ้ามีคลิปแบบนี้ไม่ถึง 8 คลิป ข้อมูลย้อนหลังยังไม่พอจะบอกได้", wNew: "เพิ่งเริ่มทำคลิปสั้น: คลิปสั้นทั้ง {n} คลิปลงภายใน {d} วันที่ผ่านมา", pmYes: "คำอธิบายเชิญให้ตัดคลิป", clAllow: "เชิญให้ตัดคลิป", momPoint: "มี {n} คอมเมนต์ชี้มาที่ตรงนี้", comp0: "ไม่พบคลิปที่ตรงกัน", comp1: "พบคลิปคล้ายกัน 1 คลิป", compN: "พบคลิปคล้ายกัน {n} คลิป", cpWhy: "เหตุผล: มี {n} คอมเมนต์ชี้มาที่ตรงนี้ (“{q}”)", cpComp0: "คู่แข่ง: ไม่พบชื่อคลิปที่ตรงกันในคลิปที่เราตรวจ", cpCompN: "คู่แข่ง: มีชื่อคลิป {n} คลิปที่ตรงกับช่วงนี้", ackMomV: "{n} ช่วงที่คนดูชี้ถึง และยังไม่พบคลิปที่ตรงกัน", ackMomV1: "1 ช่วงที่คนดูชี้ถึง และยังไม่พบคลิปที่ตรงกัน", ackMomTaken: "ทุกช่วงเด่นมีคลิปที่ตรงกันแล้ว", mNow: "เฉลี่ยตั้งแต่อัปโหลด", tcScore: "คะแนนจากหลักทั่วไป เต็ม 100 ตรวจลักษณะที่ชื่อคลิปยอดนิยมมักมี ไม่ใช่การทำนายผล", pf1D: "ทุกคำและแฮชแท็กที่กำลังมาแรงจากคลิปสั้นใหม่หลายพันคลิป อัปเดตหลายครั้งต่อวัน", footWeb: "ตัวเลขมาจากข้อมูลทางการของ YouTube และอัปเดตหลายครั้งต่อวัน แต่ละช่องบอกว่าตรวจล่าสุดเมื่อไร ใช้เพื่อเรียนรู้ว่าอะไรได้ผล แล้วสร้างผลงานของคุณเอง อย่าคัดลอกหรืออัปโหลดคลิปของคนอื่นซ้ำ"});
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
     den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
@@ -2321,7 +2359,7 @@ TOPICS.forEach(tp => { T.en['_topic_' + tp[0]] = tp[2]; T.th['_topic_' + tp[0]] 
 const HELP = {
   en: [
     {id: 'what', em: '👋', h: 'What is Viral Radar?', p: [
-      'Viral Radar watches YouTube Shorts and finds channels that are growing unusually fast, especially **small channels whose videos reach millions of people**. It updates by itself all day, and it is free.',
+      'Viral Radar watches YouTube Shorts and finds channels that are growing unusually fast, especially **small channels whose videos reach millions of people**. It updates itself several times a day, and it is free.',
       'Use it to find video ideas that are working right now, then make your own version.']},
     {id: 'outlier', em: '🎯', h: 'What does “outlier” mean?', p: [
       'An outlier is something that does **much better than normal**.',
@@ -2346,14 +2384,14 @@ const HELP = {
       'Searching **all of YouTube** works when it is switched on for this site: press Enter, or tap “Search all of YouTube” under the search box. It works on any device, with no sign-in.']},
     {id: 'faq', em: '❓', h: 'Common questions', qa: [
       ['Is it free? Do I need an account?', 'Yes, it is free. No account and no sign-in.'],
-      ['How fresh are the numbers?', 'Channels are re-checked all day using YouTube’s official data. View counts on YouTube itself can lag a little.'],
+      ['How fresh are the numbers?', 'Hot channels are re-checked every few hours and the rest about once a day, using YouTube’s official data. Each channel shows when it was last checked, and the Data status box at the top of this page shows the whole picture. View counts on YouTube itself can lag a little.'],
       ['A channel is in another language. What now?', 'Tap “🌐 Translate” next to it. Shorts are visual, so most ideas work in any language.'],
       ['If I copy a “Super hot” channel, will I succeed?', 'Not necessarily. It shows what viewers like right now. Your own execution decides the result.'],
       ['Where are my saved channels kept?', 'In this browser, on this device. Nobody else can see them.']]}
   ],
   th: [
     {id: 'what', em: '👋', h: 'Viral Radar คืออะไร?', p: [
-      'Viral Radar คอยติดตามคลิปสั้นบน YouTube (Shorts) แล้วคัดช่องที่โตเร็วผิดปกติมาให้ โดยเฉพาะ**ช่องเล็ก ๆ ที่คลิปมีคนดูเป็นล้าน** ระบบอัปเดตเองตลอดทั้งวัน และใช้งานฟรี',
+      'Viral Radar คอยติดตามคลิปสั้นบน YouTube (Shorts) แล้วคัดช่องที่โตเร็วผิดปกติมาให้ โดยเฉพาะ**ช่องเล็ก ๆ ที่คลิปมีคนดูเป็นล้าน** ระบบอัปเดตเองหลายครั้งต่อวัน และใช้งานฟรี',
       'ใช้หาไอเดียคลิปที่กำลังได้ผลอยู่ตอนนี้ แล้วนำไปทำในแบบของคุณเอง']},
     {id: 'outlier', em: '🎯', h: '“Outlier” (ช่องหรือคลิปที่โดดเด่น) หมายถึงอะไร?', p: [
       'Outlier คือสิ่งที่ทำผลงานได้**ดีกว่าปกติมาก**',
@@ -2378,7 +2416,7 @@ const HELP = {
       'การค้นหาจาก **YouTube ทั้งหมด** ใช้ได้เมื่อเว็บนี้เปิดใช้งานไว้ กด Enter หรือกดปุ่ม “ค้นหาบน YouTube ทั้งหมด” ใต้ช่องค้นหา ใช้ได้ทุกอุปกรณ์ ไม่ต้องล็อกอิน']},
     {id: 'faq', em: '❓', h: 'คำถามที่พบบ่อย', qa: [
       ['ใช้ฟรีไหม ต้องสมัครสมาชิกหรือเปล่า?', 'ฟรี ไม่ต้องสมัครและไม่ต้องล็อกอิน'],
-      ['ตัวเลขอัปเดตบ่อยแค่ไหน?', 'ระบบตรวจช่องซ้ำตลอดทั้งวันด้วยข้อมูลทางการของ YouTube ยอดวิวบน YouTube เองอาจช้ากว่าจริงเล็กน้อย'],
+      ['ตัวเลขอัปเดตบ่อยแค่ไหน?', 'ช่องที่กำลังมาแรงจะถูกตรวจซ้ำทุกไม่กี่ชั่วโมง ช่องอื่นประมาณวันละครั้ง ด้วยข้อมูลทางการของ YouTube แต่ละช่องบอกว่าตรวจล่าสุดเมื่อไร และกล่องสถานะข้อมูลด้านบนหน้านี้แสดงภาพรวม ยอดวิวบน YouTube เองอาจช้ากว่าจริงเล็กน้อย'],
       ['ช่องเป็นภาษาอื่น ทำยังไงดี?', 'กด “🌐 แปล” ข้าง ๆ ช่องนั้น คลิปสั้นส่วนใหญ่เน้นภาพ ไอเดียจึงใช้ได้กับทุกภาษา'],
       ['ถ้าทำตามช่องที่ “มาแรงสุด ๆ” จะประสบความสำเร็จแน่ไหม?', 'ไม่แน่นอน มันแค่บอกว่าตอนนี้คนดูชอบอะไร ผลลัพธ์ขึ้นอยู่กับการลงมือทำของคุณเอง'],
       ['ช่องที่บันทึกไว้เก็บไว้ที่ไหน?', 'เก็บในเบราว์เซอร์นี้บนอุปกรณ์นี้ ไม่มีใครเห็นนอกจากคุณ']]}
@@ -2519,7 +2557,7 @@ const shown = {channels: 15, videos: 60, live: 60};
 const watchLocal = new Set(LS.get('radar.watch', []));
 let SEARCH = null, PREV_TAB = 'home', searchTimer = null, SHEET_ID = null, SHEET_SORT = 'new', lastTab = null;
 const canLive = () => SERVER && !!DATA && !DATA.readonly;   // owner of the local app: scan, track, change settings
-const canSearch = () => canLive() || (STATIC && !!getKey());   // live search: local app, or hosted site with the site's key or the visitor's own
+const canSearch = () => canLive() || (STATIC && (!!getKey() || !!API_BASE));   // live search: local app, or hosted site with the site's key or the visitor's own
 
 /* ---------- helpers ---------- */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -2551,6 +2589,7 @@ const fmt = n => {
   }
 };
 const fmtX = r => (r >= 10 ? String(Math.round(r)) : String(Math.round(r * 10) / 10));
+const xOr = x => (x == null ? '–' : fmtX(x) + '×');   // a ratio, or a dash when there isn't enough to work it out
 const fmtDur = s => { s = Math.round(s); const m = Math.floor(s / 60); return m >= 60 ? `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}` : `${m}:${String(s % 60).padStart(2, '0')}`; };
 const nowTs = () => (DATA && DATA.snapshot ? DATA.generated : Date.now() / 1000);
 const ago = ts => {
@@ -2565,9 +2604,11 @@ const scoreColor = s => s >= 80 ? 'var(--hot3)' : s >= 65 ? 'var(--hot2)' : s >=
 const isWatched = c => (LIVE && !DATA.readonly ? c.watch : watchLocal.has(c.ch_id));
 const foreign = c => c.lang && c.lang !== 'en' && c.lang !== 'und';
 const needsTr = c => (c.lang && c.lang !== 'und' ? c.lang !== UI.split('-')[0] : UI !== 'en');
-const grow = v => (v.g && v.h ? v.g / v.h : 0);
+const grow = v => (v.g && v.h && v.h <= 12 && nowTs() - (v.gAt || 0) < 6 * 3600 ? v.g / v.h : 0);   // measured growth, shown only while both checks are recent
 const when = v => v.p || v.s || 0;   // real upload time on the hosted site, first-seen time in the local app
-const speed = v => { const age = v.p ? nowTs() - v.p : 0; return age > 0 && age < 72 * 3600 ? v.v / Math.max(age / 3600, 1) : 0; };   // views per hour of a fresh upload
+const speed = v => { const age = v.p ? nowTs() - v.p : 0; return age > 0 && age < 72 * 3600 ? v.v / Math.max(age / 3600, 1) : 0; };   // average views per hour since a fresh upload went up
+const young = v => !!v.p && nowTs() - v.p < 7 * 86400;   // still collecting most of its views: too new to judge
+const topShare = c => c.top_share != null ? c.top_share : (s => (s ? Math.max(...c.series.map(v => v.v)) / s : 0))(c.series.reduce((a, v) => a + v.v, 0));
 const findCh = id => (DATA && DATA.channels.find(c => c.ch_id === id)) || (SEARCH && SEARCH.channels.find(c => c.ch_id === id)) ||
   (MY && MY.data && MY.data.id === id ? mineChannel(MY.data) : null);
 const IC = {
@@ -2663,13 +2704,13 @@ function chFacts(c) {
   let f = factCache.get(c);
   if (f) return f;
   const ps = c.series.map(v => v.p).filter(Boolean).sort((a, b) => b - a);
-  f = {freq: null, last: ps[0] || null, isNew: false, days: null};
+  f = {freq: null, last: ps[0] || null, first: ps.length ? ps[ps.length - 1] : null, isNew: false, days: null, newShorts: false, shortDays: null};
   if (ps.length >= 3) f.freq = (ps.length - 1) / Math.max((ps[0] - ps[ps.length - 1]) / 86400, 0.5);   // uploads per day
-  if (ps.length >= 3 && ps.length === c.series.length && c.series.length < 20) {
-    f.days = Math.max(1, Math.ceil((nowTs() - ps[ps.length - 1]) / 86400));
-    f.isNew = f.days <= 60;
+  if (ps.length >= 3 && ps.length === c.series.length && c.series.length < 20) {   // every Short we hold is recent: new to Shorts (not necessarily a new channel)
+    f.shortDays = Math.max(1, Math.ceil((nowTs() - ps[ps.length - 1]) / 86400));
+    f.newShorts = f.shortDays <= 60;
   }
-  if (c.created) { f.days = chAgeDays(c); f.isNew = f.days <= 120; }   // the real channel age when YouTube gave it
+  if (c.created) { f.days = chAgeDays(c); f.isNew = f.days <= 120; if (f.isNew) f.newShorts = false; }   // the channel's own creation date from YouTube
   factCache.set(c, f);
   return f;
 }
@@ -2687,15 +2728,16 @@ function whyLines(c) {
   if (k1 >= 2) out.push(t('wHits', {k: k1, n}));
   else if (k100 >= Math.max(3, n / 2)) out.push(t('wHits100', {k: k100, n}));
   const f = chFacts(c);
-  if (f.isNew) out.push(c.created ? t('wNewAge', {a: ageText(f.days)}) : t('wNew', {n, d: f.days}));
-  if (c.tags.includes('Rising')) out.push(t('wRising', {r: fmtX(c.trend)}));
+  if (f.isNew) out.push(t('wNewAge', {a: ageText(f.days)}));
+  else if (f.newShorts) out.push(t('wNew', {n, d: f.shortDays}));
+  if (c.tags.includes('Rising') && c.trend != null) out.push(t('wRising', {r: fmtX(c.trend)}));
   else if (c.tags.includes('Fading')) out.push(t('wFading'));
-  if (c.tags.includes('One-hit')) out.push(t('wOneHit'));
+  if (c.tags.includes('One-hit')) out.push(t('wOneHit2', {p: pct(topShare(c))}));
   return out;
 }
 const xText = x => (x >= 1.5 ? t('xMore', {x: fmtX(x)}) : x >= 0.8 ? t('xAbout') : t('xLess'));
 const HELPKEYS = {subs: ['lSubs', 'gSubs'], typical: ['lTypical', 'gTypical'], best: ['lBest', 'gBest'], ratio: ['lRatio', 'gRatio'], x: ['lX', 'gX'],
-  hits: ['lHits', 'gHits'], grow: ['lGrow', 'gGrow'], new: ['lNew', 'gNew'], score: ['lScore', 'gScore'], trend: ['lTrend', 'gTrend'], freq: ['lFreq', 'gFreq']};
+  hits: ['lHits', 'gHits'], grow: ['lGrow', 'gGrow'], new: ['lNewShorts', 'gNew'], score: ['lScore', 'gScore'], trend: ['lTrend', 'gTrend'], freq: ['lFreq', 'gFreq']};
 function helpHtml(key) {
   if (key === 'api') return apiHelp();
   if (key === 'verdict') return `<b>${esc(t('lVerdict'))}</b>${esc(t('gVerdict'))}` +
@@ -2736,7 +2778,7 @@ function channelsFiltered(ignoreScore) {
     (ignoreScore || c.score >= S.minScore) && (!S.maxSubs || c.subs <= S.maxSubs) && (!det || c.med_recent >= S.minMed) &&
     (!hideOne || !c.tags.includes('One-hit')) && (!S.tag || c.tags.includes(S.tag)) && (!S.niche || (c.queries || []).includes(S.niche)) &&
     (!q || hay(c).includes(q)));
-  const key = {score: c => c.score, med: c => c.med_recent, ratio: c => c.ratio, best: c => c.max_views, small: c => -c.subs, trend: c => c.trend}[S.sort] || (c => c.score);
+  const key = {score: c => c.score, med: c => c.med_recent, ratio: c => c.ratio ?? -1, best: c => c.max_views, small: c => -c.subs, trend: c => c.trend ?? -1}[S.sort] || (c => c.score);
   return list.sort((a, b) => key(b) - key(a));
 }
 const videoPool = chs => { const out = []; for (const c of chs) for (const v of c.series) out.push([v, c]); return out; };
@@ -2776,7 +2818,7 @@ function thumbBox(v, c) {
   return `<a class="th" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" data-play="${esc(v.id)}" data-c="${esc(c.ch_id)}" title="${esc(v.t)}">` +
     `<img loading="lazy" src="${thumb(v.id)}" alt="">` +
     (v.x >= 2 ? `<span class="x ${badgeClass(v.x)}">${fmtX(v.x)}×</span>` : '') +
-    (g ? `<span class="g">+${esc(fmt(g))}/${esc(t('hUnit'))}</span>` : '') +
+    (g ? `<span class="g" title="${esc(t('growTip', {h: v.h, ago: ago(v.gAt)}))}">+${esc(fmt(g))}/${esc(t('hUnit'))}</span>` : '') +
     `<span class="views">▶ ${esc(fmt(v.v))}</span>` + (v.d ? `<span class="dur">${fmtDur(v.d)}</span>` : '') +
     `<span class="play">${ICON.play}</span></a>`;
 }
@@ -2789,7 +2831,7 @@ function vCard(v, c, opts = {}) {
   return `<div class="vcard">${thumbBox(v, c)}<div class="vmeta">` +
     (opts.noCh ? '' : `<button type="button" class="avlink" data-open-ch="${esc(c.ch_id)}" aria-label="${esc(c.name)}">${avatarEl(c, 36)}</button>`) +
     `<div class="vtxt"><a class="vt" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" data-play="${esc(v.id)}" data-c="${esc(c.ch_id)}" title="${esc(v.t)}">${esc(v.t)}</a>${chLine}` +
-    `<div class="vst">${esc(t('views', {n: fmt(v.v)}))}${opts.talk && talk(v) != null ? ` · <span class="hotx">${esc(t('talkV', {n: fmtTalk(talk(v))}))}</span>` : speed(v) ? ` · <span class="hotx">${esc(t('speed', {n: fmt(speed(v))}))}</span>` : v.x ? ` · <span class="${v.x >= 1.5 ? 'hotx' : ''}">${esc(xText(v.x))}</span>` : ''}</div>${w}${S.detail ? vDetail(v) : ''}</div></div></div>`;
+    `<div class="vst">${esc(t('views', {n: fmt(v.v)}))}${opts.talk && talk(v) != null ? ` · <span class="hotx">${esc(t('talkV', {n: fmtTalk(talk(v))}))}</span>` : speed(v) ? ` · <span class="hotx">${esc(t('speed', {n: fmt(speed(v))}))}</span>` : v.x ? ` · <span class="${v.x >= 1.5 ? 'hotx' : ''}">${esc(v.x < 1.5 && young(v) ? t('tooNew') : xText(v.x))}</span>` : ''}</div>${w}${S.detail ? vDetail(v) : ''}</div></div></div>`;
 }
 const topVids = (c, n) => c.series.slice().sort((a, b) => b.v - a.v).slice(0, n);
 const trio = c => `<div class="trio">${topVids(c, 3).map(v => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('')}</div>`;
@@ -2798,12 +2840,15 @@ function chCard(c) {
     <div class="cbody">${avatarEl(c, 64)}<b>${esc(c.name)}</b>${vdPill(c)}
     <small>${esc(t('subscribers', {n: fmt(c.subs)}))}<br>${esc(t('typicalViews', {n: fmt(c.med_recent)}))}</small></div></article>`;
 }
+const pickTier = p => (UI === 'th' && p.tier_th ? p.tier_th : p.tier || t('edPick'));
+const pickNote = p => (UI === 'th' && p.note_th ? p.note_th : p.note);
+const pickDate = p => (p.date ? t('pickDate', {d: new Date(p.date + 'T12:00:00Z').toLocaleDateString(LOC(), {day: 'numeric', month: 'short', year: 'numeric'})}) : t('ourNote'));
 function pickCard(c) {
-  const p = c.pick, tier = UI === 'th' && p.tier_th ? p.tier_th : p.tier, note = UI === 'th' && p.note_th ? p.note_th : p.note;
+  const p = c.pick;
   return `<article class="pcard" data-open-ch="${esc(c.ch_id)}" tabindex="0" role="button" aria-label="${esc(c.name)}">${trio(c)}
-    <div class="pbody"><div class="ptop">${avatarEl(c, 44)}<div><b>${esc(c.name)}</b><span class="tag pick">${esc(tier)}</span></div></div>
+    <div class="pbody"><div class="ptop">${avatarEl(c, 44)}<div><b>${esc(c.name)}</b><span class="tag pick">${esc(pickTier(p))}</span></div></div>
     <div class="chsub">${vdPill(c)}<span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span></div>
-    <div class="pnote">${esc(note)}</div></div></article>`;
+    <div class="pnote"><small class="pdate">${esc(pickDate(p))}</small>${esc(pickNote(p))}</div></div></article>`;
 }
 function statPills(c, f) {
   const top = c.series.reduce((a, b) => (b.v > a.v ? b : a), c.series[0] || {v: c.max_views});
@@ -2811,8 +2856,8 @@ function statPills(c, f) {
   let h = st(IC.eye, fmt(c.med_recent), t('lTypical'), 'typical') + st(IC.trophy, fmt(top.v), t('lBest'), 'best');
   if (f.freq) h += `<span class="st">${IC.calendar} <span>${esc(freqText(f.freq))}</span>${qm('freq')}</span>`;
   if (S.detail) {
-    h += st(IC.bolt, fmtX(c.ratio) + '×', t('lRatio'), 'ratio') + st(IC.target, t('hitsVal', {k: c.series.filter(v => v.v >= 1e5).length, n: c.series.length}), t('lHits'), 'hits') +
-      st(IC.trend, fmtX(c.trend) + '×', t('lTrend'), 'trend') +
+    h += st(IC.bolt, xOr(c.ratio), t('lRatio'), 'ratio') + st(IC.target, t('hitsVal', {k: c.series.filter(v => v.v >= 1e5).length, n: c.series.length}), t('lHits'), 'hits') +
+      st(IC.trend, xOr(c.trend), t('lTrend'), 'trend') +
       c.tags.map(k => `<button type="button" class="tag ${TAGS[k] ? TAGS[k].cls : ''}" data-help="tag:${esc(k)}">${esc(tagName(k))}</button>`).join('');
   }
   return h;
@@ -2823,14 +2868,14 @@ function saveBtn(c) {
 }
 function channelRow(c) {
   const pick = c.pick, f = chFacts(c), id = esc(c.ch_id);
-  const tier = pick ? (UI === 'th' && pick.tier_th ? pick.tier_th : pick.tier) : '';
+  const tier = pick ? pickTier(pick) : '';
   const vids = S.detail && S.shelf === 'top' ? c.series.slice().sort((a, b) => b.v - a.v) : c.series;
   return `<section class="ch">
     <div class="chhead">
       <button type="button" class="avlink" data-open-ch="${id}" aria-label="${esc(c.name)}">${avatarEl(c, 96)}</button>
       <div class="chinfo">
-        <div class="chname"><button type="button" data-open-ch="${id}">${esc(c.name)}</button>${vdPill(c)}${pick ? `<span class="tag pick">${esc(tier)}</span>` : ''}${f.isNew ? newBadge(c, f) : ''}</div>
-        <div class="chsub">${c.handle ? `<span>${esc(c.handle)}</span><span>·</span>` : ''}<span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span>${langChip(c)}${needsTr(c) && c.descr ? `<a class="tr" href="${trUrl(c.descr)}" target="_blank" rel="noopener noreferrer">${IC.globe}${esc(t('translate'))}</a>` : ''}</div>
+        <div class="chname"><button type="button" data-open-ch="${id}">${esc(c.name)}</button>${vdPill(c)}${pick ? `<span class="tag pick">${esc(tier)}</span>` : ''}${newBadge(c, f)}</div>
+        <div class="chsub">${c.handle ? `<span>${esc(c.handle)}</span><span>·</span>` : ''}<span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span>${langChip(c)}${freshChip(c)}${needsTr(c) && c.descr ? `<a class="tr" href="${trUrl(c.descr)}" target="_blank" rel="noopener noreferrer">${IC.globe}${esc(t('translate'))}</a>` : ''}</div>
         <div class="why">${whyLines(c).slice(0, 2).map(s => `<div>${esc(s)}</div>`).join('')}</div>
         <div class="stats">${statPills(c, f)}</div>
       </div>
@@ -2920,7 +2965,7 @@ function scoreBreak(c) {
   const parts = scoreParts(c), num = v => (v < 0 ? '−' + Math.abs(Math.round(v)) : String(Math.round(v)));
   return `<div class="anx-t wide"><div class="sbhead"><div class="ring" style="--p:${c.score};--c:${scoreColor(c.score)}"><span>${Math.round(c.score)}</span></div><div><h5>${esc(t('spT'))}</h5><small>${esc(t('spD'))}</small></div></div>
     <div class="sbbar">${parts.filter(x => x[1] > 0).map(([k, v, , col]) => `<i style="width:${v.toFixed(1)}%;background:${col}" title="${esc(t(k))}: ${Math.round(v)}"></i>`).join('')}</div>
-    <div class="sblist">${parts.filter(x => x[2] || x[1]).map(([k, v, mx, col]) => `<div><i style="background:${col}"></i><span>${esc(t(k))}</span><b>${num(v)}${mx ? `<small>/${mx}</small>` : ''}</b></div>`).join('')}</div></div>`;
+    <div class="sblist">${parts.filter(x => x[2] || x[1]).map(([k, v, mx, col]) => `<div><i style="background:${col}"></i><span>${esc(k === 'spTrend' && c.trend == null ? t(k) + ' · ' + t('momNA') : t(k))}</span><b>${num(v)}${mx ? `<small>/${mx}</small>` : ''}</b></div>`).join('')}</div></div>`;
 }
 const tile = (icon, title, body, foot) => `<div class="anx-t"><h5>${icon}${esc(title)}</h5>${body}${foot ? `<small>${esc(foot)}</small>` : ''}</div>`;
 function viewsMini(c) {   // every recent Short as a bar, oldest to newest; hits (2x usual and more) in colour
@@ -2983,12 +3028,28 @@ function vDetail(v) {   // Detailed: how far above its channel's usual, how fast
 /* ---------- pages ---------- */
 const pageHead = (tk, dk, extra = '') => `<div class="phead"><h1>${esc(t(tk))}</h1><p>${esc(t(dk))}</p></div>${extra}`;
 const moreBtn = (kind, left) => (left > 0 ? `<button type="button" class="more" data-more="${kind}">${esc(t('more', {n: left}))}</button>` : '');
+function freshShare() {   // the share of channels whose numbers were checked in the last 24 hours
+  const cs = (DATA && DATA.channels) || [];
+  if (!cs.length || !cs.some(c => c.last_probe)) return null;
+  const ref = nowTs();
+  return cs.filter(c => ref - (c.last_probe || 0) < 86400).length / cs.length;
+}
+function dataStatus() {   // how fresh the numbers are, in plain figures
+  if (!STATIC || !DATA || DATA.snapshot || !DATA.channels.length) return '';
+  const ref = nowTs(), st = DATA.status || {}, q = st.quota || {};
+  const ages = DATA.channels.map(c => (ref - (c.last_probe || 0)) / 3600).filter(x => x >= 0).sort((a, b) => a - b);
+  const row = (k, v) => `<div><span>${esc(t(k))}</span><b>${esc(v)}</b></div>`;
+  return `<section class="dstatus" id="status"><h2>${esc(t('dsT'))}</h2><div class="dsgrid">${row('dsPub', ago(DATA.generated))}${row('dsFresh', pct(freshShare() || 0))}` +
+    (ages.length ? row('dsMed', t('dsMedV', {n: Math.max(1, Math.round(ages[Math.floor(ages.length / 2)]))})) : '') +
+    (q.scanner_cap ? row('dsQuota', `${fmt(q.used_today || 0)} / ${fmt(q.scanner_cap)}`) : '') + (q.search_cap ? row('dsSearch', `${q.searches_today || 0} / ${q.search_cap}`) : '') + '</div>' +
+    (st.run_gap_h ? `<p class="pbtip">${esc(t('dsGap', {h: st.run_gap_h}))}</p>` : '') + `<p class="pbtip">${esc(t('dsNote'))}</p></section>`;
+}
 function statusInfo() {
   const st = DATA.status || {};
   if (DATA.snapshot) return {cls: 'dot snap', txt: t('snap', {d: new Date(DATA.generated * 1000).toLocaleString(LOC()), n: DATA.channels.length})};
   if (st.state === 'scanning') return {cls: 'dot live', txt: t(st.phase === 'discovery' ? 'stDisc' : 'stProbe', {a: st.done, b: st.total})};
   if (st.state === 'starting') return {cls: 'dot', txt: t('stStart')};
-  if (STATIC) return {cls: 'dot live', txt: t('stUpdated', {ago: ago(DATA.generated || st.last_cycle_end)})};
+  if (STATIC) { const fr = freshShare(); return {cls: 'dot live', txt: fr == null ? t('stUpdated', {ago: ago(DATA.generated || st.last_cycle_end)}) : t('stPub', {ago: ago(DATA.generated || st.last_cycle_end), p: pct(fr)})}; }
   return {cls: 'dot', txt: t('stIdle', {ago: ago(st.last_cycle_end)}) + (st.next_scan ? t('stNext', {n: Math.max(1, Math.round((st.next_scan - Date.now() / 1000) / 60))}) : '')};
 }
 function homeView() {
@@ -3119,13 +3180,13 @@ function helpView() {
   const H = HELP[UI] || HELP.en, sec = id => H.find(x => x.id === id) || {h: '', em: ''};
   const gl = (dt, dd) => `<dt>${dt}</dt><dd>${esc(dd)}</dd>`;
   const verdicts = `<dl class="gl">${[3, 2, 1, 0].map(l => gl(`<span class="vd v${l}">${l ? flames(l) : ''}${esc(t(VKEY[l]))}</span>`, t(VKEY[l] + 'D'))).join('')}</dl>`;
-  const gloss = `<dl class="gl">` + ['subs', 'typical', 'best', 'ratio', 'x', 'hits', 'grow', 'freq', 'new', 'trend', 'score'].map(k => {
+  const gloss = `<dl class="gl">` + ['subs', 'typical', 'best', 'ratio', 'x', 'hits', 'grow', 'freq', 'created', 'new', 'trend', 'score'].map(k => {
     const [lk, gk] = HELPKEYS[k];
-    const ex = k === 'x' ? ' <span class="tag bad" style="background:var(--hot3);color:#fff">12×</span>' : k === 'new' ? ` <span class="tag new">${esc(t('newBadge'))}</span>` : '';
+    const ex = k === 'x' ? ' <span class="tag bad" style="background:var(--hot3);color:#fff">12×</span>' : k === 'new' ? ` <span class="tag new">${esc(t('newShortsBadge'))}</span>` : '';
     return gl(esc(t(lk)) + ex, t(gk));
   }).join('') + Object.keys(TAGS).map(k => gl(`<span class="tag ${TAGS[k].cls}">${esc(tagName(k))}</span>`, tagDesc(k))).join('') + '</dl>';
   const ideas = sec('ideas'), srch = sec('search'), faq = sec('faq');
-  return `<div class="phead"><h1>${esc(t('nHelp'))}</h1><p>${esc(t('helpD'))}</p></div>
+  return `<div class="phead"><h1>${esc(t('nHelp'))}</h1><p>${esc(t('helpD'))}</p></div>${dataStatus()}
     <div class="hcards">
       <button type="button" class="hcard" data-tour><div class="poster tourp"><span>${ICON.tour}</span></div><div class="hb"><b>${esc(t('tourBtn'))}</b><small>${esc(t('tourBtnD'))}</small></div></button>
       <button type="button" class="hcard" data-tab="playbook"><div class="poster tourp"><span>${ICON.playbook}</span></div><div class="hb"><b>${esc(t('pbT'))}</b><small>${esc(t('pbCardD'))}</small></div></button></div>
@@ -3200,24 +3261,24 @@ function drawSheet(keepScroll) {
   const k100 = c.series.filter(v => v.v >= 1e5).length;
   const card = (label, val, sub, help) => `<div class="scard"><div class="lbl">${esc(t(label))}${help ? qm(help) : ''}</div><b>${esc(val)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</div>`;
   const vids = SHEET_SORT === 'top' ? c.series.slice().sort((a, b) => b.v - a.v) : c.series;
-  const tier = pick ? (UI === 'th' && pick.tier_th ? pick.tier_th : pick.tier) : '';
-  const note = pick ? (UI === 'th' && pick.note_th ? pick.note_th : pick.note) : '';
+  const tier = pick ? pickTier(pick) : '';
+  const note = pick ? pickNote(pick) : '';
   body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
     <div class="shtop">${avatarEl(c, 104)}<div style="min-width:0">
       <h2>${esc(c.name)} ${vdPill(c)}</h2>
-      <div class="chsub">${c.handle ? `<span>${esc(c.handle)}</span><span>·</span>` : ''}<span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span>${langChip(c)}${pick ? `<span class="tag pick">${esc(tier)}</span>` : ''}${f.isNew ? newBadge(c, f) : ''}</div>
-      <div class="btns">${saveBtn(c)}<a class="pillbtn red" href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>${cmpBtn(c)}
+      <div class="chsub">${c.handle ? `<span>${esc(c.handle)}</span><span>·</span>` : ''}<span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span>${langChip(c)}${pick ? `<span class="tag pick">${esc(tier)}</span>` : ''}${newBadge(c, f)}${freshChip(c)}</div>
+      <div class="btns">${saveBtn(c)}${bdBtn('ch:' + c.ch_id)}<a class="pillbtn red" href="${chUrl(c.ch_id)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>${cmpBtn(c)}
         ${LIVE ? `<button type="button" class="pillbtn" data-copy="${id}">${esc(t('copyLink'))}</button>` : ''}</div></div></div>
     <div class="shbody">
       <h3>${esc(t('why'))}</h3><div class="why">${whyLines(c).map(s => `<div>${esc(s)}</div>`).join('')}</div>
-      ${note ? `<div class="note"><b>${esc(t('ourNote'))}</b>${esc(note)}</div>` : ''}
+      ${note ? `<div class="note"><b>${esc(pickDate(pick))}</b>${esc(note)}</div>` : ''}
       <div class="cards4">
-        ${card('lTypical', fmt(c.med_recent), '', 'typical')}${card('lBest', fmt(best.v), '', 'best')}
-        ${card('lRatio', fmtX(c.ratio) + '×', '', 'ratio')}${card('lHits', t('hitsVal', {k: k100, n: c.series.length}), t('hitsSub'), 'hits')}
+        ${card('lTypical', fmt(c.med_recent), c.base_n ? t(c.settled_n >= 3 ? 'typicalFoot' : 'typicalFootAll', {n: c.base_n}) : '', 'typical')}${card('lBest', fmt(best.v), '', 'best')}
+        ${card('lRatio', xOr(c.ratio), '', 'ratio')}${card('lHits', t('hitsVal', {k: k100, n: c.series.length}), t('hitsSub'), 'hits')}
         ${f.freq ? card('lFreq', freqText(f.freq), f.last ? t('lLast') + ': ' + ago(f.last) : '', 'freq') : ''}
-        ${chTalk(c) != null ? card('lTalk', fmtTalk(chTalk(c)), talkNorm() ? t('talkAvg', {n: fmtTalk(talkNorm())}) : '', 'talk') : ''}${c.created ? card('lAge', ageText(chAgeDays(c)), '', 'age') : ''}
+        ${chTalk(c) != null ? card('lTalk', fmtTalk(chTalk(c)), talkNorm() ? t('talkAvg', {n: fmtTalk(talkNorm())}) : '', 'talk') : ''}${c.created ? card('lCreated', createdText(c), t('agoV', {a: ageText(chAgeDays(c))}), 'created') : ''}${f.first ? card('lFirstShort', shortDate(f.first), t('agoV', {a: ageText((nowTs() - f.first) / 86400)}), 'first') : ''}
         ${(lr => lr != null ? card('lLikeRate', fmtRate(lr), '', '') : '')(chRates(c).likes)}
-        ${S.detail ? card('lScore', Math.round(c.score) + ' / 100', '', 'score') + card('lTrend', fmtX(c.trend) + '×', '', 'trend') : ''}
+        ${S.detail ? card('lScore', Math.round(c.score) + ' / 100', '', 'score') + card('lTrend', xOr(c.trend), c.trend == null ? t('momNA') : '', 'trend') : ''}
       </div>
       <h3>${esc(t('spT'))}</h3><div class="anx one">${scoreBreak(c)}</div>
       ${(an => an ? `<h3>${esc(t('anT'))}</h3>${an}` : '')(chStats(c))}
@@ -3254,7 +3315,7 @@ function openPlayer(vid, chId, start = 0) {
   const g = grow(v);
   const facts = [[IC.eye, t('views', {n: fmt(v.v)})]];
   if (v.x) facts.push([IC.flameF, v.x >= 1.5 ? t('pX', {x: fmtX(v.x)}) : v.x < 0.8 ? t('pXlow') : t('xAbout')]);
-  if (g) facts.push([IC.trend, t('pGrow', {n: fmt(g)})]);
+  if (g) facts.push([IC.trend, t('pGrowH', {n: fmt(g), h: v.h})]);
   if (v.d) facts.push([IC.clock, t('pLen', {d: fmtDur(v.d)})]);
   if (v.p) facts.push([IC.calendar, t('pUp', {ago: ago(v.p)})]);
   if (accelerating(v)) facts.push([IC.rocket, t('pAccel')]);
@@ -3267,7 +3328,7 @@ function openPlayer(vid, chId, start = 0) {
       ${c ? `<button type="button" class="pch" data-closeplayer data-open-ch="${esc(c.ch_id)}">${avatarEl(c, 42)}<span><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))} · ${esc(t('pSeeCh'))} →</small></span></button>` : ''}
       <div class="pfacts">${facts.map(([e, s]) => `<div><span class="em">${e}</span><span>${esc(s)}</span></div>`).join('')}</div>
       <div class="btns"><a class="pillbtn red" href="${start ? `https://www.youtube.com/watch?v=${vid}&amp;t=${Math.floor(start)}s` : vidUrl(vid)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>
-        ${c && needsTr(c) && v.t ? `<a class="pillbtn" href="${trUrl(v.t)}" target="_blank" rel="noopener noreferrer">${IC.globe}${esc(t('translate'))}</a>` : ''}<button type="button" class="pillbtn" data-tear="${esc(vid)}" data-c="${esc(chId || '')}">${esc(t('tearBtn'))}</button></div>
+        ${c && needsTr(c) && v.t ? `<a class="pillbtn" href="${trUrl(v.t)}" target="_blank" rel="noopener noreferrer">${IC.globe}${esc(t('translate'))}</a>` : ''}<button type="button" class="pillbtn" data-tear="${esc(vid)}" data-c="${esc(chId || '')}">${esc(t('tearBtn'))}</button>${bdBtn('v:' + vid + '|' + (chId || ''))}</div>
       ${vidStats(v, c)}
       <span class="hint">${esc(t('pNoEmbed'))}</span></div></div>`;
   if (!$('#player').open) $('#player').showModal();
@@ -3387,11 +3448,12 @@ async function sharedGet(key) {
     return channels.length ? {channels, at} : null;
   } catch (e) { return null; }
 }
-async function sharedPut(key, query, channels) {
-  if (!FB || !(window.crypto && crypto.subtle) || !channels.length) return;
+async function sharedPut(key, query, channels) {   // only signed-in visitors can share results (the Firestore rules check it)
+  if (!FB || !USER || !(window.crypto && crypto.subtle) || !channels.length) return;
   try {
+    const token = await USER.getIdToken();
     const name = `projects/${FB.projectId}/databases/(default)/documents/searches/${await shareId(key)}`;
-    await fetch(`${fsDocs()}:commit?key=${encodeURIComponent(FB.apiKey)}`, {method: 'POST', headers: {'Content-Type': 'application/json'},
+    await fetch(`${fsDocs()}:commit?key=${encodeURIComponent(FB.apiKey)}`, {method: 'POST', headers: {'Content-Type': 'application/json', authorization: 'Bearer ' + token},
       body: JSON.stringify({writes: [{update: {name, fields: {q: {stringValue: query.slice(0, 120)}, c: {stringValue: JSON.stringify(channels)}, n: {integerValue: String(channels.length)}}},
         updateTransforms: [{fieldPath: 't', setToServerValue: 'REQUEST_TIME'}]}]})});
   } catch (e) {}
@@ -3415,11 +3477,13 @@ function cleanShared(list) {   // results another visitor saved: rebuild every c
       avatar_url: /^https:\/\/(yt3\.ggpht\.com|yt3\.googleusercontent\.com)\/[\w\-./=~%]+$/.test(c.avatar_url || '') ? c.avatar_url : '',
       created: c.created != null ? num(c.created) : undefined, pick: null,
       n: num(c.n, 100), med_recent: num(c.med_recent), med_all: num(c.med_all), max_views: num(c.max_views), share_100k: num(c.share_100k, 1), share_1m: num(c.share_1m, 1),
-      trend: num(c.trend, 1e4), peak_vs_med: num(c.peak_vs_med, 1e6), ratio: num(c.ratio, 1e7), score: num(c.score, 100), tags: (Array.isArray(c.tags) ? c.tags : []).filter(x => TAG_OK.has(x))};
+      trend: c.trend == null ? null : num(c.trend, 1e4), peak_vs_med: num(c.peak_vs_med, 1e6), ratio: c.ratio == null ? null : num(c.ratio, 1e7),
+      top_share: num(c.top_share, 1), base_n: num(c.base_n, 100), settled_n: num(c.settled_n, 100), mom_n: num(c.mom_n, 100), score: num(c.score, 100), tags: (Array.isArray(c.tags) ? c.tags : []).filter(x => TAG_OK.has(x))};
   }).filter(c => c.series.length);
 }
 
 /* ---------- this week ---------- */
+const subStep = n => (n >= 1000 ? 10 ** (Math.floor(Math.log10(n)) - 2) : 1);   // the size of one rounding step in a public subscriber count
 function weekData() {
   const wk = nowTs() - 7 * 86400, per = new Map();
   const vids = videoPool(DATA.channels).filter(([v]) => when(v) >= wk).sort((a, b) => b[0].v - a[0].v)
@@ -3431,7 +3495,7 @@ function weekData() {
     const h = (c.hist || []).filter(p => p[0] >= wk);
     if (h.length < 2) return null;
     const a = h[0], b = h[h.length - 1], days = (b[0] - a[0]) / 86400;
-    return days >= 0.5 && b[1] > a[1] ? {c, gain: b[1] - a[1], pct: a[1] ? (b[1] - a[1]) / a[1] : 0, days} : null;
+    return days >= 3 && b[1] - a[1] >= 2 * subStep(a[1]) ? {c, gain: b[1] - a[1], pct: a[1] ? (b[1] - a[1]) / a[1] : 0, days} : null;   // 3+ days and more than YouTube's rounding
   }).filter(Boolean).sort((a, b) => b.gain - a.gain).slice(0, 10);
   return {vids, chans, fresh, climb};
 }
@@ -3573,11 +3637,11 @@ function compareView() {
     [t('lSubs'), c => esc(fmt(c.subs))],
     [t('lTypical'), c => esc(fmt(c.med_recent)), c => c.med_recent],
     [t('lBest'), c => esc(fmt(best(c).v)), c => best(c).v],
-    [t('lRatio'), c => esc(fmtX(c.ratio) + '×'), c => c.ratio],
+    [t('lRatio'), c => esc(xOr(c.ratio)), c => c.ratio ?? -1],
     [t('lHits'), c => esc(t('hitsVal', {k: hits(c), n: c.series.length})), c => hits(c) / Math.max(1, c.series.length)],
     [t('lFreq'), c => { const f = chFacts(c); return f.freq ? esc(freqText(f.freq)) : '–'; }, c => chFacts(c).freq || 0],
     [t('cmpLen'), c => { const l = lenOf(c); return l ? esc(fmtDur(l)) : '–'; }],
-    [t('lTrend'), c => esc(fmtX(c.trend) + '×'), c => c.trend],
+    [t('lTrend'), c => esc(xOr(c.trend)), c => c.trend ?? -1],
     ...(S.detail ? [[t('lScore'), c => esc(String(Math.round(c.score))), c => c.score]] : []),
     [t('cmpGrowth'), c => spark(c)],
     [t('cmpTop'), c => `<div class="thumbs">${topVids(c, 3).map(v => `<a href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" data-play="${esc(v.id)}" data-c="${esc(c.ch_id)}"><img loading="lazy" src="${thumb(v.id)}" alt=""></a>`).join('')}</div>`],
@@ -3656,7 +3720,7 @@ function vidStats(v, c) {   // the video panel: headline numbers, how it ranks, 
   if (v.c != null) cards.push(mcard(t('mComments'), fmt(v.c), cm != null ? t('mPerK', {n: fmtRate(cm)}) : ''));
   if (speed(v)) cards.push(mcard(t('mSpeed'), fmt(speed(v)), t('mNow')));
   else if (c.series.includes(v)) cards.push(mcard(t('mRank'), t('rankV', {r: rank, n}), t('rankSub')));
-  const perf = !v.x ? null : v.x >= 3 ? ['up', '▲ ' + t('perfWay')] : v.x >= 1.3 ? ['up', '▲ ' + t('perfAbove')] : v.x >= 0.7 ? ['', t('perfTypical')] : ['down', '▼ ' + t('perfBelow')];
+  const perf = !v.x ? null : v.x >= 3 ? ['up', '▲ ' + t('perfWay')] : v.x >= 1.3 ? ['up', '▲ ' + t('perfAbove')] : young(v) ? ['', t('tooNew')] : v.x >= 0.7 ? ['', t('perfTypical')] : ['down', '▼ ' + t('perfBelow')];
   let h = `<h4 class="antitle">${esc(t('anT'))}</h4><div class="mcards">${cards.join('')}</div>`;
   if (perf) h += `<div class="perf"><span class="perfpill ${perf[0]}">${esc(perf[1])}</span><span>${esc(t('perfWhy', {n}))}</span></div>`;
   if ((v.vh || []).length >= 2) h += `<div class="chartbox"><h4>${esc(t('vidGrowth'))}</h4><div class="lchart" data-ch="${esc(c.ch_id)}" data-vid="${esc(v.id)}"></div></div>`;
@@ -4080,8 +4144,11 @@ function ageText(days) {
   return t('ageY', {n: Math.round(days / 365 * 10) / 10});
 }
 const chAgeDays = c => (c.created ? Math.max(0, (nowTs() - c.created) / 86400) : null);
-const newBadge = (c, f) => `<button type="button" class="tag new" data-help="new">${esc(c.created ? t('newAgeBadge', {a: ageText(f.days)}) : t('newBadge'))}</button>`;
-Object.assign(HELPKEYS, {talk: ['lTalk', 'gTalk'], age: ['lAge', 'gAge']});
+const newBadge = (c, f) => (f.isNew ? `<button type="button" class="tag new" data-help="created">${esc(t('newAgeBadge', {a: ageText(f.days)}))}</button>`
+  : f.newShorts ? `<button type="button" class="tag new" data-help="new">${esc(t('newShortsBadge'))}</button>` : '');
+const createdText = c => new Date(c.created * 1000).toLocaleDateString(LOC(), {month: 'short', year: 'numeric'});
+const freshChip = c => (c.last_probe && STATIC ? `<span class="fresh ${nowTs() - c.last_probe > 36 * 3600 ? 'stale' : ''}">${esc(t('checkedAgo', {ago: ago(c.last_probe)}))}</span>` : '');
+Object.assign(HELPKEYS, {talk: ['lTalk', 'gTalk'], age: ['lAge', 'gAge'], created: ['lCreated', 'gCreated'], first: ['lFirstShort', 'gFirstShort']});
 
 /* ---------- playbook: the whole method as 8 steps with tools (saved on this device) ---------- */
 const PB_DEFAULT = () => ({done: {}, open: 1, views: 50000, niches: [], tds: [], todo: {}, ch: {}, scripts: [], log: [], spins: {}, review: {}, topic: ''});
@@ -4454,7 +4521,8 @@ function topicHeat() {
       const h = (c.hist || []).filter(p => p[0] >= wk);
       if (h.length < 2) return null;
       const a = h[0], b = h[h.length - 1], days = (b[0] - a[0]) / 86400;
-      return days >= 0.5 && a[1] > 0 ? (b[1] - a[1]) / a[1] / days * 7 : null;
+      if (days < 3 || !(a[1] > 0)) return null;   // too short a window: YouTube rounds subscriber counts to 3 significant figures
+      return Math.abs(b[1] - a[1]) < 2 * subStep(a[1]) ? 0 : (b[1] - a[1]) / a[1] / days * 7;
     }).filter(x => x != null);
     const fresh = videoPool(chs).filter(([v]) => v.p && v.p >= wk), spd = fresh.map(([v]) => v.v / Math.max(1, (nowTs() - v.p) / 86400));
     return {tp, n: g.length, growth: g.length >= 3 ? median(g) : null, uploads: fresh.length, speed: spd.length >= 3 ? median(spd) : null};
@@ -4481,7 +4549,7 @@ async function loadLite() {
   try {
     const r = await fetch('data-lite.json', {cache: 'no-cache'});
     if (!r.ok) return;
-    const d = await r.json();
+    const d = prepData(await r.json());
     if (DATA) return;   // the full data won the race
     d.lite = true;
     DATA = d;
@@ -4512,7 +4580,7 @@ if (STATIC && 'serviceWorker' in navigator && (location.protocol === 'https:' ||
 /* ---------- Google sign-in + sync (Firebase Auth + Cloud Firestore on the free plan) ---------- */
 const FB = CFG.firebase && CFG.firebase.apiKey && CFG.firebase.projectId ? CFG.firebase : null;
 const FB_VER = '10.12.2';
-const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.tw', 'radar.trackinfo'];
+const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.tw', 'radar.trackinfo', 'radar.boards'];
 const GICON = '<svg viewBox="0 0 48 48" style="stroke:none"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.7 6c4.5-4.2 6.9-10.3 6.9-17.7z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.7-6c-2.1 1.4-4.9 2.3-8.2 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>';
 let FBX = null, USER = null, SYNC = {state: 'off', at: 0, err: ''}, syncTimer = null, applyingRemote = false, unsubSnap = null;
 const lsRaw = LS.set.bind(LS);
@@ -4660,63 +4728,57 @@ $('#dlg').addEventListener('close', () => { $('#dlgBody').dataset.mode = ''; });
 
 /* ---------- trends: what is rising on Shorts, from the titles and hashtags of every tracked Short ---------- */
 const TR_RECENT = 3 * 86400, TR_WINDOW = 21 * 86400, TR_DAYS = 14;
-const NOISE = new Set(['shorts', 'short', 'shortvideo', 'shortsvideo', 'shortsfeed', 'viral', 'viralvideo', 'viralshorts', 'fyp', 'foryou', 'foryoupage', 'trending', 'trend',
-  'youtube', 'youtubeshorts', 'ytshorts', 'subscribe', 'tiktok', 'reels', 'video', 'videos', 'new', 'best', 'part', 'episode', 'full', 'official', 'คลิป', 'ไวรัล', 'ติดเทรนด์', 'ฟีด']);
-const GENERIC = new Set(('make made makes making get got gets getting try tried trying see saw seen look looking like likes love loved good bad big small little real really very much many more most '
-  + 'every everyone someone people person thing things time times day days today first last one two three top wait end ever always never just only even still back now new old best worst '
-  + 'want need know think say said tell give take come came goes going went done doing let put keep found find watch watching guy girl boy man woman kid kids baby world life '
-  + 'pake kok masa baru cara bikin sama aja gak ga nggak udah lagi banget buat jadi kalau kalo mau bisa orang emang beli langsung pas sampai sampe kayak gini gitu '
-  + 'que como para por mas muy pero esto eso todo cuando donde quien hace hacer não mais muito isso tudo quando onde quem fazer '
-  + 'है के की में को से और ने बना दिया कर गया था थी हो रहा रही ये वो एक भी तो ही क्या कैसे लिए वाला वाली '
-  + 'ทำ ได้ ไป มา เลย แล้ว ก็ จะ คน ตัว ครั้ง วัน ดู ลอง อะไร ยังไง มาก สุด เขา เรา '
-  + 'và của là có không một những cho này được với người khi đã để tak dan yang ini itu ada untuk dengan tidak juga '
-  + 'happens happened happen poor rich star eyes water car fake funny cute crazy amazing insane epic part pov vs').split(' '));
-const termCache = new Map();
+// The word lists and rules below are the same ones web/scanner/trends.py uses (it reads the trendWords block at the top of this page),
+// so the alert list and the page always agree. web/scanner/parity.mjs checks it.
+/* @trend-rules-start */
+const TW = (() => { try { return JSON.parse(document.getElementById('trendWords').textContent); } catch (e) { return {noise: [], generic: [], stop: [], games: [], cartoons: []}; } })();
+const NOISE = new Set(TW.noise), GENERIC = new Set(TW.generic), TSTOP = new Set(TW.stop);
+const NO_SPACES = /[\u0E00-\u0E7F\u3040-\u30FF\u3400-\u9FFF\uAC00-\uD7AF]/;   // Thai, Japanese, Chinese, Korean: only their hashtags count
+const CASED = /[A-Za-z\u00C0-\u024F\u1E00-\u1EFF\u0370-\u03FF\u0400-\u04FF]/;   // scripts with capital letters
+function splitTitle(title) {   // [hashtags, word tokens with their case]
+  const raw = String(title || '').replace(/[\u2019\u2018\u02BC]/g, "'").replace(/[\uFE0E\uFE0F\u200D\u20E3]/g, '');
+  const tags = [];
+  const rest = raw.replace(/#[\p{L}\p{M}\p{N}_]{2,}/gu, m => { tags.push(m.toLowerCase()); return ' '; });
+  return [tags, (rest.match(/[\p{L}\p{M}\p{N}']+/gu) || []).map(w => w.replace(/^'+|'+$/g, '')).filter(w => w && /[\p{L}\p{N}]/u.test(w))];
+}
+const wordOk = w => !!w && [...w].length >= 2 && !/^[0-9]+$/.test(w) && !TSTOP.has(w) && !NOISE.has(w) && !GENERIC.has(w);
+const termCache = new Map(), capCache = new Map();
 function termsOf(title) {   // hashtags, words and two-word phrases in a title, once each
   let out = termCache.get(title);
   if (out) return out;
-  out = new Set((String(title).match(/#[\p{L}\p{N}_]{2,}/gu) || []).map(x => x.toLowerCase()).filter(x => !NOISE.has(x.slice(1))));
-  const ws = titleWords(title), ok = w => w && !isStop(w) && !NOISE.has(w) && !GENERIC.has(w);
-  ws.forEach((w, i) => { if (!ok(w)) return; out.add(w); if (ok(ws[i + 1])) out.add(w + ' ' + ws[i + 1]); });
+  const [tags, toks] = splitTitle(title), ws = toks.map(w => (NO_SPACES.test(w) ? null : w.toLowerCase()));
+  out = new Set(tags.filter(x => !NOISE.has(x.slice(1))));
+  ws.forEach((w, i) => { if (!wordOk(w)) return; out.add(w); if (wordOk(ws[i + 1])) out.add(w + ' ' + ws[i + 1]); });
   termCache.set(title, out);
   return out;
 }
-const capCache = new Map();
 function capsIn(title) {   // in a title written as an ordinary sentence, the words that start with a capital (names of people, games, characters)
   let out = capCache.get(title);
   if (out) return out;
-  const raw = String(title).replace(/#[\p{L}\p{N}_]+/gu, ' ');
-  const ws = SEG ? [...SEG.segment(raw)].filter(x => x.isWordLike).map(x => x.segment) : (raw.match(/[\p{L}\p{N}']+/gu) || []);
-  const cased = ws.filter(w => w.toLowerCase() !== w.toUpperCase()), caps = cased.filter(w => /^\p{Lu}/u.test(w));
-  out = {plain: cased.length >= 3 && caps.length / cased.length <= 0.6, caps: new Set(ws.filter((w, i) => i > 0 && /^\p{Lu}/u.test(w)).map(w => w.toLowerCase()))};
+  const toks = splitTitle(title)[1], cased = toks.filter(w => w.toLowerCase() !== w.toUpperCase()), caps = cased.filter(w => /^\p{Lu}/u.test(w));
+  out = {plain: cased.length >= 3 && caps.length / cased.length <= 0.6, caps: new Set(toks.filter((w, i) => i > 0 && /^\p{Lu}/u.test(w)).map(w => w.toLowerCase()))};
   capCache.set(title, out);
   return out;
 }
-const CASED = /[\p{Script=Latin}\p{Script=Cyrillic}\p{Script=Greek}]/u;
+function coverageWeight(series, now) {   // only a channel's newest 24 Shorts are kept: a prolific channel's short history is scaled up to 18 days, or left out
+  const dated = series.filter(v => v.p).map(v => v.p);
+  if (!dated.length) return null;
+  const days = series.length < 24 ? 21 : Math.min(21, (now - Math.min(...dated)) / 86400);
+  if (days < 4) return null;
+  return days >= 21 ? 1 : Math.min(6, 18 / (days - 3));
+}
+const liftOf = (r, b) => (r + 2) / (b / 6 + 2);   // the last 3 days against what the 18 before predict, pulled toward 1 for small counts
+const isHot = (r, chans, lift) => r >= 4 && chans >= 2 && lift >= 2;
+// ages count from each channel's own last check, so a channel checked yesterday still has a full 3-day window; one not checked
+// for 2 days can't say what is recent and is left out
+const trendRef = (c, now) => { const ref = c.last_probe || now; return now - ref > 2 * 86400 ? null : ref; };
+/* @trend-rules-end */
 const TREND_CATS = [['all', '✨', 'All', 'ทั้งหมด'], ['games', '🎮', 'Games', 'เกม'], ['cartoons', '🎨', 'Cartoons & anime', 'การ์ตูนและอนิเมะ'],
   ['memes', '🤪', 'Memes & challenges', 'มีมและชาเลนจ์'], ['news', '📰', 'News & events', 'ข่าวและเหตุการณ์'], ['music', '🎵', 'Music & dance', 'เพลงและการเต้น'],
   ['food', '🍳', 'Food', 'อาหาร'], ['animals', '🐾', 'Animals', 'สัตว์'], ['sports', '⚽', 'Sports', 'กีฬา'], ['facts', '🧠', 'Facts', 'ความรู้'], ['other', '🔥', 'Everything else', 'อื่น ๆ']];
 TREND_CATS.forEach(c => { T.en['_tcat_' + c[0]] = c[2]; T.th['_tcat_' + c[0]] = c[3]; });
-const GAMES = [['Roblox', /roblox/i], ['Minecraft', /minecraft/i], ['Fortnite', /fortnite/i], ['GTA', /\bgta\b|grand theft auto/i], ['GTA 6', /\bgta ?(6|vi)\b/i],
-  ['Brawl Stars', /brawl ?stars/i], ['Free Fire', /free ?fire|ฟีฟาย/i], ['PUBG', /pubg/i], ['ROV', /\brov\b|arena of valor/i], ['Mobile Legends', /mobile legends|\bmlbb\b/i],
-  ['Valorant', /valorant/i], ['Genshin Impact', /genshin/i], ['Honkai', /honkai/i], ['Among Us', /among ?us/i], ['Poppy Playtime', /poppy playtime|huggy wuggy|catnap/i],
-  ['FNAF', /\bfnaf\b|five nights at freddy/i], ['Garten of Banban', /banban/i], ['Clash Royale', /clash royale/i], ['Clash of Clans', /clash of clans/i],
-  ['Pokémon', /pok[eé]mon|pikachu/i], ['Mario', /\bmario\b/i], ['Sonic', /\bsonic\b/i], ['Call of Duty', /call of duty|warzone/i], ['Apex Legends', /apex legends/i],
-  ['Overwatch', /overwatch/i], ['Counter-Strike', /counter[- ]?strike|\bcs2\b/i], ['Elden Ring', /elden ring/i], ['Silksong', /silksong|hollow knight/i],
-  ['Stardew Valley', /stardew/i], ['Terraria', /terraria/i], ['Subway Surfers', /subway surfers/i], ['Geometry Dash', /geometry dash/i], ['Rocket League', /rocket league/i],
-  ['EA FC / FIFA', /\bea ?fc\b|\bfifa\b|\bfc ?2[4-7]\b/i], ['eFootball', /efootball/i], ['NBA 2K', /nba ?2k/i], ['Blox Fruits', /blox fruits?/i], ['Brookhaven', /brookhaven/i],
-  ['Grow a Garden', /grow a garden/i], ['Steal a Brainrot', /steal a brainrot/i], ['99 Nights in the Forest', /99 nights/i], ['Dead Rails', /dead rails/i], ['Forsaken', /forsaken/i],
-  ['Bedwars', /bedwars/i], ['Stumble Guys', /stumble guys/i], ['Fall Guys', /fall guys/i], ['Honor of Kings', /honor of kings/i], ['Delta Force', /delta force/i],
-  ['Marvel Rivals', /marvel rivals/i], ['Wuthering Waves', /wuthering waves/i], ['Plants vs Zombies', /plants vs\.? zombies|\bpvz\b/i], ['Chess', /\bchess\b|หมากรุก/i]];
-const CARTOONS = [['Sprunki', /sprunki/i], ['Skibidi Toilet', /skibidi/i], ['Italian Brainrot', /brainrot|tralalero|tung ?tung|sahur|bombardiro|cappuccina|lirili|chimpanzini/i],
-  ['Labubu', /labubu/i], ['KPop Demon Hunters', /demon hunters|huntrix|saja boys/i], ['Bluey', /\bbluey\b/i], ['SpongeBob', /sponge ?bob/i], ['Peppa Pig', /peppa/i],
-  ['Cocomelon', /cocomelon/i], ['Doraemon', /doraemon|โดราเอม่อน/i], ['Shin-chan', /shin ?chan|ชินจัง/i], ['Pokémon', /pok[eé]mon|pikachu/i], ['Minions', /\bminions?\b/i],
-  ['Hello Kitty & Sanrio', /hello kitty|sanrio|kuromi|cinnamoroll|my melody/i], ['Demon Slayer', /demon slayer|kimetsu/i], ['One Piece', /one piece|luffy/i],
-  ['Naruto', /naruto/i], ['Dragon Ball', /dragon ?ball|goku/i], ['Jujutsu Kaisen', /jujutsu|gojo/i], ['Chainsaw Man', /chainsaw man/i], ['Spy x Family', /spy ?x ?family/i],
-  ['Smurfs', /\bsmurfs?\b/i], ['Toy Story', /toy story/i], ['Zootopia', /zootopia/i], ['Frozen', /\bfrozen\b|\belsa\b/i], ['Moana', /moana/i], ['Shrek', /shrek/i],
-  ['Garfield', /garfield/i], ['Tom and Jerry', /tom (and|&) jerry/i], ['The Amazing Digital Circus', /digital circus|pomni/i], ['Murder Drones', /murder drones/i],
-  ['Hazbin Hotel', /hazbin|helluva/i], ['Rainbow Friends', /rainbow friends/i], ['Siren Head', /siren head|cartoon cat/i], ['Stickman', /stick ?man/i],
-  ['Anime', /\banime\b|อนิเมะ/i], ['Cartoons', /cartoon|การ์ตูน/i]];
+const GAMES = TW.games.map(([n, p]) => [n, new RegExp(p, 'i')]);   // curated name lists, shared with web/scanner/trends.py
+const CARTOONS = TW.cartoons.map(([n, p]) => [n, new RegExp(p, 'i')]);
 const CAT_RX = [['games', new RegExp(GAMES.map(g => g[1].source).join('|') + '|gaming|gameplay|speedrun|เกม', 'i')],
   ['cartoons', new RegExp(CARTOONS.map(g => g[1].source).join('|') + '|animation|animated|แอนิเมชัน', 'i')],
   ['news', /\bnews\b|breaking|election|president|earthquake|flood|storm|typhoon|hurricane|ข่าว|ด่วน|เลือกตั้ง|น้ำท่วม|แผ่นดินไหว/i],
@@ -4736,22 +4798,27 @@ function trendCat(label, vids) {   // the trend's own words first, then what its
 }
 const catOf = k => TREND_CATS.find(c => c[0] === k) || TREND_CATS[TREND_CATS.length - 1];
 const catName = k => t('_tcat_' + catOf(k)[0]);
-function finishStats(s) {   // lift: Shorts per day in the last 3 days against the 18 days before
-  s.lift = (s.r / 3) / ((s.b + 1) / 18);
+function finishStats(s) {   // lift: Shorts in the last 3 days against what the 18 days before predict
+  s.lift = liftOf(s.r, s.b);
   s.vids.sort((a, b) => b[0].v - a[0].v);
   s.med = s.vids.length ? median(s.vids.map(([v]) => v.v)) : 0;
   s.heat = Math.min(s.lift, 10) * s.chs.size ** 0.75 * Math.max(0.3, Math.log10(s.med + 10) - 3) ** 1.5;   // views count for a lot: a trend is only worth riding if it gets watched
   return s;
 }
 const newStats = (key, label) => ({key, label, r: 0, b: 0, chs: new Set(), vids: [], days: new Array(TR_DAYS).fill(0)});
-function addVideo(s, v, c, age) {
+function addVideo(s, v, c, age, w) {
   const day = Math.floor(age / 86400);
   if (day < TR_DAYS) s.days[TR_DAYS - 1 - day]++;
-  if (age <= TR_RECENT) { s.r++; s.chs.add(c.ch_id); s.vids.push([v, c]); } else s.b++;
+  if (age <= TR_RECENT) { s.r++; s.chs.add(c.ch_id); s.vids.push([v, c]); } else s.b += w;
 }
-function windowVideos() {   // [video, channel, age] for every Short uploaded in the last 3 weeks
-  const now = nowTs(), out = [];
-  for (const c of DATA.channels) for (const v of c.series) { const age = v.p ? now - v.p : -1; if (age >= 0 && age <= TR_WINDOW) out.push([v, c, age]); }
+const trNow = () => (DATA && DATA.generated) || nowTs();   // worked out as of the data's own time, like the scanner's alert list
+function windowVideos() {   // [video, channel, age, weight] for every Short uploaded in the last 3 weeks, from channels with enough history to compare
+  const now = trNow(), out = [];
+  for (const c of DATA.channels) {
+    const ref = trendRef(c, now), w = ref == null ? null : coverageWeight(c.series, ref);
+    if (w == null) continue;
+    for (const v of c.series) { const age = v.p ? ref - v.p : -1; if (age >= 0 && age <= TR_WINDOW) out.push([v, c, age, w]); }
+  }
   return out;
 }
 let TR = null;
@@ -4759,21 +4826,20 @@ function trendData() {   // rising words, hashtags, games and characters; worked
   const sig = DATA.generated + ':' + DATA.channels.length;
   if (TR && TR.sig === sig) return TR;
   const win = windowVideos(), terms = new Map();
-  for (const [v, c, age] of win) {
+  for (const [v, c, age, w] of win) {
     const cap = capsIn(v.t);
     for (const term of termsOf(v.t)) {
       let s = terms.get(term);
       if (!s) terms.set(term, s = newStats('t:' + term, term));
-      addVideo(s, v, c, age);
+      addVideo(s, v, c, age, w);
       if (cap.plain && age <= TR_RECENT) { s.plain = (s.plain || 0) + 1; if (cap.caps.has(term)) s.named = (s.named || 0) + 1; }
     }
   }
   const rising = [];
-  for (const s of terms.values()) {   // phrases and hashtags are more telling than single words, so single words need more channels behind them
+  for (const s of terms.values()) {   // at least 4 new Shorts (5 for a single word) from 3 channels; single words only when written like a name
     const phrase = s.label.includes(' ') || s.label.startsWith('#');
-    // a single word only counts when people write it like a name (Mbappé, Labubu), not an everyday word
     if (!phrase && !(CASED.test(s.label) && (s.plain || 0) >= 2 && (s.named || 0) / s.plain >= 0.6)) continue;
-    if (s.r < (phrase ? 3 : 4) || s.chs.size < (phrase ? 2 : 3) || finishStats(s).lift < (phrase ? 1.8 : 2.2) || s.med < (phrase ? 10000 : 30000)) continue;
+    if (s.r < (phrase ? 4 : 5) || s.chs.size < 3 || finishStats(s).lift < (phrase ? 1.8 : 2.2) || s.med < (phrase ? 10000 : 30000)) continue;
     if (phrase) s.heat *= 1.6;
     rising.push(s);
   }
@@ -4788,7 +4854,7 @@ function trendData() {   // rising words, hashtags, games and characters; worked
   }
   const board = (list, pre) => list.map(([name, rx]) => {
     const s = newStats(pre + name, name);
-    for (const [v, c, age] of win) if (rx.test(v.t)) addVideo(s, v, c, age);
+    for (const [v, c, age, w] of win) if (rx.test(v.t)) addVideo(s, v, c, age, w);
     finishStats(s);
     s.cat = pre === 'g:' ? 'games' : 'cartoons';
     s.yt = ytMentions(rx);
@@ -4808,10 +4874,21 @@ function trendByKey(key) {
   if (!s.cat) s.cat = trendCat(s.label, s.vids);
   return s;
 }
-const trendHot = s => s.r >= 3 && s.lift >= 2;
+const trendHot = s => isHot(s.r, s.chs.size, s.lift);
+const weakSignal = s => s.r < 8 || s.chs.size < 4;   // a few Shorts from a few channels: worth a look, not a sure thing
 
 /* ---------- outside trend feeds (trends.json from the scanner): YouTube's charts and Wikipedia's most-read ---------- */
 let TRENDS = null;
+async function loadPremium() {   // Pro members get the full trend feeds from the server; everyone else reads the public file
+  if (!PRO.gate || !API_BASE || !USER || !isPro()) return;
+  try {
+    const r = await fetch(API_BASE + '/api/trends', {headers: {authorization: 'Bearer ' + await USER.getIdToken()}});
+    if (!r.ok) return;
+    TRENDS = await r.json();
+    if (TR) TR.sig = '';
+    if (DATA && ['trends', 'home'].includes(S.tab) && !$('#dlg').open) renderContent();
+  } catch (e) {}
+}
 async function loadTrends() {
   if (!STATIC) return;
   try {
@@ -4819,6 +4896,7 @@ async function loadTrends() {
     if (!r.ok) return;
     TRENDS = await r.json();
     if (TR) TR.sig = '';   // the boards count chart mentions too
+    loadPremium();
     if (DATA && ['trends', 'home'].includes(S.tab) && !$('#dlg').open) renderContent();
     checkLocalAlerts();
   } catch (e) {}
@@ -4839,7 +4917,8 @@ const PRO = {gate: !!CFG.proGate, price: CFG.proPrice || '$9.99', checkout: http
 let PRO_UNTIL = 0, PRO_PORTAL = '';
 const isPro = () => !PRO.gate || PRO_UNTIL > Date.now();
 const FREE_N = 5;
-const proTag = () => `<span class="protag" title="${esc(t(PRO.gate ? 'proTagT' : 'proBetaT'))}">PRO</span>`;
+const proTag = () => (PRO.gate ? `<span class="protag" title="${esc(t('proTagT'))}">PRO</span>` : '');   // no PRO badges while everything is free
+const betaNote = () => (PRO.gate ? '' : `<div class="betanote">${IC.star}<span>${esc(t('betaBanner'))}</span></div>`);
 const lockCard = what => `<div class="lockcard"><span class="ico">${IC.lock}</span><div><b>${esc(t('lockT', {x: what}))}</b><small>${esc(t('lockD', {p: PRO.price}))}</small></div><button type="button" class="pillbtn pro" data-tab="pro">${esc(t('lockBtn'))}</button></div>`;
 const gateList = (items, what, n = FREE_N) => (isPro() || items.length <= n ? items : items.slice(0, n).concat([lockCard(what)]));
 async function checkPro() {   // a subscription is recorded in Firestore pro/{uid} by the payment provider's webhook; visitors can only read their own
@@ -4852,6 +4931,7 @@ async function checkPro() {   // a subscription is recorded in Firestore pro/{ui
     } catch (e) {}
   }
   if (DATA) render(true);
+  loadPremium();
 }
 const checkoutLink = () => {   // Lemon Squeezy's affiliate script, when present, adds the referring affiliate to the link
   const u = PRO.checkout && USER ? PRO.checkout.replace('{uid}', encodeURIComponent(USER.uid)).replace('{email}', encodeURIComponent(USER.email || '')) : '';
@@ -4890,7 +4970,7 @@ function trendCard(s) {
   const imgs = s.vids.slice(0, 3).map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('');
   return `<article class="tcard" data-trend="${esc(s.key)}" tabindex="0" role="button" aria-label="${esc(s.label)}">
     <div class="trio">${imgs}</div>
-    <div class="tbody"><div class="ttop"><b>${esc(s.label)}</b>${s.r ? stageBadge(s) : ''}</div>
+    <div class="tbody"><div class="ttop"><b>${esc(s.label)}</b>${s.r ? stageBadge(s) : ''}</div>${s.r && weakSignal(s) ? `<span class="weak">${esc(t('weakSig', {n: s.r, k: s.chs.size}))}</span>` : ''}
       ${areaSpark(s.days)}
       <div class="tnums"><span><b class="up">▲ ${esc(s.b === 0 && s.r ? t('liftNew') : fmtX(Math.min(s.lift, 99)) + '×')}</b><small>${esc(t('tnLift'))}</small></span>
         <span><b>${s.r}</b><small>${esc(t('tnShorts'))}</small></span><span><b>${s.chs.size}</b><small>${esc(t('tnCh'))}</small></span><span><b>${esc(fmt(s.med))}</b><small>${esc(t('tnViews'))}</small></span></div>
@@ -5295,6 +5375,7 @@ function openTrend(key) {
   body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
     <h3>${esc(label)} <span class="tcat">${esc(catName(s.cat || 'other'))}</span></h3>
     <p class="pbtip">${s.r ? esc((s.b === 0 ? t('liftNewD') : t('liftD', {x: fmtX(Math.min(s.lift, 99))})) + ' ' + t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)})) : esc(t('tQuietD'))}</p>
+    ${s.r && weakSignal(s) ? `<p class="weak">${esc(t('weakSig', {n: s.r, k: s.chs.size}))}</p>` : ''}
     <div class="mcards">${mcard(t('tShorts3'), String(s.r))}${mcard(t('tChannels'), String(s.chs.size))}${mcard(t('lTypical'), fmt(s.med))}${best ? mcard(t('lBest'), fmt(best[0].v)) : ''}</div>
     <div class="chartbox" style="margin-top:12px"><h4>${esc(t('tPerDay'))}</h4><div class="dbars">${bars}</div><div class="dbl"><span>${esc(shortDate(start))}</span><span>${esc(t('today'))}</span></div></div>
     ${(s.yt || []).length ? `<h4 class="antitle" style="margin-top:14px">${esc(t('tOnCharts'))}</h4><div class="blist">${s.yt.slice(0, 5).map(x => { YT_ITEMS.set(x.id, x); return `<button type="button" class="yrow2" data-play="${esc(x.id)}" data-c=""><span class="bnum">${x.region}</span><img loading="lazy" src="${thumb(x.id)}" alt=""><span class="bmain"><b>${esc(x.t)}</b><small>${esc(x.cht)} · ${esc(t('views', {n: fmt(x.v || 0)}))}</small></span></button>`; }).join('')}</div>` : ''}
@@ -5305,7 +5386,7 @@ function openTrend(key) {
     <div class="pbfoot" style="margin-top:14px"><button type="button" class="pillbtn ${isTracked(key) ? '' : 'red'}" data-twatch="${esc(key)}" data-tl="${esc(label)}">${esc(t(isTracked(key) ? 'twOff' : 'twOn'))} ${proTag()}</button>
       ${canSearch() ? `<button type="button" class="pillbtn" data-tsearch="${esc(label.replace(/^#/, ''))}">${IC.search}${esc(t('tSearch'))}</button>` : ''}
       ${LIVE ? `<button type="button" class="ghost" data-copylink="trend/${esc(encodeURIComponent(key))}">${esc(t('tShare'))}</button>` : ''}
-      ${isTracked(key) ? alertBtn() : ''}</div>`;
+      ${bdBtn('t:' + key + '|' + label)}${isTracked(key) ? alertBtn() : ''}</div>`;
   if (!dlg.open) dlg.showModal();
   body.scrollTop = 0;
 }
@@ -5363,7 +5444,11 @@ function checkTitle(raw) {
     <div class="tcl">${checks.map(([ok, txt]) => `<div class="${ok ? 'ok' : 'no'}"><span>${ok ? '✓' : '•'}</span>${esc(txt)}</div>`).join('')}</div>
     ${similar.length ? `<h4 class="antitle" style="margin-top:12px">${esc(t('tcSimilar'))}</h4><div class="tcsim">${similar.map(([v, c]) => `<button type="button" class="yrow2" data-play="${esc(v.id)}" data-c="${esc(c.ch_id)}"><img loading="lazy" src="${thumb(v.id)}" alt=""><span class="bmain"><b>${esc(v.t)}</b><small>${esc(c.name)} · ${esc(t('views', {n: fmt(v.v)}))} · ${esc(xText(v.x))}</small></span></button>`).join('')}</div>` : ''}`;
 }
-function csvCell(x) { const s = String(x == null ? '' : x); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function csvCell(x) {   // a cell starting with = + - @ would run as a formula in a spreadsheet, so it gets a leading apostrophe
+  let s = String(x == null ? '' : x);
+  if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
 function downloadCsv(name, rows) {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob(['﻿' + rows.map(r => r.map(csvCell).join(',')).join('\n')], {type: 'text/csv;charset=utf-8'}));
@@ -5380,7 +5465,7 @@ function exportCsv(kind) {
     .concat(trendData().rising.map(s => [s.label, s.cat, s.r, s.chs.size, Math.round(s.lift * 10) / 10, Math.round(s.med)])));
 }
 function toolsView() {
-  let h = pageHead('pToolsT', 'pToolsD');
+  let h = pageHead('pToolsT', 'pToolsD') + betaNote();
   if (!isPro()) h += lockCard(t('nTools'));
   const rows = niches();
   const sec = (em, k, d, body) => `<section class="tool"><h2>${em} ${esc(t(k))} ${proTag()}</h2><p class="pbtip">${esc(t(d))}</p>${body}</section>`;
@@ -5448,7 +5533,7 @@ async function addChannel(raw) {
 function savedView() {
   const list = DATA.channels.filter(isWatched).sort((a, b) => b.score - a.score), info = trackInfo();
   const waiting = STATIC ? [...watchLocal].filter(id => !findCh(id) && info[id]) : [];
-  let h = pageHead('pSavedT', canLive() ? 'pSavedDLive' : 'pSavedD');
+  let h = pageHead('pSavedT', canLive() ? 'pSavedDLive' : 'pSavedD') + boardsSection();
   if (STATIC) h += `<div class="addch"><input id="addIn" placeholder="${esc(t('acPh'))}" autocomplete="off"><button type="button" class="pillbtn red" data-addch>${IC.plus}${esc(t('acBtn'))}</button></div>
     <p class="pbtip" id="addMsg">${esc(t(FB && !USER ? 'acSignIn' : 'acHint'))}</p>`;
   if (waiting.length) h += `<div class="blist waitlist">${waiting.map(id => { const x = info[id], pic = /^https:\/\/yt3\.(ggpht|googleusercontent)\.com\//.test(x.avatar) ? `<img src="${esc(x.avatar)}" alt="">` : '';
@@ -5456,6 +5541,84 @@ function savedView() {
       <button type="button" class="ghost" data-unwatch="${esc(id)}">${esc(t('remove'))}</button></div>`; }).join('')}</div>`;
   return h + (list.length || !waiting.length ? channelsView(list, t('emptySaved')) : '');
 }
+
+/* ---------- boards: one place per video idea for the channels, Shorts and trends worth keeping (synced like saved channels) ---------- */
+const boards = () => (LS.get('radar.boards', []) || []).filter(b => b && b.id && Array.isArray(b.items));
+const saveBoards = list => LS.set('radar.boards', list.slice(0, 50));
+const bdKey = it => it.k + ':' + it.id;
+function bdItem(spec) {   // "ch:UC…", "v:VIDEOID|UC…" or "t:key|label", from a button
+  const i = String(spec).indexOf(':'), k = spec.slice(0, i), [id, extra] = spec.slice(i + 1).split('|');
+  if (k === 'ch') { const c = findCh(id); return chOk(id) ? {k, id, l: c ? c.name : id} : null; }
+  if (k === 'v') { const c = chOk(extra) ? findCh(extra) : null, v = c && c.series.find(x => x.id === id); return vidOk(id) ? {k, id, c: chOk(extra) ? extra : '', l: (v && v.t) || (YT_ITEMS.get(id) || {}).t || id} : null; }
+  if (k === 't') return id ? {k, id, l: extra || id.slice(2)} : null;
+  return null;
+}
+const bdBtn = spec => `<button type="button" class="pillbtn" data-bdadd="${esc(spec)}">${IC.plus}${esc(t('bdAdd'))}</button>`;
+function newBoard(name) {
+  name = String(name || '').trim().slice(0, 60);
+  if (!name) return null;
+  const list = boards(), b = {id: 'b' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name, notes: '', items: [], at: Date.now()};
+  list.unshift(b);
+  saveBoards(list);
+  return b;
+}
+function addToBoard(boardId, spec) {
+  const it = bdItem(spec), list = boards(), b = list.find(x => x.id === boardId);
+  if (!it || !b) return;
+  if (!b.items.some(x => bdKey(x) === bdKey(it))) b.items.unshift(Object.assign(it, {a: Date.now()}));
+  b.items = b.items.slice(0, 200);
+  b.at = Date.now();
+  saveBoards(list);
+  toast(t('bdAdded', {b: b.name}));
+}
+function openBoardPicker(spec) {
+  const it = bdItem(spec);
+  if (!it) return;
+  let pop = $('#bdpick');
+  if (!pop) { pop = document.createElement('dialog'); pop.id = 'bdpick'; pop.className = 'bdpick'; document.body.appendChild(pop); }
+  pop.dataset.spec = spec;
+  pop.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('bdAdd'))}</h3><p class="pbtip">${esc(it.l)}</p>
+    <div class="blist">${boards().map(b => `<button type="button" class="nrow" data-bdpick="${esc(b.id)}"><span class="bmain"><b>${esc(b.name)}</b><small>${esc(t('bdItems', {n: b.items.length}))}</small></span>${b.items.some(x => bdKey(x) === bdKey(it)) ? IC.check : ''}</button>`).join('')}</div>
+    <div class="addch"><input id="bdNewIn" placeholder="${esc(t('bdNamePh'))}" autocomplete="off" maxlength="60"><button type="button" class="pillbtn red" data-bdnew>${IC.plus}${esc(t('bdNew'))}</button></div>`;
+  if (!pop.open) pop.showModal();
+}
+function boardsSection() {
+  const list = boards();
+  const itemRow = (b, it) => {
+    const open = it.k === 'ch' ? `data-open-ch="${esc(it.id)}"` : it.k === 'v' ? `data-play="${esc(it.id)}" data-c="${esc(it.c || '')}"` : `data-trend="${esc(it.id)}"`;
+    return `<div class="bditem"><button type="button" class="bdopen" ${open}><span class="bdic">${it.k === 'ch' ? ICON.channels : it.k === 'v' ? ICON.play : IC.trend}</span><span>${esc(it.l)}</span></button>
+      <button type="button" class="icon" data-bdrm="${esc(b.id + '|' + bdKey(it))}" aria-label="${esc(t('bdRemove'))}">${ICON.close}</button></div>`;
+  };
+  return `<section class="boards"><h2 class="subhead">${esc(t('bdT'))}</h2><p class="pbtip">${esc(t('bdD'))}</p>
+    <div class="addch"><input id="bdMainIn" placeholder="${esc(t('bdNamePh'))}" autocomplete="off" maxlength="60"><button type="button" class="pillbtn red" data-bdcreate>${IC.plus}${esc(t('bdNew'))}</button></div>
+    ${list.length ? list.map(b => `<div class="board"><div class="bdhead"><b>${esc(b.name)}</b><small>${esc(t('bdItems', {n: b.items.length}))}</small><button type="button" class="ghost" data-bddel="${esc(b.id)}">${esc(t('bdDelete'))}</button></div>
+      <textarea data-bdnotes="${esc(b.id)}" rows="2" placeholder="${esc(t('bdNotesPh'))}">${esc(b.notes || '')}</textarea>
+      ${b.items.length ? `<div class="bditems">${b.items.map(it => itemRow(b, it)).join('')}</div>` : ''}</div>`).join('') : `<p class="pbmuted">${esc(t('bdEmpty'))}</p>`}</section>`;
+}
+document.addEventListener('click', e => {
+  const x = e.target.closest && e.target.closest('[data-bdadd],[data-bdpick],[data-bdnew],[data-bdcreate],[data-bdrm],[data-bddel]');
+  if (!x) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const pop = $('#bdpick');
+  if (x.dataset.bdadd != null) { openBoardPicker(x.dataset.bdadd); return; }
+  if (x.dataset.bdpick != null) { addToBoard(x.dataset.bdpick, pop.dataset.spec); pop.close(); return; }
+  if (x.dataset.bdnew != null) { const b = newBoard($('#bdNewIn').value); if (b) { addToBoard(b.id, pop.dataset.spec); pop.close(); } return; }
+  if (x.dataset.bdcreate != null) { if (newBoard($('#bdMainIn').value)) render(true); return; }
+  if (x.dataset.bdrm != null) {
+    const [bid, key] = [x.dataset.bdrm.slice(0, x.dataset.bdrm.indexOf('|')), x.dataset.bdrm.slice(x.dataset.bdrm.indexOf('|') + 1)], list = boards(), b = list.find(y => y.id === bid);
+    if (b) { b.items = b.items.filter(y => bdKey(y) !== key); saveBoards(list); render(true); }
+    return;
+  }
+  if (x.dataset.bddel != null) { saveBoards(boards().filter(y => y.id !== x.dataset.bddel)); render(true); }
+}, true);
+let bdTimer = null;
+document.addEventListener('input', e => {
+  const ta = e.target.closest && e.target.closest('[data-bdnotes]');
+  if (!ta) return;
+  clearTimeout(bdTimer);
+  bdTimer = setTimeout(() => { const list = boards(), b = list.find(y => y.id === ta.dataset.bdnotes); if (b) { b.notes = ta.value.slice(0, 4000); b.at = Date.now(); saveBoards(list); } }, 400);
+});
 
 /* ---------- trend alerts: a notification the moment a tracked trend takes off ---------- */
 const VAPID = /^[A-Za-z0-9_-]{80,100}$/.test(CFG.vapidKey || '') ? CFG.vapidKey : '';
@@ -6016,33 +6179,44 @@ const getKey = () => {
   return keyOk(site) && !SITE_KEY_BAD ? site : '';
 };
 const setKey = k => { try { localStorage.setItem('radar.key', k.trim()); } catch (e) {} };
+/* @metrics-start */
 const median = a => { const s = a.slice().sort((x, y) => x - y), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; };
 const clip = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
-const r1 = x => Math.round(x * 10) / 10, r2 = x => Math.round(x * 100) / 100;
-// Same scoring as the Python scanner (kept in step with compute_metrics in app.py).
-function computeMetrics(vids, subs) {
+const r1 = x => Math.round(x * 10) / 10, r2 = x => Math.round(x * 100) / 100, r3 = x => Math.round(x * 1000) / 1000;
+const SETTLE = 7 * 86400;   // a Short this young is still collecting most of its views: too new to judge
+// The same rules as compute_metrics in outlier-radar/app.py; web/scanner/parity.mjs checks that both give the same answers.
+function computeMetrics(vids, subs, now) {
   const views = vids.map(v => v.v), n = views.length;
   if (n < 6) return null;
-  const medRecent = median(views.slice(0, 12)), medAll = median(views), mx = Math.max(...views);
-  const s100 = views.filter(v => v >= 1e5).length / n, s1m = views.filter(v => v >= 1e6).length / n;
-  const mid = views.slice(3, 12), old = views.slice(12);
-  const trend = (median(mid.length ? mid : views) + 1) / (median(old.length ? old : views) + 1);
-  const peak = mx / Math.max(medAll, 1), ratio = medRecent / Math.max(subs || 0, 1000);
+  now = now == null ? nowTs() : now;
+  const settled = vids.filter(v => v.p).length >= 0.8 * n ? vids.filter(v => !v.p || now - v.p >= SETTLE).map(v => v.v) : views.slice(3);
+  const pool = settled.length >= 3 ? settled : views, base = pool.slice(0, 12);
+  const medRecent = median(base), medAll = median(pool), mx = Math.max(...views);
+  const s100 = pool.filter(v => v >= 1e5).length / pool.length, s1m = pool.filter(v => v >= 1e6).length / pool.length;
+  let trend = null, momN = settled.length;
+  if (settled.length >= 8) {   // momentum needs two groups of at least 4 settled Shorts
+    const k = Math.min(6, Math.floor(settled.length / 2)), newer = settled.slice(0, k), older = settled.slice(k, k + 12);
+    trend = (median(newer) + 1) / (median(older) + 1);
+    momN = newer.length + older.length;
+  }
+  const peak = mx / Math.max(medAll, 1), ratio = subs > 0 ? medRecent / subs : null;   // hidden or unknown subscriber counts earn no points here
   const engine = 30 * clip((Math.log10(Math.max(medRecent, 1)) - 4.7) / (6.0 - 4.7), 0, 1);
-  const leverage = 35 * clip(Math.log10(Math.max(ratio, 1)) / Math.log10(30), 0, 1);
+  const leverage = ratio == null ? 0 : 35 * clip(Math.log10(Math.max(ratio, 1)) / Math.log10(30), 0, 1);
   const consistency = 15 * s100 + 10 * clip(s1m / 0.25, 0, 1);
-  const trendS = 10 * clip((Math.log2(Math.max(trend, 0.05)) + 1) / 2, 0, 1);
+  const trendS = trend == null ? 5 : 10 * clip((Math.log2(Math.max(trend, 0.05)) + 1) / 2, 0, 1);
   const fluke = peak > 30 ? -15 : peak > 15 ? -8 : 0;
   const score = clip(engine + leverage + consistency + trendS + fluke, 0, 100);
   const tags = [];
   if (s100 >= 0.6 && peak <= 15 && medRecent >= 150000) tags.push('Consistent engine');
   if (peak > 30 || (s100 < 0.2 && mx >= 1e6)) tags.push('One-hit');
   if (subs && subs < 25000 && medRecent >= 200000) tags.push('Tiny & huge');
-  if (trend >= 1.4) tags.push('Rising'); else if (trend <= 0.6) tags.push('Fading');
-  vids.forEach(v => { v.x = r1(v.v / Math.max(medAll, 1000)); });
-  return {n, med_recent: medRecent, med_all: medAll, max_views: mx, share_100k: r2(s100), share_1m: r2(s1m), trend: r2(trend),
-          peak_vs_med: r1(peak), ratio: r1(ratio), score: r1(score), tags};
+  if (trend != null && trend >= 1.4) tags.push('Rising'); else if (trend != null && trend <= 0.6) tags.push('Fading');
+  vids.forEach(v => { v.x = r1(v.v / Math.max(medRecent, 1000)); });   // times the channel's usual views: the baseline the page prints
+  return {n, med_recent: medRecent, med_all: medAll, max_views: mx, share_100k: r2(s100), share_1m: r2(s1m), trend: trend == null ? null : r2(trend),
+          peak_vs_med: r1(peak), ratio: ratio == null ? null : r1(ratio), score: r1(score), tags,
+          base_n: base.length, settled_n: settled.length, mom_n: momN, top_share: r3(mx / Math.max(views.reduce((a, b) => a + b, 0), 1))};
 }
+/* @metrics-end */
 const SCRIPTS = [['ru', /[Ѐ-ӿ]/g], ['ar', /[؀-ۿ]/g], ['hi', /[ऀ-ॿ]/g], ['bn', /[ঀ-৿]/g], ['th', /[฀-๿]/g],
   ['ko', /[가-힯]/g], ['ja', /[぀-ヿ]/g], ['zh', /[一-鿿]/g], ['ta', /[஀-௿]/g], ['te', /[ఀ-౿]/g],
   ['he', /[֐-׿]/g], ['el', /[Ͱ-Ͽ]/g]];
@@ -6073,37 +6247,47 @@ function parseDur(iso) {
   const m = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.exec(iso || '');
   return m ? (+m[1] || 0) * 86400 + (+m[2] || 0) * 3600 + (+m[3] || 0) * 60 + (+m[4] || 0) : 1e6;
 }
+const API_BASE = httpsOk(CFG.apiUrl) ? CFG.apiUrl.replace(/\/+$/, '') : '';   // the server worker: keeps the YouTube key off the page
 async function ytApi(path, params) {
-  const u = new URL('https://www.googleapis.com/youtube/v3/' + path);
+  const proxy = API_BASE && !ownKey();
+  const u = new URL(proxy ? `${API_BASE}/yt/${path}` : 'https://www.googleapis.com/youtube/v3/' + path);
   Object.entries(params).forEach(([k, v]) => u.searchParams.set(k, v));
-  u.searchParams.set('key', getKey());
+  if (!proxy) u.searchParams.set('key', getKey());
+  const headers = {};
+  if (proxy && USER && USER.getIdToken) { try { headers.authorization = 'Bearer ' + await USER.getIdToken(); } catch (e) {} }
   let r;
-  try { r = await fetch(u.toString()); } catch (e) { throw {net: true}; }
+  try { r = await fetch(u.toString(), {headers}); } catch (e) { throw {net: true}; }
   if (!r.ok) {
     let body = {}; try { body = await r.json(); } catch (e) {}
+    if (r.status === 429) { if (body.scope === 'global') LS.set('radar.qrest', body.until || nextPacificMidnight()); throw {quota: true, limit: body.scope !== 'global'}; }
     if (r.status === 403 && /quota/i.test(JSON.stringify(body))) { if (!ownKey()) LS.set('radar.qrest', nextPacificMidnight()); throw {quota: true}; }
-    if (r.status === 400 || r.status === 403) throw {badKey: true};
+    if (r.status === 400 || r.status === 403) throw {badKey: !proxy};
     throw {http: r.status};
   }
   return r.json();
 }
+const trustO = () => !!(DATA && DATA.orient && DATA.orient.trusted);   // the scanner confirmed that player sizes tell vertical from horizontal
+const orientOf = p => { const w = +((p || {}).embedWidth || 0), h = +((p || {}).embedHeight || 0); return w > 0 && h > 0 ? (w < h * 0.9 ? 'v' : w > h * 1.1 ? 'h' : 's') : null; };
+const vidParts = () => (trustO() ? {part: 'snippet,statistics,contentDetails,player', maxHeight: 480} : {part: 'snippet,statistics,contentDetails'});
+const isShortV = v => v.dur <= 180 && !(trustO() && v.o === 'h');
 const parseVideo = it => ({
   id: it.id, t: (it.snippet || {}).title || '', ch: (it.snippet || {}).channelId,
   v: it.statistics && it.statistics.viewCount != null ? +it.statistics.viewCount : null,
   dur: parseDur(it.contentDetails && it.contentDetails.duration), p: (it.snippet || {}).publishedAt ? Date.parse(it.snippet.publishedAt) / 1000 : null,
-  c: it.statistics && it.statistics.commentCount != null ? +it.statistics.commentCount : null, l: it.statistics && it.statistics.likeCount != null ? +it.statistics.likeCount : null
+  c: it.statistics && it.statistics.commentCount != null ? +it.statistics.commentCount : null, l: it.statistics && it.statistics.likeCount != null ? +it.statistics.likeCount : null,
+  o: orientOf(it.player)
 });
 async function probeStatic(chId, info, query) {
   const pl = await ytApi('playlistItems', {part: 'contentDetails', playlistId: 'UU' + chId.slice(2), maxResults: 50});
   const ids = (pl.items || []).map(i => i.contentDetails && i.contentDetails.videoId).filter(Boolean);
   if (!ids.length) return null;
-  const vr = await ytApi('videos', {part: 'snippet,statistics,contentDetails', id: ids.join(',')});
+  const vr = await ytApi('videos', Object.assign({id: ids.join(',')}, vidParts()));
   const byId = new Map((vr.items || []).map(it => [it.id, parseVideo(it)]));
-  const vids = ids.map(i => byId.get(i)).filter(v => v && v.v != null && v.dur <= 180).slice(0, 24)
+  const vids = ids.map(i => byId.get(i)).filter(v => v && v.v != null && isShortV(v)).slice(0, 24)
     .map(v => ({id: v.id, t: v.t, v: v.v, ...(v.p ? {p: Math.round(v.p)} : {}), ...(v.dur < 1e6 ? {d: v.dur} : {}), ...(v.c != null ? {c: v.c} : {}), ...(v.l != null ? {l: v.l} : {})}));
   const sn = (info && info.snippet) || {}, st = (info && info.statistics) || {}, th = sn.thumbnails || {};
   const subs = st.hiddenSubscriberCount ? 0 : +(st.subscriberCount || 0);
-  const m = computeMetrics(vids, subs);
+  const m = computeMetrics(vids, subs, Date.now() / 1000);
   if (!m) return null;
   const descr = (sn.description || '').replace(/\s+/g, ' ').trim().slice(0, 400);
   const lang = detectLang(vids.map(v => v.t).concat([descr]));
@@ -6113,7 +6297,7 @@ async function probeStatic(chId, info, query) {
 }
 async function staticSearch(query, fresh) {
   const ck = qKey(query), hit = fresh ? null : searchCache().find(x => x.q === ck);   // saved results reopen for free
-  if (!hit && !getKey()) { go('channels'); return; }   // no key: the typed words already filter our own list
+  if (!hit && !canSearch()) { go('channels'); return; }   // no key: the typed words already filter our own list
   enterSearch();
   const base = {query, id: 'web', phase: '', done: 0, total: 0, found: 0, channels: [], error: null, tracked: false, msg: ''};
   if (hit) { SEARCH = Object.assign(base, {state: 'done', channels: hit.channels, cachedAt: hit.t / 1000}); render(); window.scrollTo(0, 0); return; }
@@ -6133,8 +6317,8 @@ async function staticSearch(query, fresh) {
     const sr = await ytApi('search', Object.assign({part: 'id', type: 'video', order: 'viewCount', videoDuration: 'short', maxResults: 50, q: query,
       publishedAfter: new Date(Date.now() - 30 * 864e5).toISOString()}, thai ? {relevanceLanguage: 'th', regionCode: 'TH'} : {}));
     const ids = (sr.items || []).map(i => i.id && i.id.videoId).filter(Boolean);
-    const vr = ids.length ? await ytApi('videos', {part: 'snippet,statistics,contentDetails', id: ids.join(',')}) : {items: []};
-    const rows = (vr.items || []).map(parseVideo).filter(v => v.v != null && v.dur <= 180 && v.ch);
+    const vr = ids.length ? await ytApi('videos', Object.assign({id: ids.join(',')}, vidParts())) : {items: []};
+    const rows = (vr.items || []).map(parseVideo).filter(v => v.v != null && isShortV(v) && v.ch);
     mine.found = rows.length; mine.phase = 'checking';
     const best = new Map();
     rows.forEach(r => best.set(r.ch, Math.max(best.get(r.ch) || 0, r.v)));
@@ -6162,7 +6346,7 @@ async function staticSearch(query, fresh) {
     mine.state = 'error';
     if (e && e.quota && !ownKey()) { refundFreeSearch(); searchHint(); }
     if (e && e.badKey && !ownKey()) { SITE_KEY_BAD = true; searchHint(); renderSide(); }   // the site's key was refused: stop offering YouTube search
-    mine.msg = e && e.quota ? (!ownKey() && restingUntil() ? t('kRest', {time: clock(restingUntil())}) : t('kQuota')) : e && e.badKey ? t('kBad') : e && e.net ? t('kNet') : t('sErr');
+    mine.msg = e && e.limit ? t('sLimit') : e && e.quota ? (!ownKey() && restingUntil() ? t('kRest', {time: clock(restingUntil())}) : t('kQuota')) : e && e.badKey ? t('kBad') : e && e.net ? t('kNet') : t('sErr');
   }
   if (S.tab === 'search' && SEARCH === mine) { renderChips(); renderContent(); }
 }
@@ -6190,11 +6374,18 @@ function openKeyDialog() {
 
 /* ---------- data loop ---------- */
 let lastSig = '';
+function prepData(d) {   // growth figures carry the time they were measured, so stale ones stop showing
+  for (const c of (d && d.channels) || []) for (const v of c.series || []) if (v.g != null) v.gAt = c.last_probe || d.generated || 0;
+  return d;
+}
 async function refresh() {
   if (!LIVE) return;
   try {
+    if (STATIC && DATA && !DATA.lite && lastSig) {   // a tiny file says whether anything new was published, so the big one isn't fetched for nothing
+      try { const v = await (await fetch('version.json', {cache: 'no-cache'})).json(); if (v && String(v.generated) === lastSig) return; } catch (e) {}
+    }
     const r = await fetch(STATIC ? 'data.json' : '/api/data', {cache: STATIC ? 'no-cache' : 'no-store'});
-    const d = await r.json();
+    const d = prepData(await r.json());
     const sig = STATIC ? String(d.generated) : '';   // the hosted data only changes when the scanner publishes
     if (sig && sig === lastSig) return;
     lastSig = sig;

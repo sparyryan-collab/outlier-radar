@@ -2,7 +2,7 @@
 
 This puts the dashboard on the internet at an address you choose, updating by itself while your PC is off.
 
-How it works: a static website on **GitHub Pages**, refreshed about every 15 minutes by a **GitHub Actions** job that asks YouTube's **official Data API** for fresh numbers. There is no server to keep running and nothing sleeps. The PC app stays as it is; this is a second, hosted edition of the same dashboard.
+How it works: a static website on **GitHub Pages**, refreshed several times a day by a **GitHub Actions** job that asks YouTube's **official Data API** for fresh numbers (every 15 minutes if you add the optional server worker). There is no server to keep running and nothing sleeps. The PC app stays as it is; this is a second, hosted edition of the same dashboard.
 
 ## Cost and billing details
 
@@ -24,12 +24,12 @@ Running out of YouTube quota never bills you. YouTube just refuses further calls
 | Anyone can open it by link | no | **yes** (public, read-only) |
 | Custom domain with HTTPS | no | **yes** |
 | Data source | yt-dlp scraping, no quota | official YouTube Data API: free, with Google's default of about **100 searches and 10,000 other units a day** (it can change) |
-| How fresh | every 20 min, most channels hourly | about every 15 min (GitHub sometimes skips scheduled runs at busy times); each run re-checks up to 40 channels, looks up related channels of 3 top creators, and runs one discovery search (up to 45 a day, spread out) |
+| How fresh | every 20 min, most channels hourly | GitHub starts the scheduled job only a few times a day, so each run re-checks as many channels as the day's remaining quota allows: hot channels every few hours, the rest about daily. Each channel shows when it was last checked. The optional server worker starts the job every 15 minutes |
 | Live search for any topic | yes, for you | yes, with an API key (see "Live search" below) |
 | Real upload times in the Live feed | no (first-seen time) | **yes** |
 | Cost | free | free (plus your domain, about 10-15 USD a year) |
 
-Be aware: because of the API quota, the hosted site refreshes each channel less often than the PC app. It keeps the best 1,500 channels. To give it a big boost at any time, let the PC app scan for a while, then run `python web/scanner/export_extra.py` and push: the website merges those channels once and keeps them fresh from then on.
+Be aware: because of the API quota, the hosted site refreshes each channel less often than the PC app. It keeps the best 1,500 channels. To give it a big boost at any time, let the PC app scan for a while, then run `python web/scanner/export_extra.py` and push: the website queues those channels and fetches every number again through the official API. Nothing the PC app measured with yt-dlp is published.
 
 ## Setup (about 15 minutes)
 
@@ -62,11 +62,11 @@ gh api -X POST repos/{owner}/{repo}/pages -f build_type=workflow
 ### 3. Add the key and start it
 ```
 gh secret set YT_API_KEY
-gh workflow run "Refresh site"
+gh workflow run "Refresh site" -f bootstrap=true
 ```
-`gh secret set` asks you to paste the key (you will not see it as you paste). After about two minutes your site is live at `https://<your-github-name>.github.io/outlier-radar/`. From then on it refreshes by itself, about every 15 minutes.
+`gh secret set` asks you to paste the key (you will not see it as you paste). `bootstrap=true` is only for this very first run: there is no previous data yet, so the scanner starts from the seed's list of channels and fetches all their numbers through the API. After a few minutes your site is live at `https://<your-github-name>.github.io/outlier-radar/`. From then on it refreshes by itself several times a day.
 
-If the first run shows a red cross under the repository's Actions tab, open it: the log says what failed (the most common cause is a wrong or not yet enabled API key). The site still publishes the starter data meanwhile.
+If a run shows a red cross under the repository's Actions tab, open it: the log says what failed (the most common cause is a wrong or not yet enabled API key). The scanner never starts over from nothing by itself: if it cannot read its saved state or the live site's data, it refuses to publish and the live site keeps its last good version.
 
 ## Custom domain (for example radar.yourdomain.com)
 
@@ -102,20 +102,20 @@ If it is declined, nothing breaks: keep using the free github.io address.
 
 ## Live search on the site (set up once, works on every device)
 
-Typing in the search box always filters the channels already on the site. Searching **all of YouTube** needs an API key, because every search uses quota. The site never asks visitors for one by itself.
+Typing in the search box always filters the channels already on the site. Searching **all of YouTube** uses quota, so it needs a key somewhere. The site never asks visitors for one by itself. There are two ways to switch it on; the first is safer.
 
-**One-time setup, so it works on every phone and computer with no sign-in:** create a second key that only works on your site's address and give it to the site as `BROWSER_KEY`. A key locked to your address is designed to sit in a web page. It is useless on any other site, and it never touches your scanner secret.
+**A. Through the server worker (recommended).** Visitors' searches go to your Cloudflare worker, which holds the key and enforces limits per person: 5 searches a day for visitors who aren't signed in, 15 for signed-in ones, and 90 for everyone together, so nobody can use up your quota. Set it up as described in "The server worker" below (the `YT_KEY` row), then `gh variable set API_URL --body https://viral-radar.<you>.workers.dev` and run "Refresh site". With `API_URL` set, no key is put in the page at all.
 
-1. Open https://console.cloud.google.com/apis/credentials (the same Google project as before is fine).
-2. Create credentials, then API key. Copy it.
+**B. A key in the page.** Create a second key that only works on your site's address and give it to the site as `BROWSER_KEY`. Website restrictions stop other websites' browsers from using it, but not scripts, which can claim to be your site. So **create this key in its own Google Cloud project**, never the scanner's: then the worst anyone can do is use up the visitors' search allowance, not stop the scanner.
+
+1. Open https://console.cloud.google.com/, create a **new** project (for example "viral-radar-visitors"), and enable YouTube Data API v3 in it.
+2. Credentials, Create credentials, API key. Copy it.
 3. Click the new key to edit it:
    - Application restrictions: **Websites**. Add `https://sparyryan-collab.github.io/*`, and later your custom domain too (for example `https://viralradar.foo.ng/*`).
    - API restrictions: **Restrict key**, then tick only **YouTube Data API v3**. Save.
 4. In a terminal in the repository folder: `gh variable set BROWSER_KEY` (paste the key when asked), then `gh workflow run "Refresh site"`.
 
-After that run, everyone gets a "Search all of YouTube" button and Enter searches YouTube directly.
-
-How the quota is protected: each device gets 15 searches a day with the site's key; a device's own searches reopen free for a week, and any topic someone searched in the last 24 hours opens free for everyone (shared through Firestore, see the rules below). When the project's roughly 100 daily searches run out, the search bar says when they come back (midnight Pacific time) and everything else keeps working. Keep this key in a different Google Cloud project from the scanner's key, so visitors can never use up the scanner's quota.
+How the quota is protected: Google gives each project about 100 searches a day (a bucket of their own) plus 10,000 units for everything else. The scanner uses up to 45 of its project's searches and `trends.py` up to 34 more, which is why visitors' searches must come from another project or through the worker. Each device also counts 15 searches a day, a device's own searches reopen free for a week, and any topic a signed-in visitor searched in the last 24 hours opens free for everyone (shared through Firestore). When searches run out, the search bar says when they come back (midnight Pacific time) and everything else keeps working.
 
 Anyone who wants more can still add their own key from the How to use page; it stays in their browser.
 
@@ -127,48 +127,14 @@ Signing in with Google keeps your saved channels, Playbook, upload log and My ch
 2. **Build → Authentication → Get started → Sign-in method → Google → Enable**, choose your email as the support email, **Save**.
 3. Still in Authentication: **Settings → Authorized domains → Add domain**: `sparyryan-collab.github.io`, and later your custom domain (for example `viralradar.foo.ng`).
 4. **Build → Firestore Database → Create database**, pick a location near you (for example `asia-southeast1`), start in **production mode**, create.
-5. In Firestore, open **Rules**, replace everything with the rules below, and click **Publish**:
-   ```
-   rules_version = '2';
-   service cloud.firestore {
-     match /databases/{database}/documents {
-       match /users/{uid} {
-         allow read, write: if request.auth != null && request.auth.uid == uid;
-       }
-       match /searches/{id} {
-         function valid() {
-           let d = request.resource.data;
-           return id.matches('q[0-9a-f]{40}')
-             && d.keys().hasOnly(['q', 'c', 'n', 't'])
-             && d.q is string && d.q.size() > 0 && d.q.size() <= 120
-             && d.c is string && d.c.size() <= 800000
-             && d.n is int && d.n >= 1 && d.n <= 15
-             && d.t == request.time;
-         }
-         allow get: if true;
-         allow create: if valid();
-         allow update: if valid() && resource.data.t < request.time - duration.value(20, 'h');
-       }
-       match /pro/{uid} {
-         allow read: if request.auth != null && request.auth.uid == uid;
-       }
-       match /push/{uid} {
-         allow read, write: if request.auth != null && request.auth.uid == uid;
-       }
-       match /track/{id} {
-         allow get, list: if true;
-         allow create: if request.auth != null && id.matches('UC[A-Za-z0-9_-]{22}')
-           && request.resource.data.keys().hasOnly(['t']) && request.resource.data.t == request.time;
-       }
-     }
-   }
-   ```
+5. In Firestore, open **Rules**, replace everything with the contents of `web/firestore.rules` from this repository, and click **Publish**. Check it took: the Rules tab should show `allow create: if request.auth != null && valid();` under `searches`. If the console still shows `allow read, write: if true` (test mode), everyone can read and change everything.
    What each part allows:
    - `users`: each signed-in person reads and writes only their own synced settings.
-   - `searches`: anyone can read shared search results; a result can only be written in the expected shape and can't be replaced until it is 20 hours old.
+   - `searches`: anyone can read shared search results; only a signed-in person can save one, in the expected shape, and it can't be replaced until it is 20 hours old.
    - `pro`: people can read only their own subscription status. Nobody can write it from the page; only the server worker can.
    - `push`: each person manages only their own alert subscription.
    - `track`: anyone can see which channels visitors asked the site to follow; a signed-in person can add a channel once.
+   - Everything else (`billing`, `rate`, `ailimit`, `meta`) is closed to the page; the server worker writes those with its service account.
 6. **Project settings (the gear) → General → Your apps → the `</>` (Web) button**, give it any name, skip Hosting, **Register app**. It shows a `firebaseConfig` with `apiKey: "AIza..."` and `projectId: "..."`.
 7. In a terminal: `gh variable set FIREBASE_PROJECT_ID --body "<projectId>"`, then `gh variable set FIREBASE_API_KEY` (paste the apiKey when asked), then `gh workflow run "Refresh site"`.
 
@@ -178,11 +144,11 @@ The Firebase apiKey is meant to be in the web page (it only identifies the proje
 
 The Trends page combines three sources:
 
-- **Rising on Shorts**: worked out in the page from every tracked Short. A word, phrase or hashtag counts as rising when far more new Shorts used it in the last 3 days than in the 18 days before, from several channels, with real views behind it. Games and cartoons/characters get their own boards from curated name lists.
+- **Rising on Shorts**: worked out from every tracked Short. A phrase or hashtag counts as rising when at least 4 new Shorts (5 for a single word written like a name) from at least 3 channels used it in the last 3 days, far more than the 18 days before predict, with real views behind it. Small counts are pulled toward "no change", so 3 Shorts never look like a boom, and a card with fewer than 8 Shorts or 4 channels says "weak signal". Each channel only contributes its newest 24 Shorts, so a channel that posts several a day has its short history scaled up to 18 days (or is left out) instead of making every word it uses look new. Contractions and the common words of every language the scanner covers are ignored; languages written without spaces (Thai, Japanese, Chinese, Korean) count only by hashtag. Games and cartoons/characters get their own boards from curated name lists.
 - **YouTube trending charts**: `web/scanner/trends.py` (run by the workflow after each scan) reads YouTube's `mostPopular` chart for Thailand and the USA in 12 categories. Each chart costs 1 unit, about 24 units every 3 hours, from the scanner's key. It keeps each video's previous rank, so the page can show what climbed and what's new.
 - **News & curiosity**: Wikipedia's most-read articles yesterday (English and Thai) from the open Wikimedia pageviews API, compared with the day before.
 
-Everything lands in `trends.json` next to `data.json`. If a run fails, the previous feeds are kept.
+The page and `trends.py` use the same word lists (a JSON block at the top of `index.html`) and the same rules, so a trend alert never names a trend the page doesn't show as hot. `node web/scanner/parity.mjs` checks that they agree. Everything lands in `trends.json` next to `data.json`. If a run fails, the previous feeds are kept.
 
 ## Viral Radar Pro (subscriptions)
 
@@ -205,7 +171,9 @@ Which provider? Lemon Squeezy and Paddle are "merchants of record": they sell on
 
 The site has terms of service, privacy and refund pages (footer links). They are a sensible starting point, not legal advice: read them, set `CONTACT_EMAIL`, and adjust the refund promise (7 days, first payment) if you want a different one.
 
-Note: the locks run in the browser and the data files are public, so they stop casual use rather than determined copying. Before charging, read the YouTube API Services Terms of Service and Developer Policies (your app must add value of its own beyond YouTube's data, and must say it isn't made by YouTube; the footer does), and expect to apply for a higher YouTube quota once many people search.
+**What is really protected.** Locks in the page alone protect nothing, because anyone can download the public data files. So once Pro is paid (`PRO_GATE` on) and the server worker's premium data is set up (the `UPLOAD_TOKEN` row below), the workflow uploads the full `trends.json` to the worker and publishes a trimmed public copy: YouTube's charts, the news lists, clip creators and their best moments, and creators who invite clippers then reach only Pro members, through `GET /api/trends`, which checks their sign-in and subscription. The AI writer and push alerts are also checked on the server. What stays readable by anyone who downloads `data.json` is everything the page works out from the public channel data: rising words, the games and cartoons boards, and the creator tools. Those need the channel data that free features use, so treat their locks as a convenience, or move them to the server later.
+
+Before charging, read the YouTube API Services Terms of Service and Developer Policies (your app must add value of its own beyond YouTube's data, and must say it isn't made by YouTube; the footer does), and expect to apply for a higher YouTube quota once many people search.
 
 ## The server worker (fresh data every 15 minutes, trend alerts, the AI writer)
 
@@ -221,11 +189,13 @@ One free Cloudflare Worker, `web/pay/worker.js`, does everything the static site
 | Fresh data every 15 minutes (GitHub's own timer only manages about every 2 hours) | `GITHUB_TOKEN`: on GitHub, Settings, Developer settings, Fine-grained tokens, Generate: only this repository, permission **Actions: Read and write**. `GITHUB_REPO`: `sparyryan-collab/outlier-radar` |
 | Payments | `FIREBASE_SA` (the service account JSON) plus each provider's signing secret, see "Viral Radar Pro" |
 | Trend alerts (phone and desktop notifications, even with the app closed) | Run `node web/pay/vapid.mjs` once. Put `VAPID_PUBLIC_KEY` in the worker **and** as a GitHub repository variable; `VAPID_PRIVATE_JWK` in the worker only (secret). Also `VAPID_SUBJECT` (`mailto:` your email), `SITE_URL` (the site's address) and `FIREBASE_SA` |
-| AI idea writer | `ANTHROPIC_API_KEY` (from https://console.anthropic.com; usage is billed by Anthropic), `FIREBASE_SA`, `ALLOWED_ORIGIN` (the site's origin, for example `https://sparyryan-collab.github.io`), and the GitHub repository variable `AI_URL` = the worker's address (`https://viral-radar.<you>.workers.dev`). Optional: `AI_MODEL` (default `claude-opus-5-5`), `AI_DAILY` (requests per person per day, default 20), `PRO_GATE` = `1` once Pro is paid |
+| AI idea writer | `ANTHROPIC_API_KEY` (from https://console.anthropic.com; usage is billed by Anthropic), `FIREBASE_SA`, `ALLOWED_ORIGIN` (the site's origin, for example `https://sparyryan-collab.github.io`), and the GitHub repository variable `AI_URL` = the worker's address (`https://viral-radar.<you>.workers.dev`). Optional: `AI_MODEL` (default `claude-opus-5-5`), `AI_DAILY` (requests per person per day, default 20), `AI_GLOBAL_DAILY` (all people together, default 300), `PRO_GATE` = `1` once Pro is paid. Counting happens before each request, so parallel requests can't slip past the limits |
+| Visitors' YouTube search | `YT_KEY` (a YouTube Data API key, ideally in its own Google Cloud project; it never leaves the worker), `FIREBASE_SA`, `ALLOWED_ORIGIN`, then the GitHub repository variable `API_URL` = the worker's address. Optional limits: `SEARCH_ANON_DAILY` (5), `SEARCH_USER_DAILY` (15), `SEARCH_GLOBAL_DAILY` (90), `CALLS_HOURLY` (400 other calls per person per hour). Only the methods and parameters the page uses are passed through |
+| Premium data for Pro members | A KV namespace bound to the worker as `DATA` (Workers & Pages, KV, Create; then the worker's Settings, Bindings, KV namespace, variable name `DATA`), `UPLOAD_TOKEN` (any long random string) in the worker **and** as the GitHub secret `UPLOAD_TOKEN` (`gh secret set UPLOAD_TOKEN`), `FIREBASE_SA`, and `API_URL` as above. See "What is really protected" |
 
 After adding GitHub variables, run "Refresh site" so the page picks them up.
 
-**Costs to know about:** Cloudflare's free plan covers this comfortably at the start. The AI writer is the only part with a running cost: each request (5 ideas) is a small Claude API call, and `AI_DAILY` caps how many each person can make. Keep it a Pro feature once Pro is paid.
+**Costs to know about:** Cloudflare's free plan covers this comfortably at the start, and the worker's counters use a few Firestore writes per search. The AI writer is the only part with a running cost: each request (5 ideas) is a small Claude API call, and `AI_DAILY` caps how many each person can make. Keep it a Pro feature once Pro is paid.
 
 ## Tracked channels
 
@@ -247,19 +217,25 @@ Lemon Squeezy has a built-in affiliate program: creators who recommend Viral Rad
 
 On Android and desktop Chrome or Edge, the site offers "📲 Install the app" in the menu. On iPhone or iPad: Share, then "Add to Home Screen". The installed app opens full screen and still shows the last data when offline.
 
+## How the data stays safe between runs
+
+- Each run starts from the newer of two copies of the scanner's state: a private copy the workflow saves in GitHub's Actions cache (with every channel's history, the quota counters and the candidates), and the live site's `data.json`. The three newest saved copies are kept.
+- If neither can be read, the scanner and `trends.py` refuse to run, nothing is written, and `web/scanner/check_site.py` stops the deploy, so the live site keeps its last good version. Only the very first run of a brand-new site uses `bootstrap=true`.
+- Every number on the site comes from the official API. Old records imported from the PC app are kept private until the API has refreshed them, and dropped if it can't. A channel the API can't refresh for 30 days is dropped too, and profile pictures are fetched again within 25 days and deleted when a channel leaves the list.
+- On every push the workflow first runs the self-tests (`web/scanner/selftest.py`, `web/scanner/parity.mjs`, `web/pay/selftest.mjs`); a failing test stops the deploy.
+
 ## Changing things
 
 - **Niches to scan:** edit `web/queries.json` (each entry has `q`, and optionally `lang` and `region`, for example `th` and `TH`). Push the change and the next run picks it up.
-- **Your notes on top channels:** edit `outlier-radar/picks.json` (English and Thai fields), push.
-- **How fast it spends quota:** environment values in the workflow, defaults in `web/scanner/scan.py` (`PROBES_PER_RUN`, `SEARCH_DAILY_CAP`, `DAILY_BUDGET`, `FEATURED_PER_RUN`, `KEEP_CHANNELS`).
-- **Add the PC app's finds:** `python web/scanner/export_extra.py` writes `web/seed/extra.json` (channels the site does not have yet) and copies their profile pictures; push it and the next run merges them.
-- **Check the scanner logic without any key or network:** `python web/scanner/selftest.py` (it runs against a fake YouTube API).
+- **Your notes on top channels:** edit `outlier-radar/picks.json` (English and Thai fields, plus `date`), push. Keep live numbers out of the notes: the page shows the current ones right beside them. Write format and opinion, and mark opinion as such ("Our read: …").
+- **How fast it spends quota:** environment values in the workflow, defaults in `web/scanner/scan.py`: `DAILY_BUDGET` (8,000 units a day), `RUN_BUDGET` (the most one run may spend, 2,400), `PROBES_PER_RUN` (a cap on channels per run), `SEARCH_DAILY_CAP`, `FEATURED_PER_RUN`, `KEEP_CHANNELS`. Each run divides what is left of the day's budget by the number of runs still expected today, learned from how often GitHub actually starts them. `trends.py` keeps to its own 1,200 units a day (`TRENDS_DAILY_UNITS`).
+- **Add the PC app's finds:** `python web/scanner/export_extra.py` writes `web/seed/extra.json`; push it and the next run queues those channels for the API to check.
+- **Check the logic without any key or network:** `python web/scanner/selftest.py` (it runs against a fake YouTube API), `node web/scanner/parity.mjs` (the page and the scanner agree) and `node web/pay/selftest.mjs` (the server worker).
 
 ## Things to know
 
-- Scheduled GitHub jobs can start a few minutes late, and GitHub switches scheduled jobs off after 60 days without repository activity. The workflow ends each run by asking GitHub to keep it enabled, which is meant to prevent that. I could not confirm that here, so if you ever see the schedule stopped, open Actions and click Enable (or push any small change).
-- Google's limits reset at midnight Pacific time. The scanner keeps itself well inside them (searches have their own bucket of 100 calls a day; the scanner uses at most 45 of them and 8,000 of the 10,000 daily units, leaving the rest for visitors); if YouTube refuses a call it stops and the site keeps showing the last good data. Google's published numbers are described as subject to change, so if searches start failing early, lower `SEARCH_DAILY_CAP`.
-- The profile pictures are stored on the site itself (downloaded slowly and cached), because hot-linking Google's image server gets rate limited.
-- Channel numbers come from the official API, so a few things differ from the PC app: the API cannot tell a Short from a short regular video, so any upload of 3 minutes or less counts; subscriber counts are rounded by YouTube.
+- GitHub starts scheduled jobs late and often skips them: in practice a few runs a day rather than every 15 minutes. Each run therefore does a bigger share of the day's work, and the server worker's 15-minute trigger is the way to get frequent runs. GitHub also switches scheduled jobs off after 60 days without repository activity; the workflow ends each run by asking GitHub to keep it enabled. If you ever see the schedule stopped, open Actions and click Enable (or push any small change).
+- Google's limits reset at midnight Pacific time. Searches have their own bucket of 100 calls a day: the scanner uses at most 45 and `trends.py` at most 34, so visitors' searches must come from another project or through the worker. If the search bucket runs out, the scanner keeps re-checking channels and only stops searching. Google's published numbers are described as subject to change, so if searches start failing early, lower `SEARCH_DAILY_CAP`.
+- The profile pictures are stored on the site itself (downloaded slowly, refreshed within 25 days), because hot-linking Google's image server gets rate limited. The downloader names itself honestly in its User-Agent, tries a picture that failed again only a day later, and the workflow saves the picture folder to the Actions cache only on runs that changed it (the two newest copies are kept).
+- What counts as a Short: the API has no "is a Short" field, and Shorts can be up to 3 minutes long. Any upload of 3 minutes or less counts, and the scanner also records each video's player shape. Once vertical Shorts have shown that the shape is reliable (at least 80% of videos of 60 seconds or less come back vertical), horizontal short videos are left out automatically; `data.json` says whether that has happened (`orient.trusted`). Subscriber counts are rounded by YouTube.
 - Scores rank patterns of demand. They do not predict results. Study the formats, then make something original.
-- The workflow file and the page were written and tested here against a fake YouTube API and in a browser, but not run on GitHub itself or with a real API key, so the first run is the real test.

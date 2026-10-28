@@ -1,19 +1,28 @@
 name: Refresh site
 
-# About every 15 minutes (at off-peak minutes, which GitHub delays and drops less): re-check channels with the YouTube Data API and publish the updated site.
-# Needs a repository secret named YT_API_KEY (see web/README.md). Optional repository variables:
+# Re-checks channels with the YouTube Data API and publishes the updated site. GitHub starts scheduled runs far less often than
+# asked (a few times a day), so each run sizes its work to what is left of the day's quota; the optional server worker
+# (web/pay/worker.js) can start the workflow every 15 minutes instead. Needs a repository secret named YT_API_KEY (see web/README.md).
+# Optional repository variables:
 #   CUSTOM_DOMAIN  your domain, e.g. radar.example.com   (the domain itself is set in Settings > Pages)
-#   BROWSER_KEY    a referrer-restricted API key that lets every visitor use live search
+#   API_URL        the server worker's address: visitors' YouTube searches then go through it, so no key sits in the page
+#   BROWSER_KEY    without the worker: a website-restricted key in its OWN Google Cloud project, for visitors' searches
 #   SITE_URL       only if your site address is not https://<you>.github.io/<repo>
 #   FIREBASE_API_KEY, FIREBASE_PROJECT_ID   switch on Google sign-in and sync (see web/README.md)
 #   PRO_GATE, PRO_PRICE, CHECKOUT_URL, MANAGE_URL   Viral Radar Pro: lock Pro features behind a subscription (see web/README.md)
 #   CONTACT_EMAIL  shown on the terms, privacy and refund pages
 #   VAPID_PUBLIC_KEY, AI_URL       trend alerts and the AI writer, served by the server worker (web/pay/worker.js)
 #   LEMON_STORE, AFFILIATE_URL     Lemon Squeezy affiliate tracking and the footer's affiliate sign-up link
+# Optional secret UPLOAD_TOKEN (with API_URL): the full trend feeds are uploaded to the worker for Pro members.
 on:
   schedule:
     - cron: "4,19,34,49 * * * *"
   workflow_dispatch:
+    inputs:
+      bootstrap:
+        description: "Brand-new site only: start from the seed's channel list because there is no previous data yet"
+        type: boolean
+        default: false
   push:
     branches: [main]
 
@@ -28,7 +37,27 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  test:   # a code change is only published when every self-test passes
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Scanner self-test (fake YouTube API)
+        run: python web/scanner/selftest.py
+      - name: The page and the scanner agree (scoring and trend rules)
+        run: node web/scanner/parity.mjs
+      - name: Server worker self-test
+        run: node web/pay/selftest.mjs
+
   scan-and-deploy:
+    needs: test
+    if: always() && (needs.test.result == 'success' || needs.test.result == 'skipped')
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -43,6 +72,7 @@ jobs:
       - name: Build the page
         env:
           BROWSER_KEY: ${{ vars.BROWSER_KEY }}
+          API_URL: ${{ vars.API_URL }}
           FIREBASE_API_KEY: ${{ vars.FIREBASE_API_KEY }}
           FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
           CUSTOM_DOMAIN: ${{ vars.CUSTOM_DOMAIN }}
@@ -58,17 +88,22 @@ jobs:
         run: python web/scanner/build_site.py _site
 
       - name: Restore profile pictures
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: _site/avatars
           key: avatars-${{ github.run_id }}
           restore-keys: avatars-
 
-      - name: Add the starter profile pictures
-        run: mkdir -p _site/avatars && cp -n web/seed/avatars/* _site/avatars/ 2>/dev/null || true
+      - name: Restore the scanner's saved state
+        uses: actions/cache/restore@v4
+        with:
+          path: state
+          key: state-${{ github.run_id }}
+          restore-keys: state-
 
       - name: Scan with the YouTube API
-        continue-on-error: true
+        id: scan
+        continue-on-error: true   # an API problem still publishes the last good numbers; with no state at all nothing is written and the check below stops the deploy
         env:
           YT_API_KEY: ${{ secrets.YT_API_KEY }}
           SITE_URL: ${{ vars.SITE_URL }}
@@ -76,28 +111,67 @@ jobs:
           REPO: ${{ github.event.repository.name }}
           FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
           FIREBASE_API_KEY: ${{ vars.FIREBASE_API_KEY }}
+          ALLOW_SEED: ${{ inputs.bootstrap && '1' || '' }}
         run: |
           OWNER_LC="$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')"
           export PREV_DATA_URL="${SITE_URL:-https://${OWNER_LC}.github.io/${REPO}}/data.json"
-          python web/scanner/scan.py --out _site/data.json
+          python web/scanner/scan.py --out _site/data.json --state state
 
-      - name: Fall back to the seed data if the scan produced nothing
-        run: test -f _site/data.json || cp web/seed/data.json _site/data.json
-
-      - name: Collect trend feeds (YouTube charts by country and category, Wikipedia's most-read)
+      - name: Collect trend feeds (YouTube charts by country and category, Wikipedia's most-read, clip research)
         continue-on-error: true
         env:
           YT_API_KEY: ${{ secrets.YT_API_KEY }}
           SITE_URL: ${{ vars.SITE_URL }}
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
+          ALLOW_SEED: ${{ inputs.bootstrap && '1' || '' }}
         run: |
           OWNER_LC="$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')"
           export PREV_TRENDS_URL="${SITE_URL:-https://${OWNER_LC}.github.io/${REPO}}/trends.json"
-          python web/scanner/trends.py --out _site/trends.json --data _site/data.json
+          python web/scanner/trends.py --out _site/trends.json --data _site/data.json --state state
 
-      - name: Download any new profile pictures
+      - name: Keep the last good trends if this run's feeds failed
+        run: test -f _site/trends.json || cp state/trends.json _site/trends.json || true
+
+      - name: Download new profile pictures and refresh old ones
+        id: avatars
+        continue-on-error: true
         run: python web/scanner/sync_avatars.py _site/data.json _site/avatars 150
+
+      - name: Premium data for Pro members (only when the server worker is set up)
+        continue-on-error: true
+        env:
+          API_URL: ${{ vars.API_URL }}
+          UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
+          PRO_GATE: ${{ vars.PRO_GATE }}
+        run: python web/scanner/premium.py _site/trends.json
+
+      - name: Check the site before publishing
+        run: python web/scanner/check_site.py _site
+
+      - name: Save the scanner's state for the next run
+        uses: actions/cache/save@v4
+        with:
+          path: state
+          key: state-${{ github.run_id }}
+
+      - name: Save the profile pictures (only when this run downloaded or removed some)
+        if: steps.avatars.outputs.changed == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: _site/avatars
+          key: avatars-${{ github.run_id }}
+
+      - name: Forget older saved copies (the three newest states and two newest picture folders are kept)
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for kept in "state- 3" "avatars- 2"; do
+            set -- $kept
+            gh cache list --repo "${{ github.repository }}" --key "$1" --limit 100 --json id,createdAt \
+              --jq "sort_by(.createdAt) | reverse | .[$2:] | .[].id" | xargs -r -n1 gh cache delete --repo "${{ github.repository }}"
+          done
 
       - uses: actions/configure-pages@v5
 
@@ -110,6 +184,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
       - name: Keep the schedule alive
+        if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow enable "Refresh site" --repo "${{ github.repository }}" || true

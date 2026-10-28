@@ -4,10 +4,12 @@
 //   2. Fresh data    every 15 minutes (a Cron Trigger) it starts the GitHub workflow that rescans and republishes the site
 //   3. Trend alerts  on the same timer, sends a web push to everyone whose tracked trends just took off
 //   4. AI writer     POST /ai   Short ideas for a trend, written by Claude, for signed-in (Pro) users
+//   5. YouTube       GET /yt/<method>   the page's YouTube searches, with the key kept here and daily limits per person
+//   6. Premium data  GET /api/trends   the full trend feeds for Pro members; PUT /admin/put/<file>   the workflow uploads them
 //
 // Secrets and variables (Workers > Settings > Variables; mark keys and secrets as encrypted). Each part switches on
 // only when its own settings are present:
-//   FIREBASE_SA            Firebase service account JSON (Project settings > Service accounts > Generate new private key)   [1, 3, 4]
+//   FIREBASE_SA            Firebase service account JSON (Project settings > Service accounts > Generate new private key)   [1, 3, 4, 5, 6]
 //   LEMON_SECRET / STRIPE_SECRET / PADDLE_SECRET   webhook signing secret of each payment provider you use               [1]
 //   GITHUB_TOKEN           fine-grained token with "Actions: read and write" on the site's repository                     [2]
 //   GITHUB_REPO            owner/name, for example sparyryan-collab/outlier-radar                                           [2]
@@ -15,7 +17,11 @@
 //   VAPID_PUBLIC_KEY, VAPID_PRIVATE_JWK, VAPID_SUBJECT   web push keys (node web/pay/vapid.mjs makes them) and a mailto: [3]
 //   ANTHROPIC_API_KEY      Claude API key                                                                                    [4]
 //   AI_MODEL (optional, default claude-opus-5-5), AI_DAILY (optional, ideas requests per user per day, default 20),
-//   PRO_GATE ("1" when Pro is paid; the AI writer then needs Pro), ALLOWED_ORIGIN (the site's origin, for CORS)        [4]
+//   AI_GLOBAL_DAILY (optional, all users together per day, default 300)                                                      [4]
+//   YT_KEY                 a YouTube Data API key, ideally in its own Google Cloud project (never put it in the page)       [5]
+//   SEARCH_USER_DAILY / SEARCH_ANON_DAILY / SEARCH_GLOBAL_DAILY / CALLS_HOURLY   optional limits (15 / 5 / 90 / 400)      [5]
+//   UPLOAD_TOKEN           a long random string, also saved as the GitHub secret UPLOAD_TOKEN; plus a KV namespace bound as DATA  [6]
+//   PRO_GATE ("1" when Pro is paid: the AI writer, premium data and alerts then need Pro), ALLOWED_ORIGIN (the site's origin, for CORS)
 // The checkout link must carry the visitor's Firebase uid (the site fills {uid} in CHECKOUT_URL):
 //   Lemon Squeezy  ...?checkout[custom][uid]={uid}&checkout[email]={email}
 //   Stripe         https://buy.stripe.com/...?client_reference_id={uid}&prefilled_email={email}
@@ -27,7 +33,8 @@ const hex = buf => [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, 
 const b64url = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const unb64url = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - s.length % 4) % 4)), c => c.charCodeAt(0));
 const concat = (...parts) => { const out = new Uint8Array(parts.reduce((n, x) => n + x.length, 0)); let i = 0; for (const x of parts) { out.set(x, i); i += x.length; } return out; };
-const json = (obj, status = 200) => new Response(JSON.stringify(obj), {status, headers: {'content-type': 'application/json'}});
+const json = (obj, status = 200, headers = {}) => new Response(JSON.stringify(obj), {status, headers: {'content-type': 'application/json', ...headers}});
+const hashText = async text => hex(await crypto.subtle.digest('SHA-256', enc.encode(text)));
 
 async function hmacHex(secret, text) {
   const key = await crypto.subtle.importKey('raw', enc.encode(secret), {name: 'HMAC', hash: 'SHA-256'}, false, ['sign']);
@@ -39,8 +46,17 @@ function sameText(a, b) {   // constant-time comparison of two signatures
   for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return d === 0;
 }
+const pacificDay = (ms = Date.now()) => new Intl.DateTimeFormat('en-CA', {timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit'}).format(ms);
+function nextPacificMidnight(ms = Date.now()) {   // when YouTube's daily quota resets
+  const today = pacificDay(ms);
+  let t = ms;
+  while (pacificDay(t) === today) t += 3600e3;
+  t -= 3600e3;
+  while (pacificDay(t) === today) t += 60e3;
+  return t;
+}
 
-/* ---------- Firestore through a service account (bypasses the security rules, so only this worker can grant Pro) ---------- */
+/* ---------- Firestore through a service account (bypasses the security rules, so only this worker can grant Pro or count usage) ---------- */
 let cachedToken = null;
 async function googleToken(sa) {
   if (cachedToken && cachedToken.exp > Date.now() + 60e3) return cachedToken.token;
@@ -59,9 +75,10 @@ async function googleToken(sa) {
   cachedToken = {token: data.access_token, exp: Date.now() + (data.expires_in || 3600) * 1000};
   return cachedToken.token;
 }
+const fsBase = sa => `https://firestore.googleapis.com/v1/projects/${sa.project_id}/databases/(default)/documents`;
 async function firestore(env, method, path, fields) {
   const sa = JSON.parse(env.FIREBASE_SA);
-  const base = `https://firestore.googleapis.com/v1/projects/${sa.project_id}/databases/(default)/documents/${path}`;
+  const base = `${fsBase(sa)}/${path}`;
   const url = fields ? base + '?' + Object.keys(fields).map(f => 'updateMask.fieldPaths=' + encodeURIComponent(f)).join('&') : base;
   const r = await fetch(url, {method, headers: {authorization: 'Bearer ' + (await googleToken(sa)), 'content-type': 'application/json'},
     body: fields ? JSON.stringify({fields}) : undefined});
@@ -69,16 +86,35 @@ async function firestore(env, method, path, fields) {
   if (!r.ok) throw new Error(`Firestore ${method} ${path}: ${r.status}`);
   return r.json();
 }
+async function bump(env, path, by = 1) {   // an atomic counter: adds to field n and returns the new value, safe under parallel requests
+  const sa = JSON.parse(env.FIREBASE_SA);
+  const r = await fetch(`${fsBase(sa)}:commit`, {method: 'POST', headers: {authorization: 'Bearer ' + (await googleToken(sa)), 'content-type': 'application/json'},
+    body: JSON.stringify({writes: [{update: {name: `projects/${sa.project_id}/databases/(default)/documents/${path}`, fields: {}}, updateMask: {fieldPaths: []},
+      updateTransforms: [{fieldPath: 'n', increment: {integerValue: String(by)}}]}]})});
+  if (!r.ok) throw new Error(`Firestore count ${path}: ${r.status}`);
+  const res = await r.json();
+  return +((((res.writeResults || [])[0] || {}).transformResults || [])[0] || {}).integerValue || 0;
+}
 const str = v => ({stringValue: String(v || '')});
 async function setPro(env, uid, untilMs, provider, extra = {}) {
-  if (!/^[A-Za-z0-9]{10,64}$/.test(uid || '')) throw new Error('missing or odd uid');
   const fields = {until: {timestampValue: new Date(untilMs).toISOString()}, provider: str(provider), updated: {timestampValue: new Date().toISOString()}};
   for (const [k, v] of Object.entries(extra)) if (v) fields[k] = str(v);
   await firestore(env, 'PATCH', `pro/${uid}`, fields);
 }
-const remember = (env, key, uid) => firestore(env, 'PATCH', `billing/${key}`, {uid: str(uid)});   // which account a subscription belongs to
-async function recall(env, key) { const d = await firestore(env, 'GET', `billing/${key}`); return d && d.fields && d.fields.uid ? d.fields.uid.stringValue : ''; }
+const okUid = uid => /^[A-Za-z0-9]{10,64}$/.test(uid || '');
+async function isProUser(env, uid) {
+  const pro = await firestore(env, 'GET', `pro/${uid}`);
+  const until = pro && pro.fields && pro.fields.until ? Date.parse(pro.fields.until.timestampValue) : 0;
+  return until > Date.now();
+}
+// which account a subscription belongs to, and the time of the last event applied (so a late, older event can't undo a newer one)
+const stamp = (env, key, uid, at) => firestore(env, 'PATCH', `billing/${key}`, {uid: str(uid), ...(at ? {at: {timestampValue: new Date(at).toISOString()}} : {})});
+async function billing(env, key) {
+  const d = await firestore(env, 'GET', `billing/${key}`), f = (d && d.fields) || {};
+  return {uid: f.uid ? f.uid.stringValue : '', at: f.at ? Date.parse(f.at.timestampValue) : 0};
+}
 const day = 86400e3;
+const ignored = why => { console.log('webhook ignored:', why); return json({ok: true, ignored: why}); };   // a 200, so the provider doesn't retry forever
 
 /* ---------- Lemon Squeezy ---------- */
 async function lemon(req, env, body) {
@@ -86,9 +122,13 @@ async function lemon(req, env, body) {
   const e = JSON.parse(body), a = (e.data || {}).attributes || {}, uid = ((e.meta || {}).custom_data || {}).uid;
   const name = (e.meta || {}).event_name || '';
   if (!name.startsWith('subscription_')) return json({ok: true, ignored: name});
+  if (!okUid(uid)) return ignored('no account id in the checkout');
+  const key = 'lemon_' + ((e.data || {}).id || uid), at = Date.parse(a.updated_at || '') || Date.now();
+  if (at < (await billing(env, key)).at) return ignored('older event');
   const active = ['active', 'on_trial', 'past_due', 'cancelled'].includes(a.status);   // cancelled keeps Pro until the paid period ends
   const until = active ? Date.parse(a.ends_at || a.renews_at) || Date.now() + 31 * day : Date.now();
   await setPro(env, uid, until, 'lemonsqueezy', {portal: (a.urls || {}).customer_portal, status: a.status});
+  await stamp(env, key, uid, at);
   return json({ok: true});
 }
 
@@ -96,16 +136,18 @@ async function lemon(req, env, body) {
 async function stripe(req, env, body) {
   const parts = Object.fromEntries((req.headers.get('stripe-signature') || '').split(',').map(x => x.split('=')));
   if (!parts.t || Math.abs(Date.now() / 1000 - +parts.t) > 300 || !sameText(parts.v1 || '', await hmacHex(env.STRIPE_SECRET, `${parts.t}.${body}`))) return json({error: 'bad signature'}, 401);
-  const e = JSON.parse(body), o = (e.data || {}).object || {};
+  const e = JSON.parse(body), o = (e.data || {}).object || {}, at = (e.created || 0) * 1000;
   if (e.type === 'checkout.session.completed' && o.mode === 'subscription') {
-    await remember(env, 'stripe_' + o.subscription, o.client_reference_id);
+    if (!okUid(o.client_reference_id)) return ignored('no account id in the checkout');
+    await stamp(env, 'stripe_' + o.subscription, o.client_reference_id, at);
     await setPro(env, o.client_reference_id, Date.now() + 31 * day, 'stripe', {status: 'active'});
   } else if (e.type === 'customer.subscription.updated' || e.type === 'customer.subscription.deleted') {
-    const uid = await recall(env, 'stripe_' + o.id);
-    if (uid) {
-      const live = ['active', 'trialing', 'past_due'].includes(o.status);
-      await setPro(env, uid, live ? (o.current_period_end || o.items?.data?.[0]?.current_period_end || 0) * 1000 || Date.now() + 31 * day : Date.now(), 'stripe', {status: o.status});
-    }
+    const b = await billing(env, 'stripe_' + o.id);
+    if (!b.uid) return ignored('unknown subscription');
+    if (at && at < b.at) return ignored('older event');
+    const live = ['active', 'trialing', 'past_due'].includes(o.status);
+    await setPro(env, b.uid, live ? (o.current_period_end || o.items?.data?.[0]?.current_period_end || 0) * 1000 || Date.now() + 31 * day : Date.now(), 'stripe', {status: o.status});
+    await stamp(env, 'stripe_' + o.id, b.uid, at);
   }
   return json({ok: true});
 }
@@ -113,19 +155,21 @@ async function stripe(req, env, body) {
 /* ---------- Paddle ---------- */
 async function paddle(req, env, body) {
   const parts = Object.fromEntries((req.headers.get('paddle-signature') || '').split(';').map(x => x.split('=')));
-  if (!parts.ts || !sameText(parts.h1 || '', await hmacHex(env.PADDLE_SECRET, `${parts.ts}:${body}`))) return json({error: 'bad signature'}, 401);
+  if (!parts.ts || Math.abs(Date.now() / 1000 - +parts.ts) > 300 || !sameText(parts.h1 || '', await hmacHex(env.PADDLE_SECRET, `${parts.ts}:${body}`))) return json({error: 'bad signature'}, 401);
   const e = JSON.parse(body), d = e.data || {};
   if (!String(e.event_type || '').startsWith('subscription.')) return json({ok: true, ignored: e.event_type});
-  let uid = (d.custom_data || {}).uid;
-  if (uid) await remember(env, 'paddle_' + d.id, uid); else uid = await recall(env, 'paddle_' + d.id);
+  const key = 'paddle_' + d.id, b = await billing(env, key), uid = (d.custom_data || {}).uid || b.uid, at = Date.parse(e.occurred_at || '') || Date.now();
+  if (!okUid(uid)) return ignored('no account id in the checkout');
+  if (at < b.at) return ignored('older event');
   const live = ['active', 'trialing', 'past_due'].includes(d.status) || (d.status === 'canceled' && d.current_billing_period);
   const until = live ? Date.parse((d.current_billing_period || {}).ends_at) || Date.now() + 31 * day : Date.now();
   await setPro(env, uid, until, 'paddle', {status: d.status});
+  await stamp(env, key, uid, at);
   return json({ok: true});
 }
 
 
-/* ---------- 2. fresh data: start the GitHub workflow (GitHub's own timer only runs it about every 2 hours) ---------- */
+/* ---------- 2. fresh data: start the GitHub workflow (GitHub's own timer only runs it a few times a day) ---------- */
 async function refreshSite(env) {
   const r = await fetch(`https://api.github.com/repos/${env.GITHUB_REPO}/actions/workflows/scan.yml/dispatches`, {method: 'POST',
     headers: {authorization: 'Bearer ' + env.GITHUB_TOKEN, accept: 'application/vnd.github+json', 'x-github-api-version': '2022-11-28', 'user-agent': 'viral-radar-worker'},
@@ -177,6 +221,9 @@ const ALERT_TEXT = {
 async function sendAlerts(env) {   // trends.json carries the scanner's list of hot trends; each subscriber hears about a trend once every 3 days at most
   const trends = await (await fetch(env.SITE_URL.replace(/\/$/, '') + '/trends.json', {cf: {cacheTtl: 0}})).json();
   const hot = trends.hot || {}, now = Date.now();
+  const sig = await hashText(JSON.stringify(Object.keys(hot).sort()));
+  const meta = await firestore(env, 'GET', 'meta/alerts'), mf = (meta && meta.fields) || {};
+  if (mf.sig && mf.sig.stringValue === sig && now - +(mf.at || {}).integerValue < 6 * 3600e3) return 0;   // nothing new: skip reading every subscription
   let page = '', sent = 0;
   do {
     const list = await firestore(env, 'GET', `push?pageSize=200${page ? '&pageToken=' + encodeURIComponent(page) : ''}`);
@@ -186,6 +233,7 @@ async function sendAlerts(env) {   // trends.json carries the scanner's list of 
       try { sub = JSON.parse(f.sub.stringValue); keys = JSON.parse((f.keys || {}).stringValue || '[]'); seen = JSON.parse((f.sent || {}).stringValue || '{}'); } catch (e) { continue; }
       const fresh = keys.filter(k => hot[k] && !(seen[k] > now - 3 * day));
       if (!fresh.length) continue;
+      if (env.PRO_GATE === '1' && !(await isProUser(env, uid))) continue;   // alerts are a Pro feature once Pro is paid
       const k = fresh[0], h = hot[k], text = (ALERT_TEXT[(f.lang || {}).stringValue] || ALERT_TEXT.en)(h[2], h);
       const r = await sendPush(sub, {...text, tag: k, url: '#trend/' + encodeURIComponent(k)}, env);
       if (r.status === 404 || r.status === 410) { await firestore(env, 'DELETE', `push/${uid}`); continue; }   // the browser unsubscribed
@@ -196,27 +244,34 @@ async function sendAlerts(env) {   // trends.json carries the scanner's list of 
     }
     page = list && list.nextPageToken;
   } while (page);
+  await firestore(env, 'PATCH', 'meta/alerts', {sig: str(sig), at: {integerValue: String(now)}});
   return sent;
 }
 
-/* ---------- 4. AI writer: Short ideas for a trend (Claude, through the Messages API) ---------- */
+/* ---------- sign-in: the visitor's Firebase ID token ---------- */
 let googleKeys = null;
-async function firebaseUser(req, env) {   // checks the visitor's Firebase sign-in token; returns their uid
-  const token = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
-  const [h, c, sig] = token.split('.');
-  if (!sig) return null;
-  const head = JSON.parse(new TextDecoder().decode(unb64url(h))), claim = JSON.parse(new TextDecoder().decode(unb64url(c)));
-  const project = JSON.parse(env.FIREBASE_SA).project_id, now = Date.now() / 1000;
-  if (head.alg !== 'RS256' || claim.aud !== project || claim.iss !== 'https://securetoken.google.com/' + project || !(claim.exp > now) || !(claim.iat < now + 300) || !claim.sub) return null;
-  if (!googleKeys || googleKeys.exp < Date.now()) {
-    const r = await fetch('https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com');
-    googleKeys = {keys: (await r.json()).keys || [], exp: Date.now() + 3600e3};
+async function firebaseUser(req, env) {   // checks the visitor's Firebase sign-in token; returns their uid, or null
+  try {
+    const token = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
+    const [h, c, sig] = token.split('.');
+    if (!sig) return null;
+    const head = JSON.parse(new TextDecoder().decode(unb64url(h))), claim = JSON.parse(new TextDecoder().decode(unb64url(c)));
+    const project = JSON.parse(env.FIREBASE_SA).project_id, now = Date.now() / 1000;
+    if (head.alg !== 'RS256' || claim.aud !== project || claim.iss !== 'https://securetoken.google.com/' + project || !(claim.exp > now) || !(claim.iat < now + 300) || !claim.sub) return null;
+    if (!googleKeys || googleKeys.exp < Date.now()) {
+      const r = await fetch('https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com');
+      googleKeys = {keys: (await r.json()).keys || [], exp: Date.now() + 3600e3};
+    }
+    const jwk = googleKeys.keys.find(k => k.kid === head.kid);
+    if (!jwk) return null;
+    const key = await crypto.subtle.importKey('jwk', jwk, {name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256'}, false, ['verify']);
+    return await crypto.subtle.verify('RSASSA-PKCS1-v1_5', key, unb64url(sig), enc.encode(`${h}.${c}`)) ? claim.sub : null;
+  } catch (e) {
+    return null;
   }
-  const jwk = googleKeys.keys.find(k => k.kid === head.kid);
-  if (!jwk) return null;
-  const key = await crypto.subtle.importKey('jwk', jwk, {name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256'}, false, ['verify']);
-  return await crypto.subtle.verify('RSASSA-PKCS1-v1_5', key, unb64url(sig), enc.encode(`${h}.${c}`)) ? claim.sub : null;
 }
+
+/* ---------- 4. AI writer: Short ideas for a trend (Claude, through the Messages API) ---------- */
 const IDEAS_SCHEMA = {type: 'object', additionalProperties: false, required: ['ideas'], properties: {ideas: {type: 'array', items: {
   type: 'object', additionalProperties: false, required: ['title', 'hook', 'beats'],
   properties: {title: {type: 'string'}, hook: {type: 'string'}, beats: {type: 'array', items: {type: 'string'}}}}}}};
@@ -247,26 +302,73 @@ async function writeIdeas(input, env) {
 async function ai(req, env) {
   const uid = await firebaseUser(req, env);
   if (!uid) return {status: 401, body: {error: 'sign_in'}};
-  if (env.PRO_GATE === '1') {
-    const pro = await firestore(env, 'GET', `pro/${uid}`);
-    const until = pro && pro.fields && pro.fields.until ? Date.parse(pro.fields.until.timestampValue) : 0;
-    if (!(until > Date.now())) return {status: 402, body: {error: 'pro'}};
-  }
-  const today = new Date().toISOString().slice(0, 10), lim = await firestore(env, 'GET', `ailimit/${uid}`);
-  const used = lim && lim.fields && lim.fields.d && lim.fields.d.stringValue === today ? +lim.fields.n.integerValue : 0;
-  if (used >= +(env.AI_DAILY || 20)) return {status: 429, body: {error: 'limit'}};
+  if (env.PRO_GATE === '1' && !(await isProUser(env, uid))) return {status: 402, body: {error: 'pro'}};
+  const today = pacificDay(), mine = `ailimit/${uid}_${today}`, all = `ailimit/_all_${today}`;
+  if (await bump(env, mine) > +(env.AI_DAILY || 20)) return {status: 429, body: {error: 'limit'}};   // counted before the call, so parallel requests can't slip past
+  if (await bump(env, all) > +(env.AI_GLOBAL_DAILY || 300)) { await bump(env, mine, -1); return {status: 503, body: {error: 'busy'}}; }
   const out = await writeIdeas(await req.json(), env);
-  if (out.status === 200) await firestore(env, 'PATCH', `ailimit/${uid}`, {d: str(today), n: {integerValue: String(used + 1)}});
+  if (out.status !== 200) { await bump(env, mine, -1); await bump(env, all, -1); }   // a failed request doesn't use up the allowance
   return out;
 }
-const cors = env => ({'access-control-allow-origin': env.ALLOWED_ORIGIN || '*', 'access-control-allow-methods': 'POST, OPTIONS',
+
+/* ---------- 5. YouTube for the page: the key stays here, and searches are limited per person and per day ---------- */
+const YT_PARAMS = {search: ['part', 'type', 'order', 'videoDuration', 'q', 'publishedAfter', 'maxResults', 'relevanceLanguage', 'regionCode'],
+  videos: ['part', 'id', 'maxHeight'], channels: ['part', 'id', 'forHandle'], playlistItems: ['part', 'playlistId', 'maxResults'],
+  commentThreads: ['part', 'videoId', 'order', 'maxResults', 'textFormat']};
+async function youtube(req, env, method) {
+  const allowed = YT_PARAMS[method];
+  if (!allowed || req.method !== 'GET') return json({error: 'not found'}, 404);
+  if (!env.YT_KEY || !env.FIREBASE_SA) return json({error: 'not configured'}, 503);
+  const src = new URL(req.url), q = new URLSearchParams();
+  for (const k of allowed) if (src.searchParams.has(k)) q.set(k, src.searchParams.get(k).slice(0, 400));
+  const cache = typeof caches !== 'undefined' && caches.default ? caches.default : null;   // the same search by anyone is answered from the edge
+  const cacheKey = new Request(`https://cache.viral-radar.invalid/yt/${method}?${q}`);
+  const hit = cache ? await cache.match(cacheKey) : null;
+  if (hit) return hit;
+  const uid = req.headers.get('authorization') ? await firebaseUser(req, env) : null;
+  const who = uid ? 'u_' + uid : 'ip_' + (await hashText((req.headers.get('cf-connecting-ip') || 'unknown') + '|' + (env.IP_SALT || env.YT_KEY))).slice(0, 24);
+  const limit = scope => json({error: 'limit', scope, until: scope === 'global' ? nextPacificMidnight() : null}, 429);
+  if (method === 'search') {
+    if (await bump(env, `rate/${who}_s_${pacificDay()}`) > +(uid ? env.SEARCH_USER_DAILY || 15 : env.SEARCH_ANON_DAILY || 5)) return limit('user');
+    if (await bump(env, `rate/_all_s_${pacificDay()}`) > +(env.SEARCH_GLOBAL_DAILY || 90)) return limit('global');
+  } else if (await bump(env, `rate/${who}_c_${new Date().toISOString().slice(0, 13)}`) > +(env.CALLS_HOURLY || 400)) {
+    return limit('user');
+  }
+  q.set('key', env.YT_KEY);
+  const r = await fetch(`https://www.googleapis.com/youtube/v3/${method}?${q}`);
+  const res = new Response(await r.text(), {status: r.status, headers: {'content-type': 'application/json', 'cache-control': `public, max-age=${method === 'search' ? 21600 : 900}`}});
+  if (r.ok && cache) await cache.put(cacheKey, res.clone());
+  return res;
+}
+
+/* ---------- 6. premium data: full trend feeds for Pro members (the public trends.json can be trimmed when Pro is paid) ---------- */
+const UPLOADS = new Set(['trends-full.json']);
+async function premium(req, env) {
+  if (!env.DATA || !env.FIREBASE_SA) return json({error: 'not configured'}, 404);
+  const uid = await firebaseUser(req, env);
+  if (!uid) return json({error: 'sign_in'}, 401);
+  if (env.PRO_GATE === '1' && !(await isProUser(env, uid))) return json({error: 'pro'}, 402);
+  const body = await env.DATA.get('trends-full.json');
+  return body ? new Response(body, {headers: {'content-type': 'application/json', 'cache-control': 'private, max-age=300'}}) : json({error: 'not yet'}, 404);
+}
+async function upload(req, env, name) {
+  if (!env.UPLOAD_TOKEN || !env.DATA) return json({error: 'not configured'}, 404);
+  if (!sameText(req.headers.get('authorization') || '', 'Bearer ' + env.UPLOAD_TOKEN)) return json({error: 'bad token'}, 401);
+  if (!UPLOADS.has(name)) return json({error: 'unknown file'}, 400);
+  await env.DATA.put(name, await req.text());
+  return json({ok: true});
+}
+
+const cors = env => ({'access-control-allow-origin': env.ALLOWED_ORIGIN || '*', 'access-control-allow-methods': 'GET, POST, OPTIONS',
   'access-control-allow-headers': 'authorization, content-type', 'access-control-max-age': '86400', vary: 'origin'});
+const withCors = (res, env) => { const h = new Headers(res.headers); for (const [k, v] of Object.entries(cors(env))) h.set(k, v); return new Response(res.body, {status: res.status, headers: h}); };
 
 export default {
   async fetch(req, env) {
     const path = new URL(req.url).pathname.replace(/\/+$/, '');
-    if (path === '/ai') {   // called from the site itself, so it needs CORS
-      if (req.method === 'OPTIONS') return new Response(null, {status: 204, headers: cors(env)});
+    const forPage = path === '/ai' || path.startsWith('/yt/') || path === '/api/trends';   // called from the site itself, so these need CORS
+    if (forPage && req.method === 'OPTIONS') return new Response(null, {status: 204, headers: cors(env)});
+    if (path === '/ai') {
       if (req.method !== 'POST' || !env.ANTHROPIC_API_KEY) return new Response(null, {status: 404, headers: cors(env)});
       try {
         const out = await ai(req, env);
@@ -275,6 +377,14 @@ export default {
         return new Response(JSON.stringify({error: 'server'}), {status: 500, headers: {...cors(env), 'content-type': 'application/json'}});
       }
     }
+    if (forPage) {
+      try {
+        return withCors(path === '/api/trends' ? await premium(req, env) : await youtube(req, env, path.slice(4)), env);
+      } catch (err) {
+        return withCors(json({error: 'server'}, 500), env);
+      }
+    }
+    if (path.startsWith('/admin/put/') && req.method === 'PUT') return upload(req, env, path.slice('/admin/put/'.length));
     if (req.method !== 'POST') return new Response('Viral Radar server: OK', {status: 200});
     const body = await req.text();
     try {
@@ -283,7 +393,8 @@ export default {
       if (path === '/paddle' && env.PADDLE_SECRET) return await paddle(req, env, body);
       return json({error: 'unknown endpoint'}, 404);
     } catch (err) {
-      return json({error: String(err.message || err).slice(0, 200)}, 500);   // the provider retries failed webhooks
+      console.log('webhook failed:', err.message);
+      return json({error: 'server'}, 500);   // the provider retries failed webhooks; details stay in the worker's log
     }
   },
   encryptPush,   // exposed for web/pay/selftest.mjs
