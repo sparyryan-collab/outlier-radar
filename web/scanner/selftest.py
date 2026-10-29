@@ -364,6 +364,25 @@ def main():
         assert radar.compute_metrics(rising, 50000, t0)["trend"] == 3.0, "newer settled Shorts at 3× the older ones"
         print("metrics OK: SeedThePast gets 'not enough history' instead of '2.2× rising'; hidden subscribers earn no ratio points")
 
+        # edge cases: nothing to score, zero views, one giant video, only brand-new uploads, hidden or tiny subscriber counts, no dates
+        def ser(views, ages):
+            return [{"id": f"e{i:010d}", "t": "x", "v": v, "p": t0 - a * 86400, "d": 30} for i, (v, a) in enumerate(zip(views, ages))]
+        cm = radar.compute_metrics
+        assert cm([], 1000, t0) is None and cm(ser([50000], [10]), 1000, t0) is None, "too little to score"
+        zero = cm(ser([0] * 10, range(8, 18)), 1000, t0)
+        assert zero["med_recent"] == 0 and zero["score"] <= 5 and not zero["tags"], zero
+        giant = cm(ser([50_000_000] + [10_000] * 11, range(8, 20)), 5000, t0)
+        assert "One-hit" in giant["tags"] and giant["top_share"] > 0.99 and giant["score"] < 10, giant   # one video carrying the channel is penalised
+        fresh = cm(ser([100_000] * 8, [1, 2, 2, 3, 4, 5, 5, 6]), 2000, t0)
+        assert fresh["settled_n"] == 0 and fresh["base_n"] == 8 and fresh["trend"] is None, fresh   # all still collecting views: no momentum claim
+        steady = cm(ser([200_000] * 12, range(8, 20)), 0, t0)
+        assert steady["ratio"] is None and "Consistent engine" in steady["tags"], steady
+        tiny = cm(ser([600] * 12, range(8, 20)), 2, t0)
+        assert tiny["ratio"] == 300 and tiny["score"] < 50, tiny   # a huge ratio on tiny views stays below the 'worth watching' level
+        undated = cm([{"id": f"u{i:010d}", "t": "x", "v": 100_000, "d": 30} for i in range(12)], 5000, t0)
+        assert undated["settled_n"] == 9, undated   # without upload dates the 3 newest are left out instead
+        print("metrics edge cases OK: empty, zero views, one giant video, only new uploads, hidden and tiny subscriber counts, no dates")
+
         # trend feeds: YouTube charts by country and category, Wikipedia's most-read list, history between runs
         tstate2 = Path(tmp) / "state-trends"
 

@@ -222,7 +222,7 @@ On Android and desktop Chrome or Edge, the site offers "📲 Install the app" in
 - Each run starts from the newer of two copies of the scanner's state: a private copy the workflow saves in GitHub's Actions cache (with every channel's history, the quota counters and the candidates), and the live site's `data.json`. The three newest saved copies are kept.
 - If neither can be read, the scanner and `trends.py` refuse to run, nothing is written, and `web/scanner/check_site.py` stops the deploy, so the live site keeps its last good version. Only the very first run of a brand-new site uses `bootstrap=true`.
 - Every number on the site comes from the official API. Old records imported from the PC app are kept private until the API has refreshed them, and dropped if it can't. A channel the API can't refresh for 30 days is dropped too, channels that leave the list are forgotten within 30 days, statistics history is kept for 30 days (`STATS_DAYS`), and profile pictures are fetched again within 25 days and deleted when a channel leaves the list. Each video's Made for Kids flag is looked up, as YouTube requires for embedded videos, and the site carries no tracking code.
-- On every push the workflow first runs the self-tests (`web/scanner/selftest.py`, `web/scanner/parity.mjs`, `web/pay/selftest.mjs`); a failing test stops the deploy.
+- On every push the workflow first runs the self-tests (`web/scanner/selftest.py`, `web/scanner/parity.mjs`, `web/scanner/page_tests.mjs`, `web/pay/selftest.mjs`); a failing test stops the deploy.
 
 ## Changing things
 
@@ -230,7 +230,7 @@ On Android and desktop Chrome or Edge, the site offers "📲 Install the app" in
 - **Your notes on top channels:** edit `outlier-radar/picks.json` (English and Thai fields, plus `date`), push. Keep live numbers out of the notes: the page shows the current ones right beside them. Write format and opinion, and mark opinion as such ("Our read: …").
 - **How fast it spends quota:** environment values in the workflow, defaults in `web/scanner/scan.py`: `DAILY_BUDGET` (8,000 units a day), `RUN_BUDGET` (the most one run may spend, 2,400), `PROBES_PER_RUN` (a cap on channels per run), `SEARCH_DAILY_CAP`, `FEATURED_PER_RUN`, `KEEP_CHANNELS`. Each run divides what is left of the day's budget by the number of runs still expected today, learned from how often GitHub actually starts them. `trends.py` keeps to its own 1,200 units a day (`TRENDS_DAILY_UNITS`).
 - **Add the PC app's finds:** `python web/scanner/export_extra.py` writes `web/seed/extra.json`; push it and the next run queues those channels for the API to check.
-- **Check the logic without any key or network:** `python web/scanner/selftest.py` (it runs against a fake YouTube API), `node web/scanner/parity.mjs` (the page and the scanner agree) and `node web/pay/selftest.mjs` (the server worker).
+- **Check the logic without any key or network:** `python web/scanner/selftest.py` (it runs against a fake YouTube API), `node web/scanner/parity.mjs` (the page and the scanner agree), `node web/scanner/page_tests.mjs` (the page's own helpers) and `node web/pay/selftest.mjs` (the server worker).
 
 ## Things to know
 
