@@ -932,6 +932,13 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .stage.cooling{background:color-mix(in srgb,var(--muted) 18%,transparent);color:var(--muted)}
 .vlegend i.crowded{background:var(--c2)}.vlegend i.cooling{background:var(--muted)}
 .viz .bub.crowded circle{fill:var(--c2)}.viz .bub.cooling circle{fill:var(--muted)}
+.focusbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 6px;font-size:13px}
+.focusbar small{color:var(--muted)}
+.focusbar>span{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 12px}
+.focusbar.on>span{background:color-mix(in srgb,var(--c1) 15%,transparent)}
+.focusbar.off>span{color:var(--muted);background:var(--surface)}
+.focusbar .i{width:15px;height:15px}
+.fcgrid{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
 .fmtcard{background:var(--surface);border-radius:14px;padding:12px 14px;display:grid;gap:12px;margin:4px 0 6px}
 .fmtrow{display:grid;grid-template-columns:118px minmax(0,1fr);gap:10px;align-items:start}
 .fmtk{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--muted)}
@@ -2526,8 +2533,8 @@ Object.assign(T.th, {stUpdated: "อัปเดตเมื่อ {ago}", gVerd
   dTitle: "หาโอกาส", dcFast: "ได้วิวเร็วที่สุด", dcFastD: "คลิปที่ได้วิวต่อชั่วโมงมากที่สุดระหว่างการตรวจสองครั้งล่าสุด", dcFastNone: "ยังไม่มีคลิปที่ถูกตรวจสองครั้งล่าสุด รายการนี้จะเติมเมื่อมีการตรวจช่องอีกรอบ", dcBeat: "ชนะยอดปกติของช่อง", dcBeatD: "คลิปที่ได้วิวหลายเท่าของยอดปกติของช่องตัวเอง ไม่ว่าช่องจะเล็กหรือใหญ่", dcSmall: "ช่องเล็ก ผลงานใหญ่", dcSmallD: "ช่องที่มีผู้ติดตามไม่ถึง 5 หมื่นคน แต่คลิปปกติได้ 5 หมื่นวิวขึ้นไป และอย่างน้อย 10 เท่าของผู้ติดตาม", dcSpread: "กำลังเกิดในหลายช่อง", dcSpreadD: "หัวข้อที่ช่องในข้อมูลของเรา 3 ช่องขึ้นไปลงมากกว่าปกติใน 3 วันที่ผ่านมา ก่อนจะแออัด", dcSteady: "ฮิตต่อเนื่อง", dcSteadyD: "ช่องที่คลิปล่าสุดส่วนใหญ่เกิน 1 แสนวิว แปลว่ารูปแบบนี้ยังได้ผล", dcCrowded: "แออัดแล้ว", dcCrowdedD: "หัวข้อที่ช่องในข้อมูลของเราลงกันเยอะแล้ว จะโดดเด่นได้ยากถ้าไม่มีอะไรใหม่", dcNone: "ยังไม่มีอะไรในรายการนี้", rsSmall: "คลิปปกติได้วิว {r} เท่าของผู้ติดตาม", rsTrend: "คลิปใหม่ {n} คลิปจาก {k} ช่องใน 3 วัน",
   radD: "แต่ละวงคือเทรนด์ที่กำลังขึ้นในข้อมูลของเรา ยิ่งซ้าย: ยิ่งมีช่องของเราลงน้อย ยิ่งสูง: ยิ่งลงมากกว่าปกติ ยิ่งใหญ่: ยิ่งมีคลิปใหม่มากใน 3 วัน", radEarly: "เพิ่งเริ่ม: ช่องของเราไม่เกิน 4 ช่อง", radX: "จำนวนช่องที่ลงใน 3 วัน", radY: "คลิปใหม่เทียบกับปกติ", radSize: "วงใหญ่: คลิปใหม่มาก", radWeak: "สีจาง: สัญญาณอ่อน", radWeakS: "สัญญาณอ่อน", radFresh: "นับจากช่องที่ตรวจภายใน 2 วัน · เผยแพร่ข้อมูลเมื่อ {ago}", radList: "ดูเป็นรายการ", radFew: "ตอนนี้เทรนด์ที่กำลังขึ้นในข้อมูลของเรายังน้อยเกินกว่าจะวาดเรดาร์", oppD: "แต่ละวงคือหัวข้อ ยิ่งสูง: ยอดวิวปกติยิ่งมาก ยิ่งซ้าย: ยิ่งมีช่องของเราลงหัวข้อนี้น้อย ยิ่งใหญ่: คลิปไวรัลยิ่งเยอะ แตะเพื่อดู", oppSweet: "ช่องน้อย วิวสูง"});
 // Product pass (29 Oct 2026): trend stages, signals, format, focus, idea pipeline, evidence and alerts; the packs carry the same keys
-Object.assign(T.en, {stCrowded: "Crowded", stCooling: "Cooling", gStage: "How far a trend has spread among the channels we track: Early, Spreading or Crowded. Cooling means it was busier a few days ago.", mh_stage: "Early: 4 or fewer of our channels posted it in the last 3 days. Spreading: 5 or more channels and under 15 new Shorts. Crowded: 5 or more channels and 15 or more new Shorts. Cooling: it had a busy 3 days (8 or more Shorts, at least twice its earlier share of new Shorts) and that share has since halved.", mf_stage: "Counts over the last 3 days. Cooling looks back 2 weeks.", my_stage: "Describes how far a trend has spread in our data. Early doesn’t mean easy, Crowded doesn’t mean too late, and Cooling doesn’t mean over.", sigOpen: "Show every signal as a table", sigD: "Each column is a separate signal from the channels we track. Sort by the one that matters to you: we don’t blend them into one score.", sigTrend: "Trend", sigStage: "Stage", sigNew: "New Shorts, 3 days", sigCh: "Our channels", sigLift: "vs usual", sigViews: "Typical views", sigSort: "Sort by", sigEarly: "Early only", sigFoot: "Counts come from the {n} channels we track, not all of YouTube. Faded rows are weak signals.", coolT: "Cooling down", coolD: "Topics that were busier in our data a few days ago and have quietened since. Good to know before you start one.", coolRow: "Busiest: {p} new Shorts in 3 days around {d} · last 3 days: {n}", coolSheet: "Busier a few days ago: {p} new Shorts in 3 days around {d}, against {n} in the last 3 days. Counted in our data and adjusted for how much history we keep per channel.", coolTop: "Shorts from its busiest days", tnPeak: "busiest 3 days", tnNow: "last 3 days", tnCh3w: "channels in 3 weeks", dcCooling: "Cooling down", dcCoolingD: "Topics that were busier in our data a few days ago and have quietened since. Good to know before you start one.", dcCrowdedD: "Rising topics that 5 or more of our channels posted 15 or more Shorts about in 3 days. Harder to stand out unless you bring something new.", nfD: "Topics compared on separate signals from the channels we track: typical views, the share of Shorts that go viral and how many of our channels post. Pick one to sort by; we don’t blend them into a score.", nfByViews: "Typical views", nfByViral: "Share going viral", nfByFew: "Fewest of our channels", fmtT: "Format DNA", fmtTrendT: "Format of Shorts on this trend", fmtMineT: "Your format", fmtLen: "Length", fmtLenV: "Most run {a}–{b} · typical {m}", fmtTopLen: "its 3 most-viewed: typical {m}", fmtTopKey: "orange dots: the 3 most-viewed", fmtRhythm: "Rhythm", fmtWeek: "About {n} a week", fmtDay: "About {n} a day", fmtWeekKey: "Uploads by weekday, in your time zone", fmtTitles: "Titles", fmtTitleLen: "Titles run about {n} characters", fmtQ: "questions", fmtTag: "hashtags", fmtNum: "numbers", fmtSeries: "numbered parts", fmtHook: "hook openers", fmtEmoji: "emoji", fmtPct: "{p}% {x}", fmtRepeat: "Same words in {k} of {n} titles: “{w}”", fmtFoot: "Read from titles, lengths and upload times only. We don’t watch or listen to the videos.", fmtFew: "Too few Shorts to read a format yet."});
-Object.assign(T.th, {stCrowded: "ทำกันเยอะแล้ว", stCooling: "เริ่มซา", gStage: "เทรนด์กระจายไปในช่องที่เราติดตามมากแค่ไหน: เพิ่งเริ่ม กำลังกระจาย หรือทำกันเยอะแล้ว ส่วนเริ่มซาแปลว่าเมื่อไม่กี่วันก่อนคึกคักกว่านี้", mh_stage: "เพิ่งเริ่ม: ช่องของเรา 4 ช่องหรือน้อยกว่าโพสต์เรื่องนี้ใน 3 วันล่าสุด กำลังกระจาย: 5 ช่องขึ้นไปและคลิปใหม่ไม่ถึง 15 คลิป ทำกันเยอะแล้ว: 5 ช่องขึ้นไปและคลิปใหม่ 15 คลิปขึ้นไป เริ่มซา: เคยมีช่วง 3 วันที่คึกคัก (8 คลิปขึ้นไป และสัดส่วนคลิปใหม่อย่างน้อย 2 เท่าของก่อนหน้า) แล้วสัดส่วนนั้นลดลงเหลือครึ่งหนึ่งหรือน้อยกว่า", mf_stage: "นับจาก 3 วันล่าสุด ส่วนเริ่มซาย้อนดู 2 สัปดาห์", my_stage: "บอกว่าเทรนด์กระจายไปแค่ไหนในข้อมูลของเรา เพิ่งเริ่มไม่ได้แปลว่าง่าย ทำกันเยอะแล้วไม่ได้แปลว่าสายเกินไป และเริ่มซาไม่ได้แปลว่าจบแล้ว", sigOpen: "ดูทุกสัญญาณเป็นตาราง", sigD: "แต่ละคอลัมน์คือสัญญาณแยกกันจากช่องที่เราติดตาม เรียงตามตัวที่คุณสนใจได้เลย เราไม่รวมเป็นคะแนนเดียว", sigTrend: "เทรนด์", sigStage: "ระยะ", sigNew: "คลิปใหม่ 3 วัน", sigCh: "ช่องที่เราติดตาม", sigLift: "เทียบปกติ", sigViews: "วิวปกติ", sigSort: "เรียงตาม", sigEarly: "เฉพาะเพิ่งเริ่ม", sigFoot: "ตัวเลขมาจาก {n} ช่องที่เราติดตาม ไม่ใช่ทั้ง YouTube แถวที่จางคือสัญญาณอ่อน", coolT: "เริ่มซาแล้ว", coolD: "หัวข้อที่เมื่อไม่กี่วันก่อนคึกคักกว่านี้ในข้อมูลของเรา แล้วค่อย ๆ เงียบลง ควรรู้ไว้ก่อนเริ่มทำ", coolRow: "ช่วงคึกสุด: คลิปใหม่ {p} คลิปใน 3 วัน ราว {d} · 3 วันล่าสุด: {n}", coolSheet: "เมื่อไม่กี่วันก่อนคึกคักกว่านี้: คลิปใหม่ {p} คลิปใน 3 วัน ราว {d} เทียบกับ {n} คลิปใน 3 วันล่าสุด นับจากข้อมูลของเรา และปรับตามจำนวนประวัติที่เราเก็บต่อช่อง", coolTop: "คลิปจากช่วงที่คึกที่สุด", tnPeak: "3 วันที่คึกสุด", tnNow: "3 วันล่าสุด", tnCh3w: "ช่องใน 3 สัปดาห์", dcCooling: "เริ่มซาแล้ว", dcCoolingD: "หัวข้อที่เมื่อไม่กี่วันก่อนคึกคักกว่านี้ในข้อมูลของเรา แล้วค่อย ๆ เงียบลง ควรรู้ไว้ก่อนเริ่มทำ", dcCrowdedD: "หัวข้อที่กำลังขึ้น ซึ่งช่องของเรา 5 ช่องขึ้นไปโพสต์รวม 15 คลิปขึ้นไปใน 3 วัน จะโดดเด่นได้ยากถ้าไม่มีมุมใหม่", nfD: "เทียบหมวดด้วยสัญญาณแยกกันจากช่องที่เราติดตาม: วิวปกติ สัดส่วนคลิปที่ไวรัล และจำนวนช่องของเราที่โพสต์ เลือกเรียงทีละตัว เราไม่รวมเป็นคะแนน", nfByViews: "วิวปกติ", nfByViral: "สัดส่วนที่ไวรัล", nfByFew: "ช่องของเราโพสต์น้อยสุด", fmtT: "DNA รูปแบบคลิป", fmtTrendT: "รูปแบบของคลิปในเทรนด์นี้", fmtMineT: "รูปแบบคลิปของคุณ", fmtLen: "ความยาว", fmtLenV: "ส่วนใหญ่ยาว {a}–{b} · ปกติ {m}", fmtTopLen: "3 คลิปที่วิวสูงสุด: ปกติ {m}", fmtTopKey: "จุดสีส้ม: 3 คลิปที่วิวสูงสุด", fmtRhythm: "จังหวะการลง", fmtWeek: "ราว {n} คลิปต่อสัปดาห์", fmtDay: "ราว {n} คลิปต่อวัน", fmtWeekKey: "จำนวนคลิปตามวันในสัปดาห์ ตามเวลาของคุณ", fmtTitles: "ชื่อคลิป", fmtTitleLen: "ชื่อยาวราว {n} ตัวอักษร", fmtQ: "เป็นคำถาม", fmtTag: "มีแฮชแท็ก", fmtNum: "มีตัวเลข", fmtSeries: "เป็นตอนมีเลข", fmtHook: "เปิดด้วยฮุก", fmtEmoji: "มีอีโมจิ", fmtPct: "{x} {p}%", fmtRepeat: "คำเดิมใน {k} จาก {n} ชื่อ: “{w}”", fmtFoot: "อ่านจากชื่อ ความยาว และเวลาที่ลงเท่านั้น เราไม่ได้ดูหรือฟังคลิป", fmtFew: "คลิปยังน้อยเกินไปที่จะอ่านรูปแบบได้"});
+Object.assign(T.en, {stCrowded: "Crowded", stCooling: "Cooling", gStage: "How far a trend has spread among the channels we track: Early, Spreading or Crowded. Cooling means it was busier a few days ago.", mh_stage: "Early: 4 or fewer of our channels posted it in the last 3 days. Spreading: 5 or more channels and under 15 new Shorts. Crowded: 5 or more channels and 15 or more new Shorts. Cooling: it had a busy 3 days (8 or more Shorts, at least twice its earlier share of new Shorts) and that share has since halved.", mf_stage: "Counts over the last 3 days. Cooling looks back 2 weeks.", my_stage: "Describes how far a trend has spread in our data. Early doesn’t mean easy, Crowded doesn’t mean too late, and Cooling doesn’t mean over.", sigOpen: "Show every signal as a table", sigD: "Each column is a separate signal from the channels we track. Sort by the one that matters to you: we don’t blend them into one score.", sigTrend: "Trend", sigStage: "Stage", sigNew: "New Shorts, 3 days", sigCh: "Our channels", sigLift: "vs usual", sigViews: "Typical views", sigSort: "Sort by", sigEarly: "Early only", sigFoot: "Counts come from the {n} channels we track, not all of YouTube. Faded rows are weak signals.", coolT: "Cooling down", coolD: "Topics that were busier in our data a few days ago and have quietened since. Good to know before you start one.", coolRow: "Busiest: {p} new Shorts in 3 days around {d} · last 3 days: {n}", coolSheet: "Busier a few days ago: {p} new Shorts in 3 days around {d}, against {n} in the last 3 days. Counted in our data and adjusted for how much history we keep per channel.", coolTop: "Shorts from its busiest days", tnPeak: "busiest 3 days", tnNow: "last 3 days", tnCh3w: "channels in 3 weeks", dcCooling: "Cooling down", dcCoolingD: "Topics that were busier in our data a few days ago and have quietened since. Good to know before you start one.", dcCrowdedD: "Rising topics that 5 or more of our channels posted 15 or more Shorts about in 3 days. Harder to stand out unless you bring something new.", nfD: "Topics compared on separate signals from the channels we track: typical views, the share of Shorts that go viral and how many of our channels post. Pick one to sort by; we don’t blend them into a score.", nfByViews: "Typical views", nfByViral: "Share going viral", nfByFew: "Fewest of our channels", fmtT: "Format DNA", fmtTrendT: "Format of Shorts on this trend", fmtMineT: "Your format", fmtLen: "Length", fmtLenV: "Most run {a}–{b} · typical {m}", fmtTopLen: "its 3 most-viewed: typical {m}", fmtTopKey: "orange dots: the 3 most-viewed", fmtRhythm: "Rhythm", fmtWeek: "About {n} a week", fmtDay: "About {n} a day", fmtWeekKey: "Uploads by weekday, in your time zone", fmtTitles: "Titles", fmtTitleLen: "Titles run about {n} characters", fmtQ: "questions", fmtTag: "hashtags", fmtNum: "numbers", fmtSeries: "numbered parts", fmtHook: "hook openers", fmtEmoji: "emoji", fmtPct: "{p}% {x}", fmtRepeat: "Same words in {k} of {n} titles: “{w}”", fmtFoot: "Read from titles, lengths and upload times only. We don’t watch or listen to the videos.", fmtFew: "Too few Shorts to read a format yet.", fcSet: "Pick your focus", fcSetD: "Optional: narrow trends and opportunities to the topics you make", fcOnT: "Your focus: {x}", fcOffT: "Focus is off ({x})", fcEdit: "Edit", fcShowAll: "Show everything", fcTurnOn: "Turn focus on", fcT: "Your focus", fcD: "Pick the topics you make. While focus is on, Today, Trends and Find opportunities show only channels in these topics and the trends those channels post. You can show everything again at any time.", fcSave: "Save", fcClear: "Clear focus", fcPrivacy: "Saved on this device, and synced to your account if you sign in. It isn’t sent anywhere else.", fcEmpty: "Nothing from your focus topics is rising right now. Show everything to see all trends."});
+Object.assign(T.th, {stCrowded: "ทำกันเยอะแล้ว", stCooling: "เริ่มซา", gStage: "เทรนด์กระจายไปในช่องที่เราติดตามมากแค่ไหน: เพิ่งเริ่ม กำลังกระจาย หรือทำกันเยอะแล้ว ส่วนเริ่มซาแปลว่าเมื่อไม่กี่วันก่อนคึกคักกว่านี้", mh_stage: "เพิ่งเริ่ม: ช่องของเรา 4 ช่องหรือน้อยกว่าโพสต์เรื่องนี้ใน 3 วันล่าสุด กำลังกระจาย: 5 ช่องขึ้นไปและคลิปใหม่ไม่ถึง 15 คลิป ทำกันเยอะแล้ว: 5 ช่องขึ้นไปและคลิปใหม่ 15 คลิปขึ้นไป เริ่มซา: เคยมีช่วง 3 วันที่คึกคัก (8 คลิปขึ้นไป และสัดส่วนคลิปใหม่อย่างน้อย 2 เท่าของก่อนหน้า) แล้วสัดส่วนนั้นลดลงเหลือครึ่งหนึ่งหรือน้อยกว่า", mf_stage: "นับจาก 3 วันล่าสุด ส่วนเริ่มซาย้อนดู 2 สัปดาห์", my_stage: "บอกว่าเทรนด์กระจายไปแค่ไหนในข้อมูลของเรา เพิ่งเริ่มไม่ได้แปลว่าง่าย ทำกันเยอะแล้วไม่ได้แปลว่าสายเกินไป และเริ่มซาไม่ได้แปลว่าจบแล้ว", sigOpen: "ดูทุกสัญญาณเป็นตาราง", sigD: "แต่ละคอลัมน์คือสัญญาณแยกกันจากช่องที่เราติดตาม เรียงตามตัวที่คุณสนใจได้เลย เราไม่รวมเป็นคะแนนเดียว", sigTrend: "เทรนด์", sigStage: "ระยะ", sigNew: "คลิปใหม่ 3 วัน", sigCh: "ช่องที่เราติดตาม", sigLift: "เทียบปกติ", sigViews: "วิวปกติ", sigSort: "เรียงตาม", sigEarly: "เฉพาะเพิ่งเริ่ม", sigFoot: "ตัวเลขมาจาก {n} ช่องที่เราติดตาม ไม่ใช่ทั้ง YouTube แถวที่จางคือสัญญาณอ่อน", coolT: "เริ่มซาแล้ว", coolD: "หัวข้อที่เมื่อไม่กี่วันก่อนคึกคักกว่านี้ในข้อมูลของเรา แล้วค่อย ๆ เงียบลง ควรรู้ไว้ก่อนเริ่มทำ", coolRow: "ช่วงคึกสุด: คลิปใหม่ {p} คลิปใน 3 วัน ราว {d} · 3 วันล่าสุด: {n}", coolSheet: "เมื่อไม่กี่วันก่อนคึกคักกว่านี้: คลิปใหม่ {p} คลิปใน 3 วัน ราว {d} เทียบกับ {n} คลิปใน 3 วันล่าสุด นับจากข้อมูลของเรา และปรับตามจำนวนประวัติที่เราเก็บต่อช่อง", coolTop: "คลิปจากช่วงที่คึกที่สุด", tnPeak: "3 วันที่คึกสุด", tnNow: "3 วันล่าสุด", tnCh3w: "ช่องใน 3 สัปดาห์", dcCooling: "เริ่มซาแล้ว", dcCoolingD: "หัวข้อที่เมื่อไม่กี่วันก่อนคึกคักกว่านี้ในข้อมูลของเรา แล้วค่อย ๆ เงียบลง ควรรู้ไว้ก่อนเริ่มทำ", dcCrowdedD: "หัวข้อที่กำลังขึ้น ซึ่งช่องของเรา 5 ช่องขึ้นไปโพสต์รวม 15 คลิปขึ้นไปใน 3 วัน จะโดดเด่นได้ยากถ้าไม่มีมุมใหม่", nfD: "เทียบหมวดด้วยสัญญาณแยกกันจากช่องที่เราติดตาม: วิวปกติ สัดส่วนคลิปที่ไวรัล และจำนวนช่องของเราที่โพสต์ เลือกเรียงทีละตัว เราไม่รวมเป็นคะแนน", nfByViews: "วิวปกติ", nfByViral: "สัดส่วนที่ไวรัล", nfByFew: "ช่องของเราโพสต์น้อยสุด", fmtT: "DNA รูปแบบคลิป", fmtTrendT: "รูปแบบของคลิปในเทรนด์นี้", fmtMineT: "รูปแบบคลิปของคุณ", fmtLen: "ความยาว", fmtLenV: "ส่วนใหญ่ยาว {a}–{b} · ปกติ {m}", fmtTopLen: "3 คลิปที่วิวสูงสุด: ปกติ {m}", fmtTopKey: "จุดสีส้ม: 3 คลิปที่วิวสูงสุด", fmtRhythm: "จังหวะการลง", fmtWeek: "ราว {n} คลิปต่อสัปดาห์", fmtDay: "ราว {n} คลิปต่อวัน", fmtWeekKey: "จำนวนคลิปตามวันในสัปดาห์ ตามเวลาของคุณ", fmtTitles: "ชื่อคลิป", fmtTitleLen: "ชื่อยาวราว {n} ตัวอักษร", fmtQ: "เป็นคำถาม", fmtTag: "มีแฮชแท็ก", fmtNum: "มีตัวเลข", fmtSeries: "เป็นตอนมีเลข", fmtHook: "เปิดด้วยฮุก", fmtEmoji: "มีอีโมจิ", fmtPct: "{x} {p}%", fmtRepeat: "คำเดิมใน {k} จาก {n} ชื่อ: “{w}”", fmtFoot: "อ่านจากชื่อ ความยาว และเวลาที่ลงเท่านั้น เราไม่ได้ดูหรือฟังคลิป", fmtFew: "คลิปยังน้อยเกินไปที่จะอ่านรูปแบบได้", fcSet: "เลือกหมวดที่คุณทำ", fcSetD: "ไม่บังคับ: กรองเทรนด์และโอกาสให้เหลือเฉพาะหมวดที่คุณทำ", fcOnT: "หมวดของคุณ: {x}", fcOffT: "ปิดการกรองอยู่ ({x})", fcEdit: "แก้ไข", fcShowAll: "แสดงทั้งหมด", fcTurnOn: "เปิดการกรอง", fcT: "หมวดของคุณ", fcD: "เลือกหมวดที่คุณทำ ระหว่างที่เปิดการกรอง หน้าวันนี้ เทรนด์ และหาโอกาส จะแสดงเฉพาะช่องในหมวดเหล่านี้และเทรนด์ที่ช่องเหล่านั้นโพสต์ กดแสดงทั้งหมดได้ทุกเมื่อ", fcSave: "บันทึก", fcClear: "ล้างหมวด", fcPrivacy: "บันทึกไว้ในเครื่องนี้ และซิงก์กับบัญชีของคุณถ้าลงชื่อเข้าใช้ ไม่ได้ส่งไปที่อื่น", fcEmpty: "ตอนนี้ยังไม่มีเทรนด์จากหมวดของคุณที่กำลังขึ้น กดแสดงทั้งหมดเพื่อดูทุกเทรนด์"});
 // end of the product pass wording
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
@@ -3278,17 +3285,17 @@ function statusInfo() {
 function homeView() {
   const chs = DATA.channels, st = statusInfo(), whole = n => Number(n || 0).toLocaleString(LOC());
   if (!chs.length) return emptyBox(t('emptyHome'));
-  const ranked = chs.filter(c => !c.tags.includes('One-hit')).sort((a, b) => b.score - a.score);
-  const picks = picksList(), top = picks[0] || ranked[0];
+  const ranked = chs.filter(c => !c.tags.includes('One-hit') && inFocusCh(c)).sort((a, b) => b.score - a.score);
+  const picks = picksList().filter(inFocusCh), top = picks[0] || ranked[0];
   const table = picks.length ? picks.concat(ranked.filter(c => !c.pick)).slice(0, Math.max(5, picks.length)) : ranked.slice(0, 8);   // the editor's picks, topped up
   const kpi = (k, v, see, cls = '') => `<button type="button" class="kpi" data-see="${see}"><span>${esc(t(k))}</span><b class="${cls}">${esc(v)}</b></button>`;
   const day = new Date(nowTs() * 1000).toLocaleDateString(LOC(), {weekday: 'long', day: 'numeric', month: 'long'});
   let h = `<div class="tdhead"><div><p class="tdeyebrow">${esc(day)}</p><h1>${esc(t('tdHead'))}</h1></div>` +
     `<a class="tdlive${st.late ? ' late' : ''}" href="#help" data-tab="help"><span class="${st.cls}"></span><span>${esc(st.txt)}</span></a></div>` +
     `<div class="kpis">${kpi('kTracked', whole(chs.length), 'channels')}${kpi('kHot', whole(chs.filter(c => c.score >= 65).length), 'hot', 'hotv')}` +
-    `${kpi('kNew3', whole(liveVideos(chs).length), 'live')}${kpi('kClipC', TRENDS ? whole(clipList().length) : '–', 'clips')}</div><div class="tdgrid">`;
+    `${kpi('kNew3', whole(liveVideos(chs).length), 'live')}${kpi('kClipC', TRENDS ? whole(clipList().length) : '–', 'clips')}</div>${focusBar()}<div class="tdgrid">`;
   if (top) h += oppCard(top);
-  const rising = trendData().rising.slice(0, 5);
+  const rising = trendData().rising.filter(inFocusTrend).slice(0, 5);
   h += `<section class="tdcard"><h2>${esc(t('risingNowT'))}${qm('lift')}</h2>` + (rising.length ? `<div class="rlist2">${rising.map(s =>
     `<button type="button" class="rrow" data-trend="${esc(s.key)}"><span><b>${esc(s.label)}</b><small><em class="up">▲ ${esc(liftText(s))}</em> · ${esc(s.r + ' ' + t('tnShorts'))}` +
     ` · ${esc(s.chs.size + ' ' + t('tnCh'))}${stageBadge(s)}</small></span>${spark(s.days)}</button>`).join('')}</div>` : `<p class="pbtip">${esc(t('tNone'))}</p>`) +
@@ -3313,8 +3320,8 @@ const DISC = [['fast', 'bolt', 'var(--c1)'], ['beat', 'flameF', 'var(--hot3)'], 
   ['steady', 'target', '#8b5cf6'], ['crowded', 'chat', 'var(--muted)'], ['cooling', 'clock', 'var(--muted)']];
 function discCards(kind) {
   const once = () => { const seen = new Set(); return ([, c]) => !seen.has(c.ch_id) && seen.add(c.ch_id); };   // one card per channel
-  const chs = DATA.channels.filter(c => !c.tags.includes('One-hit')), tr = trendData().rising;
-  if (kind === 'fast') return videoPool(DATA.channels).filter(([v]) => grow(v) > 0).sort((a, b) => grow(b[0]) - grow(a[0])).filter(once()).slice(0, 12)
+  const all = DATA.channels.filter(inFocusCh), chs = all.filter(c => !c.tags.includes('One-hit')), tr = trendData().rising.filter(inFocusTrend);
+  if (kind === 'fast') return videoPool(all).filter(([v]) => grow(v) > 0).sort((a, b) => grow(b[0]) - grow(a[0])).filter(once()).slice(0, 12)
     .map(([v, c]) => vCard(v, c, {reason: t('pGrowH', {n: fmt(grow(v)), h: v.h})}));
   if (kind === 'beat') return videoPool(chs).filter(([v]) => v.x >= 5 && v.v >= 100000).sort((a, b) => b[0].x - a[0].x).filter(once()).slice(0, 12)
     .map(([v, c]) => vCard(v, c, {reason: t('pX', {x: fmtX(v.x)})}));
@@ -3322,7 +3329,7 @@ function discCards(kind) {
     .map(c => chCard(c, t('rsSmall', {r: fmtX(c.ratio)})));
   if (kind === 'steady') return chs.filter(c => c.tags.includes('Consistent engine')).sort((a, b) => b.score - a.score).slice(0, 12)
     .map(c => chCard(c, t('hitsVal', {k: c.series.filter(v => v.v >= 1e5).length, n: c.series.length}) + ' ' + t('hitsSub')));
-  if (kind === 'cooling') return trendData().cooling.map(x => trendCard(x, coolText(x)));
+  if (kind === 'cooling') return trendData().cooling.filter(inFocusTrend).map(x => trendCard(x, coolText(x)));
   const list = kind === 'spread' ? tr.filter(x => x.chs.size >= 3 && trendStage(x) !== 'crowded').sort((a, b) => b.lift - a.lift)
     : tr.filter(x => trendStage(x) === 'crowded').sort((a, b) => b.r - a.r);
   return list.slice(0, 12).map(x => trendCard(x, t('rsTrend', {n: x.r, k: x.chs.size})));
@@ -4798,7 +4805,7 @@ function mineClick(x) {
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target && e.target.id === 'mineIn') connectMine(e.target.value); });
 
 /* ---------- backup / move to another device ---------- */
-const BK_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.scache', 'radar.tw'];
+const BK_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.scache', 'radar.tw', 'radar.focus'];
 function toB64(str) {
   const bytes = new TextEncoder().encode(str);
   let bin = '';
@@ -4937,7 +4944,7 @@ if (STATIC && 'serviceWorker' in navigator && (location.protocol === 'https:' ||
 /* ---------- Google sign-in + sync (Firebase Auth + Cloud Firestore on the free plan) ---------- */
 const FB = CFG.firebase && CFG.firebase.apiKey && CFG.firebase.projectId ? CFG.firebase : null;
 const FB_VER = '10.12.2';
-const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.tw', 'radar.trackinfo', 'radar.boards'];
+const SYNC_KEYS = ['radar.watch', 'radar.state4', 'radar.pb', 'radar.mych', 'radar.ui', 'radar.toured', 'radar.tw', 'radar.trackinfo', 'radar.boards', 'radar.focus'];
 const GICON = '<svg viewBox="0 0 48 48" style="stroke:none"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.7 6c4.5-4.2 6.9-10.3 6.9-17.7z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.7-6c-2.1 1.4-4.9 2.3-8.2 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>';
 let FBX = null, USER = null, SYNC = {state: 'off', at: 0, err: ''}, syncTimer = null, applyingRemote = false, unsubSnap = null;
 const lsRaw = LS.set.bind(LS);
@@ -5225,7 +5232,7 @@ function trendData() {   // rising words, hashtags, games and characters; worked
   for (const s of rising) {   // skip near-copies: "grow" next to "grow garden" with about the same Shorts
     if (keep.some(k => (words(k).some(w => words(s).includes(w))) && Math.abs(k.r - s.r) <= Math.max(1, k.r * 0.3))) continue;
     s.cat = trendCat(s.label, s.vids);
-    s.tops = new Set(s.vids.flatMap(([, c]) => [...chTopics(c)]));
+    s.tops = topicCounts(s.vids);
     keep.push(s);
     if (keep.length >= 150) break;
   }
@@ -5250,7 +5257,7 @@ function trendData() {   // rising words, hashtags, games and characters; worked
       const i = TR_DAYS - 1 - Math.floor(age / 86400), ts = termsOf(v.t);
       for (const s of coolKeep) if (i >= s.cool.at && i < s.cool.at + 3 && ts.has(s.label)) s.pv.push([v, c]);
     }
-    coolKeep.forEach(s => s.pv.sort((a, b) => b[0].v - a[0].v));
+    coolKeep.forEach(s => { s.pv.sort((a, b) => b[0].v - a[0].v); s.tops = topicCounts(s.pv); });
   }
   coolKeep.forEach(s => { s.cat = trendCat(s.label, s.pv.length ? s.pv : s.vids); });   // its category from the Shorts of its busy days
   const board = (list, pre) => list.map(([name, rx]) => {
@@ -5363,6 +5370,42 @@ const liftText = s => (s.b === 0 && s.r ? t('liftNew') : t('liftX', {x: fmtX(Mat
 const trendStage = s => (s.cool ? 'cooling' : s.chs.size <= 4 ? 'early' : s.r >= 15 ? 'crowded' : 'spread');   // describes our data, never a forecast
 const STAGE_KEY = {early: 'stEarly', spread: 'stSpread', crowded: 'stCrowded', cooling: 'stCooling'};
 const stageBadge = s => `<span class="stage ${trendStage(s)}">${esc(t(STAGE_KEY[trendStage(s)]))}</span>`;
+/* ---------- your focus: topics the visitor makes, narrowing trend lists and Find opportunities while it is on ---------- */
+const focusSaved = () => { const f = LS.get('radar.focus', null); return f && Array.isArray(f.t) ? {t: f.t.filter(k => TOPICS.some(x => x[0] === k)), on: f.on !== false} : {t: [], on: false}; };
+const focusTopics = () => { const f = focusSaved(); return f.on ? f.t : []; };
+const inFocusCh = c => { const ks = focusTopics(); return !ks.length || ks.some(k => chTopics(c).has(k)); };
+// a trend is in focus when its category is one of the topics (games, cartoons, food...) or a third of the channels posting it are in them
+const topicCounts = vids => { const n = new Map(), seen = new Set(); vids.forEach(([, c]) => { if (seen.has(c.ch_id)) return; seen.add(c.ch_id); chTopics(c).forEach(k => n.set(k, (n.get(k) || 0) + 1)); }); n.total = seen.size; return n; };
+const inFocusTrend = s => { const ks = focusTopics(); return !ks.length || ks.some(k => TOPIC_CAT[k] === s.cat || (s.tops && (s.tops.get(k) || 0) >= Math.max(1, s.tops.total / 3))); };
+function focusBar() {
+  const f = focusSaved();
+  if (!f.t.length) return `<div class="focusbar"><button type="button" class="chip" data-focusedit>${IC.target}${esc(t('fcSet'))}</button><small>${esc(t('fcSetD'))}</small></div>`;
+  const names = f.t.map(k => topicName(TOPICS.find(x => x[0] === k))).join(', ');
+  return `<div class="focusbar ${f.on ? 'on' : 'off'}"><span>${IC.target}<b>${esc(t(f.on ? 'fcOnT' : 'fcOffT', {x: names}))}</b></span>
+    <button type="button" class="ghost" data-focusedit>${esc(t('fcEdit'))}</button><button type="button" class="ghost" data-focustoggle>${esc(t(f.on ? 'fcShowAll' : 'fcTurnOn'))}</button></div>`;
+}
+function openFocus() {
+  let dlg = $('#focusdlg');
+  if (!dlg) { dlg = document.createElement('dialog'); dlg.id = 'focusdlg'; dlg.className = 'bdpick'; document.body.appendChild(dlg); }
+  const sel = new Set(focusSaved().t);
+  dlg.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button><h3>${esc(t('fcT'))}</h3><p class="pbtip">${esc(t('fcD'))}</p>
+    <div class="fcgrid">${TOPICS.map(tp => `<button type="button" class="chip" data-focuspick="${tp[0]}" aria-pressed="${sel.has(tp[0])}">${tp[1]} ${esc(topicName(tp))}</button>`).join('')}</div>
+    <div class="pbfoot"><button type="button" class="pillbtn red" data-focussave>${esc(t('fcSave'))}</button>${sel.size ? `<button type="button" class="ghost" data-focusclear>${esc(t('fcClear'))}</button>` : ''}</div>
+    <p class="pbtip">${esc(t('fcPrivacy'))}</p>`;
+  if (!dlg.open) dlg.showModal();
+}
+document.addEventListener('click', e => {
+  const x = e.target.closest && e.target.closest('[data-focusedit],[data-focustoggle],[data-focuspick],[data-focussave],[data-focusclear]');
+  if (!x) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const dlg = $('#focusdlg'), y = window.scrollY, done = () => { if (dlg && dlg.open) dlg.close(); render(true); window.scrollTo(0, y); };
+  if (x.dataset.focusedit != null) { openFocus(); return; }
+  if (x.dataset.focuspick != null) { x.setAttribute('aria-pressed', String(x.getAttribute('aria-pressed') !== 'true')); return; }
+  if (x.dataset.focussave != null) { const ks = [...dlg.querySelectorAll('[data-focuspick][aria-pressed="true"]')].map(b => b.dataset.focuspick); LS.set('radar.focus', ks.length ? {t: ks, on: true} : null); done(); return; }
+  if (x.dataset.focusclear != null) { LS.set('radar.focus', null); done(); return; }
+  if (x.dataset.focustoggle != null) { const f = focusSaved(); LS.set('radar.focus', {t: f.t, on: !f.on}); done(); }
+}, true);
 const coolDate = s => shortDate(trNow() - (TR_DAYS - 2 - s.cool.at) * 86400);   // the middle of its busiest 3 days
 const coolText = s => t('coolRow', {p: s.cool.peak, d: coolDate(s), n: s.cool.now});
 function areaSpark(days) {   // two weeks of new Shorts a day; the last 3 days (the ones that count) in colour
@@ -5438,7 +5481,7 @@ const TTABS = [['rising', '🚀', 'ttRising'], ['games', '🎮', 'ttGames'], ['c
 function trendsView() {
   const T_ = trendData(), tab = TTABS.some(x => x[0] === S.ttab) ? S.ttab : 'rising';   // the clip finder has its own page now
   TREND_OPEN = '';
-  let h = pageHead('pTrendsT', 'pTrendsD') + briefHtml(T_) + `<p class="pbtip">${esc(t('ownCalc'))}</p>`;
+  let h = pageHead('pTrendsT', 'pTrendsD') + briefHtml(T_) + `<p class="pbtip">${esc(t('ownCalc'))}</p>` + focusBar();
   const tw = tracked();
   if (tw.length) {
     h += `<div class="twrow"><b>${IC.star}${esc(t('twT'))}</b>${alertBtn()}${tw.map(x => { const s = trendByKey(x.k); return `<button type="button" class="chip ${trendHot(s) ? 'hot' : ''}" data-trend="${esc(x.k)}">${esc(x.l)} <span class="${trendHot(s) ? 'heatup' : 'pbmuted'}">${esc(trendHot(s) ? '▲ ' + liftText(s) : s.r ? t('twSteady') : t('twQuiet'))}</span></button>`; }).join('')}</div>`;
@@ -5452,12 +5495,12 @@ function trendsView() {
   } else if (tab === 'yt') h += ytTab();
   else if (tab === 'news') h += newsTab();
   else {
-    const cat = S.tcat || 'all', list = T_.rising.filter(s => cat === 'all' || s.cat === cat);
-    h += trendRadar(list, cat === 'all' ? T_.games.concat(T_.toons) : cat === 'games' ? T_.games : cat === 'cartoons' ? T_.toons : []);
+    const cat = S.tcat || 'all', mine = s => (cat === 'all' ? inFocusTrend(s) : s.cat === cat), list = T_.rising.filter(mine);   // a category chip beats the focus
+    h += trendRadar(list, cat === 'all' ? T_.games.concat(T_.toons).filter(inFocusTrend) : cat === 'games' ? T_.games : cat === 'cartoons' ? T_.toons : []);
     h += `<div class="tcats">${TREND_CATS.filter(c => c[0] === 'all' || T_.rising.some(s => s.cat === c[0])).map(c => `<button type="button" class="chip" data-tcat="${c[0]}" aria-pressed="${cat === c[0]}">${esc(t('_tcat_' + c[0]))} <span class="pbmuted">${c[0] === 'all' ? T_.rising.length : T_.rising.filter(s => s.cat === c[0]).length}</span></button>`).join('')}</div>`;
     h += `<p class="pbtip">${esc(t('ttRisingD'))}</p>`;
-    h += list.length ? `<div class="tgrid">${gateList(list.slice(0, 60).map(trendCard), t('ttRising'), 6).join('')}</div>` : emptyBox(t('tNone'), '🔭');
-    const cool = T_.cooling.filter(s => cat === 'all' || s.cat === cat);
+    h += list.length ? `<div class="tgrid">${gateList(list.slice(0, 60).map(trendCard), t('ttRising'), 6).join('')}</div>` : emptyBox(t(cat === 'all' && focusTopics().length ? 'fcEmpty' : 'tNone'), '🔭');
+    const cool = T_.cooling.filter(mine);
     if (cool.length) h += `<h2 class="subhead">${esc(t('coolT'))}</h2><p class="pbtip">${esc(t('coolD'))}</p><div class="blist">${cool.map(s => `<button type="button" class="brow" data-trend="${esc(s.key)}">
       <span class="bthumbs">${(s.pv.length ? s.pv : s.vids).slice(0, 3).map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('')}</span>
       <span class="bmain"><b>${esc(s.label)}</b><small>${esc(coolText(s))}</small></span><span class="bside">${stageBadge(s)}${spark(s.days)}</span></button>`).join('')}</div>`;
