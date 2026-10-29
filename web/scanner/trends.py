@@ -190,7 +190,7 @@ def hot_trends(data_path, t):
     for key, (r, b, chs) in stats.items():
         lift = lift_of(r, b)
         if is_hot(r, len(chs), lift):
-            hot[key] = [r, round(lift, 1), key[2:]]
+            hot[key] = [r, round(lift, 1), key[2:], len(chs)]   # new Shorts, lift, label, channels (alerts say all four)
     return dict(sorted(hot.items(), key=lambda kv: -kv[1][0] * min(kv[1][1], 10))[:4000])
 
 

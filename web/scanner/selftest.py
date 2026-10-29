@@ -423,6 +423,7 @@ def main():
         hot = t4["hot"]
         assert hot["t:#mario"][0] == 6 and hot["g:Mario"][0] == 6 and hot["t:mario speedrun"][2] == "mario speedrun", {k: hot[k] for k in list(hot)[:6]}
         assert hot["t:#mario"][1] == 4.0, hot["t:#mario"]   # (6 + 2) / (0 + 2): small counts are pulled toward 1
+        assert hot["t:#mario"][3] == 3, hot["t:#mario"]   # three channels posted it (alerts name them)
         assert "t:quiet" not in hot and "t:a quiet" not in hot, "old uploads only count as the baseline"
         t5, _ = run_trends("wrong", prev=Path(tmp) / "trends18000testkey.json", offset=6 * 3600)
         assert t5["hot"] == hot, "without this run's data the previous hot list is kept"
