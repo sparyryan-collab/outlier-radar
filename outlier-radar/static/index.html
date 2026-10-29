@@ -1449,6 +1449,7 @@ p.weak{margin:4px 0 10px}
 .tdhead h1{margin:4px 0 0;font-size:30px;line-height:1.15;letter-spacing:-.02em}
 .tdlive{display:inline-flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--good) 12%,transparent);color:var(--good);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600}
 .tdlive .dot{margin-top:0}
+.tdlive.late{background:color-mix(in srgb,var(--warn) 14%,transparent);color:var(--warn)}
 .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 16px}
 .kpi{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;min-width:0}
 .kpi:hover{box-shadow:var(--shadow)}
@@ -2421,15 +2422,28 @@ Object.assign(T.en, {lNewShorts: "New to Shorts", newShortsBadge: "🌱 New to S
 Object.assign(T.th, {lNewShorts: "เพิ่งเริ่มทำคลิปสั้น", newShortsBadge: "🌱 เพิ่งเริ่มทำคลิปสั้น", wOneHit2: "ระวัง: คลิปที่ดีที่สุดคลิปเดียวมีวิวถึง {p} ของวิวทั้งหมดที่เราเห็น", pGrowH: "วิวเพิ่ม +{n} ต่อชั่วโมง ในช่วง {h} ชม. ที่ผ่านมา", growTip: "วัดในช่วง {h} ชม. · {ago}", tooNew: "ใหม่เกินกว่าจะตัดสิน", lCreated: "สร้างช่องเมื่อ", gCreated: "วันที่ช่องถูกสร้างบน YouTube ช่องอาจมีมานานก่อนลงคลิปสั้นคลิปแรก", agoV: "{a}ที่แล้ว", lFirstShort: "คลิปสั้นเก่าสุดที่เราตรวจ", gFirstShort: "คลิปที่เก่าที่สุดในบรรดาคลิปสั้นล่าสุดที่เราตรวจ (สูงสุด 24 คลิป) ถ้าช่องมีคลิปสั้นไม่ถึง 24 คลิป มักจะเป็นคลิปแรกของช่อง", momNA: "ข้อมูลย้อนหลังยังไม่พอ", typicalFoot: "ค่ากลางจาก {n} คลิปที่อายุเกิน 1 สัปดาห์", typicalFootAll: "ค่ากลางจาก {n} คลิปล่าสุด", checkedAgo: "ตรวจเมื่อ {ago}", stPub: "เผยแพร่เมื่อ {ago} · ตรวจช่องแล้ว {p} ใน 1 วันที่ผ่านมา", dsT: "สถานะข้อมูล", dsPub: "เผยแพร่ล่าสุด", dsFresh: "ช่องที่ตรวจใน 24 ชั่วโมงที่ผ่านมา", dsMed: "เวลาโดยทั่วไปนับจากการตรวจช่องครั้งล่าสุด", dsMedV: "ประมาณ {n} ชม.", dsQuota: "หน่วย YouTube API ที่ใช้วันนี้", dsSearch: "การค้นหาของระบบสแกนวันนี้", dsGap: "GitHub เริ่มรอบอัปเดตประมาณทุก {h} ชม.", dsNote: "ตัวเลขทุกตัวมาจาก API ทางการของ YouTube ช่องที่กำลังมาแรงจะถูกตรวจซ้ำทุกไม่กี่ชั่วโมง ช่องอื่นประมาณวันละครั้ง", weakSig: "สัญญาณอ่อน: {n} คลิปจาก {k} ช่อง", pickDate: "ความเห็นทีมงาน · {d}", edPick: "ทีมงานเลือก", betaBanner: "ช่วงเบต้า: ทุกฟีเจอร์ใช้ฟรีระหว่างที่ Viral Radar อยู่ในช่วงเบต้า", bdT: "บอร์ดไอเดีย", bdD: "หนึ่งบอร์ดต่อหนึ่งไอเดียคลิป รวมช่อง คลิปสั้น เทรนด์ และโน้ตไว้ที่เดียว บอร์ดจะซิงก์เมื่อคุณเข้าสู่ระบบ", bdNew: "บอร์ดใหม่", bdNamePh: "ชื่อบอร์ด เช่น “ถ้าไดโนเสาร์…”", bdEmpty: "ยังไม่มีบอร์ด สร้างบอร์ดแล้วกด “บันทึกลงบอร์ด” ที่ช่อง คลิป หรือเทรนด์ไหนก็ได้", bdAdd: "บันทึกลงบอร์ด", bdAdded: "บันทึกลง “{b}” แล้ว", bdNotesPh: "โน้ต: ฮุก ไอเดีย ลิงก์…", bdDelete: "ลบบอร์ด", bdRemove: "เอาออกจากบอร์ด", bdItems: "บันทึกไว้ {n} รายการ", gTypical: "ค่ากลางของวิวจากคลิปสั้นล่าสุดของช่องที่อายุอย่างน้อย 1 สัปดาห์ ครึ่งหนึ่งได้มากกว่า อีกครึ่งได้น้อยกว่า คลิปฮิตคลิปเดียวดันตัวเลขขึ้นไม่ได้ และคลิปที่เพิ่งลงก็ไม่ดึงให้ต่ำลง", gGrow: "วิวที่เพิ่มต่อชั่วโมงระหว่างการตรวจ 2 ครั้งล่าสุด แสดงเฉพาะเมื่อตรวจทั้งสองครั้งไม่นานมานี้ จึงบอกสิ่งที่เกิดขึ้นตอนนี้", gTrend: "วิวปกติของคลิปที่ใหม่กว่าหารด้วยของคลิปที่เก่ากว่า โดยนับเฉพาะคลิปที่อายุอย่างน้อย 1 สัปดาห์ มากกว่า 1× แปลว่าช่องกำลังโต ถ้ามีคลิปแบบนี้ไม่ถึง 8 คลิป ข้อมูลย้อนหลังยังไม่พอจะบอกได้", wNew: "เพิ่งเริ่มทำคลิปสั้น: คลิปสั้นทั้ง {n} คลิปลงภายใน {d} วันที่ผ่านมา", pmYes: "คำอธิบายเชิญให้ตัดคลิป", clAllow: "เชิญให้ตัดคลิป", momPoint: "มี {n} คอมเมนต์ชี้มาที่ตรงนี้", comp0: "ไม่พบคลิปที่ตรงกัน", comp1: "พบคลิปคล้ายกัน 1 คลิป", compN: "พบคลิปคล้ายกัน {n} คลิป", cpWhy: "เหตุผล: มี {n} คอมเมนต์ชี้มาที่ตรงนี้ (“{q}”)", cpComp0: "คู่แข่ง: ไม่พบชื่อคลิปที่ตรงกันในคลิปที่เราตรวจ", cpCompN: "คู่แข่ง: มีชื่อคลิป {n} คลิปที่ตรงกับช่วงนี้", ackMomV: "{n} ช่วงที่คนดูชี้ถึง และยังไม่พบคลิปที่ตรงกัน", ackMomV1: "1 ช่วงที่คนดูชี้ถึง และยังไม่พบคลิปที่ตรงกัน", ackMomTaken: "ทุกช่วงเด่นมีคลิปที่ตรงกันแล้ว", mNow: "เฉลี่ยตั้งแต่อัปโหลด", tcScore: "คะแนนจากหลักทั่วไป เต็ม 100 ตรวจลักษณะที่ชื่อคลิปยอดนิยมมักมี ไม่ใช่การทำนายผล", pf1D: "ทุกคำและแฮชแท็กที่กำลังมาแรงจากคลิปสั้นใหม่หลายพันคลิป อัปเดตหลายครั้งต่อวัน", footWeb: "ตัวเลขมาจากข้อมูลทางการของ YouTube และอัปเดตหลายครั้งต่อวัน แต่ละช่องบอกว่าตรวจล่าสุดเมื่อไร ใช้เพื่อเรียนรู้ว่าอะไรได้ผล แล้วสร้างผลงานของคุณเอง อย่าคัดลอกหรืออัปโหลดคลิปของคนอื่นซ้ำ"});
 // The five destinations and the Today page (homepage concept A, 29 Oct 2026); the language packs carry the same keys
 Object.assign(T.en, {navToday: "Today", navClips: "Clips", navMake: "Make", navLibrary: "Library", subOverview: "Overview", tdHead: "Here’s what’s moving on Shorts",
-  kTracked: "Channels tracked", kHot: "Hot right now", kNew3: "New uploads, 3 days", kClipC: "Creators checked for clipping", tdOppT: "Today’s #1 opportunity",
+  kTracked: "Channels tracked", kHot: "Hot channels", kNew3: "New uploads, 3 days", kClipC: "Creators checked for clipping", tdOppT: "Today’s #1 opportunity",
   oppOpen: "Open channel", risingNowT: "Rising now", risingAll: "Open the Trend radar", picksT: "Top picks, ranked", colCh: "Channel", picksAll: "See all channels",
   clipNextT: "Clip these next", clipNextAll: "See every moment", mfkTag: "Made for kids, as set by the creator on YouTube",
   ownCalc: "Scores, multipliers, trends and tags are Viral Radar’s own calculations from YouTube’s public numbers. YouTube doesn’t publish them."});
 Object.assign(T.th, {navToday: "วันนี้", navClips: "ตัดคลิป", navMake: "สร้าง", navLibrary: "คลังของฉัน", subOverview: "ภาพรวม", tdHead: "นี่คือสิ่งที่กำลังมาแรงบน Shorts",
-  kTracked: "ช่องที่ติดตาม", kHot: "กำลังมาแรง", kNew3: "คลิปใหม่ใน 3 วัน", kClipC: "ครีเอเตอร์ที่ตรวจเรื่องตัดคลิปแล้ว", tdOppT: "โอกาสอันดับ 1 ของวันนี้",
+  kTracked: "ช่องที่ติดตาม", kHot: "ช่องที่กำลังแรง", kNew3: "คลิปใหม่ใน 3 วัน", kClipC: "ครีเอเตอร์ที่ตรวจเรื่องตัดคลิปแล้ว", tdOppT: "โอกาสอันดับ 1 ของวันนี้",
   oppOpen: "เปิดช่อง", risingNowT: "กำลังขึ้นตอนนี้", risingAll: "เปิดเรดาร์เทรนด์", picksT: "ช่องเด่น จัดอันดับ", colCh: "ช่อง", picksAll: "ดูทุกช่อง",
   clipNextT: "คลิปที่ควรตัดต่อไป", clipNextAll: "ดูทุกช่วงเด่น", mfkTag: "สร้างมาเพื่อเด็ก ตามที่ครีเอเตอร์ตั้งไว้บน YouTube",
   ownCalc: "คะแนน ตัวคูณ เทรนด์ และแท็ก เป็นการคำนวณของ Viral Radar เองจากตัวเลขสาธารณะของ YouTube ไม่ใช่ตัวเลขที่ YouTube เผยแพร่"});
+// Wording added or corrected in the trust pass (29 Oct 2026): nothing claims to be live, every metric says what it is; the packs carry the same keys
+Object.assign(T.en, {stUpdated: "Updated {ago}", gVerdict: "How strongly the channel’s recent Shorts perform, judged from its newest Shorts that are at least a week old. It is Viral Radar’s own score, not a YouTube figure.",
+  vNormalD: "Nothing unusual in its recent Shorts.", sLead: "Fetched from YouTube for this search and scored the same way as our list.",
+  tour_picks_d: "Channels doing unusually well in their recent Shorts, checked by hand. Start here every day.",
+  pTrendsD: "What’s rising lately: words and hashtags on Shorts, games, cartoons, the news and YouTube’s own trending charts.",
+  pf2D: "Which games, cartoons and meme characters took off in the last 3 days.", speed: "{n} views/hour since upload",
+  subRound: "No clear change: YouTube rounds subscriber counts", stLate: "the scheduled refresh is late, so the numbers may be older than usual"});
+Object.assign(T.th, {stUpdated: "อัปเดตเมื่อ {ago}", gVerdict: "คลิปสั้นล่าสุดของช่องทำผลงานได้ดีแค่ไหน ดูจากคลิปล่าสุดที่ลงมาแล้วอย่างน้อยหนึ่งสัปดาห์ เป็นคะแนนของ Viral Radar เอง ไม่ใช่ตัวเลขของ YouTube",
+  vNormalD: "ไม่มีอะไรผิดปกติในคลิปล่าสุด", sLead: "ดึงจาก YouTube สำหรับการค้นหานี้ และให้คะแนนแบบเดียวกับรายการของเรา",
+  tour_picks_d: "ช่องที่คลิปล่าสุดทำผลงานดีผิดปกติ คัดเลือกด้วยมือ เริ่มที่นี่ทุกวัน",
+  pTrendsD: "สิ่งที่กำลังขึ้นช่วงนี้: คำและแฮชแท็กใน Shorts เกม การ์ตูน ข่าว และชาร์ตมาแรงของ YouTube",
+  pf2D: "เกม การ์ตูน และตัวละครมีมที่มาแรงใน 3 วันที่ผ่านมา", speed: "{n} วิว/ชั่วโมง นับตั้งแต่ลง",
+  subRound: "ไม่เปลี่ยนชัดเจน: YouTube ปัดเศษจำนวนผู้ติดตาม", stLate: "การอัปเดตตามรอบล่าช้า ตัวเลขอาจเก่ากว่าปกติ"});
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
     den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
@@ -3158,7 +3172,11 @@ function statusInfo() {
   if (DATA.snapshot) return {cls: 'dot snap', txt: t('snap', {d: new Date(DATA.generated * 1000).toLocaleString(LOC()), n: DATA.channels.length})};
   if (st.state === 'scanning') return {cls: 'dot live', txt: t(st.phase === 'discovery' ? 'stDisc' : 'stProbe', {a: st.done, b: st.total})};
   if (st.state === 'starting') return {cls: 'dot', txt: t('stStart')};
-  if (STATIC) { const fr = freshShare(); return {cls: 'dot live', txt: fr == null ? t('stUpdated', {ago: ago(DATA.generated || st.last_cycle_end)}) : t('stPub', {ago: ago(DATA.generated || st.last_cycle_end), p: pct(fr)})}; }
+  if (STATIC) {
+    const fr = freshShare(), at = DATA.generated || st.last_cycle_end, late = nowTs() - at > Math.max(6, 2.5 * (st.run_gap_h || 0)) * 3600;   // well past the usual gap between refreshes
+    const txt = fr == null ? t('stUpdated', {ago: ago(at)}) : t('stPub', {ago: ago(at), p: pct(fr)});
+    return {cls: late ? 'dot snap' : 'dot live', txt: late ? txt + ' · ' + t('stLate') : txt, late};
+  }
   return {cls: 'dot', txt: t('stIdle', {ago: ago(st.last_cycle_end)}) + (st.next_scan ? t('stNext', {n: Math.max(1, Math.round((st.next_scan - Date.now() / 1000) / 60))}) : '')};
 }
 /* ---------- Today: the command center (homepage concept A). Four numbers, then the single best opportunity, what is rising,
@@ -3172,7 +3190,7 @@ function homeView() {
   const kpi = (k, v, see, cls = '') => `<button type="button" class="kpi" data-see="${see}"><span>${esc(t(k))}</span><b class="${cls}">${esc(v)}</b></button>`;
   const day = new Date(nowTs() * 1000).toLocaleDateString(LOC(), {weekday: 'long', day: 'numeric', month: 'long'});
   let h = `<div class="tdhead"><div><p class="tdeyebrow">${esc(day)}</p><h1>${esc(t('tdHead'))}</h1></div>` +
-    `<a class="tdlive" href="#help" data-tab="help"><span class="${st.cls}"></span><span>${esc(st.txt)}</span></a></div>` +
+    `<a class="tdlive${st.late ? ' late' : ''}" href="#help" data-tab="help"><span class="${st.cls}"></span><span>${esc(st.txt)}</span></a></div>` +
     `<div class="kpis">${kpi('kTracked', whole(chs.length), 'channels')}${kpi('kHot', whole(chs.filter(c => c.score >= 65).length), 'hot', 'hotv')}` +
     `${kpi('kNew3', whole(liveVideos(chs).length), 'live')}${kpi('kClipC', TRENDS ? whole(clipList().length) : '–', 'clips')}</div><div class="tdgrid">`;
   if (top) h += oppCard(top);
@@ -3792,6 +3810,10 @@ function growthHtml(c) {
   if (h.length < 2) return `<p class="descr">${esc(t('chFew'))}</p>`;
   const box = (k, label) => {
     const a = h[0][k], b = h[h.length - 1][k], dv = b - a, since = esc(t('chSince', {d: shortDate(h[0][0])}));
+    if (k === 1 && dv && Math.abs(dv) < 2 * subStep(Math.max(a, b))) {   // inside YouTube's rounding of public subscriber counts
+      return `<div class="chartbox"><h4>${esc(t(label))}</h4><div><span class="big">${esc(fmt(b))}</span><span class="delta">${esc(t('subRound'))} · ${since}</span></div>` +
+        `<div class="lchart" data-ch="${esc(c.ch_id)}" data-k="${k}"></div></div>`;
+    }
     const delta = dv ? `<span class="delta ${dv > 0 ? 'up' : ''}">${dv > 0 ? '▲ +' : '▼ −'}${esc(fmt(Math.abs(dv)))} (${a ? pct(Math.abs(dv / a)) : '–'}) · ${since}</span>` : `<span class="delta">${since}</span>`;
     return `<div class="chartbox"><h4>${esc(t(label))}</h4><div><span class="big">${esc(fmt(b))}</span>${delta}</div><div class="lchart" data-ch="${esc(c.ch_id)}" data-k="${k}"></div></div>`;
   };
@@ -4629,7 +4651,7 @@ function accelerating(v) {
   const h = v.vh || [];
   if (h.length < 3) return false;
   const [a, b, c] = h.slice(-3), s0 = (b[1] - a[1]) / Math.max(1, (b[0] - a[0]) / 3600), s1 = (c[1] - b[1]) / Math.max(1, (c[0] - b[0]) / 3600);
-  return s1 >= 200 && s1 > s0 * 1.5;   // at least 200 views an hour, and 1.5× faster than the step before
+  return nowTs() - c[0] < 12 * 3600 && s1 >= 200 && s1 > s0 * 1.5;   // checked in the last 12 h, at least 200 views an hour, and 1.5× faster than the step before
 }
 
 /* ---------- topics heating up ---------- */
