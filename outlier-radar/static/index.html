@@ -283,8 +283,13 @@ a.th:hover .play{opacity:1}
 .more{display:block;margin:18px auto;height:38px;border:0;border-radius:19px;padding:0 22px;background:var(--surface);font-weight:600}
 .more:hover{background:var(--surface2)}
 footer{margin-top:32px;color:var(--muted);font-size:12px;max-width:860px;line-height:1.6}
-#pop{position:fixed;z-index:90;max-width:300px;padding:10px 12px;border-radius:10px;background:var(--on-bg);color:var(--on-fg);font-size:13px;line-height:1.5;box-shadow:var(--shadow);display:none}
+#pop{position:fixed;z-index:90;max-width:300px;padding:10px 12px;border-radius:10px;background:var(--on-bg);color:var(--on-fg);font-size:13px;line-height:1.5;box-shadow:var(--shadow);display:none;max-height:calc(100vh - 16px);overflow-y:auto}
 #pop b{display:block;margin-bottom:2px}
+#pop:has(.mexp){max-width:340px}
+.mkind{display:inline-block;font-size:11px;font-weight:600;border-radius:6px;padding:1px 7px;margin:2px 0 4px;background:color-mix(in srgb,currentColor 16%,transparent)}
+.mexp{margin:2px 0 0}
+.mexp dt{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;opacity:.7;margin-top:6px}
+.mexp dd{margin:1px 0 0}
 #toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);opacity:0;z-index:100;background:var(--on-bg);color:var(--on-fg);padding:10px 18px;border-radius:10px;font-weight:500;transition:all .25s;pointer-events:none}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
@@ -2437,13 +2442,15 @@ Object.assign(T.en, {stUpdated: "Updated {ago}", gVerdict: "How strongly the cha
   tour_picks_d: "Channels doing unusually well in their recent Shorts, checked by hand. Start here every day.",
   pTrendsD: "What’s rising lately: words and hashtags on Shorts, games, cartoons, the news and YouTube’s own trending charts.",
   pf2D: "Which games, cartoons and meme characters took off in the last 3 days.", speed: "{n} views/hour since upload",
-  subRound: "No clear change: YouTube rounds subscriber counts", stLate: "the scheduled refresh is late, so the numbers may be older than usual"});
+  subRound: "No clear change: YouTube rounds subscriber counts", stLate: "the scheduled refresh is late, so the numbers may be older than usual",
+  mWhat: "What it means", mVs: "Compared with", mHow: "How it’s worked out", mFresh: "How recent", mWhy: "Why it matters", kYt: "YouTube’s own number", kMeasured: "Measured by Viral Radar between checks", kCalc: "Worked out by Viral Radar", lAccel: "Speeding up", lLift: "Rising vs usual", lStage: "Stage", lTrend: "Momentum", gSpeed: "Average views per hour since the Short went up.", gAccel: "The Short is gaining views faster than it was a few hours earlier.", gLift: "How many more new Shorts on this topic our channels posted in the last 3 days than usual.", gStage: "How far a trend has spread among the channels we track: Early, Spreading or Exploding.", gGrow: "Views gained per hour between our last two checks of this Short.", momFoot: "from {n} Shorts at least a week old", mv_x: "The channel’s typical views: the middle of its recent Shorts that are at least a week old.", mh_x: "This Short’s views divided by the channel’s typical views.", mf_x: "Views as of the channel’s last check. Shorts under a week old are still collecting views.", my_x: "It shows which ideas beat the channel’s normal audience, whatever the channel’s size.", mv_typical: "Nothing else: it is the channel’s own normal level.", mh_typical: "The middle value of its newest Shorts that are at least a week old (up to 12 of them).", mf_typical: "From the channel’s last check. Each channel shows when that was.", my_typical: "It is the baseline that every “× usual” number is measured against.", mv_ratio: "The channel’s subscriber count, which YouTube rounds.", mh_ratio: "Typical views divided by subscribers.", mf_ratio: "Both numbers come from the channel’s last check.", my_ratio: "A high number means YouTube shows these Shorts far beyond the people who follow the channel.", mv_hits: "The channel’s own recent Shorts.", mh_hits: "How many of its recent Shorts passed 100K views, and how many passed 1M.", mf_hits: "Views as of the channel’s last check.", my_hits: "Repeated hits point to a format that works, not one lucky video.", mv_score: "Every other channel we track.", mh_score: "Views per subscriber (up to 35 points), typical views (30), hit rate (25) and momentum (10), minus up to 15 when one video carries the channel.", mf_score: "From Shorts at least a week old, as of the channel’s last check.", my_score: "It ranks channels whose recent Shorts beat their size again and again. It can’t promise results.", mv_trend: "The channel’s own older Shorts.", mh_trend: "The middle views of its newest 6 Shorts that are at least a week old, divided by the middle of the next 12. It needs at least 8.", mf_trend: "As of the channel’s last check. New uploads count once they are a week old.", my_trend: "It tells you whether a channel is heating up or cooling off.", mv_grow: "The same Short at our previous check.", mh_grow: "Views gained between our last two checks, divided by the hours between them.", mf_grow: "Shown only when the two checks are under 12 hours apart and the newer one is under 6 hours old.", my_grow: "It shows which Shorts gained views in the last few hours.", mv_speed: "Nothing else: it is an average.", mh_speed: "Total views divided by the hours since upload, for Shorts under 3 days old.", mf_speed: "Views as of the last check. It is an average since upload, not the current rate.", my_speed: "It lets you compare brand-new uploads fairly.", mv_accel: "The same Short’s growth in the interval before.", mh_accel: "Views per hour in the latest interval are at least 1.5 times those of the interval before, and at least 200 an hour.", mf_accel: "Only when the latest check is under 12 hours old.", my_accel: "An early sign that a Short is still taking off.", mv_talk: "The typical rate across the channels we track.", mh_talk: "Comments divided by views, times 1,000, for Shorts with at least 1,000 views.", mf_talk: "YouTube’s counts as of the last check.", my_talk: "Many comments can mean a strong reaction, or a question worth answering in your own video.", mv_lift: "How often the same channels posted about it in the 18 days before.", mh_lift: "New Shorts in the last 3 days compared with what those 18 days predict, pulled toward 1× when there are only a few.", mf_lift: "From the channels’ last checks. Channels not checked for 2 days are left out.", my_lift: "It shows topics being posted more than usual. It counts uploads in our data, not all of YouTube.", mv_stage: "The channels we track, not all of YouTube.", mh_stage: "Early: 4 or fewer of our channels posted it in the last 3 days. Exploding: 5 or more channels and 15 or more new Shorts. Spreading: everything in between.", mf_stage: "Counts from the last 3 days.", my_stage: "It describes how far a trend has spread in our data. Early doesn’t mean easy or guaranteed.", mv_subs: "Nothing else: it is YouTube’s own count.", mh_subs: "Reported by YouTube. Above 1,000, YouTube rounds it to 3 significant figures.", mf_subs: "As of the channel’s last check.", my_subs: "Small channels with big views are the clearest sign that an idea, not an existing audience, did the work.", mv_best: "The channel’s other recent Shorts.", mh_best: "The highest view count among its newest Shorts, as YouTube reports it.", mf_best: "As of the channel’s last check.", my_best: "Compare it with typical views to see whether one video carries the channel."});
 Object.assign(T.th, {stUpdated: "อัปเดตเมื่อ {ago}", gVerdict: "คลิปสั้นล่าสุดของช่องทำผลงานได้ดีแค่ไหน ดูจากคลิปล่าสุดที่ลงมาแล้วอย่างน้อยหนึ่งสัปดาห์ เป็นคะแนนของ Viral Radar เอง ไม่ใช่ตัวเลขของ YouTube",
   vNormalD: "ไม่มีอะไรผิดปกติในคลิปล่าสุด", sLead: "ดึงจาก YouTube สำหรับการค้นหานี้ และให้คะแนนแบบเดียวกับรายการของเรา",
   tour_picks_d: "ช่องที่คลิปล่าสุดทำผลงานดีผิดปกติ คัดเลือกด้วยมือ เริ่มที่นี่ทุกวัน",
   pTrendsD: "สิ่งที่กำลังขึ้นช่วงนี้: คำและแฮชแท็กใน Shorts เกม การ์ตูน ข่าว และชาร์ตมาแรงของ YouTube",
   pf2D: "เกม การ์ตูน และตัวละครมีมที่มาแรงใน 3 วันที่ผ่านมา", speed: "{n} วิว/ชั่วโมง นับตั้งแต่ลง",
-  subRound: "ไม่เปลี่ยนชัดเจน: YouTube ปัดเศษจำนวนผู้ติดตาม", stLate: "การอัปเดตตามรอบล่าช้า ตัวเลขอาจเก่ากว่าปกติ"});
+  subRound: "ไม่เปลี่ยนชัดเจน: YouTube ปัดเศษจำนวนผู้ติดตาม", stLate: "การอัปเดตตามรอบล่าช้า ตัวเลขอาจเก่ากว่าปกติ",
+  mWhat: "หมายความว่า", mVs: "เทียบกับ", mHow: "คำนวณอย่างไร", mFresh: "ข้อมูลล่าสุดแค่ไหน", mWhy: "ทำไมถึงสำคัญ", kYt: "ตัวเลขของ YouTube เอง", kMeasured: "Viral Radar วัดระหว่างการตรวจแต่ละรอบ", kCalc: "Viral Radar คำนวณเอง", lAccel: "กำลังเร่งขึ้น", lLift: "เพิ่มขึ้นจากปกติ", lStage: "ระยะ", lTrend: "โมเมนตัม", gSpeed: "ยอดวิวเฉลี่ยต่อชั่วโมงตั้งแต่คลิปถูกลง", gAccel: "คลิปได้วิวเร็วขึ้นกว่าเมื่อไม่กี่ชั่วโมงก่อน", gLift: "ช่องที่เราติดตามลงคลิปหัวข้อนี้ใน 3 วันที่ผ่านมามากกว่าปกติกี่เท่า", gStage: "เทรนด์แพร่ไปในช่องที่เราติดตามมากแค่ไหน: เพิ่งเริ่ม กำลังกระจาย หรือกำลังระเบิด", gGrow: "ยอดวิวที่เพิ่มต่อชั่วโมงระหว่างการตรวจสองครั้งล่าสุดของคลิปนี้", momFoot: "จาก {n} คลิปที่ลงมาแล้วอย่างน้อยหนึ่งสัปดาห์", mv_x: "ยอดวิวปกติของช่อง: ค่ากลางของคลิปล่าสุดที่ลงมาแล้วอย่างน้อยหนึ่งสัปดาห์", mh_x: "ยอดวิวของคลิปนี้ หารด้วยยอดวิวปกติของช่อง", mf_x: "ยอดวิว ณ การตรวจช่องครั้งล่าสุด คลิปที่ลงไม่ถึงสัปดาห์ยังเก็บวิวอยู่", my_x: "บอกว่าไอเดียไหนชนะฐานผู้ชมปกติของช่อง ไม่ว่าช่องจะเล็กหรือใหญ่", mv_typical: "ไม่เทียบกับอะไร เป็นระดับปกติของช่องเอง", mh_typical: "ค่ากลางของคลิปล่าสุดที่ลงมาแล้วอย่างน้อยหนึ่งสัปดาห์ (สูงสุด 12 คลิป)", mf_typical: "จากการตรวจช่องครั้งล่าสุด แต่ละช่องแสดงว่าตรวจเมื่อไร", my_typical: "เป็นฐานที่ใช้วัดตัวเลข “× ปกติ” ทุกตัว", mv_ratio: "จำนวนผู้ติดตามของช่อง ซึ่ง YouTube ปัดเศษ", mh_ratio: "ยอดวิวปกติ หารด้วยจำนวนผู้ติดตาม", mf_ratio: "ตัวเลขทั้งสองมาจากการตรวจช่องครั้งล่าสุด", my_ratio: "ตัวเลขสูงแปลว่า YouTube แนะนำคลิปไปไกลกว่าคนที่ติดตามช่อง", mv_hits: "คลิปล่าสุดของช่องเอง", mh_hits: "จำนวนคลิปล่าสุดที่เกิน 1 แสนวิว และกี่คลิปที่เกิน 1 ล้านวิว", mf_hits: "ยอดวิว ณ การตรวจช่องครั้งล่าสุด", my_hits: "ฮิตซ้ำ ๆ บอกว่ารูปแบบนี้ได้ผลจริง ไม่ใช่โชคครั้งเดียว", mv_score: "ทุกช่องที่เราติดตาม", mh_score: "วิวต่อผู้ติดตาม (สูงสุด 35 คะแนน) วิวปกติ (30) อัตราคลิปฮิต (25) และโมเมนตัม (10) หักได้ถึง 15 คะแนนถ้าคลิปเดียวแบกทั้งช่อง", mf_score: "จากคลิปที่ลงมาแล้วอย่างน้อยหนึ่งสัปดาห์ ณ การตรวจช่องครั้งล่าสุด", my_score: "จัดอันดับช่องที่คลิปล่าสุดชนะขนาดของช่องซ้ำแล้วซ้ำเล่า ไม่ได้รับประกันผล", mv_trend: "คลิปเก่าของช่องเอง", mh_trend: "ค่ากลางของวิว 6 คลิปล่าสุดที่ลงมาแล้วอย่างน้อยหนึ่งสัปดาห์ หารด้วยค่ากลางของ 12 คลิปถัดไป ต้องมีอย่างน้อย 8 คลิป", mf_trend: "ณ การตรวจช่องครั้งล่าสุด คลิปใหม่จะนับเมื่อครบหนึ่งสัปดาห์", my_trend: "บอกว่าช่องกำลังร้อนขึ้นหรือเย็นลง", mv_grow: "คลิปเดียวกัน ณ การตรวจครั้งก่อน", mh_grow: "ยอดวิวที่เพิ่มระหว่างการตรวจสองครั้งล่าสุด หารด้วยจำนวนชั่วโมงระหว่างนั้น", mf_grow: "แสดงเฉพาะเมื่อการตรวจสองครั้งห่างกันไม่ถึง 12 ชั่วโมง และครั้งล่าสุดไม่เกิน 6 ชั่วโมง", my_grow: "บอกว่าคลิปไหนได้วิวเพิ่มในไม่กี่ชั่วโมงที่ผ่านมา", mv_speed: "ไม่เทียบกับอะไร เป็นค่าเฉลี่ย", mh_speed: "ยอดวิวทั้งหมด หารด้วยจำนวนชั่วโมงตั้งแต่ลง สำหรับคลิปที่ลงไม่ถึง 3 วัน", mf_speed: "ยอดวิว ณ การตรวจครั้งล่าสุด เป็นค่าเฉลี่ยตั้งแต่ลง ไม่ใช่ความเร็วตอนนี้", my_speed: "ช่วยเทียบคลิปที่เพิ่งลงได้อย่างยุติธรรม", mv_accel: "การเติบโตของคลิปเดียวกันในช่วงก่อนหน้า", mh_accel: "วิวต่อชั่วโมงในช่วงล่าสุดมากกว่าช่วงก่อนหน้าอย่างน้อย 1.5 เท่า และอย่างน้อย 200 วิวต่อชั่วโมง", mf_accel: "เฉพาะเมื่อการตรวจครั้งล่าสุดไม่เกิน 12 ชั่วโมง", my_accel: "สัญญาณแรก ๆ ว่าคลิปยังกำลังพุ่งขึ้น", mv_talk: "อัตราปกติของช่องที่เราติดตาม", mh_talk: "จำนวนคอมเมนต์ หารด้วยยอดวิว คูณ 1,000 สำหรับคลิปที่มีอย่างน้อย 1,000 วิว", mf_talk: "ตัวเลขของ YouTube ณ การตรวจครั้งล่าสุด", my_talk: "คอมเมนต์เยอะอาจแปลว่าคนดูรู้สึกแรง หรือมีคำถามที่น่าเอาไปทำคลิปตอบ", mv_lift: "ช่องกลุ่มเดียวกันลงคลิปหัวข้อนี้บ่อยแค่ไหนใน 18 วันก่อนหน้า", mh_lift: "คลิปใหม่ใน 3 วันล่าสุด เทียบกับที่ 18 วันก่อนหน้าคาดไว้ และดึงเข้าหา 1× เมื่อมีจำนวนน้อย", mf_lift: "จากการตรวจช่องครั้งล่าสุด ช่องที่ไม่ได้ตรวจ 2 วันจะไม่ถูกนับ", my_lift: "บอกหัวข้อที่ถูกลงมากกว่าปกติ นับเฉพาะคลิปในข้อมูลของเรา ไม่ใช่ทั้ง YouTube", mv_stage: "ช่องที่เราติดตาม ไม่ใช่ทั้ง YouTube", mh_stage: "เพิ่งเริ่ม: ช่องของเราลงหัวข้อนี้ไม่เกิน 4 ช่องใน 3 วัน กำลังระเบิด: 5 ช่องขึ้นไปและคลิปใหม่ 15 คลิปขึ้นไป กำลังกระจาย: อยู่ระหว่างนั้น", mf_stage: "นับจาก 3 วันที่ผ่านมา", my_stage: "บอกว่าเทรนด์แพร่ไปในข้อมูลของเรามากแค่ไหน ระยะเพิ่งเริ่มไม่ได้แปลว่าง่ายหรือรับประกันผล", mv_subs: "ไม่เทียบกับอะไร เป็นตัวเลขของ YouTube เอง", mh_subs: "YouTube รายงาน และปัดเศษให้เหลือ 3 หลักแรกเมื่อเกิน 1,000", mf_subs: "ณ การตรวจช่องครั้งล่าสุด", my_subs: "ช่องเล็กที่ได้วิวมหาศาลคือสัญญาณชัดที่สุดว่าไอเดีย ไม่ใช่ฐานผู้ชมเดิม ที่ทำให้ปัง", mv_best: "คลิปล่าสุดอื่น ๆ ของช่อง", mh_best: "ยอดวิวสูงสุดในคลิปล่าสุดของช่อง ตามที่ YouTube รายงาน", mf_best: "ณ การตรวจช่องครั้งล่าสุด", my_best: "เทียบกับยอดวิวปกติเพื่อดูว่าคลิปเดียวแบกทั้งช่องหรือไม่"});
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
     den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
@@ -2870,14 +2877,22 @@ function whyLines(c) {
 }
 const xText = x => (x >= 1.5 ? t('xMore', {x: fmtX(x)}) : x >= 0.8 ? t('xAbout') : t('xLess'));
 const HELPKEYS = {subs: ['lSubs', 'gSubs'], typical: ['lTypical', 'gTypical'], best: ['lBest', 'gBest'], ratio: ['lRatio', 'gRatio'], x: ['lX', 'gX'],
-  hits: ['lHits', 'gHits'], grow: ['lGrow', 'gGrow'], new: ['lNewShorts', 'gNew'], score: ['lScore', 'gScore'], trend: ['lTrend', 'gTrend'], freq: ['lFreq', 'gFreq']};
+  hits: ['lHits', 'gHits'], grow: ['lGrow', 'gGrow'], new: ['lNewShorts', 'gNew'], score: ['lScore', 'gScore'], trend: ['lTrend', 'gTrend'], freq: ['lFreq', 'gFreq'],
+  talk: ['lTalk', 'gTalk'], speed: ['mSpeed', 'gSpeed'], accel: ['lAccel', 'gAccel'], lift: ['lLift', 'gLift'], stage: ['lStage', 'gStage']};
+// each metric's explanation answers: what it means, compared with what, how it is worked out, how recent, why it matters (mv_/mh_/mf_/my_ keys)
+const MKIND = {subs: 'yt', best: 'yt', grow: 'measured', accel: 'measured', x: 'calc', typical: 'calc', ratio: 'calc', hits: 'calc', score: 'calc', trend: 'calc',
+  speed: 'calc', talk: 'calc', lift: 'calc', stage: 'calc'};
 function helpHtml(key) {
   if (key === 'api') return apiHelp();
   if (key === 'verdict') return `<b>${esc(t('lVerdict'))}</b>${esc(t('gVerdict'))}` +
     [3, 2, 1, 0].map(l => `<div style="margin-top:4px">${l ? flames(l) : '•'} <b style="display:inline">${esc(t(VKEY[l]))}</b>: ${esc(t(VKEY[l] + 'D'))}</div>`).join('');
   if (key.startsWith('tag:')) return `<b>${esc(tagName(key.slice(4)))}</b>${esc(tagDesc(key.slice(4)))}`;
   const k = HELPKEYS[key];
-  return k ? `<b>${esc(t(k[0]))}</b>${esc(t(k[1]))}` : '';
+  if (!k) return '';
+  if (!MKIND[key]) return `<b>${esc(t(k[0]))}</b>${esc(t(k[1]))}`;
+  const rows = [['mWhat', k[1]], ['mVs', 'mv_' + key], ['mHow', 'mh_' + key], ['mFresh', 'mf_' + key], ['mWhy', 'my_' + key]];
+  return `<b>${esc(t(k[0]))}</b><span class="mkind">${esc(t({yt: 'kYt', measured: 'kMeasured', calc: 'kCalc'}[MKIND[key]]))}</span>` +
+    `<dl class="mexp">${rows.map(([a, b]) => `<dt>${esc(t(a))}</dt><dd>${esc(t(b))}</dd>`).join('')}</dl>`;
 }
 const qm = key => `<button type="button" class="qm" data-help="${key}" aria-label="?">?</button>`;
 
@@ -3195,11 +3210,11 @@ function homeView() {
     `${kpi('kNew3', whole(liveVideos(chs).length), 'live')}${kpi('kClipC', TRENDS ? whole(clipList().length) : '–', 'clips')}</div><div class="tdgrid">`;
   if (top) h += oppCard(top);
   const rising = trendData().rising.slice(0, 5);
-  h += `<section class="tdcard"><h2>${esc(t('risingNowT'))}</h2>` + (rising.length ? `<div class="rlist2">${rising.map(s =>
+  h += `<section class="tdcard"><h2>${esc(t('risingNowT'))}${qm('lift')}</h2>` + (rising.length ? `<div class="rlist2">${rising.map(s =>
     `<button type="button" class="rrow" data-trend="${esc(s.key)}"><span><b>${esc(s.label)}</b><small><em class="up">▲ ${esc(liftText(s))}</em> · ${esc(s.r + ' ' + t('tnShorts'))}` +
     ` · ${esc(s.chs.size + ' ' + t('tnCh'))}${stageBadge(s)}</small></span>${spark(s.days)}</button>`).join('')}</div>` : `<p class="pbtip">${esc(t('tNone'))}</p>`) +
     `<button type="button" class="tdmore" data-tab="trends">${esc(t('risingAll'))} →</button></section>`;
-  const head = `<div class="prow ph"><span>#</span><span>${esc(t('colCh'))}</span><span class="ps">${esc(t('lSubs'))}</span><span class="pt">${esc(t('lTypical'))}</span><span>${esc(t('lScore'))}</span></div>`;
+  const head = `<div class="prow ph"><span>#</span><span>${esc(t('colCh'))}</span><span class="ps">${esc(t('lSubs'))}</span><span class="pt">${esc(t('lTypical'))}</span><span>${esc(t('lScore'))}${qm('score')}</span></div>`;
   h += `<section class="tdcard wide"><h2>${esc(t('picksT'))}</h2><div class="ptable">${head}${table.map((c, i) =>
     `<button type="button" class="prow" data-open-ch="${esc(c.ch_id)}"><span class="pr r${i + 1}">${i + 1}</span><span class="pn">${avatarEl(c, 28)}<b>${esc(c.name)}</b></span>` +
     `<span class="ps">${esc(fmt(c.subs))}</span><span class="pt">${esc(fmt(c.med_recent))}</span>` +
@@ -3222,11 +3237,11 @@ function oppCard(c) {   // today's single best opportunity: an editor's pick whe
     <div class="oppth">${topVids(c, 3).map(v => thumbBox(v, c)).join('')}</div>
     <div class="oppmain"><div class="oppch"><button type="button" class="avlink" data-open-ch="${id}" aria-label="${esc(c.name)}">${avatarEl(c, 52)}</button>
       <div><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))}${tp ? ' · ' + esc(topicName(tp)) : ''}</small></div></div>
-      <p class="oppbig"><b>${esc(big[0])}</b><span>${esc(big[1])}</span></p>
+      <p class="oppbig"><b>${esc(big[0])}</b><span>${esc(big[1])}${qm(c.subs > 0 && c.ratio >= 1.5 ? 'ratio' : 'typical')}</span></p>
       <p class="oppwhy">${esc(whyLines(c).slice(0, 2).join(' '))}</p>
       ${c.pick ? `<p class="oppnote"><small class="pdate">${esc(pickDate(c.pick))}</small>${esc(pickNote(c.pick))}</p>` : ''}
       <div class="sbar" role="img" aria-label="${esc(t('spT'))}: ${Math.round(c.score)}">${parts.map(([, v, , col]) => `<i style="width:${clampN(v, 0, 100).toFixed(1)}%;background:${col}"></i>`).join('')}</div>
-      <div class="sleg">${parts.map(p => `<span style="--k:${p[3]}">${esc(t(p[0]))} ${esc(part(p))}</span>`).join('')}</div>
+      <div class="sleg">${parts.map(p => `<span style="--k:${p[3]}">${esc(t(p[0]))} ${esc(part(p))}</span>`).join('')}${qm('score')}</div>
       <div class="btns"><button type="button" class="pillbtn primary" data-open-ch="${id}">${esc(t('oppOpen'))}</button>${bdBtn('ch:' + c.ch_id)}</div></div></div></section>`;
 }
 function filtersHtml(kind) {
@@ -3425,7 +3440,7 @@ function drawSheet(keepScroll) {
         ${f.freq ? card('lFreq', freqText(f.freq), f.last ? t('lLast') + ': ' + ago(f.last) : '', 'freq') : ''}
         ${chTalk(c) != null ? card('lTalk', fmtTalk(chTalk(c)), talkNorm() ? t('talkAvg', {n: fmtTalk(talkNorm())}) : '', 'talk') : ''}${c.created ? card('lCreated', createdText(c), t('agoV', {a: ageText(chAgeDays(c))}), 'created') : ''}${f.first ? card('lFirstShort', shortDate(f.first), t('agoV', {a: ageText((nowTs() - f.first) / 86400)}), 'first') : ''}
         ${(lr => lr != null ? card('lLikeRate', fmtRate(lr), '', '') : '')(chRates(c).likes)}
-        ${S.detail ? card('lScore', Math.round(c.score) + ' / 100', '', 'score') + card('lTrend', xOr(c.trend), c.trend == null ? t('momNA') : '', 'trend') : ''}
+        ${S.detail ? card('lScore', Math.round(c.score) + ' / 100', '', 'score') + card('lTrend', xOr(c.trend), c.trend == null ? t('momNA') : c.mom_n ? t('momFoot', {n: c.mom_n}) : '', 'trend') : ''}
       </div>
       <h3>${esc(t('spT'))}</h3><div class="anx one">${scoreBreak(c)}</div>
       ${(an => an ? `<h3>${esc(t('anT'))}</h3>${an}` : '')(chStats(c))}
@@ -3461,11 +3476,11 @@ function openPlayer(vid, chId, start = 0) {
   closePop();
   const g = grow(v);
   const facts = [[IC.eye, t('views', {n: fmt(v.v)})]];
-  if (v.x) facts.push([IC.flameF, v.x >= 1.5 ? t('pX', {x: fmtX(v.x)}) : v.x < 0.8 ? t('pXlow') : t('xAbout')]);
-  if (g) facts.push([IC.trend, t('pGrowH', {n: fmt(g), h: v.h})]);
+  if (v.x) facts.push([IC.flameF, v.x >= 1.5 ? t('pX', {x: fmtX(v.x)}) : v.x < 0.8 ? t('pXlow') : t('xAbout'), 'x']);
+  if (g) facts.push([IC.trend, t('pGrowH', {n: fmt(g), h: v.h}), 'grow']);
   if (v.d) facts.push([IC.clock, t('pLen', {d: fmtDur(v.d)})]);
   if (v.p) facts.push([IC.calendar, t('pUp', {ago: ago(v.p)})]);
-  if (accelerating(v)) facts.push([IC.rocket, t('pAccel')]);
+  if (accelerating(v)) facts.push([IC.rocket, t('pAccel'), 'accel']);
   if (v.k) facts.push([IC.smile, t('mfkTag')]);
   if (start) facts.unshift([IC.scissors, t('pFrom', {t: tsText(start)})]);
   $('#playerBody').innerHTML = `<div class="pwrap"><button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
@@ -3474,7 +3489,7 @@ function openPlayer(vid, chId, start = 0) {
     <div class="pside"><h3>${esc(v.t)}</h3>
       ${!c && v.cht ? `<div class="pch" style="cursor:default"><span><b>${esc(v.cht)}</b><small>${esc(t('ytFrom'))}</small></span></div>` : ''}
       ${c ? `<button type="button" class="pch" data-closeplayer data-open-ch="${esc(c.ch_id)}">${avatarEl(c, 42)}<span><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))} · ${esc(t('pSeeCh'))} →</small></span></button>` : ''}
-      <div class="pfacts">${facts.map(([e, s]) => `<div><span class="em">${e}</span><span>${esc(s)}</span></div>`).join('')}</div>
+      <div class="pfacts">${facts.map(([e, s, hk]) => `<div><span class="em">${e}</span><span>${esc(s)}${hk ? qm(hk) : ''}</span></div>`).join('')}</div>
       <div class="btns"><a class="pillbtn red" href="${start ? `https://www.youtube.com/watch?v=${vid}&amp;t=${Math.floor(start)}s` : vidUrl(vid)}" target="_blank" rel="noopener noreferrer">${ICON.play}${esc(t('openYt'))}</a>
         ${c && needsTr(c) && v.t ? `<a class="pillbtn" href="${trUrl(v.t)}" target="_blank" rel="noopener noreferrer">${IC.globe}${esc(t('translate'))}</a>` : ''}<button type="button" class="pillbtn" data-tear="${esc(vid)}" data-c="${esc(chId || '')}">${esc(t('tearBtn'))}</button>${bdBtn('v:' + vid + '|' + (chId || ''))}</div>
       ${vidStats(v, c)}
@@ -3858,7 +3873,7 @@ function chRates(c) {   // the channel's typical likes and comments per 1,000 vi
   const lk = c.series.map(v => perK(v.l, v.v)).filter(x => x != null), cm = c.series.map(v => perK(v.c, v.v)).filter(x => x != null);
   return {likes: lk.length >= 3 ? median(lk) : null, comments: cm.length >= 3 ? median(cm) : null};
 }
-const mcard = (label, val, sub) => `<div class="mcard"><span>${esc(label)}</span><b>${esc(val)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</div>`;
+const mcard = (label, val, sub, help) => `<div class="mcard"><span>${esc(label)}${help ? qm(help) : ''}</span><b>${esc(val)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</div>`;
 function bullet(label, val, avg) {
   const mx = Math.max(val || 0, avg || 0) * 1.2 || 1;
   return `<div class="bul"><div class="bulh"><span>${esc(label)}</span><b>${esc(fmtRate(val))}</b>${avg != null ? `<small>${esc(t('bulAvg', {n: fmtRate(avg)}))}</small>` : ''}</div>` +
@@ -3868,17 +3883,17 @@ const privNote = () => `<p class="anote">${IC.lock} ${esc(t('privNote'))}</p>`;
 function vidStats(v, c) {   // the video panel: headline numbers, how it ranks, views over time, engagement
   if (!c || !c.series.length) return '';
   const r = chRates(c), lk = perK(v.l, v.v), cm = perK(v.c, v.v), n = c.series.length, rank = 1 + c.series.filter(x => x.v > v.v).length;
-  const cards = [mcard(t('mViews'), fmt(v.v), v.x ? t('mVsUsual', {x: fmtX(v.x)}) : '')];
+  const cards = [mcard(t('mViews'), fmt(v.v), v.x ? t('mVsUsual', {x: fmtX(v.x)}) : '', v.x ? 'x' : '')];
   if (v.l != null) cards.push(mcard(t('mLikes'), fmt(v.l), lk != null ? t('mPerK', {n: fmtRate(lk)}) : ''));
   if (v.c != null) cards.push(mcard(t('mComments'), fmt(v.c), cm != null ? t('mPerK', {n: fmtRate(cm)}) : ''));
-  if (speed(v)) cards.push(mcard(t('mSpeed'), fmt(speed(v)), t('mNow')));
+  if (speed(v)) cards.push(mcard(t('mSpeed'), fmt(speed(v)), t('mNow'), 'speed'));
   else if (c.series.includes(v)) cards.push(mcard(t('mRank'), t('rankV', {r: rank, n}), t('rankSub')));
   const perf = !v.x ? null : v.x >= 3 ? ['up', '▲ ' + t('perfWay')] : v.x >= 1.3 ? ['up', '▲ ' + t('perfAbove')] : young(v) ? ['', t('tooNew')] : v.x >= 0.7 ? ['', t('perfTypical')] : ['down', '▼ ' + t('perfBelow')];
   let h = `<h4 class="antitle">${esc(t('anT'))}</h4><div class="mcards">${cards.join('')}</div>`;
   if (perf) h += `<div class="perf"><span class="perfpill ${perf[0]}">${esc(perf[1])}</span><span>${esc(t('perfWhy', {n}))}</span></div>`;
   if ((v.vh || []).length >= 2) h += `<div class="chartbox"><h4>${esc(t('vidGrowth'))}</h4><div class="lchart" data-ch="${esc(c.ch_id)}" data-vid="${esc(v.id)}"></div></div>`;
   if (n >= 3 && c.series.includes(v)) h += `<div class="chartbox"><h4>${esc(t('barsT'))}</h4><div class="bchart hasHl" data-ch="${esc(c.ch_id)}" data-hl="${esc(v.id)}"></div><small class="cap">${esc(t('barsHl'))}</small></div>`;
-  if (lk != null || cm != null) h += `<div class="chartbox"><h4>${esc(t('engT'))}</h4>${lk != null ? bullet(t('mLikes'), lk, r.likes) : ''}${cm != null ? bullet(t('mComments'), cm, r.comments) : ''}</div>`;
+  if (lk != null || cm != null) h += `<div class="chartbox"><h4>${esc(t('engT'))}${qm('talk')}</h4>${lk != null ? bullet(t('mLikes'), lk, r.likes) : ''}${cm != null ? bullet(t('mComments'), cm, r.comments) : ''}</div>`;
   return h + privNote();
 }
 function postTimes(c) {   // a week grid of when the channel uploads, in the viewer's own time zone
@@ -5514,6 +5529,7 @@ function openTrend(key) {
     <h3>${esc(label)} <span class="tcat">${esc(catName(s.cat || 'other'))}</span></h3>
     <p class="pbtip">${s.r ? esc((s.b === 0 ? t('liftNewD') : t('liftD', {x: fmtX(Math.min(s.lift, 99))})) + ' ' + t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)})) : esc(t('tQuietD'))}</p>
     ${s.r && weakSignal(s) ? `<p class="weak">${esc(t('weakSig', {n: s.r, k: s.chs.size}))}</p>` : ''}
+    ${s.r ? `<p class="pbtip">${stageBadge(s)}${qm('stage')} ${esc(liftText(s))}${qm('lift')}</p>` : ''}
     <div class="mcards">${mcard(t('tShorts3'), String(s.r))}${mcard(t('tChannels'), String(s.chs.size))}${mcard(t('lTypical'), fmt(s.med))}${best ? mcard(t('lBest'), fmt(best[0].v)) : ''}</div>
     <div class="chartbox" style="margin-top:12px"><h4>${esc(t('tPerDay'))}</h4><div class="dbars">${bars}</div><div class="dbl"><span>${esc(shortDate(start))}</span><span>${esc(t('today'))}</span></div></div>
     ${(s.yt || []).length ? `<h4 class="antitle" style="margin-top:14px">${esc(t('tOnCharts'))}</h4><div class="blist">${s.yt.slice(0, 5).map(x => { YT_ITEMS.set(x.id, x); return `<button type="button" class="yrow2" data-play="${esc(x.id)}" data-c=""><span class="bnum">${x.region}</span><img loading="lazy" src="${thumb(x.id)}" alt=""><span class="bmain"><b>${esc(x.t)}</b><small>${esc(x.cht)} · ${esc(t('views', {n: fmt(x.v || 0)}))}</small></span></button>`; }).join('')}</div>` : ''}
