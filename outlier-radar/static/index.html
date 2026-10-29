@@ -928,6 +928,24 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .stage.early{background:color-mix(in srgb,var(--c1) 16%,transparent);color:var(--c1)}
 .stage.spread{background:color-mix(in srgb,var(--c3) 16%,transparent);color:var(--c3)}
 .stage.boom{background:color-mix(in srgb,var(--c2) 16%,transparent);color:var(--c2)}
+.stage.crowded{background:color-mix(in srgb,var(--c2) 16%,transparent);color:var(--c2)}
+.stage.cooling{background:color-mix(in srgb,var(--muted) 18%,transparent);color:var(--muted)}
+.vlegend i.crowded{background:var(--c2)}.vlegend i.cooling{background:var(--muted)}
+.viz .bub.crowded circle{fill:var(--c2)}.viz .bub.cooling circle{fill:var(--muted)}
+.sigtools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 2px}
+.sigsel{font-size:13px;color:var(--muted);display:none;align-items:center;gap:6px}
+.sigtab{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+.sigtab th{font-size:11.5px;font-weight:600;color:var(--muted);text-align:right;padding:6px;border-bottom:1px solid var(--line);white-space:nowrap}
+.sigtab th button{border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;padding:2px 0}
+.sigtab th button[aria-pressed=true]{color:var(--text)}
+.sigtab td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;vertical-align:middle}
+.sigtab th:first-child,.sigtab td:first-child{text-align:left}
+.sigtab td:first-child button{border:0;background:transparent;color:var(--text);font:inherit;font-weight:600;cursor:pointer;padding:0;text-align:left}
+.sigtab td:first-child small{display:block;color:var(--muted);font-size:11px}
+.sigtab tr.sigweak td{opacity:.72}
+@media (max-width:600px){.sigsel{display:inline-flex}.sigtab thead{display:none}.sigtab tr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px 8px;padding:9px 2px;border-bottom:1px solid var(--line)}
+  .sigtab td{border:0;padding:0;text-align:left;align-self:end}.sigtab td:first-child{grid-column:1/4;align-self:start}.sigtab td:nth-child(2){grid-column:4;text-align:right;align-self:start}
+  .sigtab td[data-l]::before{content:attr(data-l);display:block;font-size:10.5px;color:var(--muted)}.sigtab td:nth-child(2)::before{display:none}}
 .tcard .trio{aspect-ratio:16/7}
 .tcard .tbody{gap:8px}
 .tcard .ttop{align-items:center}
@@ -2489,6 +2507,10 @@ Object.assign(T.th, {stUpdated: "อัปเดตเมื่อ {ago}", gVerd
   evT: "หลักฐาน", rkT: "ความเสี่ยงและข้อจำกัด", moreStats: "สถิติและกราฟทั้งหมด", tkOneHit: "ฮิตใหญ่คลิปเดียว ยังไม่เป็นรูปแบบ", tkSmallBig: "ช่องเล็กที่ไปได้ไกลกว่าขนาดตัวเองซ้ำแล้วซ้ำเล่า", tkBeyond: "คลิปของช่องนี้ไปได้ไกลกว่าจำนวนผู้ติดตามมาก", tkReliable: "สม่ำเสมอ: คลิปล่าสุดส่วนใหญ่เกิน 1 แสนวิว", tkRising: "กำลังแรงขึ้น: คลิปใหม่ทำได้ดีกว่าคลิปเก่า", tkFading: "กำลังเย็นลง: คลิปใหม่ได้วิวน้อยกว่าคลิปเก่า", tkSteady: "คงที่ ยังไม่มีอะไรผิดปกติ", rkOneHit: "วิวส่วนใหญ่มาจากคลิปเดียว: คลิปที่ดีที่สุดมี {p} ของวิวทั้งหมดที่เราเห็น", rkFew: "มีเพียง {n} คลิปที่ลงมาแล้วอย่างน้อยหนึ่งสัปดาห์ จึงยังตัดสินโมเมนตัมไม่ได้", rkYoung: "คลิปล่าสุด {n} คลิปลงมายังไม่ถึงสัปดาห์และยังเก็บวิวอยู่", rkYoung1: "คลิปล่าสุด 1 คลิปลงมายังไม่ถึงสัปดาห์และยังเก็บวิวอยู่", rkHidden: "ช่องซ่อนจำนวนผู้ติดตาม จึงคำนวณวิวต่อผู้ติดตามไม่ได้", rkNew: "ประวัติคลิปสั้นยังสั้น เดือนที่ดีเดือนเดียวอาจดูเหมือนเป็นรูปแบบ", rkStale: "ตรวจล่าสุดเมื่อ {ago} ตัวเลขอาจเปลี่ยนไปแล้ว", rkSample: "อ้างอิงจาก {n} คลิปล่าสุด ไม่ใช่ทั้งช่อง", simSearch: "พบจากการค้นหาเดียวกัน: “{q}”", simTopic: "หัวข้อเดียวกัน: {t}",
   dTitle: "หาโอกาส", dcFast: "ได้วิวเร็วที่สุด", dcFastD: "คลิปที่ได้วิวต่อชั่วโมงมากที่สุดระหว่างการตรวจสองครั้งล่าสุด", dcFastNone: "ยังไม่มีคลิปที่ถูกตรวจสองครั้งล่าสุด รายการนี้จะเติมเมื่อมีการตรวจช่องอีกรอบ", dcBeat: "ชนะยอดปกติของช่อง", dcBeatD: "คลิปที่ได้วิวหลายเท่าของยอดปกติของช่องตัวเอง ไม่ว่าช่องจะเล็กหรือใหญ่", dcSmall: "ช่องเล็ก ผลงานใหญ่", dcSmallD: "ช่องที่มีผู้ติดตามไม่ถึง 5 หมื่นคน แต่คลิปปกติได้ 5 หมื่นวิวขึ้นไป และอย่างน้อย 10 เท่าของผู้ติดตาม", dcSpread: "กำลังเกิดในหลายช่อง", dcSpreadD: "หัวข้อที่ช่องในข้อมูลของเรา 3 ช่องขึ้นไปลงมากกว่าปกติใน 3 วันที่ผ่านมา ก่อนจะแออัด", dcSteady: "ฮิตต่อเนื่อง", dcSteadyD: "ช่องที่คลิปล่าสุดส่วนใหญ่เกิน 1 แสนวิว แปลว่ารูปแบบนี้ยังได้ผล", dcCrowded: "แออัดแล้ว", dcCrowdedD: "หัวข้อที่ช่องในข้อมูลของเราลงกันเยอะแล้ว จะโดดเด่นได้ยากถ้าไม่มีอะไรใหม่", dcNone: "ยังไม่มีอะไรในรายการนี้", rsSmall: "คลิปปกติได้วิว {r} เท่าของผู้ติดตาม", rsTrend: "คลิปใหม่ {n} คลิปจาก {k} ช่องใน 3 วัน",
   radD: "แต่ละวงคือเทรนด์ที่กำลังขึ้นในข้อมูลของเรา ยิ่งซ้าย: ยิ่งมีช่องของเราลงน้อย ยิ่งสูง: ยิ่งลงมากกว่าปกติ ยิ่งใหญ่: ยิ่งมีคลิปใหม่มากใน 3 วัน", radEarly: "เพิ่งเริ่ม: ช่องของเราไม่เกิน 4 ช่อง", radX: "จำนวนช่องที่ลงใน 3 วัน", radY: "คลิปใหม่เทียบกับปกติ", radSize: "วงใหญ่: คลิปใหม่มาก", radWeak: "สีจาง: สัญญาณอ่อน", radWeakS: "สัญญาณอ่อน", radFresh: "นับจากช่องที่ตรวจภายใน 2 วัน · เผยแพร่ข้อมูลเมื่อ {ago}", radList: "ดูเป็นรายการ", radFew: "ตอนนี้เทรนด์ที่กำลังขึ้นในข้อมูลของเรายังน้อยเกินกว่าจะวาดเรดาร์", oppD: "แต่ละวงคือหัวข้อ ยิ่งสูง: ยอดวิวปกติยิ่งมาก ยิ่งซ้าย: ยิ่งมีช่องของเราลงหัวข้อนี้น้อย ยิ่งใหญ่: คลิปไวรัลยิ่งเยอะ แตะเพื่อดู", oppSweet: "ช่องน้อย วิวสูง"});
+// Product pass (29 Oct 2026): trend stages, signals, format, focus, idea pipeline, evidence and alerts; the packs carry the same keys
+Object.assign(T.en, {stCrowded: "Crowded", stCooling: "Cooling", gStage: "How far a trend has spread among the channels we track: Early, Spreading or Crowded. Cooling means it was busier a few days ago.", mh_stage: "Early: 4 or fewer of our channels posted it in the last 3 days. Spreading: 5 or more channels and under 15 new Shorts. Crowded: 5 or more channels and 15 or more new Shorts. Cooling: it had a busy 3 days (8 or more Shorts, at least twice its earlier share of new Shorts) and that share has since halved.", mf_stage: "Counts over the last 3 days. Cooling looks back 2 weeks.", my_stage: "Describes how far a trend has spread in our data. Early doesn’t mean easy, Crowded doesn’t mean too late, and Cooling doesn’t mean over.", sigOpen: "Show every signal as a table", sigD: "Each column is a separate signal from the channels we track. Sort by the one that matters to you: we don’t blend them into one score.", sigTrend: "Trend", sigStage: "Stage", sigNew: "New Shorts, 3 days", sigCh: "Our channels", sigLift: "vs usual", sigViews: "Typical views", sigSort: "Sort by", sigEarly: "Early only", sigFoot: "Counts come from the {n} channels we track, not all of YouTube. Faded rows are weak signals.", coolT: "Cooling down", coolD: "Topics that were busier in our data a few days ago and have quietened since. Good to know before you start one.", coolRow: "Busiest: {p} new Shorts in 3 days around {d} · last 3 days: {n}", coolSheet: "Busier a few days ago: {p} new Shorts in 3 days around {d}, against {n} in the last 3 days. Counted in our data and adjusted for how much history we keep per channel.", coolTop: "Shorts from its busiest days", tnPeak: "busiest 3 days", tnNow: "last 3 days", tnCh3w: "channels in 3 weeks", dcCooling: "Cooling down", dcCoolingD: "Topics that were busier in our data a few days ago and have quietened since. Good to know before you start one.", dcCrowdedD: "Rising topics that 5 or more of our channels posted 15 or more Shorts about in 3 days. Harder to stand out unless you bring something new.", nfD: "Topics compared on separate signals from the channels we track: typical views, the share of Shorts that go viral and how many of our channels post. Pick one to sort by; we don’t blend them into a score.", nfByViews: "Typical views", nfByViral: "Share going viral", nfByFew: "Fewest of our channels"});
+Object.assign(T.th, {stCrowded: "ทำกันเยอะแล้ว", stCooling: "เริ่มซา", gStage: "เทรนด์กระจายไปในช่องที่เราติดตามมากแค่ไหน: เพิ่งเริ่ม กำลังกระจาย หรือทำกันเยอะแล้ว ส่วนเริ่มซาแปลว่าเมื่อไม่กี่วันก่อนคึกคักกว่านี้", mh_stage: "เพิ่งเริ่ม: ช่องของเรา 4 ช่องหรือน้อยกว่าโพสต์เรื่องนี้ใน 3 วันล่าสุด กำลังกระจาย: 5 ช่องขึ้นไปและคลิปใหม่ไม่ถึง 15 คลิป ทำกันเยอะแล้ว: 5 ช่องขึ้นไปและคลิปใหม่ 15 คลิปขึ้นไป เริ่มซา: เคยมีช่วง 3 วันที่คึกคัก (8 คลิปขึ้นไป และสัดส่วนคลิปใหม่อย่างน้อย 2 เท่าของก่อนหน้า) แล้วสัดส่วนนั้นลดลงเหลือครึ่งหนึ่งหรือน้อยกว่า", mf_stage: "นับจาก 3 วันล่าสุด ส่วนเริ่มซาย้อนดู 2 สัปดาห์", my_stage: "บอกว่าเทรนด์กระจายไปแค่ไหนในข้อมูลของเรา เพิ่งเริ่มไม่ได้แปลว่าง่าย ทำกันเยอะแล้วไม่ได้แปลว่าสายเกินไป และเริ่มซาไม่ได้แปลว่าจบแล้ว", sigOpen: "ดูทุกสัญญาณเป็นตาราง", sigD: "แต่ละคอลัมน์คือสัญญาณแยกกันจากช่องที่เราติดตาม เรียงตามตัวที่คุณสนใจได้เลย เราไม่รวมเป็นคะแนนเดียว", sigTrend: "เทรนด์", sigStage: "ระยะ", sigNew: "คลิปใหม่ 3 วัน", sigCh: "ช่องที่เราติดตาม", sigLift: "เทียบปกติ", sigViews: "วิวปกติ", sigSort: "เรียงตาม", sigEarly: "เฉพาะเพิ่งเริ่ม", sigFoot: "ตัวเลขมาจาก {n} ช่องที่เราติดตาม ไม่ใช่ทั้ง YouTube แถวที่จางคือสัญญาณอ่อน", coolT: "เริ่มซาแล้ว", coolD: "หัวข้อที่เมื่อไม่กี่วันก่อนคึกคักกว่านี้ในข้อมูลของเรา แล้วค่อย ๆ เงียบลง ควรรู้ไว้ก่อนเริ่มทำ", coolRow: "ช่วงคึกสุด: คลิปใหม่ {p} คลิปใน 3 วัน ราว {d} · 3 วันล่าสุด: {n}", coolSheet: "เมื่อไม่กี่วันก่อนคึกคักกว่านี้: คลิปใหม่ {p} คลิปใน 3 วัน ราว {d} เทียบกับ {n} คลิปใน 3 วันล่าสุด นับจากข้อมูลของเรา และปรับตามจำนวนประวัติที่เราเก็บต่อช่อง", coolTop: "คลิปจากช่วงที่คึกที่สุด", tnPeak: "3 วันที่คึกสุด", tnNow: "3 วันล่าสุด", tnCh3w: "ช่องใน 3 สัปดาห์", dcCooling: "เริ่มซาแล้ว", dcCoolingD: "หัวข้อที่เมื่อไม่กี่วันก่อนคึกคักกว่านี้ในข้อมูลของเรา แล้วค่อย ๆ เงียบลง ควรรู้ไว้ก่อนเริ่มทำ", dcCrowdedD: "หัวข้อที่กำลังขึ้น ซึ่งช่องของเรา 5 ช่องขึ้นไปโพสต์รวม 15 คลิปขึ้นไปใน 3 วัน จะโดดเด่นได้ยากถ้าไม่มีมุมใหม่", nfD: "เทียบหมวดด้วยสัญญาณแยกกันจากช่องที่เราติดตาม: วิวปกติ สัดส่วนคลิปที่ไวรัล และจำนวนช่องของเราที่โพสต์ เลือกเรียงทีละตัว เราไม่รวมเป็นคะแนน", nfByViews: "วิวปกติ", nfByViral: "สัดส่วนที่ไวรัล", nfByFew: "ช่องของเราโพสต์น้อยสุด"});
+// end of the product pass wording
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
     den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
@@ -3270,7 +3292,7 @@ function homeView() {
 }
 /* ---------- Find opportunities: six kinds of opportunity, each card saying why it is in the list ---------- */
 const DISC = [['fast', 'bolt', 'var(--c1)'], ['beat', 'flameF', 'var(--hot3)'], ['small', 'trophy', 'var(--c3)'], ['spread', 'compass', 'var(--c2)'],
-  ['steady', 'target', '#8b5cf6'], ['crowded', 'chat', 'var(--muted)']];
+  ['steady', 'target', '#8b5cf6'], ['crowded', 'chat', 'var(--muted)'], ['cooling', 'clock', 'var(--muted)']];
 function discCards(kind) {
   const once = () => { const seen = new Set(); return ([, c]) => !seen.has(c.ch_id) && seen.add(c.ch_id); };   // one card per channel
   const chs = DATA.channels.filter(c => !c.tags.includes('One-hit')), tr = trendData().rising;
@@ -3282,8 +3304,9 @@ function discCards(kind) {
     .map(c => chCard(c, t('rsSmall', {r: fmtX(c.ratio)})));
   if (kind === 'steady') return chs.filter(c => c.tags.includes('Consistent engine')).sort((a, b) => b.score - a.score).slice(0, 12)
     .map(c => chCard(c, t('hitsVal', {k: c.series.filter(v => v.v >= 1e5).length, n: c.series.length}) + ' ' + t('hitsSub')));
-  const list = kind === 'spread' ? tr.filter(x => x.chs.size >= 3 && trendStage(x) !== 'boom').sort((a, b) => b.lift - a.lift)
-    : tr.filter(x => trendStage(x) === 'boom').sort((a, b) => b.r - a.r);
+  if (kind === 'cooling') return trendData().cooling.map(x => trendCard(x, coolText(x)));
+  const list = kind === 'spread' ? tr.filter(x => x.chs.size >= 3 && trendStage(x) !== 'crowded').sort((a, b) => b.lift - a.lift)
+    : tr.filter(x => trendStage(x) === 'crowded').sort((a, b) => b.r - a.r);
   return list.slice(0, 12).map(x => trendCard(x, t('rsTrend', {n: x.r, k: x.chs.size})));
 }
 function discPanel() {
@@ -3366,12 +3389,11 @@ function oppMap() {   // demand (typical views) against competition (channels po
   const data = {xmin, xmax, ymin, ymax, xticks: spread(logTicks(xmin, xmax), 6), yticks: spread(logTicks(ymin, ymax), 5), xfmt: v => fmt(v), yfmt: v => fmt(v),
     xlab: t('oppX'), ylab: t('oppY'), zone: {x0: xmin, x1: midA, y0: midM, y1: ymax, label: t('oppSweet')},
     pts: rows.map(r => ({x: r.active, y: r.med, r: 7 + 16 * Math.sqrt(r.viral), cls: r.active <= midA && r.med >= midM ? 'early' : 'spread', label: topicName(r.tp), lab: true,
-      attr: `data-topic="${r.tp[0]}" data-go="videos"`, tip: `<b>${esc(topicName(r.tp))}</b><br>${esc(t('oppTip', {m: fmt(r.med), a: r.active, v: Math.round(100 * r.viral)}))}<br>${esc(t('oppScore'))}: ${r.score}/100`}))};
+      attr: `data-topic="${r.tp[0]}" data-go="videos"`, tip: `<b>${esc(topicName(r.tp))}</b><br>${esc(t('oppTip', {m: fmt(r.med), a: r.active, v: Math.round(100 * r.viral)}))}`}))};
   return `<section class="vizcard"><div class="vizhead"><div><h3>${IC.target}${esc(t('oppT'))}</h3><p>${esc(t('oppD'))}</p></div>
     <div class="vlegend"><span><i class="early"></i>${esc(t('oppSweet'))}</span><span><i class="spread"></i>${esc(t('oppOther'))}</span></div></div>${vizBox('bubbles', data, 340, t('oppT'))}</section>`;
 }
 function topicsView() {
-  const opp = new Map(niches().map(r => [r.tp[0], r.score]));
   const rows = TOPICS.map(tp => {
     const chs = DATA.channels.filter(c => chTopics(c).has(tp[0]) && langOk(c)).sort((a, b) => b.score - a.score);
     return {tp, chs, n: chs.length, hot: chs.filter(c => c.score >= 65).length, top: chs.slice(0, 5)};
@@ -3379,9 +3401,9 @@ function topicsView() {
   let h = pageHead('pTopicsT', 'pTopicsD', `<div class="filters">${modeSeg()}</div>`) + oppMap() + heatSection();
   if (!rows.length) return h + emptyBox(t('emptyNiche'));
   h += `<div class="ttiles">` + rows.map(r => {
-    const vids = viralVideos(r.chs).slice(0, 3), o = opp.get(r.tp[0]);
+    const vids = viralVideos(r.chs).slice(0, 3);
     return `<button type="button" class="ttile" data-topic="${r.tp[0]}" data-go="videos"><span class="tth">${vids.map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('')}</span>
-      <span class="ttb"><span class="ttop2"><span class="tico">${topicIcon(r.tp[0])}</span><b>${esc(topicName(r.tp))}</b>${o != null ? `<span class="opp" title="${esc(t('oppScore'))}">${o}</span>` : ''}</span>
+      <span class="ttb"><span class="ttop2"><span class="tico">${topicIcon(r.tp[0])}</span><b>${esc(topicName(r.tp))}</b></span>
         <span class="meter"><i style="width:${(100 * r.hot / r.n).toFixed(0)}%"></i></span><small>${esc(t('topicStats', {h: r.hot, n: r.n}))}</small>
         <span class="stack">${r.top.map(c => avatarEl(c, 28)).join('')}</span></span></button>`;
   }).join('') + '</div>';
@@ -5025,6 +5047,21 @@ const isHot = (r, chans, lift) => r >= 4 && chans >= 2 && lift >= 2;
 // for 2 days can't say what is recent and is left out
 const trendRef = (c, now) => { const ref = c.last_probe || now; return now - ref > 2 * 86400 ? null : ref; };
 /* @trend-rules-end */
+// Cooling: a trend that had a busy 3 days (8+ Shorts, at least twice its earlier share of each day's new Shorts) and whose share in the
+// last 3 days has fallen to half of that or less. Shares, not counts, because older days hold fewer Shorts (only the newest 24 per channel
+// are kept). days and tot run oldest to newest, one entry per day; returns {peak, at, now} or null.
+function coolingOf(days, tot) {
+  const n = days.length, sum = (a, i, j) => { let x = 0; for (let k = i; k < j; k++) x += a[k] || 0; return x; };
+  const now = sum(days, n - 3, n), nowTot = sum(tot, n - 3, n);
+  let best = null;
+  for (let i = 3; i <= n - 6; i++) {
+    const peak = sum(days, i, i + 3);
+    if (peak < 8) continue;
+    const share = peak / Math.max(1, sum(tot, i, i + 3)), before = (sum(days, 0, i) + 1) / Math.max(1, sum(tot, 0, i));
+    if (share >= 2 * before && (!best || share > best.share)) best = {peak, at: i, share};
+  }
+  return best && nowTot && now / nowTot <= best.share / 2 ? {peak: best.peak, at: best.at, now} : null;
+}
 const TREND_CATS = [['all', '✨', 'All', 'ทั้งหมด'], ['games', '🎮', 'Games', 'เกม'], ['cartoons', '🎨', 'Cartoons & anime', 'การ์ตูนและอนิเมะ'],
   ['memes', '🤪', 'Memes & challenges', 'มีมและชาเลนจ์'], ['news', '📰', 'News & events', 'ข่าวและเหตุการณ์'], ['music', '🎵', 'Music & dance', 'เพลงและการเต้น'],
   ['food', '🍳', 'Food', 'อาหาร'], ['animals', '🐾', 'Animals', 'สัตว์'], ['sports', '⚽', 'Sports', 'กีฬา'], ['facts', '🧠', 'Facts', 'ความรู้'], ['other', '🔥', 'Everything else', 'อื่น ๆ']];
@@ -5061,6 +5098,7 @@ const newStats = (key, label) => ({key, label, r: 0, b: 0, chs: new Set(), vids:
 function addVideo(s, v, c, age, w) {
   const day = Math.floor(age / 86400);
   if (day < TR_DAYS) s.days[TR_DAYS - 1 - day]++;
+  if (s.lc !== c.ch_id) { s.lc = c.ch_id; s.cw = (s.cw || 0) + 1; }   // channels over all 3 weeks (a channel's videos arrive together)
   if (age <= TR_RECENT) { s.r++; s.chs.add(c.ch_id); s.vids.push([v, c]); } else s.b += w;
 }
 const trNow = () => (DATA && DATA.generated) || nowTs();   // worked out as of the data's own time, like the scanner's alert list
@@ -5077,14 +5115,18 @@ let TR = null;
 function trendData() {   // rising words, hashtags, games and characters; worked out once per data refresh
   const sig = DATA.generated + ':' + DATA.channels.length;
   if (TR && TR.sig === sig) return TR;
-  const win = windowVideos(), terms = new Map();
+  const win = windowVideos(), terms = new Map(), tot = new Array(TR_DAYS).fill(0);   // tot: every Short per day, for a term's share of each day
   for (const [v, c, age, w] of win) {
-    const cap = capsIn(v.t);
+    const cap = capsIn(v.t), day = Math.floor(age / 86400);
+    if (day < TR_DAYS) tot[TR_DAYS - 1 - day]++;
     for (const term of termsOf(v.t)) {
       let s = terms.get(term);
       if (!s) terms.set(term, s = newStats('t:' + term, term));
       addVideo(s, v, c, age, w);
-      if (cap.plain && age <= TR_RECENT) { s.plain = (s.plain || 0) + 1; if (cap.caps.has(term)) s.named = (s.named || 0) + 1; }
+      if (cap.plain) {
+        s.plainW = (s.plainW || 0) + 1; if (cap.caps.has(term)) s.namedW = (s.namedW || 0) + 1;   // over all 3 weeks, for Cooling
+        if (age <= TR_RECENT) { s.plain = (s.plain || 0) + 1; if (cap.caps.has(term)) s.named = (s.named || 0) + 1; }
+      }
     }
   }
   const rising = [];
@@ -5104,16 +5146,41 @@ function trendData() {   // rising words, hashtags, games and characters; worked
     keep.push(s);
     if (keep.length >= 150) break;
   }
+  const cooling = [], kept = new Set(keep.map(s => s.key));
+  for (const s of terms.values()) {   // busy a few days ago, quieter now: the same word rules as rising, judged over all 3 weeks
+    if (kept.has(s.key) || (s.cw || 0) < 4) continue;
+    const phrase = s.label.includes(' ') || s.label.startsWith('#');
+    if (!phrase && !(CASED.test(s.label) && (s.plainW || 0) >= 2 && (s.namedW || 0) / s.plainW >= 0.6)) continue;
+    const cool = coolingOf(s.days, tot);
+    if (cool) { s.cool = cool; cooling.push(s); }
+  }
+  cooling.sort((a, b) => b.cool.peak - a.cool.peak);
+  const coolKeep = [];
+  for (const s of cooling) {
+    if (coolKeep.some(k => words(k).some(w => words(s).includes(w)) && Math.abs(k.cool.peak - s.cool.peak) <= Math.max(1, k.cool.peak * 0.3))) continue;
+    finishStats(s); s.pv = [];
+    coolKeep.push(s);
+    if (coolKeep.length >= 12) break;
+  }
+  if (coolKeep.length) {   // the Shorts from each one's busiest days, for its thumbnails
+    for (const [v, c, age] of win) {
+      const i = TR_DAYS - 1 - Math.floor(age / 86400), ts = termsOf(v.t);
+      for (const s of coolKeep) if (i >= s.cool.at && i < s.cool.at + 3 && ts.has(s.label)) s.pv.push([v, c]);
+    }
+    coolKeep.forEach(s => s.pv.sort((a, b) => b[0].v - a[0].v));
+  }
+  coolKeep.forEach(s => { s.cat = trendCat(s.label, s.pv.length ? s.pv : s.vids); });   // its category from the Shorts of its busy days
   const board = (list, pre) => list.map(([name, rx]) => {
     const s = newStats(pre + name, name);
     for (const [v, c, age, w] of win) if (rx.test(v.t)) addVideo(s, v, c, age, w);
     finishStats(s);
+    if ((s.cw || 0) >= 4 && s.lift < 1.8) s.cool = coolingOf(s.days, tot) || undefined;
     s.cat = pre === 'g:' ? 'games' : 'cartoons';
     s.yt = ytMentions(rx);
     s.score = (s.r ? s.heat : 0) + s.yt.length * 2;
     return s;
   }).filter(s => s.r || s.b || s.yt.length).sort((a, b) => b.score - a.score || b.r - a.r);
-  TR = {sig, terms, rising: keep, games: board(GAMES, 'g:'), toons: board(CARTOONS, 'c:')};
+  TR = {sig, terms, rising: keep, cooling: coolKeep, games: board(GAMES, 'g:'), toons: board(CARTOONS, 'c:')};
   return TR;
 }
 function trendByKey(key) {
@@ -5210,8 +5277,11 @@ function spark(days) {   // Shorts per day over two weeks; the last 3 days (the 
   }).join('')}</svg>`;
 }
 const liftText = s => (s.b === 0 && s.r ? t('liftNew') : t('liftX', {x: fmtX(Math.min(s.lift, 99))}));
-const trendStage = s => (s.chs.size <= 4 ? 'early' : s.r >= 15 ? 'boom' : 'spread');
-const stageBadge = s => `<span class="stage ${trendStage(s)}">${esc(t({early: 'stEarly', boom: 'stBoom', spread: 'stSpread'}[trendStage(s)]))}</span>`;
+const trendStage = s => (s.cool ? 'cooling' : s.chs.size <= 4 ? 'early' : s.r >= 15 ? 'crowded' : 'spread');   // describes our data, never a forecast
+const STAGE_KEY = {early: 'stEarly', spread: 'stSpread', crowded: 'stCrowded', cooling: 'stCooling'};
+const stageBadge = s => `<span class="stage ${trendStage(s)}">${esc(t(STAGE_KEY[trendStage(s)]))}</span>`;
+const coolDate = s => shortDate(trNow() - (TR_DAYS - 2 - s.cool.at) * 86400);   // the middle of its busiest 3 days
+const coolText = s => t('coolRow', {p: s.cool.peak, d: coolDate(s), n: s.cool.now});
 function areaSpark(days) {   // two weeks of new Shorts a day; the last 3 days (the ones that count) in colour
   const n = days.length, mx = Math.max(1, ...days), w = 140, h = 40, X = i => i / (n - 1) * w, Y = v => h - 2 - (h - 8) * v / mx;
   const pts = days.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`), cut = n - 3;
@@ -5219,13 +5289,13 @@ function areaSpark(days) {   // two weeks of new Shorts a day; the last 3 days (
     `<path class="a1" d="M${X(cut).toFixed(1)},${h} L${pts.slice(cut).join(' L')} L${w},${h} Z"/><polyline points="${pts.join(' ')}"/></svg>`;
 }
 function trendCard(s, reason) {
-  const imgs = s.vids.slice(0, 3).map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('');
+  const imgs = (s.vids.length ? s.vids : s.pv || []).slice(0, 3).map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('');
   return `<article class="tcard" data-trend="${esc(s.key)}" tabindex="0" role="button" aria-label="${esc(s.label)}">
     <div class="trio">${imgs}</div>
-    <div class="tbody"><div class="ttop"><b>${esc(s.label)}</b>${s.r ? stageBadge(s) : ''}</div>${reason ? `<span class="cwhy">${esc(reason)}</span>` : ''}${s.r && weakSignal(s) ? `<span class="weak">${esc(t('weakSig', {n: s.r, k: s.chs.size}))}</span>` : ''}
+    <div class="tbody"><div class="ttop"><b>${esc(s.label)}</b>${s.r || s.cool ? stageBadge(s) : ''}</div>${reason ? `<span class="cwhy">${esc(reason)}</span>` : ''}${s.r && !s.cool && weakSignal(s) ? `<span class="weak">${esc(t('weakSig', {n: s.r, k: s.chs.size}))}</span>` : ''}
       ${areaSpark(s.days)}
-      <div class="tnums"><span><b class="up">▲ ${esc(s.b === 0 && s.r ? t('liftNew') : fmtX(Math.min(s.lift, 99)) + '×')}</b><small>${esc(t('tnLift'))}</small></span>
-        <span><b>${s.r}</b><small>${esc(t('tnShorts'))}</small></span><span><b>${s.chs.size}</b><small>${esc(t('tnCh'))}</small></span><span><b>${esc(fmt(s.med))}</b><small>${esc(t('tnViews'))}</small></span></div>
+      <div class="tnums">${s.cool ? `<span><b>${s.cool.peak}</b><small>${esc(t('tnPeak'))}</small></span><span><b>${s.cool.now}</b><small>${esc(t('tnNow'))}</small></span><span><b>${s.cw || 0}</b><small>${esc(t('tnCh3w'))}</small></span>` : `<span><b class="up">▲ ${esc(s.b === 0 && s.r ? t('liftNew') : fmtX(Math.min(s.lift, 99)) + '×')}</b><small>${esc(t('tnLift'))}</small></span>
+        <span><b>${s.r}</b><small>${esc(t('tnShorts'))}</small></span><span><b>${s.chs.size}</b><small>${esc(t('tnCh'))}</small></span><span><b>${esc(fmt(s.med))}</b><small>${esc(t('tnViews'))}</small></span>`}</div>
       <div class="tfoot"><span class="tcat">${esc(catName(s.cat))}</span>${isTracked(s.key) ? `<span class="tcat on">${IC.star}</span>` : ''}${bdMini('t:' + s.key + '|' + s.label)}</div></div></article>`;
 }
 function trendRadar(list, extra) {   // every rising trend as a bubble: few channels (left) means early; higher means rising faster
@@ -5236,14 +5306,30 @@ function trendRadar(list, extra) {   // every rising trend as a bubble: few chan
   const data = {xmin: 0.75, xmax, ymin: 1.5, ymax, xticks: logTicks(1, xmax), yticks: spread(logTicks(2, ymax), 5), xfmt: v => fmt(v), yfmt: v => v + '×',
     xlab: t('radX'), ylab: t('radY'), zone: {x0: 0.75, x1: 4.5, y0: 1.5, y1: ymax, label: t('radEarly')},
     pts: pts.map((s, i) => ({x: s.chs.size, y: lifts[i], r: 5 + 15 * Math.sqrt(s.r / maxR), cls: trendStage(s) + (weakSignal(s) ? ' weak' : ''), label: s.label, lab: i < 10, attr: `data-trend="${esc(s.key)}"`,
-      tip: `<b>${esc(s.label)}</b><br>▲ ${esc(liftText(s))} · ${esc(t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)}))}<br><span class="stage ${trendStage(s)}">${esc(t({early: 'stEarly', boom: 'stBoom', spread: 'stSpread'}[trendStage(s)]))}</span>`}))};
+      tip: `<b>${esc(s.label)}</b><br>▲ ${esc(liftText(s))} · ${esc(t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)}))}<br>${stageBadge(s)}`}))};
   return `<section class="vizcard"><div class="vizhead"><div><h3>${IC.compass}${esc(t('radT'))}</h3><p>${esc(t('radD'))}</p></div>
-    <div class="vlegend">${[['early', 'stEarly'], ['spread', 'stSpread'], ['boom', 'stBoom']].map(([c, k]) => `<span><i class="${c}"></i>${esc(t(k))}</span>`).join('')}${qm('stage')}
+    <div class="vlegend">${[['early', 'stEarly'], ['spread', 'stSpread'], ['crowded', 'stCrowded']].concat(pts.some(s => s.cool) ? [['cooling', 'stCooling']] : []).map(([c, k]) => `<span><i class="${c}"></i>${esc(t(k))}</span>`).join('')}${qm('stage')}
       <span><i class="sz"></i>${esc(t('radSize'))}</span><span><i class="wk"></i>${esc(t('radWeak'))}</span></div></div>
     ${vizBox('bubbles', data, 330, t('radT'))}
     <p class="radfresh">${esc(t('radFresh', {ago: ago(DATA.generated)}))}</p>
-    <details class="radlist"${innerWidth < 600 ? ' open' : ''}><summary>${esc(t('radList'))}</summary><ol>${pts.slice().sort((a, b) => b.lift - a.lift).map(s =>   // the same trends, readable on any screen
-      `<li><button type="button" data-trend="${esc(s.key)}"><b>${esc(s.label)}</b>${stageBadge(s)}<small>▲ ${esc(liftText(s))} · ${esc(t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)}))}${weakSignal(s) ? ' · ' + esc(t('radWeakS')) : ''}</small></button></li>`).join('')}</ol></details></section>`;
+    <details class="radlist"${(S.sigopen == null ? innerWidth < 600 : S.sigopen) ? ' open' : ''}><summary>${esc(t('sigOpen'))}</summary>${sigTable(pts)}</details></section>`;
+}
+// The radar's trends as a table, readable on any screen: one column per signal, sorted by whichever the visitor picks. No blended score.
+const STAGE_ORDER = {early: 0, spread: 1, crowded: 2, cooling: 3};
+const SIG_COLS = [['stage', 'sigStage', s => STAGE_ORDER[trendStage(s)]], ['r', 'sigNew', s => s.r], ['ch', 'sigCh', s => s.chs.size],
+  ['lift', 'sigLift', s => (s.b === 0 ? 99 : s.lift)], ['med', 'sigViews', s => s.med]];
+function sigTable(pts) {
+  const col = SIG_COLS.find(c => c[0] === S.sigsort) || SIG_COLS[3], dir = col[0] === 'stage' ? 1 : -1;   // Early first; every number biggest first
+  const rows = pts.filter(s => !S.sigearly || trendStage(s) === 'early').sort((a, b) => dir * (col[2](a) - col[2](b)) || b.r - a.r);
+  const head = SIG_COLS.map(([k, lk]) => `<th scope="col"><button type="button" data-sigsort="${k}" aria-pressed="${col[0] === k}">${esc(t(lk))}${col[0] === k ? (dir < 0 ? ' ▾' : ' ▴') : ''}</button>${k === 'lift' ? qm('lift') : ''}</th>`).join('');
+  const cell = (k, v) => `<td data-l="${esc(t(k))}">${v}</td>`;
+  return `<div class="sigtools"><label class="sigsel">${esc(t('sigSort'))} <select data-sigsel>${SIG_COLS.map(([k, lk]) => `<option value="${k}" ${col[0] === k ? 'selected' : ''}>${esc(t(lk))}</option>`).join('')}</select></label>
+      <button type="button" class="chip" data-sigearly aria-pressed="${!!S.sigearly}">${esc(t('sigEarly'))}</button>${qm('stage')}</div>
+    <p class="pbtip">${esc(t('sigD'))}</p>
+    <table class="sigtab"><thead><tr><th scope="col">${esc(t('sigTrend'))}</th>${head}</tr></thead><tbody>${rows.map(s => `<tr class="${weakSignal(s) ? 'sigweak' : ''}">
+      <td><button type="button" data-trend="${esc(s.key)}">${esc(s.label)}</button>${weakSignal(s) ? `<small>${esc(t('radWeakS'))}</small>` : ''}</td>${cell('sigStage', stageBadge(s))}${cell('sigNew', s.r)}${cell('sigCh', s.chs.size)}
+      ${cell('sigLift', esc(s.b === 0 && s.r ? t('liftNew') : fmtX(Math.min(s.lift, 99)) + '×'))}${cell('sigViews', esc(fmt(s.med)))}</tr>`).join('')}</tbody></table>
+    ${rows.length ? '' : `<p class="pbmuted">${esc(t('dcNone'))}</p>`}<p class="pbtip">${esc(t('sigFoot', {n: fmt(DATA.channels.length)}))}</p>`;
 }
 function boardRow(s, i, top) {
   const imgs = s.vids.slice(0, 3).map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('');
@@ -5288,6 +5374,10 @@ function trendsView() {
     h += `<div class="tcats">${TREND_CATS.filter(c => c[0] === 'all' || T_.rising.some(s => s.cat === c[0])).map(c => `<button type="button" class="chip" data-tcat="${c[0]}" aria-pressed="${cat === c[0]}">${esc(t('_tcat_' + c[0]))} <span class="pbmuted">${c[0] === 'all' ? T_.rising.length : T_.rising.filter(s => s.cat === c[0]).length}</span></button>`).join('')}</div>`;
     h += `<p class="pbtip">${esc(t('ttRisingD'))}</p>`;
     h += list.length ? `<div class="tgrid">${gateList(list.slice(0, 60).map(trendCard), t('ttRising'), 6).join('')}</div>` : emptyBox(t('tNone'), '🔭');
+    const cool = T_.cooling.filter(s => cat === 'all' || s.cat === cat);
+    if (cool.length) h += `<h2 class="subhead">${esc(t('coolT'))}</h2><p class="pbtip">${esc(t('coolD'))}</p><div class="blist">${cool.map(s => `<button type="button" class="brow" data-trend="${esc(s.key)}">
+      <span class="bthumbs">${(s.pv.length ? s.pv : s.vids).slice(0, 3).map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('')}</span>
+      <span class="bmain"><b>${esc(s.label)}</b><small>${esc(coolText(s))}</small></span><span class="bside">${stageBadge(s)}${spark(s.days)}</span></button>`).join('')}</div>`;
   }
   return h;
 }
@@ -5627,13 +5717,15 @@ function openTrend(key) {
   const locked = !isPro();
   body.innerHTML = `<button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
     <h3>${esc(label)} <span class="tcat">${esc(catName(s.cat || 'other'))}</span></h3>
-    <p class="pbtip">${s.r ? esc((s.b === 0 ? t('liftNewD') : t('liftD', {x: fmtX(Math.min(s.lift, 99))})) + ' ' + t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)})) : esc(t('tQuietD'))}</p>
-    ${s.r && weakSignal(s) ? `<p class="weak">${esc(t('weakSig', {n: s.r, k: s.chs.size}))}</p>` : ''}
-    ${s.r ? `<p class="pbtip">${stageBadge(s)}${qm('stage')} ${esc(liftText(s))}${qm('lift')}</p>` : ''}
+    <p class="pbtip">${s.r ? esc((s.cool || (s.b && s.lift < 1) ? '' : (s.b === 0 ? t('liftNewD') : t('liftD', {x: fmtX(Math.min(s.lift, 99))})) + ' ') + t('tStats', {n: s.r, k: s.chs.size, v: fmt(s.med)})) : esc(t('tQuietD'))}</p>
+    ${s.r && !s.cool && weakSignal(s) ? `<p class="weak">${esc(t('weakSig', {n: s.r, k: s.chs.size}))}</p>` : ''}
+    ${s.cool ? `<p class="pbtip">${stageBadge(s)}${qm('stage')} ${esc(t('coolSheet', {p: s.cool.peak, d: coolDate(s), n: s.cool.now}))}</p>`
+      : s.r ? `<p class="pbtip">${stageBadge(s)}${qm('stage')} ${esc(liftText(s))}${qm('lift')}</p>` : ''}
     <div class="mcards">${mcard(t('tShorts3'), String(s.r))}${mcard(t('tChannels'), String(s.chs.size))}${mcard(t('lTypical'), fmt(s.med))}${best ? mcard(t('lBest'), fmt(best[0].v)) : ''}</div>
     <div class="chartbox" style="margin-top:12px"><h4>${esc(t('tPerDay'))}</h4><div class="dbars">${bars}</div><div class="dbl"><span>${esc(shortDate(start))}</span><span>${esc(t('today'))}</span></div></div>
     ${(s.yt || []).length ? `<h4 class="antitle" style="margin-top:14px">${esc(t('tOnCharts'))}</h4><div class="blist">${s.yt.slice(0, 5).map(x => { YT_ITEMS.set(x.id, x); return `<button type="button" class="yrow2" data-play="${esc(x.id)}" data-c=""><span class="bnum">${x.region}</span><img loading="lazy" src="${thumb(x.id)}" alt=""><span class="bmain"><b>${esc(x.t)}</b><small>${esc(x.cht)} · ${esc(t('views', {n: fmt(x.v || 0)}))}</small></span></button>`; }).join('')}</div>` : ''}
     ${s.chs.size ? `<h4 class="antitle" style="margin-top:14px">${esc(t('tChans'))}</h4><div class="tchs">${[...s.chs].map(findCh).filter(Boolean).slice(0, 14).map(c => `<button type="button" class="tch" data-open-ch="${esc(c.ch_id)}">${avatarEl(c, 40)}<small>${esc(c.name)}</small></button>`).join('')}</div>` : ''}
+    ${s.cool && (s.pv || []).length ? `<h4 class="antitle" style="margin-top:14px">${esc(t('coolTop'))}</h4><div class="vgrid">${s.pv.slice(0, locked ? 4 : 8).map(([v, c]) => vCard(v, c, {showWhen: true})).join('')}</div>` : ''}
     ${s.vids.length ? `<h4 class="antitle" style="margin-top:14px">${esc(t('tTop'))}</h4><div class="vgrid">${s.vids.slice(0, locked ? 4 : 12).map(([v, c]) => vCard(v, c, {showWhen: true})).join('')}</div>${locked && s.vids.length > 4 ? lockCard(t('tTop')) : ''}` : ''}
     <h4 class="antitle" style="margin-top:14px">${esc(t('tRide'))}</h4>${locked ? lockCard(t('tRide')) : ideaList(label.replace(/^#/, ''))}
     ${AI_URL ? `<div style="margin-top:10px"><button type="button" class="pillbtn" data-ai="${esc(key)}">${IC.sparkle}${esc(t('aiBtn'))}</button><div id="aiBox"></div></div>` : ''}
@@ -5724,9 +5816,11 @@ function toolsView() {
   const rows = niches();
   const sec = (em, k, d, body) => `<section class="tool"><h2>${em} ${esc(t(k))} ${proTag()}</h2><p class="pbtip">${esc(t(d))}</p>${body}</section>`;
   if (!isPro()) return h + `<div class="lockblur" aria-hidden="true">${sec(IC.compass, 'nfT', 'nfD', '<div class="blist">' + rows.slice(0, 4).map(r => `<div class="nrow"><b>${esc(topicName(r.tp))}</b></div>`).join('') + '</div>')}</div>`;
-  h += sec(IC.compass, 'nfT', 'nfD', `<div class="blist">${rows.map((r, i) => `<button type="button" class="nfrow" data-topic="${r.tp[0]}" data-go="videos"><span class="bnum">${i + 1}</span>
-    <span class="ico sm">${topicIcon(r.tp[0])}</span><span class="bmain"><b>${esc(topicName(r.tp))}</b><small>${esc(t('nfStats', {v: fmt(r.med), p: Math.round(100 * r.viral), c: r.active, s: Math.round(100 * r.top3)}))}</small></span>
-    <span class="nfbar"><i style="width:${r.score}%"></i></span><b class="nfscore">${r.score}</b></button>`).join('')}</div>`);
+  const NF = [['views', 'nfByViews', (a, b) => b.med - a.med], ['viral', 'nfByViral', (a, b) => b.viral - a.viral], ['few', 'nfByFew', (a, b) => a.active - b.active || b.med - a.med]];
+  const nf = NF.find(x => x[0] === S.nfsort) || NF[0];   // one signal at a time, picked by the visitor; no blended score
+  h += sec(IC.compass, 'nfT', 'nfD', `<div class="filters"><span class="seg">${NF.map(([k, lk]) => `<button type="button" data-nfsort="${k}" aria-pressed="${nf[0] === k}">${esc(t(lk))}</button>`).join('')}</span></div>
+    <div class="blist">${rows.slice().sort(nf[2]).map((r, i) => `<button type="button" class="nfrow" data-topic="${r.tp[0]}" data-go="videos"><span class="bnum">${i + 1}</span>
+    <span class="ico sm">${topicIcon(r.tp[0])}</span><span class="bmain"><b>${esc(topicName(r.tp))}</b><small>${esc(t('nfStats', {v: fmt(r.med), p: Math.round(100 * r.viral), c: r.active, s: Math.round(100 * r.top3)}))}</small></span></button>`).join('')}</div>`);
   const tp = S.bttopic || '', pool = videoPool(DATA.channels.filter(c => !tp || chTopics(c).has(tp))).filter(([v]) => v.p && v.x >= 2.5);
   const grid = pool.length >= 6 ? weekGrid(pool.map(([v]) => v.p)) : null;
   h += sec(IC.clock, 'btT', 'btD', `<select id="btTopic" aria-label="${esc(t('btT'))}"><option value="">${esc(t('topicAll'))}</option>${TOPICS.map(x => `<option value="${x[0]}" ${tp === x[0] ? 'selected' : ''}>${esc(topicName(x))}</option>`).join('')}</select>
@@ -6241,6 +6335,12 @@ document.addEventListener('click', async e => {
   const treg = x.closest('[data-treg]');
   if (treg) { S.treg = treg.dataset.treg; saveState(); renderContent(); return; }
   if (x.closest('[data-tshorts]')) { S.tshorts = !S.tshorts; saveState(); renderContent(); return; }
+  const keepY = () => { const y = window.scrollY; renderContent(); window.scrollTo(0, y); };
+  const sgs = x.closest('[data-sigsort]');
+  if (sgs) { S.sigsort = sgs.dataset.sigsort; S.sigopen = true; saveState(); keepY(); return; }
+  if (x.closest('[data-sigearly]')) { S.sigearly = !S.sigearly; S.sigopen = true; saveState(); keepY(); return; }
+  const nfs = x.closest('[data-nfsort]');
+  if (nfs) { S.nfsort = nfs.dataset.nfsort; saveState(); keepY(); return; }
   const wl = x.closest('[data-wlang]');
   if (wl) { S.wlang = wl.dataset.wlang; saveState(); renderContent(); return; }
   const tw = x.closest('[data-twatch]');
@@ -6378,7 +6478,9 @@ document.addEventListener('change', e => {
 document.addEventListener('change', e => {
   if (e.target.id === 'tyCat') { S.tycat = e.target.value; saveState(); renderContent(); }
   if (e.target.id === 'btTopic') { S.bttopic = e.target.value; saveState(); renderContent(); }
+  if (e.target.dataset && e.target.dataset.sigsel != null) { S.sigsort = e.target.value; S.sigopen = true; saveState(); const y = window.scrollY; renderContent(); window.scrollTo(0, y); }
 });
+document.addEventListener('toggle', e => { if (e.target.classList && e.target.classList.contains('radlist')) S.sigopen = e.target.open; }, true);
 let ibTimer = null;
 document.addEventListener('input', e => {
   if (e.target.id === 'lq') {   // the language picker's search

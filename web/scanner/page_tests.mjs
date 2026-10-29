@@ -54,7 +54,7 @@ const ctx = {
 vm.createContext(ctx);
 vm.runInContext('const nowTs = () => NOW_();', ctx);
 for (const name of ['speed', 'grow', 'young', 'when', 'accelerating', 'subStep', 'factCache', 'chAgeDays', 'chFacts', 'trendStage', 'weakSignal',
-  'topShare', 'freshShare', 'statusInfo', 'takeaway', 'chRisks', 'nextPacificMidnight']) vm.runInContext(cut(name), ctx);
+  'topShare', 'freshShare', 'statusInfo', 'takeaway', 'chRisks', 'nextPacificMidnight', 'coolingOf']) vm.runInContext(cut(name), ctx);
 const run = src => vm.runInContext(src, ctx);
 const H = 3600, D = 86400;
 let n = 0;
@@ -113,7 +113,18 @@ ok(run('chFacts(c)').newShorts === false, 'chFacts: Shorts going back 100 days a
 
 // trend stages and weak signals
 ok(run("trendStage({chs: new Set([1, 2, 3]), r: 30})") === 'early', 'stage: 3 channels is early, however many Shorts');
-ok(run("trendStage({chs: new Set([1, 2, 3, 4, 5, 6]), r: 20})") === 'boom', 'stage: 6 channels and 20 Shorts is exploding');
+ok(run("trendStage({chs: new Set([1, 2, 3, 4, 5, 6]), r: 20})") === 'crowded', 'stage: 6 channels and 20 Shorts is crowded');
+ok(run("trendStage({chs: new Set([1, 2, 3, 4, 5, 6]), r: 3, cool: {peak: 12, at: 6, now: 3}})") === 'cooling', 'stage: a trend marked cooling says so');
+
+// Cooling: a busy 3 days, then its share of each day's new Shorts halves; shares, so thinner old history can't fake it
+const flat = (n, v) => new Array(n).fill(v);
+const cool = (days, tot) => run(`coolingOf(${JSON.stringify(days)}, ${JSON.stringify(tot)})`);
+ok(JSON.stringify(cool([1, 1, 1, 1, 1, 1, 1, 6, 6, 6, 1, 1, 1, 1], flat(14, 100))) === '{"peak":18,"at":7,"now":3}', 'cooling: 18 Shorts in 3 days, now 3, is cooling');
+ok(cool(flat(14, 5), flat(14, 100)) === null, 'cooling: a steady topic is not cooling');
+ok(cool([0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 5, 5, 5, 5], flat(14, 100)) === null, 'cooling: still nearly as busy as its peak is not cooling');
+ok(cool([0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0], flat(14, 100)) === null, 'cooling: a peak under 8 Shorts is too small to call');
+ok(cool([2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4], flat(7, 50).concat(flat(7, 100))) === null, 'cooling: the same share on thinner old days is not a spike');
+ok(cool([0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 8, 8], flat(14, 100)) === null, 'cooling: a trend still at its peak is not cooling');
 ok(run("trendStage({chs: new Set([1, 2, 3, 4, 5, 6]), r: 10})") === 'spread', 'stage: 6 channels and 10 Shorts is spreading');
 ok(run("weakSignal({chs: new Set([1, 2, 3, 4, 5]), r: 5})") && !run("weakSignal({chs: new Set([1, 2, 3, 4, 5]), r: 10})"), 'weak signal: under 8 Shorts');
 
