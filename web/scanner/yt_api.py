@@ -111,10 +111,11 @@ class YouTube:
     def videos(self, ids, player=False):
         """Details for up to 50 video ids per call (1 unit each call, whatever parts are asked for).
         player=True also asks for the embedded player's size, which Google documents is returned when the video's
-        aspect ratio is known; it becomes "o": "v" (vertical), "h" (horizontal) or "s" (square)."""
+        aspect ratio is known; it becomes "o": "v" (vertical), "h" (horizontal) or "s" (square).
+        "k" is YouTube's Made for Kids flag: the developer policies require looking it up for every video a site embeds."""
         out = {}
         ids = list(dict.fromkeys(ids))
-        extra = {"part": "snippet,statistics,contentDetails,player", "maxHeight": 480} if player else {"part": "snippet,statistics,contentDetails"}
+        extra = {"part": "snippet,statistics,contentDetails,status,player", "maxHeight": 480} if player else {"part": "snippet,statistics,contentDetails,status"}
         for i in range(0, len(ids), 50):
             data = self.call("videos", id=",".join(ids[i:i + 50]), **extra)
             for it in data.get("items", []):
@@ -126,7 +127,7 @@ class YouTube:
                     "ch": it["snippet"].get("channelTitle"), "dur": parse_duration(it.get("contentDetails", {}).get("duration")),
                     "p": iso_to_ts(it["snippet"].get("publishedAt", "")),
                     "l": int(st["likeCount"]) if "likeCount" in st else None, "c": int(st["commentCount"]) if "commentCount" in st else None,
-                    "o": orientation(it.get("player") or {}),
+                    "o": orientation(it.get("player") or {}), "k": bool((it.get("status") or {}).get("madeForKids")),
                 }
         return out
 

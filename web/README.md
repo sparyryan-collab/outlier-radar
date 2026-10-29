@@ -209,9 +209,9 @@ On the Trends page people track trends, then turn on alerts. While Viral Radar i
 
 Lemon Squeezy has a built-in affiliate program: creators who recommend Viral Radar earn a share of each subscription. Turn it on in Lemon Squeezy (Affiliates), then set the repository variables `LEMON_STORE` (your store's slug; the site then loads Lemon's affiliate tracking script so `?aff=` links are credited) and `AFFILIATE_URL` (your affiliate sign-up page; it appears in the footer as "Earn with us").
 
-## More YouTube quota
+## More YouTube quota, and permission for the scores
 
-`web/QUOTA_REQUEST.md` has answers ready for YouTube's quota extension form. Apply before many people search or Pro goes paid; reviews take a few weeks.
+`web/QUOTA_REQUEST.md` has answers ready for YouTube's quota extension form. Apply now, not only when you need more quota: YouTube's Developer Policies forbid scores and other metrics calculated from API data unless the project has accepted the "Analytics & Reporting" amendment, which you do in that same form (Section 5). Reviews take a few weeks. Once it is accepted, set the repository variable `STATS_DAYS` (up to 1095) to keep statistics history longer than 30 days.
 
 ## Install it as an app
 
@@ -221,7 +221,7 @@ On Android and desktop Chrome or Edge, the site offers "📲 Install the app" in
 
 - Each run starts from the newer of two copies of the scanner's state: a private copy the workflow saves in GitHub's Actions cache (with every channel's history, the quota counters and the candidates), and the live site's `data.json`. The three newest saved copies are kept.
 - If neither can be read, the scanner and `trends.py` refuse to run, nothing is written, and `web/scanner/check_site.py` stops the deploy, so the live site keeps its last good version. Only the very first run of a brand-new site uses `bootstrap=true`.
-- Every number on the site comes from the official API. Old records imported from the PC app are kept private until the API has refreshed them, and dropped if it can't. A channel the API can't refresh for 30 days is dropped too, and profile pictures are fetched again within 25 days and deleted when a channel leaves the list.
+- Every number on the site comes from the official API. Old records imported from the PC app are kept private until the API has refreshed them, and dropped if it can't. A channel the API can't refresh for 30 days is dropped too, channels that leave the list are forgotten within 30 days, statistics history is kept for 30 days (`STATS_DAYS`), and profile pictures are fetched again within 25 days and deleted when a channel leaves the list. Each video's Made for Kids flag is looked up, as YouTube requires for embedded videos, and the site carries no tracking code.
 - On every push the workflow first runs the self-tests (`web/scanner/selftest.py`, `web/scanner/parity.mjs`, `web/pay/selftest.mjs`); a failing test stops the deploy.
 
 ## Changing things

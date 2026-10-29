@@ -123,6 +123,8 @@ class Fake(BaseHTTPRequestHandler):
                                                  "publishedAt": v["pub"].strftime("%Y-%m-%dT%H:%M:%SZ"), "description": CHAPTERS if i == vid(3, 5) else ""},
                             "statistics": {"viewCount": str(v["views"]), "likeCount": str(v["views"] // 40), "commentCount": str(v["views"] // 2000)},
                             "contentDetails": {"duration": v["dur"]}}
+                    if "status" in q.get("part", [""])[0]:   # channel 2's newest Short is marked Made for Kids
+                        item["status"] = {"madeForKids": i == vid(2, 13)}
                     if with_player:   # a 45-second horizontal clip on channel 1 when WORLD["horizontal"]; everything else vertical
                         flat = WORLD["horizontal"] and i == vid(1, 12)
                         item["player"] = {"embedHtml": "<iframe></iframe>", "embedWidth": "480" if flat else "270", "embedHeight": "270" if flat else "480"}
@@ -226,6 +228,7 @@ def main():
         assert all(s.get("d") == 45 for s in hit["series"]), "each Short keeps its length in seconds"
         assert all("c" in s and "l" in s for s in hit["series"]), "comments and likes are kept for the comment signal"
         assert all(s.get("o") == "v" for s in hit["series"]), "the player's shape is recorded"
+        assert {s["id"] for s in quiet["series"] if s.get("k")} == {vid(2, 13)} and not any(s.get("k") for s in hit["series"]), "Made for Kids is looked up and kept only when true"
         assert hit["created"] == 1785542400, hit.get("created")   # channel creation date (2026-08-01)
         assert hit["lang"] in ("en", "und") and hit["english"], hit["lang"]
         assert hit["src"] == "api" and hit["settled_n"] == 5 and hit["base_n"] == 5, (hit.get("settled_n"), hit.get("base_n"))   # 5 Shorts are a week old or more
@@ -319,6 +322,13 @@ def main():
         assert gap_slow == 6 * 3600 and gap_fast == 900 and slow > fast and spent == 0, (slow, gap_slow, fast, gap_fast, spent)
         assert slow >= 1300, slow   # about a quarter of the day's budget when runs come every 6 hours
         print(f"run budget OK: {slow} units per run when runs come every 6 h, {fast} when every 15 min")
+
+        # statistics history: YouTube allows 30 days, or up to 36 months once the Analytics & Reporting amendment is accepted (STATS_DAYS)
+        rec = {"hist": [[int(t0 - 40 * 86400), 1000, 5000, 50], [int(t0 - 5 * 86400), 1100, 5200, 52]], "last_probe": t0 - 5 * 86400, "med_recent": 5200,
+               "src": "api", "series": [{"id": "x", "p": 1}]}
+        h = scan_mod.add_hist(rec, t0, 1200, {"med_recent": 5300, "score": 53})
+        assert scan_mod.STATS_DAYS == 30 and [x[1] for x in h] == [1100, 1200], h
+        print("statistics OK: subscriber history older than 30 days is dropped")
 
         # Shorts shape: horizontal short videos are left out, but only once the player sizes have proved reliable
         WORLD.update(horizontal=True)

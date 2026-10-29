@@ -1504,6 +1504,7 @@ button.prow:hover{background:var(--hover)}
 .cmh .comp{font-size:11.5px}
 .cmom q{font-size:14px;font-weight:600;line-height:1.4}
 .cmom small{color:var(--muted);font-size:12.5px}
+.tdnote{margin:16px 0 0}
 .cardact{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;margin-top:2px;border:0;border-radius:999px;background:var(--surface);padding:6px 12px;font-size:13px;font-weight:500}
 .cardact:hover{background:var(--surface2)}
 .cardact svg{width:16px;height:16px}
@@ -2422,11 +2423,13 @@ Object.assign(T.th, {lNewShorts: "เพิ่งเริ่มทำคลิ�
 Object.assign(T.en, {navToday: "Today", navClips: "Clips", navMake: "Make", navLibrary: "Library", subOverview: "Overview", tdHead: "Here’s what’s moving on Shorts",
   kTracked: "Channels tracked", kHot: "Hot right now", kNew3: "New uploads, 3 days", kClipC: "Creators checked for clipping", tdOppT: "Today’s #1 opportunity",
   oppOpen: "Open channel", risingNowT: "Rising now", risingAll: "Open the Trend radar", picksT: "Top picks, ranked", colCh: "Channel", picksAll: "See all channels",
-  clipNextT: "Clip these next", clipNextAll: "See every moment"});
+  clipNextT: "Clip these next", clipNextAll: "See every moment", mfkTag: "Made for kids, as set by the creator on YouTube",
+  ownCalc: "Scores, multipliers, trends and tags are Viral Radar’s own calculations from YouTube’s public numbers. YouTube doesn’t publish them."});
 Object.assign(T.th, {navToday: "วันนี้", navClips: "ตัดคลิป", navMake: "สร้าง", navLibrary: "คลังของฉัน", subOverview: "ภาพรวม", tdHead: "นี่คือสิ่งที่กำลังมาแรงบน Shorts",
   kTracked: "ช่องที่ติดตาม", kHot: "กำลังมาแรง", kNew3: "คลิปใหม่ใน 3 วัน", kClipC: "ครีเอเตอร์ที่ตรวจเรื่องตัดคลิปแล้ว", tdOppT: "โอกาสอันดับ 1 ของวันนี้",
   oppOpen: "เปิดช่อง", risingNowT: "กำลังขึ้นตอนนี้", risingAll: "เปิดเรดาร์เทรนด์", picksT: "ช่องเด่น จัดอันดับ", colCh: "ช่อง", picksAll: "ดูทุกช่อง",
-  clipNextT: "คลิปที่ควรตัดต่อไป", clipNextAll: "ดูทุกช่วงเด่น"});
+  clipNextT: "คลิปที่ควรตัดต่อไป", clipNextAll: "ดูทุกช่วงเด่น", mfkTag: "สร้างมาเพื่อเด็ก ตามที่ครีเอเตอร์ตั้งไว้บน YouTube",
+  ownCalc: "คะแนน ตัวคูณ เทรนด์ และแท็ก เป็นการคำนวณของ Viral Radar เองจากตัวเลขสาธารณะของ YouTube ไม่ใช่ตัวเลขที่ YouTube เผยแพร่"});
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
     den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
@@ -3191,7 +3194,7 @@ function homeView() {
     return `<button type="button" class="cmom" data-play="${esc(m.v)}" data-s="${m.s}" data-c=""><span class="cmh"><b>${esc(c.name)}</b>${compBadge(m.comp)}</span>` +
       `<q>${esc(m.q || m.c || t('momNoQuote'))}</q><small>${tsText(m.s)} – ${tsText(m.e)} · ${esc(t('momPoint', {n: m.n}))}</small></button>`;
   }), t('momT'), 1).join('') : `<p class="pbtip">${esc(t('momWait'))}</p>`) + `<button type="button" class="tdmore" data-tab="clips">${esc(t('clipNextAll'))} →</button></section>`;
-  return h + '</div>';
+  return h + `</div><p class="pbtip tdnote">${esc(t('ownCalc'))}</p>`;
 }
 function oppCard(c) {   // today's single best opportunity: an editor's pick when there is one, otherwise the top-scored channel
   const id = esc(c.ch_id), tp = TOPICS.find(x => chTopics(c).has(x[0])), parts = scoreParts(c).filter(p => p[2] > 0);
@@ -3445,6 +3448,7 @@ function openPlayer(vid, chId, start = 0) {
   if (v.d) facts.push([IC.clock, t('pLen', {d: fmtDur(v.d)})]);
   if (v.p) facts.push([IC.calendar, t('pUp', {ago: ago(v.p)})]);
   if (accelerating(v)) facts.push([IC.rocket, t('pAccel')]);
+  if (v.k) facts.push([IC.smile, t('mfkTag')]);
   if (start) facts.unshift([IC.scissors, t('pFrom', {t: tsText(start)})]);
   $('#playerBody').innerHTML = `<div class="pwrap"><button type="button" class="icon dlgclose" data-close aria-label="${esc(t('dClose'))}">${ICON.close}</button>
     <div class="pvid"><iframe src="https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&playsinline=1&rel=0${start ? '&start=' + Math.floor(start) : ''}" title="${esc(v.t)}"
@@ -4483,10 +4487,10 @@ function parseChannelInput(s) {
 async function fetchMine(info) {
   const pl = await ytApi('playlistItems', {part: 'contentDetails', playlistId: 'UU' + info.id.slice(2), maxResults: 50});
   const ids = (pl.items || []).map(i => i.contentDetails && i.contentDetails.videoId).filter(Boolean);
-  const vr = ids.length ? await ytApi('videos', {part: 'snippet,statistics,contentDetails', id: ids.join(',')}) : {items: []};
+  const vr = ids.length ? await ytApi('videos', {part: 'snippet,statistics,contentDetails,status', id: ids.join(',')}) : {items: []};
   const byId = new Map((vr.items || []).map(it => [it.id, parseVideo(it)]));
   const vids = ids.map(i => byId.get(i)).filter(v => v && v.v != null && v.dur <= 180)
-    .map(v => Object.assign({id: v.id, t: v.t, v: v.v}, v.dur < 1e6 ? {d: v.dur} : {}, v.p ? {p: Math.round(v.p)} : {}, v.c != null ? {c: v.c} : {}, v.l != null ? {l: v.l} : {}));
+    .map(v => Object.assign({id: v.id, t: v.t, v: v.v}, v.dur < 1e6 ? {d: v.dur} : {}, v.p ? {p: Math.round(v.p)} : {}, v.c != null ? {c: v.c} : {}, v.l != null ? {l: v.l} : {}, v.k ? {k: 1} : {}));
   const sn = info.snippet || {}, st = info.statistics || {}, th = sn.thumbnails || {};
   return {id: info.id, name: sn.title || '', handle: sn.customUrl || '', subs: st.hiddenSubscriberCount ? 0 : +(st.subscriberCount || 0),
           avatar: (th.medium || th.default || {}).url || '', created: sn.publishedAt ? Math.round(Date.parse(sn.publishedAt) / 1000) : null, vids};
@@ -5128,7 +5132,7 @@ const TTABS = [['rising', '🚀', 'ttRising'], ['games', '🎮', 'ttGames'], ['c
 function trendsView() {
   const T_ = trendData(), tab = TTABS.some(x => x[0] === S.ttab) ? S.ttab : 'rising';   // the clip finder has its own page now
   TREND_OPEN = '';
-  let h = pageHead('pTrendsT', 'pTrendsD') + briefHtml(T_);
+  let h = pageHead('pTrendsT', 'pTrendsD') + briefHtml(T_) + `<p class="pbtip">${esc(t('ownCalc'))}</p>`;
   const tw = tracked();
   if (tw.length) {
     h += `<div class="twrow"><b>${IC.star}${esc(t('twT'))}</b>${alertBtn()}${tw.map(x => { const s = trendByKey(x.k); return `<button type="button" class="chip ${trendHot(s) ? 'hot' : ''}" data-trend="${esc(x.k)}">${esc(x.l)} <span class="${trendHot(s) ? 'heatup' : 'pbmuted'}">${esc(trendHot(s) ? '▲ ' + liftText(s) : s.r ? t('twSteady') : t('twQuiet'))}</span></button>`; }).join('')}</div>`;
@@ -5387,9 +5391,9 @@ async function checkedCompetition() {   // one search: the Shorts other channels
   try {
     const ids = ((await ytApi('search', {part: 'id', type: 'video', videoDuration: 'short', order: 'viewCount', q: c.name, publishedAfter: searchSince(30), maxResults: 50})).items || [])
       .map(x => x.id && x.id.videoId).filter(Boolean);
-    const shorts = !ids.length ? [] : ((await ytApi('videos', {part: 'snippet,statistics,contentDetails', id: ids.join(',')})).items || [])
+    const shorts = !ids.length ? [] : ((await ytApi('videos', {part: 'snippet,statistics,contentDetails,status', id: ids.join(',')})).items || [])
       .filter(v => (v.snippet || {}).channelId !== c.ch && parseDur((v.contentDetails || {}).duration) <= 180)
-      .map(v => ({id: v.id, t: String((v.snippet || {}).title || '').slice(0, 140), v: +(v.statistics || {}).viewCount || 0, ch: (v.snippet || {}).channelId, cht: (v.snippet || {}).channelTitle || ''}));
+      .map(v => ({id: v.id, t: String((v.snippet || {}).title || '').slice(0, 140), v: +(v.statistics || {}).viewCount || 0, ch: (v.snippet || {}).channelId, cht: (v.snippet || {}).channelTitle || '', ...((v.status || {}).madeForKids ? {k: 1} : {})}));
     const named = shorts.filter(x => nameHit(c.name, x.t)), clips = (named.length >= 3 ? named : shorts).sort((x, y) => y.v - x.v), views = clips.map(x => x.v);
     Object.assign(c, {clips: clips.length, clippers: new Set(clips.map(x => x.ch)).size, clip_med: views.length ? median(views) : 0, clip_top: clips[0] || null, ct: clips.slice(0, 12).map(x => x.t)});
     c.ok = [c.subs >= 1e6, c.clippers <= 8, viralOnly(c) && c.long30 >= 2];
@@ -5796,7 +5800,7 @@ async function aiIdeas(topic, examples, box) {
 }
 
 /* ---------- terms, privacy and refunds ---------- */
-const LEGAL_DATE = '2026-10-26';
+const LEGAL_DATE = '2026-10-29';
 const LEGAL = {
   en: {
     terms: ['Terms of service', [
@@ -5815,8 +5819,13 @@ const LEGAL = {
       ['Payments', 'If you subscribe, the payment provider handles your payment details. We only receive your subscription status and the email you used.'],
       ['YouTube API Services', 'When you search YouTube from Viral Radar, your search words are sent to YouTube through the YouTube API Services. Google’s Privacy Policy applies: {gp}. Viral Radar never asks for access to your YouTube account.'],
       ['Shared search results', 'A topic you search is saved for 24 hours, without anything that identifies you, so other visitors can open the same results for free.'],
+      ['Videos and thumbnails', 'Videos play in YouTube’s own embedded player in its privacy-enhanced mode, and thumbnails load from YouTube’s image servers. When you play a video, YouTube receives information about that playback under Google’s Privacy Policy. Viral Radar adds no tracking to the player.'],
+      ['Trend alerts', 'If you turn on alerts, your browser’s push subscription, your language and the trends you track are stored in Google Cloud Firestore so alerts can reach you. Turning alerts off deletes them.'],
+      ['Channels you add', 'When you ask us to follow a channel we don’t list yet, only that channel’s ID is added to the public list the scanner reads. Your account isn’t part of it.'],
+      ['AI idea writer', 'When you use the AI writer, the topic you type and a few titles of related Shorts are sent to Anthropic’s Claude to write the ideas. Viral Radar doesn’t keep them; it only counts how many requests each account makes per day.'],
+      ['Daily limits', 'When searches go through our server, it counts each account’s searches per day, or, if you aren’t signed in, those of a scrambled form of your IP address that can’t be turned back into it. The counts are used only for that day’s limits.'],
       ['Cookies and tracking', 'We don’t use advertising or analytics cookies. Google Fonts and Firebase receive your IP address when they send files or sign you in.'],
-      ['Your choices', 'You can sign out at any time. To delete the settings you synced, contact us. Clearing your browser’s site data removes the settings stored on that device.'],
+      ['Your choices', 'You can sign out at any time. To delete the settings you synced, contact us and we delete them within 7 days. Clearing your browser’s site data removes the settings stored on that device. Deleting what Viral Radar stores doesn’t change anything on YouTube.'],
       ['Children', 'Viral Radar is not meant for children under 13.'],
       ['Contact', '{contact}']]],
     refunds: ['Cancellation and refunds', [
@@ -5841,8 +5850,13 @@ const LEGAL = {
       ['การชำระเงิน', 'หากคุณสมัคร ผู้ให้บริการชำระเงินจะดูแลข้อมูลการชำระเงิน เราได้รับเพียงสถานะการสมัครและอีเมลที่ใช้'],
       ['บริการ YouTube API', 'เมื่อคุณค้นหา YouTube ผ่าน Viral Radar คำค้นจะถูกส่งไปยัง YouTube ผ่านบริการ YouTube API ซึ่งอยู่ภายใต้นโยบายความเป็นส่วนตัวของ Google: {gp} Viral Radar ไม่เคยขอสิทธิ์เข้าถึงบัญชี YouTube ของคุณ'],
       ['ผลการค้นหาที่แชร์', 'หัวข้อที่คุณค้นหาจะถูกบันทึกไว้ 24 ชั่วโมงโดยไม่มีข้อมูลที่ระบุตัวคุณ เพื่อให้คนอื่นเปิดผลเดียวกันได้ฟรี'],
+      ['วิดีโอและภาพปก', 'วิดีโอเล่นในเพลเยอร์ฝังของ YouTube เองในโหมดเพิ่มความเป็นส่วนตัว และภาพปกโหลดจากเซิร์ฟเวอร์รูปภาพของ YouTube เมื่อคุณเล่นวิดีโอ YouTube จะได้รับข้อมูลการเล่นนั้นภายใต้นโยบายความเป็นส่วนตัวของ Google ทั้งนี้ Viral Radar ไม่ได้เพิ่มการติดตามใด ๆ ในเพลเยอร์'],
+      ['การแจ้งเตือนเทรนด์', 'หากคุณเปิดการแจ้งเตือน ข้อมูลการสมัครรับการแจ้งเตือนของเบราว์เซอร์ ภาษา และเทรนด์ที่คุณติดตามจะถูกเก็บใน Google Cloud Firestore เพื่อส่งการแจ้งเตือนถึงคุณ เมื่อปิดการแจ้งเตือน ข้อมูลเหล่านี้จะถูกลบ'],
+      ['ช่องที่คุณเพิ่ม', 'เมื่อคุณขอให้เราติดตามช่องที่ยังไม่มีในรายการ ระบบจะเพิ่มเพียงรหัสช่องนั้นลงในรายการสาธารณะที่ตัวสแกนอ่าน โดยไม่ผูกกับบัญชีของคุณ'],
+      ['ผู้ช่วยเขียนไอเดีย AI', 'เมื่อคุณใช้ผู้ช่วยเขียนไอเดีย หัวข้อที่คุณพิมพ์และชื่อคลิปที่เกี่ยวข้องบางส่วนจะถูกส่งไปยัง Claude ของ Anthropic เพื่อเขียนไอเดีย Viral Radar ไม่เก็บข้อมูลเหล่านี้ไว้ เพียงนับจำนวนคำขอของแต่ละบัญชีในแต่ละวัน'],
+      ['ขีดจำกัดรายวัน', 'เมื่อการค้นหาผ่านเซิร์ฟเวอร์ของเรา ระบบจะนับจำนวนการค้นหาต่อวันของแต่ละบัญชี หรือหากคุณไม่ได้เข้าสู่ระบบ จะนับตามรูปแบบที่เข้ารหัสของที่อยู่ IP ซึ่งแปลงกลับเป็น IP เดิมไม่ได้ ตัวเลขนี้ใช้เฉพาะกับขีดจำกัดของวันนั้น'],
       ['คุกกี้และการติดตาม', 'เราไม่ใช้คุกกี้โฆษณาหรือคุกกี้วิเคราะห์ Google Fonts และ Firebase จะได้รับที่อยู่ IP ของคุณเมื่อส่งไฟล์หรือให้คุณเข้าสู่ระบบ'],
-      ['ทางเลือกของคุณ', 'ออกจากระบบได้ทุกเมื่อ หากต้องการลบการตั้งค่าที่ซิงค์ไว้ โปรดติดต่อเรา การล้างข้อมูลเว็บไซต์ในเบราว์เซอร์จะลบการตั้งค่าบนอุปกรณ์นั้น'],
+      ['ทางเลือกของคุณ', 'ออกจากระบบได้ทุกเมื่อ หากต้องการลบการตั้งค่าที่ซิงค์ไว้ โปรดติดต่อเรา แล้วเราจะลบให้ภายใน 7 วัน การล้างข้อมูลเว็บไซต์ในเบราว์เซอร์จะลบการตั้งค่าบนอุปกรณ์นั้น การลบข้อมูลที่ Viral Radar เก็บไว้ไม่มีผลกับข้อมูลใด ๆ บน YouTube'],
       ['เด็ก', 'Viral Radar ไม่ได้ออกแบบมาสำหรับเด็กอายุต่ำกว่า 13 ปี'],
       ['ติดต่อ', '{contact}']]],
     refunds: ['การยกเลิกและการคืนเงิน', [
@@ -5862,7 +5876,7 @@ function legalView(kind) {
 }
 function footHtml() {
   const lead = DATA && DATA.snapshot ? t('footSnap') + ' ' + t(DATA.web ? 'footWeb' : 'footLocal') : t(STATIC ? 'footWeb' : 'footLocal');
-  return `<p>${esc(lead)}</p><nav class="flinks"><a href="#terms" data-tab="terms">${esc(t('fTerms'))}</a><a href="#privacy" data-tab="privacy">${esc(t('fPrivacy'))}</a>` +
+  return `<p>${esc(lead)}</p><p class="fsmall">${esc(t('ownCalc'))}</p><nav class="flinks"><a href="#terms" data-tab="terms">${esc(t('fTerms'))}</a><a href="#privacy" data-tab="privacy">${esc(t('fPrivacy'))}</a>` +
     `<a href="#refunds" data-tab="refunds">${esc(t('fRefunds'))}</a><a href="#pro" data-tab="pro">Viral Radar Pro</a>` +
     (httpsOk(CFG.affiliateUrl) ? `<a href="${esc(CFG.affiliateUrl)}" target="_blank" rel="noopener">${esc(t('fAffiliate'))}</a>` : '') +
     (CONTACT ? `<a href="mailto:${esc(CONTACT)}">${esc(t('fContact'))}</a>` : `<a href="https://github.com/sparyryan-collab/outlier-radar/issues" target="_blank" rel="noopener noreferrer">${esc(t('fContact'))}</a>`) +
@@ -6385,14 +6399,14 @@ async function ytApi(path, params) {
 }
 const trustO = () => !!(DATA && DATA.orient && DATA.orient.trusted);   // the scanner confirmed that player sizes tell vertical from horizontal
 const orientOf = p => { const w = +((p || {}).embedWidth || 0), h = +((p || {}).embedHeight || 0); return w > 0 && h > 0 ? (w < h * 0.9 ? 'v' : w > h * 1.1 ? 'h' : 's') : null; };
-const vidParts = () => (trustO() ? {part: 'snippet,statistics,contentDetails,player', maxHeight: 480} : {part: 'snippet,statistics,contentDetails'});
+const vidParts = () => (trustO() ? {part: 'snippet,statistics,contentDetails,status,player', maxHeight: 480} : {part: 'snippet,statistics,contentDetails,status'});
 const isShortV = v => v.dur <= 180 && !(trustO() && v.o === 'h');
 const parseVideo = it => ({
   id: it.id, t: (it.snippet || {}).title || '', ch: (it.snippet || {}).channelId,
   v: it.statistics && it.statistics.viewCount != null ? +it.statistics.viewCount : null,
   dur: parseDur(it.contentDetails && it.contentDetails.duration), p: (it.snippet || {}).publishedAt ? Date.parse(it.snippet.publishedAt) / 1000 : null,
   c: it.statistics && it.statistics.commentCount != null ? +it.statistics.commentCount : null, l: it.statistics && it.statistics.likeCount != null ? +it.statistics.likeCount : null,
-  o: orientOf(it.player)
+  o: orientOf(it.player), k: !!(it.status || {}).madeForKids   // YouTube's Made for Kids flag (the developer policies require looking it up)
 });
 async function probeStatic(chId, info, query) {
   const pl = await ytApi('playlistItems', {part: 'contentDetails', playlistId: 'UU' + chId.slice(2), maxResults: 50});
@@ -6401,7 +6415,7 @@ async function probeStatic(chId, info, query) {
   const vr = await ytApi('videos', Object.assign({id: ids.join(',')}, vidParts()));
   const byId = new Map((vr.items || []).map(it => [it.id, parseVideo(it)]));
   const vids = ids.map(i => byId.get(i)).filter(v => v && v.v != null && isShortV(v)).slice(0, 24)
-    .map(v => ({id: v.id, t: v.t, v: v.v, ...(v.p ? {p: Math.round(v.p)} : {}), ...(v.dur < 1e6 ? {d: v.dur} : {}), ...(v.c != null ? {c: v.c} : {}), ...(v.l != null ? {l: v.l} : {})}));
+    .map(v => ({id: v.id, t: v.t, v: v.v, ...(v.p ? {p: Math.round(v.p)} : {}), ...(v.dur < 1e6 ? {d: v.dur} : {}), ...(v.c != null ? {c: v.c} : {}), ...(v.l != null ? {l: v.l} : {}), ...(v.k ? {k: 1} : {})}));
   const sn = (info && info.snippet) || {}, st = (info && info.statistics) || {}, th = sn.thumbnails || {};
   const subs = st.hiddenSubscriberCount ? 0 : +(st.subscriberCount || 0);
   const m = computeMetrics(vids, subs, Date.now() / 1000);

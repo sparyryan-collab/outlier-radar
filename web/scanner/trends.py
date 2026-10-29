@@ -337,7 +337,7 @@ def find_moments(yt, longs, clip_titles, name):
         for m in ms:
             m["sc"] = moment_score(m, v["v"])
         moments += sorted(ms, key=lambda m: -m["sc"])[:3]
-        mvids[v["id"]] = {"t": v["t"][:140], "v": v["v"], "d": v["d"], "p": v["p"], "h": heat,
+        mvids[v["id"]] = {"t": v["t"][:140], "v": v["v"], "d": v["d"], "p": v["p"], "h": heat, **({"k": 1} if v.get("k") else {}),
                           "cv": None if clip_titles is None else clip_matches(words_of(v["t"], name_words), clip_titles)}
     return sorted(moments, key=lambda m: -m["sc"])[:MOMENTS_KEEP], mvids
 
@@ -350,13 +350,13 @@ def long_uploads(yt, uploads, t, n=25):
     vids = [x["contentDetails"]["videoId"] for x in yt.call("playlistItems", part="contentDetails", playlistId=uploads, maxResults=n).get("items", [])
             if x.get("contentDetails", {}).get("videoId")]
     if vids:
-        for v in yt.call("videos", part="snippet,contentDetails,statistics", id=",".join(vids)).get("items", []):
+        for v in yt.call("videos", part="snippet,contentDetails,statistics,status", id=",".join(vids)).get("items", []):
             sn = v.get("snippet") or {}
             descs.append({"id": v["id"], "desc": sn.get("description") or ""})
             d, pub = parse_duration((v.get("contentDetails") or {}).get("duration")), iso_to_ts(sn.get("publishedAt") or "") or 0
             if d >= 240 and t - pub <= 30 * 86400:
                 longs.append({"id": v["id"], "t": (sn.get("title") or "")[:140], "v": int((v.get("statistics") or {}).get("viewCount") or 0), "d": d, "p": int(pub),
-                              "desc": sn.get("description") or ""})
+                              "desc": sn.get("description") or "", **mfk(v)})
     return longs, descs
 
 
@@ -451,10 +451,10 @@ def research_clips(yt, cands, prev_clips, quota, t):
         ids = [x["id"]["videoId"] for x in found.get("items", []) if x.get("id", {}).get("videoId")]
         shorts = []
         if ids:
-            for v in yt.call("videos", part="snippet,statistics,contentDetails", id=",".join(ids)).get("items", []):
+            for v in yt.call("videos", part="snippet,statistics,contentDetails,status", id=",".join(ids)).get("items", []):
                 vs, vt = v.get("snippet") or {}, v.get("statistics") or {}
                 if vs.get("channelId") != c["ch"] and parse_duration((v.get("contentDetails") or {}).get("duration")) <= 180:
-                    shorts.append({"id": v["id"], "t": (vs.get("title") or "")[:140], "v": int(vt.get("viewCount") or 0), "ch": vs.get("channelId"), "cht": (vs.get("channelTitle") or "")[:80]})
+                    shorts.append({"id": v["id"], "t": (vs.get("title") or "")[:140], "v": int(vt.get("viewCount") or 0), "ch": vs.get("channelId"), "cht": (vs.get("channelTitle") or "")[:80], **mfk(v)})
         named = [x for x in shorts if name_hit(name, x["t"])]
         clips = sorted(named if len(named) >= 3 else shorts, key=lambda x: -x["v"])
         views = sorted(x["v"] for x in clips)
@@ -466,7 +466,7 @@ def research_clips(yt, cands, prev_clips, quota, t):
                "regions": sorted(c["regions"]), "cats": sorted(c["cats"]), "top": {k: video.get(k) for k in ("id", "t", "v")}, "top_views": video.get("v") or 0,
                "clips": len(clips), "clippers": len({x["ch"] for x in clips}), "clip_med": views[len(views) // 2] if views else 0,
                "clip_top": clips[0] if clips else None, "long30": len(longs), "long_hours": round(sum(x["d"] for x in longs) / 3600, 1),
-               "latest": {k: newest[k] for k in ("id", "t", "v", "p")} if newest else None, "checked": int(t), "ct": [x["t"][:60] for x in clips[:12]]}
+               "latest": {k: newest[k] for k in ("id", "t", "v", "p", "k") if k in newest} if newest else None, "checked": int(t), "ct": [x["t"][:60] for x in clips[:12]]}
         rec["allow"], rec["allow_quote"], rec["allow_where"], rec["allow_vid"] = clip_permission(sn.get("description"), descs[:12])
         rec["invites"] = rec["allow"] == "allows"
         rec["paid"] = rec["invites"] and bool(PAID_RX.search(rec["allow_quote"]))
@@ -511,7 +511,7 @@ def refresh_moments(yt, clips, quota, t, per_run=3):
         c["moments"], c["mvids"] = find_moments(yt, longs, c.get("ct"), c.get("name") or "")
         newest = max(longs, key=lambda x: x["p"], default=None)
         if newest:
-            c["latest"] = {k: newest[k] for k in ("id", "t", "v", "p")}
+            c["latest"] = {k: newest[k] for k in ("id", "t", "v", "p", "k") if k in newest}
         c["mchecked"] = int(t)
 
 
@@ -599,13 +599,18 @@ def load_prev(url, state_dir, allow_seed):
     return None, "no saved trends and the live site could not be read"
 
 
+def mfk(it):
+    """YouTube's Made for Kids flag ({"k": 1}); the developer policies require looking it up for every video a site embeds."""
+    return {"k": 1} if (it.get("status") or {}).get("madeForKids") else {}
+
+
 def chart_item(it, rank):
     sn, st, cd = it.get("snippet") or {}, it.get("statistics") or {}, it.get("contentDetails") or {}
     num = lambda k: int(st[k]) if st.get(k) is not None else None   # noqa: E731
     published = iso_to_ts(sn.get("publishedAt") or "")
     return {"id": it.get("id"), "t": (sn.get("title") or "")[:200], "ch": sn.get("channelId") or "", "cht": (sn.get("channelTitle") or "")[:100],
             "v": num("viewCount"), "l": num("likeCount"), "c": num("commentCount"), "p": int(published) if published else None,
-            "d": parse_duration(cd.get("duration")), "r": rank}
+            "d": parse_duration(cd.get("duration")), "r": rank, **mfk(it)}
 
 
 def youtube_charts(yt, prev_regions, seen, t):
@@ -614,7 +619,7 @@ def youtube_charts(yt, prev_regions, seen, t):
     for region in REGIONS:
         out[region], old = {}, prev_regions.get(region) or {}
         for cat, cat_id in CATEGORIES.items():
-            params = {"part": "snippet,statistics,contentDetails", "chart": "mostPopular", "regionCode": region, "maxResults": KEEP}
+            params = {"part": "snippet,statistics,contentDetails,status", "chart": "mostPopular", "regionCode": region, "maxResults": KEEP}
             if cat_id:
                 params["videoCategoryId"] = cat_id
             try:

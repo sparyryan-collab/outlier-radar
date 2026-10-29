@@ -35,6 +35,9 @@ WINDOW_DAYS = int(os.environ.get("SEARCH_WINDOW_DAYS", "30"))
 KEEP_CHANNELS = int(os.environ.get("KEEP_CHANNELS", "1500"))
 MAX_TRACKED = int(os.environ.get("MAX_TRACKED", "400"))          # channels visitors asked for (kept on top of KEEP_CHANNELS; checked daily like the rest)
 HIST_POINTS = int(os.environ.get("HIST_POINTS", "48"))           # growth history kept per channel (at most one point per 6 hours)
+# how long statistics (subscriber counts, views) may be kept: YouTube's policies allow 30 days, or up to 36 months (1095 days)
+# once the "Analytics & Reporting" amendment has been accepted through the quota extension form (web/QUOTA_REQUEST.md)
+STATS_DAYS = min(1095, int(os.environ.get("STATS_DAYS") or "30"))
 RETAIN_DAYS = int(os.environ.get("RETAIN_DAYS", "30"))           # a channel the API could not refresh for this long is dropped
 MAX_STATE_AGE = int(os.environ.get("MAX_STATE_AGE_DAYS", "7"))   # older saved state is treated as missing (refuse rather than roll back)
 VH_DAYS, VH_POINTS = 10, 8                                       # views-over-time curve for Shorts younger than 10 days
@@ -246,7 +249,7 @@ def add_hist(rec, now, subs, m):
         h[-1] = point
     else:
         h.append(point)
-    return h[-HIST_POINTS:]
+    return [x for x in h if now - x[0] < STATS_DAYS * 86400][-HIST_POINTS:]
 
 
 def orientation_trusted(st):
@@ -307,7 +310,7 @@ def probe(radar, yt, ch_id, rec, info, now, first_seen, st, orient_ok):
     shorts = [vids[i] for i in ids if i in vids and is_short(vids[i], orient_ok)][:24]
     series = [{"id": v["id"], "t": v["t"], "v": v["v"], "d": v["dur"], **({"p": round(v["p"])} if v.get("p") else {}),
                **({"c": v["c"]} if v.get("c") is not None else {}), **({"l": v["l"]} if v.get("l") is not None else {}),
-               **({"o": v["o"]} if v.get("o") else {})} for v in shorts]
+               **({"o": v["o"]} if v.get("o") else {}), **({"k": 1} if v.get("k") else {})} for v in shorts]
     subs = info["subs"] if info else rec.get("subs", 0)
     m = radar.compute_metrics(series, subs, now)
     if not m:
@@ -483,7 +486,7 @@ def main():
     keep |= tracked
     public = [c for c in ranked if not is_legacy(c)]   # old imports stay private until the API has refreshed them
     keep_ids = {c["ch_id"] for c in ranked} | set(pending)
-    first_seen = {k: v for k, v in first_seen.items() if k in keep_ids or now - v < 180 * 86400}
+    first_seen = {k: v for k, v in first_seen.items() if k in keep_ids or now - v < RETAIN_DAYS * 86400}   # channels that left: kept no longer than YouTube's 30 days
     if len(first_seen) > 20000:
         first_seen = dict(sorted(first_seen.items(), key=lambda kv: -kv[1])[:20000])
     fresh24 = sum(1 for c in public if now - (c.get("last_probe") or 0) < 86400)

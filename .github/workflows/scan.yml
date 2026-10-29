@@ -11,6 +11,8 @@ name: Refresh site
 #   FIREBASE_API_KEY, FIREBASE_PROJECT_ID   switch on Google sign-in and sync (see web/README.md)
 #   PRO_GATE, PRO_PRICE, CHECKOUT_URL, MANAGE_URL   Viral Radar Pro: lock Pro features behind a subscription (see web/README.md)
 #   CONTACT_EMAIL  shown on the terms, privacy and refund pages
+#   STATS_DAYS     how long statistics history is kept: 30 (the default), up to 1095 once YouTube has accepted the
+#                  "Analytics & Reporting" use case for your project (see web/QUOTA_REQUEST.md)
 #   VAPID_PUBLIC_KEY, AI_URL       trend alerts and the AI writer, served by the server worker (web/pay/worker.js)
 #   LEMON_STORE, AFFILIATE_URL     Lemon Squeezy affiliate tracking and the footer's affiliate sign-up link
 # Optional secret UPLOAD_TOKEN (with API_URL): the full trend feeds are uploaded to the worker for Pro members.
@@ -111,6 +113,7 @@ jobs:
           REPO: ${{ github.event.repository.name }}
           FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
           FIREBASE_API_KEY: ${{ vars.FIREBASE_API_KEY }}
+          STATS_DAYS: ${{ vars.STATS_DAYS }}
           ALLOW_SEED: ${{ inputs.bootstrap && '1' || '' }}
         run: |
           OWNER_LC="$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')"
