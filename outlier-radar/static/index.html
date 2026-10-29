@@ -85,9 +85,22 @@ svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .seg button{border:0;background:transparent;height:30px;min-width:44px;padding:0 12px;border-radius:15px;font-weight:500;color:var(--muted)}
 .seg button[aria-pressed=true]{background:var(--on-bg);color:var(--on-fg)}
 
-/* ---- layout + sidebar ---- */
+/* ---- layout + the five destinations (in the top bar on a computer, along the bottom on a phone) ---- */
+:root{--toph:56px}
 #layout{display:flex}
-#side{position:sticky;top:56px;align-self:flex-start;height:calc(100vh - 56px);width:236px;flex:none;padding:4px 12px 16px;overflow-y:auto;scrollbar-width:thin}
+#tabs{display:flex;gap:2px;align-items:center;flex:none;margin:0 8px 0 4px}
+#tabs .tab{position:relative;display:flex;align-items:center;gap:6px;height:38px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-size:14px;font-weight:500;white-space:nowrap}
+#tabs .tab svg{display:none;width:22px;height:22px}
+#tabs .tab:hover{background:var(--hover);color:var(--text)}
+#tabs .tab[aria-current=page]{background:var(--surface);color:var(--text);font-weight:600}
+#tabs .tab .n{background:var(--red);color:#fff;border-radius:9px;padding:0 6px;line-height:18px;font-size:11.5px;font-weight:600}
+.subnav{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:12px 0 4px}
+.subnav::-webkit-scrollbar{display:none}
+.subnav button{flex:none;height:34px;padding:0 14px;border:0;border-radius:17px;background:var(--surface);font-size:13.5px;font-weight:500;white-space:nowrap}
+.subnav button:hover{background:var(--surface2)}
+.subnav button[aria-current=page]{background:var(--on-bg);color:var(--on-fg)}
+.subnav .pbmuted{font-weight:400}
+.subnav button[aria-current=page] .pbmuted{color:inherit;opacity:.75}
 .nav{display:flex;align-items:center;gap:22px;width:100%;height:42px;padding:0 12px;border:0;border-radius:10px;background:transparent;text-align:left;font-size:14px}
 .nav:hover{background:var(--hover)}
 .nav[aria-current=true]{background:var(--surface);font-weight:600}
@@ -101,7 +114,6 @@ svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 #acct .pillbtn{background:transparent;box-shadow:inset 0 0 0 1px var(--line);color:var(--accent);font-weight:600}
 #acct .pillbtn:hover{background:color-mix(in srgb,var(--accent) 10%,transparent)}
 @keyframes sheetup{from{transform:translateY(30%);opacity:.3}}
-#side .nav[data-tab=more]{display:none}
 .nav .n.hot{background:var(--red);color:#fff;border-radius:9px;padding:0 6px;line-height:18px;font-weight:600}
 .sidesec{border-top:1px solid var(--line);margin:10px 0;padding-top:12px}
 .sidesec h4{margin:0 12px 8px;font-size:14px;font-weight:600}
@@ -113,13 +125,10 @@ svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .dot.snap{background:var(--warn)}
 @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--good) 60%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
 .sidefoot{margin:12px;color:var(--muted);font-size:11px;line-height:1.5}
-body.mini #side{width:76px;padding:4px}
-body.mini .nav{flex-direction:column;gap:4px;height:68px;justify-content:center;padding:0;font-size:10px;text-align:center}
-body.mini .nav .n,body.mini .sidesec,body.mini .sidefoot,body.mini .navh,body.mini .nav .protag{display:none}
-main{flex:1;min-width:0;padding:0 24px 48px}
+main{flex:1;min-width:0;max-width:1360px;margin:0 auto;padding:0 24px 48px}
 
 /* ---- topic chips + filters ---- */
-#chips{position:sticky;top:56px;z-index:30;background:var(--bg);display:flex;gap:10px;align-items:center;overflow-x:auto;padding:8px 0 12px;scrollbar-width:none}
+#chips{position:sticky;top:var(--toph);z-index:30;background:var(--bg);display:flex;gap:10px;align-items:center;overflow-x:auto;padding:8px 0 12px;scrollbar-width:none}
 #chips:empty{display:none}
 #chips::-webkit-scrollbar{display:none}
 .chip{flex:none;height:32px;border:0;border-radius:8px;padding:0 12px;background:var(--surface);font-weight:500;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
@@ -1300,17 +1309,23 @@ svg.i{width:16px;height:16px;flex:none;vertical-align:-3px}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]) .lockcard .ico,:root:not([data-theme=light]) .procard .ico,:root:not([data-theme=light]) .protag{color:#f5c04a}}
 :root[data-theme=dark] .lockcard .ico,:root[data-theme=dark] .procard .ico,:root[data-theme=dark] .protag{color:#f5c04a}
 @media (max-width:1180px){.pillbtn .lbl{display:none}.pillbtn{padding:0 10px}}
+@media (min-width:761px) and (max-width:1180px){   /* not enough room beside the search box: the destinations get a row of their own */
+  :root{--toph:100px}
+  #top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:56px 44px;height:auto;align-items:center;column-gap:8px}
+  #top .brand{grid-row:1;grid-column:1}
+  #top .search{grid-row:1;grid-column:2}
+  #top .actions{grid-row:1;grid-column:3}
+  #tabs{grid-row:2;grid-column:1/-1;margin:0 0 6px;overflow-x:auto;scrollbar-width:none}
+  #langSeg{display:none}
+}
 @media (max-width:1000px){
-  #side{width:76px;padding:4px}
-  #side .nav{flex-direction:column;gap:4px;height:68px;justify-content:center;padding:0;font-size:10px;text-align:center}
-  #side .nav .n,#side .sidesec,#side .sidefoot,#side .navh,#side .nav .protag{display:none}
   #player .pwrap{flex-direction:column;overflow:auto}
   #player .pvid{height:min(66vh,640px);margin:0 auto}
   #player .pside{width:auto;max-width:520px}
 }
 @media (max-width:760px){
   #top{height:48px;padding:0 4px 0 12px;gap:4px}
-  #btnMenu,#btnHelp,#langSeg,#btnLang,.search,#searchBtn{display:none}
+  #btnHelp,#langSeg,#btnLang,.search,#searchBtn{display:none}
   .brand{font-size:18px;padding:0;gap:5px}
   .brand .logo{width:28px;height:20px;border-radius:6px}
   .brand .logo svg{width:14px;height:14px}
@@ -1367,15 +1382,16 @@ svg.i{width:16px;height:16px;flex:none;vertical-align:-3px}
   .filters{flex-wrap:nowrap;overflow-x:auto;margin:2px -12px 12px;padding:0 12px;scrollbar-width:none}
   .filters::-webkit-scrollbar{display:none}
   .filters>*{flex:none}
-  #side,body.mini #side{position:fixed;inset:auto 0 0 0;top:auto;z-index:45;width:auto;height:56px;display:flex;padding:0;background:var(--bg);border-top:1px solid var(--line);overflow:hidden}
-  #side>*{display:none}
-  #side>.nav[data-tab=home],#side>.nav[data-tab=trends],#side>.nav[data-tab=videos],#side>.nav[data-tab=saved],#side>.nav[data-tab=more]{display:flex}
-  #side .nav{height:56px;flex:1;min-width:0;border-radius:0;gap:2px;padding:0 2px;font-size:10px}
-  #side .nav:hover{background:transparent}
-  #side .nav .lbl{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  #side .nav[aria-current=true]{background:transparent;font-weight:600}
-  #side .nav[aria-current=true] svg{stroke-width:2.4}
-  #side .nav[aria-current=true][data-tab=home] svg,#side .nav[aria-current=true][data-tab=videos] svg,#side .nav[aria-current=true][data-tab=saved] svg{fill:currentColor}
+  #tabs{position:fixed;inset:auto 0 0 0;z-index:45;height:56px;margin:0;gap:0;background:var(--bg);border-top:1px solid var(--line)}
+  #tabs .tab{flex:1;min-width:0;height:56px;flex-direction:column;justify-content:center;gap:2px;padding:0 2px;border-radius:0;font-size:10.5px;color:var(--text)}
+  #tabs .tab svg{display:block}
+  #tabs .tab:hover,#tabs .tab[aria-current=page]{background:transparent}
+  #tabs .tab .lbl{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #tabs .tab[aria-current=page] svg{stroke-width:2.4}
+  #tabs .tab[aria-current=page][data-tab=home] svg,#tabs .tab[aria-current=page][data-tab=saved] svg{fill:currentColor}
+  #tabs .tab .n{position:absolute;top:5px;left:calc(50% + 6px);font-size:10px;line-height:16px;padding:0 5px}
+  .subnav{margin:0 -12px;padding:10px 12px 2px}
+  .subnav button{height:32px;padding:0 12px;font-size:13px}
   #tray{bottom:68px}
   #dlg{margin:auto 0 0;width:100%;max-width:100%;max-height:88vh;border-radius:16px 16px 0 0;animation:sheetup .22s ease-out}
   #dlg .dlg{padding:8px 16px 20px;max-height:88vh}
@@ -1426,12 +1442,96 @@ p.weak{margin:4px 0 10px}
 .bdpick h3{margin:0 0 4px}
 .bdpick .blist{margin:10px 0}
 .bdpick .nrow{width:100%;text-align:left;background:var(--surface2);border:0;color:var(--text);cursor:pointer}
+
+/* Today: the command center (homepage concept A, 29 Oct 2026) */
+.tdhead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin:18px 0 16px}
+.tdeyebrow{margin:0;color:var(--muted);font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.tdhead h1{margin:4px 0 0;font-size:30px;line-height:1.15;letter-spacing:-.02em}
+.tdlive{display:inline-flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--good) 12%,transparent);color:var(--good);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600}
+.tdlive .dot{margin-top:0}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 16px}
+.kpi{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;min-width:0}
+.kpi:hover{box-shadow:var(--shadow)}
+.kpi span{color:var(--muted);font-size:12.5px}
+.kpi b{font-size:26px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi b.hotv{color:var(--hot3)}
+.tdgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.tdcard{display:flex;flex-direction:column;gap:14px;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 20px}
+.tdcard.wide{grid-column:span 2}
+.tdh{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tdcard h2{margin:0;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.tdmore{align-self:flex-start;margin-top:auto;border:0;background:none;padding:2px 0;color:var(--accent);font-size:13.5px;font-weight:600}
+.oppin{display:flex;flex-wrap:wrap;gap:20px}
+.oppth{flex:1 1 300px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;align-self:flex-start}
+.oppmain{flex:1 1 300px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.oppch{display:flex;align-items:center;gap:12px}
+.oppch b{display:block;font-size:20px;font-weight:800;line-height:1.2}
+.oppch small{color:var(--muted);font-size:13px}
+.oppbig{margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+.oppbig b{font-size:48px;font-weight:800;line-height:1;letter-spacing:-.03em}
+.oppbig span{color:var(--muted);font-size:14px}
+.oppwhy{margin:0;font-size:14.5px;line-height:1.5}
+.oppnote{margin:0;color:var(--muted);font-size:13.5px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.oppnote .pdate{display:block;font-size:11.5px;font-weight:600;letter-spacing:.01em}
+.sbar{display:flex;gap:2px;height:10px;border-radius:6px;overflow:hidden;background:var(--surface2)}
+.sbar i{display:block;height:100%}
+.sleg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--muted)}
+.sleg span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;background:var(--k)}
+.oppmain .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+.rlist2{display:flex;flex-direction:column;gap:4px}
+.rrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px;border:0;border-radius:10px;background:transparent;text-align:left}
+.rrow:hover{background:var(--surface)}
+.rrow b{display:block;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rrow small{color:var(--muted);font-size:12.5px}
+.rrow .up{color:var(--good);font-weight:700;font-style:normal}
+.rrow .stage{margin-left:4px}
+.ptable{display:flex;flex-direction:column}
+.prow{display:grid;grid-template-columns:28px minmax(0,1fr) 96px 110px 150px;gap:10px;align-items:center;width:100%;padding:8px;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left;font-size:14px}
+.prow:last-child{border-bottom:0}
+button.prow:hover{background:var(--hover)}
+.prow.ph{color:var(--muted);font-size:12px;padding-top:0}
+.prow .pr{font-weight:700;color:var(--muted)}
+.prow .pr.r1{color:#d99a00}
+.prow .pn{display:flex;align-items:center;gap:8px;min-width:0}
+.prow .pn b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prow .ps{color:var(--muted)}
+.prow .psc{display:flex;align-items:center;gap:8px}
+.prow .psc i{flex:1;height:6px;border-radius:3px;background:var(--surface2);overflow:hidden}
+.prow .psc i b{display:block;height:100%;border-radius:3px}
+.cmom{display:flex;flex-direction:column;gap:6px;text-align:left;border:0;border-radius:12px;background:var(--surface);padding:12px}
+.cmom:hover{background:var(--surface2)}
+.cmh{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px}
+.cmh .comp{font-size:11.5px}
+.cmom q{font-size:14px;font-weight:600;line-height:1.4}
+.cmom small{color:var(--muted);font-size:12.5px}
+.cardact{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;margin-top:2px;border:0;border-radius:999px;background:var(--surface);padding:6px 12px;font-size:13px;font-weight:500}
+.cardact:hover{background:var(--surface2)}
+.cardact svg{width:16px;height:16px}
+.ccard .cardact{align-self:center}
+.bdmini{flex:none;width:32px;height:32px;margin:-4px -6px 0 auto;border:0;border-radius:50%;background:transparent;color:var(--muted);display:grid;place-items:center}
+.bdmini:hover{background:var(--hover);color:var(--text)}
+.bdmini svg{width:18px;height:18px}
+@media (max-width:1000px){
+  .tdgrid{grid-template-columns:minmax(0,1fr)}
+  .tdcard.wide{grid-column:auto}
+}
+@media (max-width:760px){
+  .tdhead{margin:12px 0 12px}
+  .tdhead h1{font-size:22px}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .kpi{padding:10px 12px}
+  .kpi b{font-size:21px}
+  .tdcard{padding:14px;border-radius:16px}
+  .oppbig b{font-size:38px}
+  .prow{grid-template-columns:24px minmax(0,1fr) 118px}
+  .prow .ps,.prow .pt{display:none}
+}
 </style>
 </head>
 <body>
 <header id="top">
-  <button class="icon" id="btnMenu" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
   <a class="brand" href="#home" data-tab="home"><span class="logo"><svg viewBox="0 0 24 24"><path d="M12 2c1 4 6.5 6.5 6.5 13a6.5 6.5 0 0 1-13 0c0-3.5 2.2-5.6 3.3-6.6 0 2.3 1 3.6 2.3 3.6 0-3.4-1-6.6.9-10z"/></svg></span><span>Viral Radar</span></a>
+  <nav id="tabs" aria-label="Sections"></nav>
   <button class="icon" id="btnSearchBack" type="button"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
   <form class="search" id="searchForm" role="search"><div class="qbox"><input id="fq" type="search" autocomplete="off" enterkeyhint="search"><span class="qbadge" id="qbadge"></span></div><div id="shint" aria-live="polite"></div><button type="submit" id="searchBtn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form>
   <div class="actions">
@@ -1445,11 +1545,12 @@ p.weak{margin:4px 0 10px}
     <button class="icon" id="btnHelp" data-tab="help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.8M12 17.2h.01"/></svg></button>
     <div class="seg" id="langSeg" role="group" aria-label="Language"><button data-ui="en" aria-pressed="true">EN</button><button data-ui="th" id="lang2" aria-pressed="false">ไทย</button></div>
     <button class="icon" id="btnLang" type="button" data-langpick><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg></button>
+    <button class="icon" id="btnMore" type="button" data-tab="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>
   </div>
 </header>
 <div id="layout">
-  <nav id="side" aria-label="Sections"></nav>
   <main>
+    <div id="subnav"></div>
     <div id="chips"></div>
     <div id="content"></div>
     <footer id="foot"></footer>
@@ -2317,6 +2418,15 @@ Object.assign(T.th, {
 // Wording added or corrected after the 28 Oct 2026 data audit (the language packs carry the same keys)
 Object.assign(T.en, {lNewShorts: "New to Shorts", newShortsBadge: "🌱 New to Shorts", wOneHit2: "Careful: its best Short has {p} of all the views we can see.", pGrowH: "+{n} views per hour over the last {h} h", growTip: "Measured over {h} h, {ago}", tooNew: "Too new to judge", lCreated: "Channel created", gCreated: "When the channel was created on YouTube. A channel can exist long before its first Short.", agoV: "{a} ago", lFirstShort: "Oldest Short we checked", gFirstShort: "The oldest of the newest Shorts we checked (up to 24). When a channel has fewer than 24 Shorts, this is usually its first one.", momNA: "not enough history yet", typicalFoot: "middle of {n} Shorts over a week old", typicalFootAll: "middle of its {n} newest Shorts", checkedAgo: "checked {ago}", stPub: "Published {ago} · {p} of channels checked in the last day", dsT: "Data status", dsPub: "Last published", dsFresh: "Channels checked in the last 24 hours", dsMed: "Typical time since a channel was checked", dsMedV: "about {n} h", dsQuota: "YouTube API units used today", dsSearch: "Scanner searches used today", dsGap: "GitHub has been starting a refresh about every {h} h.", dsNote: "Every number comes from YouTube’s official API. Hot channels are re-checked every few hours, the rest about once a day.", weakSig: "Weak signal: {n} Shorts from {k} channels", pickDate: "Editor’s note · {d}", edPick: "Editor’s pick", betaBanner: "Beta: every feature is free while Viral Radar is in beta.", bdT: "Boards", bdD: "One board per video idea: collect channels, Shorts, trends and notes. Boards sync when you sign in.", bdNew: "New board", bdNamePh: "Board name, e.g. “Dinosaur what-ifs”", bdEmpty: "No boards yet. Make one, then use “Save to board” on any channel, Short or trend.", bdAdd: "Save to board", bdAdded: "Saved to “{b}”", bdNotesPh: "Notes: hooks, ideas, links…", bdDelete: "Delete board", bdRemove: "Remove from board", bdItems: "{n} saved", gTypical: "The middle value of the channel’s newest Shorts that are at least a week old: half got more, half got less. One lucky video can’t inflate it, and brand-new uploads don’t drag it down.", gGrow: "Views gained per hour between our last two checks. It only shows when both checks were recent, so it describes what is happening now.", gTrend: "Usual views of the channel’s newer Shorts divided by its older ones, counting only Shorts at least a week old. Above 1× means it is growing. With fewer than 8 such Shorts there isn’t enough history to say.", wNew: "New to Shorts: all {n} of its Shorts came out in the last {d} days.", pmYes: "Description invites clippers", clAllow: "Invites clippers", momPoint: "{n} comments point here", comp0: "No matching clip found", comp1: "1 similar clip found", compN: "{n} similar clips found", cpWhy: "Why: {n} comments point to it (“{q}”)", cpComp0: "Competition: no matching titles among the clips we checked", cpCompN: "Competition: {n} clip titles match this moment", ackMomV: "{n} moments viewers point to, with no matching clip found", ackMomV1: "1 moment viewers point to, with no matching clip found", ackMomTaken: "Every standout moment already has matching clips", mNow: "average since upload", tcScore: "Rules-of-thumb score out of 100. It checks habits common in popular titles; it is not a prediction.", pf1D: "Every word and hashtag rising across thousands of new Shorts, refreshed several times a day.", footWeb: "Numbers come from YouTube’s official data and refresh several times a day; each channel shows when it was last checked. Use this to learn what works, then make something original. Don’t copy or re-upload other people’s videos."});
 Object.assign(T.th, {lNewShorts: "เพิ่งเริ่มทำคลิปสั้น", newShortsBadge: "🌱 เพิ่งเริ่มทำคลิปสั้น", wOneHit2: "ระวัง: คลิปที่ดีที่สุดคลิปเดียวมีวิวถึง {p} ของวิวทั้งหมดที่เราเห็น", pGrowH: "วิวเพิ่ม +{n} ต่อชั่วโมง ในช่วง {h} ชม. ที่ผ่านมา", growTip: "วัดในช่วง {h} ชม. · {ago}", tooNew: "ใหม่เกินกว่าจะตัดสิน", lCreated: "สร้างช่องเมื่อ", gCreated: "วันที่ช่องถูกสร้างบน YouTube ช่องอาจมีมานานก่อนลงคลิปสั้นคลิปแรก", agoV: "{a}ที่แล้ว", lFirstShort: "คลิปสั้นเก่าสุดที่เราตรวจ", gFirstShort: "คลิปที่เก่าที่สุดในบรรดาคลิปสั้นล่าสุดที่เราตรวจ (สูงสุด 24 คลิป) ถ้าช่องมีคลิปสั้นไม่ถึง 24 คลิป มักจะเป็นคลิปแรกของช่อง", momNA: "ข้อมูลย้อนหลังยังไม่พอ", typicalFoot: "ค่ากลางจาก {n} คลิปที่อายุเกิน 1 สัปดาห์", typicalFootAll: "ค่ากลางจาก {n} คลิปล่าสุด", checkedAgo: "ตรวจเมื่อ {ago}", stPub: "เผยแพร่เมื่อ {ago} · ตรวจช่องแล้ว {p} ใน 1 วันที่ผ่านมา", dsT: "สถานะข้อมูล", dsPub: "เผยแพร่ล่าสุด", dsFresh: "ช่องที่ตรวจใน 24 ชั่วโมงที่ผ่านมา", dsMed: "เวลาโดยทั่วไปนับจากการตรวจช่องครั้งล่าสุด", dsMedV: "ประมาณ {n} ชม.", dsQuota: "หน่วย YouTube API ที่ใช้วันนี้", dsSearch: "การค้นหาของระบบสแกนวันนี้", dsGap: "GitHub เริ่มรอบอัปเดตประมาณทุก {h} ชม.", dsNote: "ตัวเลขทุกตัวมาจาก API ทางการของ YouTube ช่องที่กำลังมาแรงจะถูกตรวจซ้ำทุกไม่กี่ชั่วโมง ช่องอื่นประมาณวันละครั้ง", weakSig: "สัญญาณอ่อน: {n} คลิปจาก {k} ช่อง", pickDate: "ความเห็นทีมงาน · {d}", edPick: "ทีมงานเลือก", betaBanner: "ช่วงเบต้า: ทุกฟีเจอร์ใช้ฟรีระหว่างที่ Viral Radar อยู่ในช่วงเบต้า", bdT: "บอร์ดไอเดีย", bdD: "หนึ่งบอร์ดต่อหนึ่งไอเดียคลิป รวมช่อง คลิปสั้น เทรนด์ และโน้ตไว้ที่เดียว บอร์ดจะซิงก์เมื่อคุณเข้าสู่ระบบ", bdNew: "บอร์ดใหม่", bdNamePh: "ชื่อบอร์ด เช่น “ถ้าไดโนเสาร์…”", bdEmpty: "ยังไม่มีบอร์ด สร้างบอร์ดแล้วกด “บันทึกลงบอร์ด” ที่ช่อง คลิป หรือเทรนด์ไหนก็ได้", bdAdd: "บันทึกลงบอร์ด", bdAdded: "บันทึกลง “{b}” แล้ว", bdNotesPh: "โน้ต: ฮุก ไอเดีย ลิงก์…", bdDelete: "ลบบอร์ด", bdRemove: "เอาออกจากบอร์ด", bdItems: "บันทึกไว้ {n} รายการ", gTypical: "ค่ากลางของวิวจากคลิปสั้นล่าสุดของช่องที่อายุอย่างน้อย 1 สัปดาห์ ครึ่งหนึ่งได้มากกว่า อีกครึ่งได้น้อยกว่า คลิปฮิตคลิปเดียวดันตัวเลขขึ้นไม่ได้ และคลิปที่เพิ่งลงก็ไม่ดึงให้ต่ำลง", gGrow: "วิวที่เพิ่มต่อชั่วโมงระหว่างการตรวจ 2 ครั้งล่าสุด แสดงเฉพาะเมื่อตรวจทั้งสองครั้งไม่นานมานี้ จึงบอกสิ่งที่เกิดขึ้นตอนนี้", gTrend: "วิวปกติของคลิปที่ใหม่กว่าหารด้วยของคลิปที่เก่ากว่า โดยนับเฉพาะคลิปที่อายุอย่างน้อย 1 สัปดาห์ มากกว่า 1× แปลว่าช่องกำลังโต ถ้ามีคลิปแบบนี้ไม่ถึง 8 คลิป ข้อมูลย้อนหลังยังไม่พอจะบอกได้", wNew: "เพิ่งเริ่มทำคลิปสั้น: คลิปสั้นทั้ง {n} คลิปลงภายใน {d} วันที่ผ่านมา", pmYes: "คำอธิบายเชิญให้ตัดคลิป", clAllow: "เชิญให้ตัดคลิป", momPoint: "มี {n} คอมเมนต์ชี้มาที่ตรงนี้", comp0: "ไม่พบคลิปที่ตรงกัน", comp1: "พบคลิปคล้ายกัน 1 คลิป", compN: "พบคลิปคล้ายกัน {n} คลิป", cpWhy: "เหตุผล: มี {n} คอมเมนต์ชี้มาที่ตรงนี้ (“{q}”)", cpComp0: "คู่แข่ง: ไม่พบชื่อคลิปที่ตรงกันในคลิปที่เราตรวจ", cpCompN: "คู่แข่ง: มีชื่อคลิป {n} คลิปที่ตรงกับช่วงนี้", ackMomV: "{n} ช่วงที่คนดูชี้ถึง และยังไม่พบคลิปที่ตรงกัน", ackMomV1: "1 ช่วงที่คนดูชี้ถึง และยังไม่พบคลิปที่ตรงกัน", ackMomTaken: "ทุกช่วงเด่นมีคลิปที่ตรงกันแล้ว", mNow: "เฉลี่ยตั้งแต่อัปโหลด", tcScore: "คะแนนจากหลักทั่วไป เต็ม 100 ตรวจลักษณะที่ชื่อคลิปยอดนิยมมักมี ไม่ใช่การทำนายผล", pf1D: "ทุกคำและแฮชแท็กที่กำลังมาแรงจากคลิปสั้นใหม่หลายพันคลิป อัปเดตหลายครั้งต่อวัน", footWeb: "ตัวเลขมาจากข้อมูลทางการของ YouTube และอัปเดตหลายครั้งต่อวัน แต่ละช่องบอกว่าตรวจล่าสุดเมื่อไร ใช้เพื่อเรียนรู้ว่าอะไรได้ผล แล้วสร้างผลงานของคุณเอง อย่าคัดลอกหรืออัปโหลดคลิปของคนอื่นซ้ำ"});
+// The five destinations and the Today page (homepage concept A, 29 Oct 2026); the language packs carry the same keys
+Object.assign(T.en, {navToday: "Today", navClips: "Clips", navMake: "Make", navLibrary: "Library", subOverview: "Overview", tdHead: "Here’s what’s moving on Shorts",
+  kTracked: "Channels tracked", kHot: "Hot right now", kNew3: "New uploads, 3 days", kClipC: "Creators checked for clipping", tdOppT: "Today’s #1 opportunity",
+  oppOpen: "Open channel", risingNowT: "Rising now", risingAll: "Open the Trend radar", picksT: "Top picks, ranked", colCh: "Channel", picksAll: "See all channels",
+  clipNextT: "Clip these next", clipNextAll: "See every moment"});
+Object.assign(T.th, {navToday: "วันนี้", navClips: "ตัดคลิป", navMake: "สร้าง", navLibrary: "คลังของฉัน", subOverview: "ภาพรวม", tdHead: "นี่คือสิ่งที่กำลังมาแรงบน Shorts",
+  kTracked: "ช่องที่ติดตาม", kHot: "กำลังมาแรง", kNew3: "คลิปใหม่ใน 3 วัน", kClipC: "ครีเอเตอร์ที่ตรวจเรื่องตัดคลิปแล้ว", tdOppT: "โอกาสอันดับ 1 ของวันนี้",
+  oppOpen: "เปิดช่อง", risingNowT: "กำลังขึ้นตอนนี้", risingAll: "เปิดเรดาร์เทรนด์", picksT: "ช่องเด่น จัดอันดับ", colCh: "ช่อง", picksAll: "ดูทุกช่อง",
+  clipNextT: "คลิปที่ควรตัดต่อไป", clipNextAll: "ดูทุกช่วงเด่น"});
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
     den: 'Most recent Shorts pass 100K views, and no single video carries the channel.', dth: 'คลิปล่าสุดส่วนใหญ่มียอดวิวเกิน 100K และไม่ได้พึ่งคลิปใดคลิปเดียว'},
@@ -2545,7 +2655,12 @@ function openLangPicker() {
 }
 
 /* ---------- state ---------- */
-const TABS = ['home', 'trends', 'week', 'videos', 'channels', 'live', 'ideas', 'topics', 'tools', 'pro', 'playbook', 'mine', 'saved', 'compare', 'help', 'terms', 'privacy', 'refunds'];
+const TABS = ['home', 'trends', 'clips', 'week', 'videos', 'channels', 'live', 'ideas', 'topics', 'tools', 'pro', 'playbook', 'mine', 'saved', 'compare', 'help', 'terms', 'privacy', 'refunds'];
+// five destinations (Today, Trends, Clips, Make, Library); every other page sits under one of them as a sub-page
+const DESTS = [['home', 'navToday'], ['trends', 'nTrends'], ['clips', 'navClips'], ['ideas', 'navMake'], ['saved', 'navLibrary']];
+const SUBTABS = {home: [['home', 'subOverview'], ['channels', 'nChannels'], ['videos', 'nVideos'], ['live', 'nLive'], ['week', 'nWeek'], ['topics', 'nTopics']],
+  ideas: [['ideas', 'nIdeas'], ['playbook', 'nPlaybook'], ['tools', 'nTools']], saved: [['saved', 'nSaved'], ['mine', 'nMine'], ['compare', 'nCompare']]};
+const destOf = tab => Object.keys(SUBTABS).find(d => SUBTABS[d].some(s => s[0] === tab)) || (DESTS.some(d => d[0] === tab) ? tab : '');
 const S = Object.assign({tab: 'home', q: '', topic: '', minScore: 0, maxSubs: 0, minMed: 0, lang: 'all', hideOne: true, tag: '', niche: '',
   sort: 'score', minX: 2, vsort: 'x', shelf: 'new', lsort: 'new', detail: false, cmp: []}, LS.get('radar.state4', {}));
 const hashTab = () => { const h = decodeURIComponent(location.hash.slice(1)); return TABS.includes(h) ? h : null; };
@@ -2680,6 +2795,7 @@ const ICON = {
   tutorial: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z"/></svg>',
   tour: '<svg viewBox="0 0 24 24"><path d="M5 3.5l13 6.8-5.6 1.7-2 5.6z"/><path d="M12.5 12.2l5 5"/></svg>',
   trends: '<svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>',
+  clips: '<svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4"/></svg>',
   tools: '<svg viewBox="0 0 24 24"><path d="M14.5 5.5a4 4 0 0 0 4.9 4.9L21 12l-3 3-1.6-1.6a4 4 0 0 0-4.9-4.9zM12.5 11.5 4 20M6 14l4 4"/></svg>',
   pro: '<svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z"/></svg>',
   moon: '<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>',
@@ -2831,25 +2947,21 @@ function vCard(v, c, opts = {}) {
   return `<div class="vcard">${thumbBox(v, c)}<div class="vmeta">` +
     (opts.noCh ? '' : `<button type="button" class="avlink" data-open-ch="${esc(c.ch_id)}" aria-label="${esc(c.name)}">${avatarEl(c, 36)}</button>`) +
     `<div class="vtxt"><a class="vt" href="${vidUrl(v.id)}" target="_blank" rel="noopener noreferrer" data-play="${esc(v.id)}" data-c="${esc(c.ch_id)}" title="${esc(v.t)}">${esc(v.t)}</a>${chLine}` +
-    `<div class="vst">${esc(t('views', {n: fmt(v.v)}))}${opts.talk && talk(v) != null ? ` · <span class="hotx">${esc(t('talkV', {n: fmtTalk(talk(v))}))}</span>` : speed(v) ? ` · <span class="hotx">${esc(t('speed', {n: fmt(speed(v))}))}</span>` : v.x ? ` · <span class="${v.x >= 1.5 ? 'hotx' : ''}">${esc(v.x < 1.5 && young(v) ? t('tooNew') : xText(v.x))}</span>` : ''}</div>${w}${S.detail ? vDetail(v) : ''}</div></div></div>`;
+    `<div class="vst">${esc(t('views', {n: fmt(v.v)}))}${opts.talk && talk(v) != null ? ` · <span class="hotx">${esc(t('talkV', {n: fmtTalk(talk(v))}))}</span>` : speed(v) ? ` · <span class="hotx">${esc(t('speed', {n: fmt(speed(v))}))}</span>` : v.x ? ` · <span class="${v.x >= 1.5 ? 'hotx' : ''}">${esc(v.x < 1.5 && young(v) ? t('tooNew') : xText(v.x))}</span>` : ''}</div>${w}${S.detail ? vDetail(v) : ''}</div>${bdMini('v:' + v.id + '|' + c.ch_id)}</div></div>`;
 }
 const topVids = (c, n) => c.series.slice().sort((a, b) => b.v - a.v).slice(0, n);
 const trio = c => `<div class="trio">${topVids(c, 3).map(v => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('')}</div>`;
 function chCard(c) {
   return `<article class="ccard" data-open-ch="${esc(c.ch_id)}" tabindex="0" role="button" aria-label="${esc(c.name)}">${trio(c)}
     <div class="cbody">${avatarEl(c, 64)}<b>${esc(c.name)}</b>${vdPill(c)}
-    <small>${esc(t('subscribers', {n: fmt(c.subs)}))}<br>${esc(t('typicalViews', {n: fmt(c.med_recent)}))}</small></div></article>`;
+    <small>${esc(t('subscribers', {n: fmt(c.subs)}))}<br>${esc(t('typicalViews', {n: fmt(c.med_recent)}))}</small>${cardAct('ch:' + c.ch_id)}</div></article>`;
 }
+// every card ends in one action: save it to a board (an idea board on the Saved page)
+const cardAct = spec => `<button type="button" class="cardact" data-bdadd="${esc(spec)}">${IC.plus}${esc(t('bdAdd'))}</button>`;
+const bdMini = spec => `<button type="button" class="bdmini" data-bdadd="${esc(spec)}" title="${esc(t('bdAdd'))}" aria-label="${esc(t('bdAdd'))}">${IC.plus}</button>`;
 const pickTier = p => (UI === 'th' && p.tier_th ? p.tier_th : p.tier || t('edPick'));
 const pickNote = p => (UI === 'th' && p.note_th ? p.note_th : p.note);
 const pickDate = p => (p.date ? t('pickDate', {d: new Date(p.date + 'T12:00:00Z').toLocaleDateString(LOC(), {day: 'numeric', month: 'short', year: 'numeric'})}) : t('ourNote'));
-function pickCard(c) {
-  const p = c.pick;
-  return `<article class="pcard" data-open-ch="${esc(c.ch_id)}" tabindex="0" role="button" aria-label="${esc(c.name)}">${trio(c)}
-    <div class="pbody"><div class="ptop">${avatarEl(c, 44)}<div><b>${esc(c.name)}</b><span class="tag pick">${esc(pickTier(p))}</span></div></div>
-    <div class="chsub">${vdPill(c)}<span>${esc(t('subscribers', {n: fmt(c.subs)}))}</span></div>
-    <div class="pnote"><small class="pdate">${esc(pickDate(p))}</small>${esc(pickNote(p))}</div></div></article>`;
-}
 function statPills(c, f) {
   const top = c.series.reduce((a, b) => (b.v > a.v ? b : a), c.series[0] || {v: c.max_views});
   const st = (icon, val, label, help) => `<span class="st">${icon} <b>${esc(val)}</b><span>${esc(label)}</span>${help ? qm(help) : ''}</span>`;
@@ -2889,12 +3001,6 @@ function channelRow(c) {
     ${S.detail ? chAnalytics(c) : ''}
     <div class="shelf">${vids.map(v => shortCard(v, c)).join('')}</div>
   </section>`;
-}
-function shelf(title, desc, items, see) {
-  return `<section class="shelfsec"><div class="shhead"><div><h2>${esc(t(title))}</h2><p>${esc(t(desc))}</p></div>
-    <div class="shnav">${see ? `<button type="button" class="seeall" data-see="${see}">${esc(t('seeAll'))}</button>` : ''}
-    <button type="button" class="icon" data-rail="-1" aria-label="${esc(t('prev'))}">${ICON.left}</button><button type="button" class="icon" data-rail="1" aria-label="${esc(t('next'))}">${ICON.right}</button></div></div>
-    <div class="rail">${items.join('')}</div></section>`;
 }
 const emptyBox = msg => `<div class="empty"><span class="emi">${IC.inbox}</span>${esc(msg)}</div>`;
 
@@ -2951,7 +3057,7 @@ function quickCard(c) {   // Simple: one big number and one reason, so a page of
   const big = c.subs > 0 && c.ratio >= 1.5 ? `<b>${esc(fmtX(c.ratio))}×</b><span>${esc(t('qRatio'))}</span>` : `<b>${esc(fmt(c.med_recent))}</b><span>${esc(t('lTypical'))}</span>`;
   return `<article class="qcard" data-open-ch="${esc(c.ch_id)}" tabindex="0" role="button" aria-label="${esc(c.name)}">${trio(c)}
     <div class="qbody"><div class="qtop">${avatarEl(c, 40)}<div class="qn"><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))}</small></div></div>
-      <div class="qbig">${big}</div>${vdPill(c)}${line ? `<p class="qwhy">${esc(line)}</p>` : ''}</div></article>`;
+      <div class="qbig">${big}</div>${vdPill(c)}${line ? `<p class="qwhy">${esc(line)}</p>` : ''}${cardAct('ch:' + c.ch_id)}</div></article>`;
 }
 const clampN = (x, a, b) => Math.min(b, Math.max(a, x));
 function scoreParts(c) {   // the scanner's score, part by part (the same formula as compute_metrics in app.py)
@@ -3052,35 +3158,55 @@ function statusInfo() {
   if (STATIC) { const fr = freshShare(); return {cls: 'dot live', txt: fr == null ? t('stUpdated', {ago: ago(DATA.generated || st.last_cycle_end)}) : t('stPub', {ago: ago(DATA.generated || st.last_cycle_end), p: pct(fr)})}; }
   return {cls: 'dot', txt: t('stIdle', {ago: ago(st.last_cycle_end)}) + (st.next_scan ? t('stNext', {n: Math.max(1, Math.round((st.next_scan - Date.now() / 1000) / 60))}) : '')};
 }
+/* ---------- Today: the command center (homepage concept A). Four numbers, then the single best opportunity, what is rising,
+   the ranked top channels and the clip moments worth making next; each panel ends in one action. ---------- */
 function homeView() {
-  const chs = DATA.channels.filter(baseOk);
-  let h = '', n = 0;
-  const st = statusInfo();
-  h += `<div class="sumline"><span>${t('sumTracked', {n: DATA.channels.length})}</span><span class="smhide">${t('sumHot', {n: DATA.channels.filter(c => c.score >= 65).length})}</span>` +
-    `<span class="smhide">${t('sumNew', {n: liveVideos(DATA.channels).length})}</span><span class="livebox" style="margin:0"><span class="${st.cls}"></span>${esc(st.txt)}</span>${modeSeg()}</div>`;
-  const add = (title, desc, items, see) => {
-    if (!items.length) return;
-    h += shelf(title, desc, items, see);
-    if (++n === 2) h += heatStrip() + (canInstall() ? `<div class="homeinstall" style="margin:-6px 0 22px">${installBtn()}</div>` : '');
-  };
-  const byScore = (a, b) => b.score - a.score;
-  add('shPicks', 'shPicksD', picksList().filter(baseOk).map(pickCard), '');
-  add('shTrend', 'shTrendD', trendData().rising.filter(s => !S.topic || s.tops.has(S.topic)).slice(0, 12).map(trendCard), 'trends');
-  add('shViral', 'shViralD', viralVideos(chs).slice(0, 24).map(([v, c]) => vCard(v, c)), 'videos');
-  add('shTalk', 'shTalkD', talkedAbout(chs).slice(0, 24).map(([v, c]) => vCard(v, c, {talk: true})), 'talk');
-  const fresh = liveVideos(chs), good = fresh.filter(([, c]) => c.score >= 40);
-  add('shNew', 'shNewD', (good.length >= 4 ? good : fresh).sort((a, b) => speed(b[0]) - speed(a[0])).slice(0, 24).map(([v, c]) => vCard(v, c, {showWhen: true})), 'live');
-  add('shSmall', 'shSmallD', chs.filter(c => c.subs > 0 && c.subs <= 50000 && c.score >= 50 && !c.tags.includes('One-hit')).sort((a, b) => b.med_recent - a.med_recent).slice(0, 24).map(chCard), 'small');
-  if (!S.topic) {   // a shelf for each of the hottest topics
-    TOPICS.map(tp => { const list = chs.filter(c => chTopics(c).has(tp[0])); return {tp, list, hot: list.filter(c => c.score >= 65).length}; })
-      .filter(r => r.list.length >= 6).sort((a, b) => b.hot - a.hot).slice(0, 4)
-      .forEach(r => { const vids = viralVideos(r.list).slice(0, 24); if (vids.length >= 4) add(topicName(r.tp), 'shTopicD', vids.map(([v, c]) => vCard(v, c)), 'topic:' + r.tp[0]); });
-  }
-  if (S.lang === 'all') add('shThai', 'shThaiD', chs.filter(c => c.lang === 'th').sort(byScore).slice(0, 24).map(chCard), 'thai');
-  add('shRising', 'shRisingD', chs.filter(c => c.tags.includes('Rising') && c.score >= 50).sort(byScore).slice(0, 24).map(chCard), 'rising');
-  add('shSteady', 'shSteadyD', chs.filter(c => c.tags.includes('Consistent engine')).sort(byScore).slice(0, 24).map(chCard), 'steady');
-  if (!n) h += emptyBox(t('emptyHome'));
-  return h;
+  const chs = DATA.channels, st = statusInfo(), whole = n => Number(n || 0).toLocaleString(LOC());
+  if (!chs.length) return emptyBox(t('emptyHome'));
+  const ranked = chs.filter(c => !c.tags.includes('One-hit')).sort((a, b) => b.score - a.score);
+  const picks = picksList(), top = picks[0] || ranked[0];
+  const table = picks.length ? picks.concat(ranked.filter(c => !c.pick)).slice(0, Math.max(5, picks.length)) : ranked.slice(0, 8);   // the editor's picks, topped up
+  const kpi = (k, v, see, cls = '') => `<button type="button" class="kpi" data-see="${see}"><span>${esc(t(k))}</span><b class="${cls}">${esc(v)}</b></button>`;
+  const day = new Date(nowTs() * 1000).toLocaleDateString(LOC(), {weekday: 'long', day: 'numeric', month: 'long'});
+  let h = `<div class="tdhead"><div><p class="tdeyebrow">${esc(day)}</p><h1>${esc(t('tdHead'))}</h1></div>` +
+    `<a class="tdlive" href="#help" data-tab="help"><span class="${st.cls}"></span><span>${esc(st.txt)}</span></a></div>` +
+    `<div class="kpis">${kpi('kTracked', whole(chs.length), 'channels')}${kpi('kHot', whole(chs.filter(c => c.score >= 65).length), 'hot', 'hotv')}` +
+    `${kpi('kNew3', whole(liveVideos(chs).length), 'live')}${kpi('kClipC', TRENDS ? whole(clipList().length) : '–', 'clips')}</div><div class="tdgrid">`;
+  if (top) h += oppCard(top);
+  const rising = trendData().rising.slice(0, 5);
+  h += `<section class="tdcard"><h2>${esc(t('risingNowT'))}</h2>` + (rising.length ? `<div class="rlist2">${rising.map(s =>
+    `<button type="button" class="rrow" data-trend="${esc(s.key)}"><span><b>${esc(s.label)}</b><small><em class="up">▲ ${esc(liftText(s))}</em> · ${esc(s.r + ' ' + t('tnShorts'))}` +
+    ` · ${esc(s.chs.size + ' ' + t('tnCh'))}${stageBadge(s)}</small></span>${spark(s.days)}</button>`).join('')}</div>` : `<p class="pbtip">${esc(t('tNone'))}</p>`) +
+    `<button type="button" class="tdmore" data-tab="trends">${esc(t('risingAll'))} →</button></section>`;
+  const head = `<div class="prow ph"><span>#</span><span>${esc(t('colCh'))}</span><span class="ps">${esc(t('lSubs'))}</span><span class="pt">${esc(t('lTypical'))}</span><span>${esc(t('lScore'))}</span></div>`;
+  h += `<section class="tdcard wide"><h2>${esc(t('picksT'))}</h2><div class="ptable">${head}${table.map((c, i) =>
+    `<button type="button" class="prow" data-open-ch="${esc(c.ch_id)}"><span class="pr r${i + 1}">${i + 1}</span><span class="pn">${avatarEl(c, 28)}<b>${esc(c.name)}</b></span>` +
+    `<span class="ps">${esc(fmt(c.subs))}</span><span class="pt">${esc(fmt(c.med_recent))}</span>` +
+    `<span class="psc"><i><b style="width:${clampN(c.score, 2, 100).toFixed(0)}%;background:${scoreColor(c.score)}"></b></i><b>${Math.round(c.score)}</b></span></button>`).join('')}</div>` +
+    `<button type="button" class="tdmore" data-tab="channels">${esc(t('picksAll'))} →</button></section>`;
+  const seen = new Set(), moms = TRENDS ? bestMoments().filter(([, c]) => !seen.has(c.ch) && seen.add(c.ch)).slice(0, 3) : [];   // one per creator
+  h += `<section class="tdcard"><h2>${esc(t('clipNextT'))}</h2>` + (moms.length ? gateList(moms.map(([m, c]) => {
+    const v = (c.mvids || {})[m.v] || {};
+    YT_ITEMS.set(m.v, {id: m.v, t: v.t || '', v: v.v || 0, d: v.d, p: v.p, cht: c.name});
+    return `<button type="button" class="cmom" data-play="${esc(m.v)}" data-s="${m.s}" data-c=""><span class="cmh"><b>${esc(c.name)}</b>${compBadge(m.comp)}</span>` +
+      `<q>${esc(m.q || m.c || t('momNoQuote'))}</q><small>${tsText(m.s)} – ${tsText(m.e)} · ${esc(t('momPoint', {n: m.n}))}</small></button>`;
+  }), t('momT'), 1).join('') : `<p class="pbtip">${esc(t('momWait'))}</p>`) + `<button type="button" class="tdmore" data-tab="clips">${esc(t('clipNextAll'))} →</button></section>`;
+  return h + '</div>';
+}
+function oppCard(c) {   // today's single best opportunity: an editor's pick when there is one, otherwise the top-scored channel
+  const id = esc(c.ch_id), tp = TOPICS.find(x => chTopics(c).has(x[0])), parts = scoreParts(c).filter(p => p[2] > 0);
+  const big = c.subs > 0 && c.ratio >= 1.5 ? [fmtX(c.ratio) + '×', t('qRatio')] : [fmt(c.med_recent), t('lTypical')];
+  const part = ([k, v, mx]) => (k === 'spTrend' && c.trend == null ? t('momNA') : `${Math.round(v)}/${mx}`);
+  return `<section class="tdcard wide tdopp"><div class="tdh"><h2>${esc(t('tdOppT'))}</h2>${vdPill(c)}</div><div class="oppin">
+    <div class="oppth">${topVids(c, 3).map(v => thumbBox(v, c)).join('')}</div>
+    <div class="oppmain"><div class="oppch"><button type="button" class="avlink" data-open-ch="${id}" aria-label="${esc(c.name)}">${avatarEl(c, 52)}</button>
+      <div><b>${esc(c.name)}</b><small>${esc(t('subscribers', {n: fmt(c.subs)}))}${tp ? ' · ' + esc(topicName(tp)) : ''}</small></div></div>
+      <p class="oppbig"><b>${esc(big[0])}</b><span>${esc(big[1])}</span></p>
+      <p class="oppwhy">${esc(whyLines(c).slice(0, 2).join(' '))}</p>
+      ${c.pick ? `<p class="oppnote"><small class="pdate">${esc(pickDate(c.pick))}</small>${esc(pickNote(c.pick))}</p>` : ''}
+      <div class="sbar" role="img" aria-label="${esc(t('spT'))}: ${Math.round(c.score)}">${parts.map(([, v, , col]) => `<i style="width:${clampN(v, 0, 100).toFixed(1)}%;background:${col}"></i>`).join('')}</div>
+      <div class="sleg">${parts.map(p => `<span style="--k:${p[3]}">${esc(t(p[0]))} ${esc(part(p))}</span>`).join('')}</div>
+      <div class="btns"><button type="button" class="pillbtn primary" data-open-ch="${id}">${esc(t('oppOpen'))}</button>${bdBtn('ch:' + c.ch_id)}</div></div></div></section>`;
 }
 function filtersHtml(kind) {
   const opt = (v, cur, label) => `<option value="${esc(v)}" ${String(cur) === String(v) ? 'selected' : ''}>${esc(label)}</option>`;
@@ -3140,7 +3266,7 @@ function oppMap() {   // demand (typical views) against competition (channels po
   const data = {xmin, xmax, ymin, ymax, xticks: spread(logTicks(xmin, xmax), 6), yticks: spread(logTicks(ymin, ymax), 5), xfmt: v => fmt(v), yfmt: v => fmt(v),
     xlab: t('oppX'), ylab: t('oppY'), zone: {x0: xmin, x1: midA, y0: midM, y1: ymax, label: t('oppSweet')},
     pts: rows.map(r => ({x: r.active, y: r.med, r: 7 + 16 * Math.sqrt(r.viral), cls: r.active <= midA && r.med >= midM ? 'early' : 'spread', label: topicName(r.tp), lab: true,
-      attr: `data-topic="${r.tp[0]}" data-go="home"`, tip: `<b>${esc(topicName(r.tp))}</b><br>${esc(t('oppTip', {m: fmt(r.med), a: r.active, v: Math.round(100 * r.viral)}))}<br>${esc(t('oppScore'))}: ${r.score}/100`}))};
+      attr: `data-topic="${r.tp[0]}" data-go="videos"`, tip: `<b>${esc(topicName(r.tp))}</b><br>${esc(t('oppTip', {m: fmt(r.med), a: r.active, v: Math.round(100 * r.viral)}))}<br>${esc(t('oppScore'))}: ${r.score}/100`}))};
   return `<section class="vizcard"><div class="vizhead"><div><h3>${IC.target}${esc(t('oppT'))}</h3><p>${esc(t('oppD'))}</p></div>
     <div class="vlegend"><span><i class="early"></i>${esc(t('oppSweet'))}</span><span><i class="spread"></i>${esc(t('oppOther'))}</span></div></div>${vizBox('bubbles', data, 340, t('oppT'))}</section>`;
 }
@@ -3154,7 +3280,7 @@ function topicsView() {
   if (!rows.length) return h + emptyBox(t('emptyNiche'));
   h += `<div class="ttiles">` + rows.map(r => {
     const vids = viralVideos(r.chs).slice(0, 3), o = opp.get(r.tp[0]);
-    return `<button type="button" class="ttile" data-topic="${r.tp[0]}" data-go="home"><span class="tth">${vids.map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('')}</span>
+    return `<button type="button" class="ttile" data-topic="${r.tp[0]}" data-go="videos"><span class="tth">${vids.map(([v]) => `<img loading="lazy" src="${thumb(v.id)}" alt="">`).join('')}</span>
       <span class="ttb"><span class="ttop2"><span class="tico">${topicIcon(r.tp[0])}</span><b>${esc(topicName(r.tp))}</b>${o != null ? `<span class="opp" title="${esc(t('oppScore'))}">${o}</span>` : ''}</span>
         <span class="meter"><i style="width:${(100 * r.hot / r.n).toFixed(0)}%"></i></span><small>${esc(t('topicStats', {h: r.hot, n: r.n}))}</small>
         <span class="stack">${r.top.map(c => avatarEl(c, 28)).join('')}</span></span></button>`;
@@ -3935,20 +4061,20 @@ const visibleEl = sel => [...document.querySelectorAll(sel)].find(e => e.getClie
 function tourSteps() {
   return [
     {k: 'w', card: true},
-    {k: 'picks', ic: 'trophy', sel: '#content .pcard', tab: 'home'},
-    {k: 'fire', ic: 'flameF', sel: '#content .pcard .vd, #content .ccard .vd', tab: 'home'},
-    {k: 'play', ic: 'film', sel: '#content .shelfsec .vcard .th', wait: 'player', tab: 'home'},
+    {k: 'picks', ic: 'trophy', sel: '#content .tdopp', tab: 'home'},
+    {k: 'fire', ic: 'flameF', sel: '#content .tdopp .vd', tab: 'home'},
+    {k: 'play', ic: 'film', sel: '#content .tdopp .th', wait: 'player', tab: 'home'},
     {k: 'facts', ic: 'chart', sel: '#player .pfacts', dlg: 'player', leave: () => { if ($('#player').open) $('#player').close(); }},
-    {k: 'open', ic: 'eye', sel: '#content .pcard, #content .ccard', wait: 'sheet', tab: 'home'},
+    {k: 'open', ic: 'eye', sel: '#content .tdopp .btns [data-open-ch]', wait: 'sheet', tab: 'home'},
     {k: 'why', ic: 'bulb', sel: '#sheet .why', dlg: 'sheet'},
     {k: 'save', ic: 'star', sel: '#sheet .shtop [data-star]', dlg: 'sheet', wait: 'star', leave: () => { if ($('#sheet').open) $('#sheet').close(); }},
-    {k: 'topic', ic: 'compass', sel: '#chips [data-topic]:not([data-topic=""])', wait: 'topic', tab: 'home'},
-    {k: 'trends', ic: 'trend', sel: '#side [data-tab=trends]', go: 'trends'},
-    {k: 'brief', ic: 'rocket', sel: '#content .brief', tab: 'trends'},
-    {k: 'clips', ic: 'scissors', sel: '#content .ttabs [data-ttab=clips]', wait: 'clips', tab: 'trends'},
-    {k: 'moments', ic: 'bolt', sel: '#content .momsec', tab: 'trends'},
+    {k: 'topic', ic: 'compass', sel: '#chips [data-topic]:not([data-topic=""])', wait: 'topic', tab: 'channels'},
+    {k: 'trends', ic: 'trend', sel: '#tabs [data-tab=trends]', go: 'trends'},
+    {k: 'brief', ic: 'rocket', sel: '#content .brief2', tab: 'trends'},
+    {k: 'clips', ic: 'scissors', sel: '#tabs [data-tab=clips]', wait: 'clips'},
+    {k: 'moments', ic: 'bolt', sel: '#content .momsec', tab: 'clips'},
     {k: 'search', ic: 'search', sel: '#searchForm, #btnSearchM'},
-    {k: 'lang', ic: 'globe', sel: '#btnLang, #side [data-tab=more]'},
+    {k: 'lang', ic: 'globe', sel: '#btnLang, #btnMore'},
     {k: 'done', card: true}
   ];
 }
@@ -4093,7 +4219,7 @@ function tourClick(x) {
 }
 ['player', 'sheet'].forEach(id => $('#' + id).addEventListener('close', () => tourDialogClosed(id)));
 
-/* ---------- phone menu ---------- */
+/* ---------- the More menu: account, language, learning, display (every page is reachable from its destination) ---------- */
 function openMore() {
   const dlg = $('#dlg'), body = $('#dlgBody');
   body.onclick = null; body.dataset.mode = 'more';
@@ -4104,7 +4230,6 @@ function openMore() {
     `<button type="button" class="procard" data-tab="pro"><span class="ico">${IC.star}</span><span><b>${esc(t('proCard'))}</b><small>${esc(isPro() && PRO.gate ? '✓' : PRO.gate ? t('proCardPrice', {p: PRO.price}) : t('proCardBeta'))}</small></span><span>→</span></button>` + syncBlock() +
     `<div class="mrow">${ICON.lang}<span>${esc(t('langT'))}</span><button type="button" class="pillbtn" data-langpick>${esc(langInfo(UI)[1])} ›</button></div>` +
     `<h4 class="navh">${esc(t('mLearn'))}</h4>` + row('data-tour', ICON.tour, t('nTour')) + [['playbook', 'nPlaybook'], ['help', 'nHelp']].map(tab).join('') +
-    `<h4 class="navh">${esc(t('mExplore'))}</h4>` + [['week', 'nWeek'], ['tools', 'nTools'], ['channels', 'nChannels'], ['live', 'nLive'], ['ideas', 'nIdeas'], ['topics', 'nTopics'], ['mine', 'nMine'], ['compare', 'nCompare']].map(tab).join('') +
     `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + themeSec() + (canInstall() ? `<div class="sidesec">${installBtn()}</div>` : '') +
     `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div></div>`;
   if (!dlg.open) dlg.showModal();
@@ -4131,13 +4256,6 @@ function talkNorm() {   // the typical comments per 1K views across every Short 
     TALK_SIG = sig;
   }
   return TALK_NORM;
-}
-function talkedAbout(chs) {
-  const norm = talkNorm(), seen = new Set();
-  if (!norm) return [];
-  return videoPool(chs).filter(([v]) => v.v >= 50000 && talk(v) >= norm * 3)
-    .sort((a, b) => talk(b[0]) * Math.log10(b[0].v) - talk(a[0]) * Math.log10(a[0].v))
-    .filter(([, c]) => !seen.has(c.ch_id) && seen.add(c.ch_id));
 }
 function ageText(days) {
   if (days < 60) return t('ageD', {n: Math.max(1, Math.round(days))});
@@ -4535,14 +4653,10 @@ const signedPct = x => (x >= 0 ? '▲ +' : '▼ −') + pct(Math.abs(x));
 function heatSection() {
   const rows = topicHeat().slice(0, 6);
   return `<h2 class="subhead" style="margin-top:4px">${esc(t('heatT'))}</h2><p class="pbtip" style="margin:0 0 10px">${esc(t('heatD'))}</p>` +
-    (rows.length ? `<div class="tiles">${rows.map(r => `<button type="button" class="tile" data-topic="${r.tp[0]}" data-go="home"><span class="ico">${topicIcon(r.tp[0])}</span><b>${esc(topicName(r.tp))}</b>` +
+    (rows.length ? `<div class="tiles">${rows.map(r => `<button type="button" class="tile" data-topic="${r.tp[0]}" data-go="videos"><span class="ico">${topicIcon(r.tp[0])}</span><b>${esc(topicName(r.tp))}</b>` +
       (r.growth != null ? `<small class="${r.growth > 0 ? 'heatup' : ''}">${esc(t('heatGrowth', {p: signedPct(r.growth), n: r.n}))}</small>` : '') +
       (r.speed != null ? `<small>${esc(t('heatSpeed', {u: r.uploads, s: fmt(r.speed)}))}</small>` : '') + '</button>').join('')}</div>` : `<p class="pbmuted">${esc(t('heatWait'))}</p>`) +
     `<h2 class="subhead">${esc(t('allTopics'))}</h2>`;
-}
-function heatStrip() {
-  const hot = topicHeat().filter(r => r.growth != null && r.growth > 0).slice(0, 4);
-  return hot.length ? `<div class="heatstrip"><b>${esc(t('heatShort'))}</b>${hot.map(r => `<button type="button" class="chip" data-topic="${r.tp[0]}">${esc(topicName(r.tp))} <span class="heatup">${esc(signedPct(r.growth))}</span></button>`).join('')}<button type="button" class="seeall" data-tab="topics">${esc(t('seeAll'))}</button></div>` : '';
 }
 
 /* ---------- faster first screen: the hottest 300 channels load first, everything else right after ---------- */
@@ -4700,9 +4814,9 @@ function renderAcct() {
   el.innerHTML = USER ? `<button type="button" class="acctwrap ${SYNC.state}" data-acct title="${esc(userName())}" aria-label="${esc(t('acctT'))}">${userPic(32)}</button>`
     : `<button type="button" class="pillbtn" data-signin>${GICON}<span class="lbl">${esc(t('signIn'))}</span></button>`;
   if ($('#dlg').open && $('#dlgBody').dataset.mode === 'acct') openAcct();
-  document.querySelectorAll('.syncrow small').forEach(el => { el.textContent = syncLine(); });   // keep the sidebar's status line current
+  document.querySelectorAll('.syncrow small').forEach(el => { el.textContent = syncLine(); });   // keep the More menu's status line current
 }
-function syncBlock() {   // for the sidebar and the phone menu
+function syncBlock() {   // for the More menu
   if (!FB) return '';
   return USER ? `<div class="sidesec"><button type="button" class="syncrow" data-acct>${userPic(28)}<span><b>${esc(t('syncedAs', {n: userName()}))}</b><small>${esc(syncLine())}</small></span></button></div>`
     : `<div class="sidesec"><button type="button" class="pillbtn" data-signin style="margin:0 12px">${GICON}${esc(t('signInG'))}</button><p>${esc(t('signWhy'))}</p></div>`;
@@ -4887,7 +5001,7 @@ async function loadPremium() {   // Pro members get the full trend feeds from th
     if (!r.ok) return;
     TRENDS = await r.json();
     if (TR) TR.sig = '';
-    if (DATA && ['trends', 'home'].includes(S.tab) && !$('#dlg').open) renderContent();
+    if (DATA && ['trends', 'clips', 'home'].includes(S.tab) && !$('#dlg').open) renderContent();
   } catch (e) {}
 }
 async function loadTrends() {
@@ -4898,7 +5012,7 @@ async function loadTrends() {
     TRENDS = await r.json();
     if (TR) TR.sig = '';   // the boards count chart mentions too
     loadPremium();
-    if (DATA && ['trends', 'home'].includes(S.tab) && !$('#dlg').open) renderContent();
+    if (DATA && ['trends', 'clips', 'home'].includes(S.tab) && !$('#dlg').open) renderContent();
     checkLocalAlerts();
   } catch (e) {}
 }
@@ -4975,7 +5089,7 @@ function trendCard(s) {
       ${areaSpark(s.days)}
       <div class="tnums"><span><b class="up">▲ ${esc(s.b === 0 && s.r ? t('liftNew') : fmtX(Math.min(s.lift, 99)) + '×')}</b><small>${esc(t('tnLift'))}</small></span>
         <span><b>${s.r}</b><small>${esc(t('tnShorts'))}</small></span><span><b>${s.chs.size}</b><small>${esc(t('tnCh'))}</small></span><span><b>${esc(fmt(s.med))}</b><small>${esc(t('tnViews'))}</small></span></div>
-      <div class="tfoot"><span class="tcat">${esc(catName(s.cat))}</span>${isTracked(s.key) ? `<span class="tcat on">${IC.star}</span>` : ''}</div></div></article>`;
+      <div class="tfoot"><span class="tcat">${esc(catName(s.cat))}</span>${isTracked(s.key) ? `<span class="tcat on">${IC.star}</span>` : ''}${bdMini('t:' + s.key + '|' + s.label)}</div></div></article>`;
 }
 function trendRadar(list, extra) {   // every rising trend as a bubble: few channels (left) means early; higher means rising faster
   const seen = new Set(), pts = list.concat(extra || []).filter(s => s.r >= 2 && s.chs.size && s.lift > 1 && !seen.has(s.key) && seen.add(s.key)).slice(0, 45);
@@ -5010,9 +5124,9 @@ function ideaList(x) {
 }
 
 /* ---------- the Trends page ---------- */
-const TTABS = [['rising', '🚀', 'ttRising'], ['clips', '✂️', 'ttClips'], ['games', '🎮', 'ttGames'], ['cartoons', '🎨', 'ttToons'], ['yt', '📈', 'ttYt'], ['news', '📰', 'ttNews']];
+const TTABS = [['rising', '🚀', 'ttRising'], ['games', '🎮', 'ttGames'], ['cartoons', '🎨', 'ttToons'], ['yt', '📈', 'ttYt'], ['news', '📰', 'ttNews']];
 function trendsView() {
-  const T_ = trendData(), tab = S.ttab || 'rising';
+  const T_ = trendData(), tab = TTABS.some(x => x[0] === S.ttab) ? S.ttab : 'rising';   // the clip finder has its own page now
   TREND_OPEN = '';
   let h = pageHead('pTrendsT', 'pTrendsD') + briefHtml(T_);
   const tw = tracked();
@@ -5026,7 +5140,6 @@ function trendsView() {
     const top = list[0] ? list[0].score : 1;
     h += list.length ? podium(list) + `<div class="blist">${gateList(list.slice(3, 40).map((x, i) => boardRow(x, i + 3, top)), t(tab === 'games' ? 'ttGames' : 'ttToons')).join('')}</div>` : emptyBox(t('tNone'), '🔭');
   } else if (tab === 'yt') h += ytTab();
-  else if (tab === 'clips') h += clipsTab();
   else if (tab === 'news') h += newsTab();
   else {
     const cat = S.tcat || 'all', list = T_.rising.filter(s => cat === 'all' || s.cat === cat);
@@ -5322,8 +5435,7 @@ function clipsTab() {
     .sort((x, y) => (x.allow === 'forbids') - (y.allow === 'forbids') || (y.allow === 'allows') - (x.allow === 'allows') ||
       autoChecks(y).filter(r => r[0] === 'yes').length - autoChecks(x).filter(r => r[0] === 'yes').length || y.score - x.score);
   const frShown = S.cfall ? fr : fr.slice(0, 6);
-  return `<p class="pbtip">${esc(t('clD'))}</p>
-    <section class="momsec"><div class="momhead"><span class="ico">${IC.scissors}</span><div><h3>${esc(t('momT'))} ${proTag()}</h3><p>${esc(t('momD'))}</p></div></div>
+  return `<section class="momsec"><div class="momhead"><span class="ico">${IC.scissors}</span><div><h3>${esc(t('momT'))} ${proTag()}</h3><p>${esc(t('momD'))}</p></div></div>
       ${bm.length ? `<div class="rail momrail">${gateList(bm.slice(0, 12).map(([m, c]) => momentCard(m, c, true)), t('momT'), 1).join('')}</div>` : `<p class="pbtip">${esc(t('momWait'))}</p>`}</section>
     <section class="frsec"><div class="momhead"><span class="ico good">${IC.check}</span><div><h3>${esc(t('frT'))} <span class="pbmuted">${fr.length || ''}</span></h3><p>${esc(t('frD'))}</p></div></div>
       ${fr.length ? `<div class="frgrid">${frShown.map(friendlyCard).join('')}</div>${fr.length > 6 ? `<button type="button" class="more" data-cfall>${esc(S.cfall ? t('frLess') : t('frAll', {n: fr.length}))}</button>` : ''}` : `<p class="pbtip">${esc(t('frNone'))}</p>`}</section>
@@ -5470,7 +5582,7 @@ function toolsView() {
   const rows = niches();
   const sec = (em, k, d, body) => `<section class="tool"><h2>${em} ${esc(t(k))} ${proTag()}</h2><p class="pbtip">${esc(t(d))}</p>${body}</section>`;
   if (!isPro()) return h + `<div class="lockblur" aria-hidden="true">${sec(IC.compass, 'nfT', 'nfD', '<div class="blist">' + rows.slice(0, 4).map(r => `<div class="nrow"><b>${esc(topicName(r.tp))}</b></div>`).join('') + '</div>')}</div>`;
-  h += sec(IC.compass, 'nfT', 'nfD', `<div class="blist">${rows.map((r, i) => `<button type="button" class="nfrow" data-topic="${r.tp[0]}" data-go="home"><span class="bnum">${i + 1}</span>
+  h += sec(IC.compass, 'nfT', 'nfD', `<div class="blist">${rows.map((r, i) => `<button type="button" class="nfrow" data-topic="${r.tp[0]}" data-go="videos"><span class="bnum">${i + 1}</span>
     <span class="ico sm">${topicIcon(r.tp[0])}</span><span class="bmain"><b>${esc(topicName(r.tp))}</b><small>${esc(t('nfStats', {v: fmt(r.med), p: Math.round(100 * r.viral), c: r.active, s: Math.round(100 * r.top3)}))}</small></span>
     <span class="nfbar"><i style="width:${r.score}%"></i></span><b class="nfscore">${r.score}</b></button>`).join('')}</div>`);
   const tp = S.bttopic || '', pool = videoPool(DATA.channels.filter(c => !tp || chTopics(c).has(tp))).filter(([v]) => v.p && v.x >= 2.5);
@@ -5788,7 +5900,7 @@ function applyStaticText() {
   $('#exportLbl').textContent = t('export');
   $('#btnExport').title = t('exportTip');
   $('#settingsLbl').textContent = t('settings');
-  $('#btnMenu').setAttribute('aria-label', t('menu'));
+  $('#btnMore').setAttribute('aria-label', t('nMore')); $('#btnMore').title = t('nMore');
   renderThemeBtn();
   $('#btnSearchM').setAttribute('aria-label', t('searchT')); $('#btnSearchBack').setAttribute('aria-label', t('backT'));
   document.body.classList.toggle('hasq', !!S.q.trim() || S.tab === 'search');   // phones keep the search bar open while a search is showing
@@ -5799,16 +5911,15 @@ function applyStaticText() {
   document.querySelectorAll('#langSeg [data-ui]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ui === UI)));
   $('#btnLang').title = t('langT'); $('#btnLang').setAttribute('aria-label', t('langT'));
 }
-function renderSide() {
-  const saved = DATA.channels.filter(isWatched).length, fresh = liveVideos(DATA.channels).length, st = statusInfo();
-  const nav = (id, key, n, hot) => `<button type="button" class="nav" data-tab="${id}" aria-current="${S.tab === id}">${ICON[id]}<span class="lbl">${esc(t(key))}</span>${n ? `<span class="n ${hot ? 'hot' : ''}">${n > 999 ? fmt(n) : n}</span>` : ''}</button>`;
-  const navh = k => `<h4 class="navh">${esc(t(k))}</h4>`;
-  $('#side').innerHTML = nav('home', 'nHome') + nav('trends', 'nTrends', hotTracked(), true) + nav('week', 'nWeek') + nav('videos', 'nVideos') + nav('channels', 'nChannels') + nav('live', 'nLive', fresh, true) +
-    nav('ideas', 'nIdeas') + nav('topics', 'nTopics') + '<hr class="navsep">' + navh('sYou') + nav('saved', 'nSaved', saved) + nav('mine', 'nMine') + nav('compare', 'nCompare', S.cmp.length) +
-    '<hr class="navsep">' + navh('nMore') + nav('tools', 'nTools').replace('</span></button>', `</span>${proTag()}</button>`) + nav('playbook', 'nPlaybook', PB_STEPS.length - Object.values(PB.done).filter(Boolean).length || null) +
-    `<button type="button" class="nav" data-tour>${ICON.tour}<span class="lbl">${esc(t('nTour'))}</span></button>` + nav('help', 'nHelp') + nav('pro', 'nPro') + nav('more', 'nMore') +
-    `<div class="sidesec"><h4>${esc(t('dispTitle'))}</h4><div class="seg"><button type="button" data-detail="0" aria-pressed="${!S.detail}">${esc(t('simple'))}</button><button type="button" data-detail="1" aria-pressed="${S.detail}">${esc(t('detailed'))}</button></div><p>${esc(t('dispHint'))}</p></div>` + themeSec() +
-    `<div class="sidesec"><div class="livebox"><span class="${st.cls}"></span><span>${esc(st.txt)}${DATA.snapshot ? '' : ' · ' + esc(t('stCounts', {s: DATA.channels.length}))}</span></div>${canInstall() ? `<div style="margin:10px 12px 0">${installBtn()}</div>` : ''}</div>` + syncBlock();
+function renderSide() {   // the five destinations, then the current destination's sub-pages
+  const cur = destOf(S.tab), hot = hotTracked();
+  $('#tabs').innerHTML = DESTS.map(([id, k]) => `<button type="button" class="tab" data-tab="${id}"${cur === id ? ' aria-current="page"' : ''}>${ICON[id]}<span class="lbl">${esc(t(k))}</span>` +
+    `${id === 'trends' && hot ? `<span class="n">${hot}</span>` : ''}</button>`).join('');
+  const subs = S.tab === 'search' ? null : SUBTABS[cur];
+  const count = {live: liveVideos(DATA.channels).length, saved: DATA.channels.filter(isWatched).length, compare: S.cmp.length,
+    playbook: PB_STEPS.length - Object.values(PB.done).filter(Boolean).length};
+  $('#subnav').innerHTML = subs ? `<nav class="subnav" aria-label="${esc(t(DESTS.find(d => d[0] === cur)[1]))}">${subs.map(([id, k]) =>
+    `<button type="button" data-tab="${id}"${S.tab === id ? ' aria-current="page"' : ''}>${esc(t(k))}${count[id] ? ` <span class="pbmuted">${count[id] > 999 ? fmt(count[id]) : count[id]}</span>` : ''}</button>`).join('')}</nav>` : '';
 }
 function renderChips() {
   const el = $('#chips');
@@ -5818,7 +5929,7 @@ function renderChips() {
       (STATIC && ownKey() ? `<button type="button" class="chip" data-changekey>${esc(t('kChange'))}</button>` : '');
     return;
   }
-  if (!['home', 'videos', 'channels', 'live', 'ideas'].includes(S.tab)) { el.innerHTML = ''; return; }
+  if (!['videos', 'channels', 'live', 'ideas'].includes(S.tab)) { el.innerHTML = ''; return; }
   const present = new Set();
   for (const c of DATA.channels) for (const k of chTopics(c)) present.add(k);
   const langSel = `<select id="fLang" class="chip" aria-label="Language">${[['all', 'langAll'], ['th', 'langTh'], ['en', 'langEn'], ['other', 'langOther']].map(([v, k]) => `<option value="${v}" ${S.lang === v ? 'selected' : ''}>${esc(t(k))}</option>`).join('')}</select>`;
@@ -5844,6 +5955,7 @@ function renderContent() {
   else if (tab === 'topics') el.innerHTML = topicsView();
   else if (tab === 'saved') el.innerHTML = savedView();
   else if (tab === 'trends') el.innerHTML = trendsView();
+  else if (tab === 'clips') el.innerHTML = pageHead('ttClips', 'clD') + clipsTab();
   else if (tab === 'tools') el.innerHTML = toolsView();
   else if (tab === 'pro') el.innerHTML = proView();
   else if (['terms', 'privacy', 'refunds'].includes(tab)) el.innerHTML = legalView(tab);
@@ -5881,6 +5993,7 @@ function applyTab(tab) {
   S.tab = tab; saveState(); closePop();
   ['sheet', 'player'].forEach(id => { if ($('#' + id).open) $('#' + id).close(); });
   render(); window.scrollTo(0, 0);
+  if (tab === 'clips') tourEvent('clips');
 }
 function go(tab) {
   closePop();
@@ -5904,6 +6017,7 @@ function openCompareLink(h) {
 
 /* ---------- events ---------- */
 const PRESETS = {
+  hot: {minScore: 65, maxSubs: 0, tag: '', sort: 'score'},
   small: {maxSubs: 50000, sort: 'med', minScore: 50, tag: ''}, rising: {sort: 'trend', minScore: 50, maxSubs: 0, tag: ''},
   steady: {tag: 'Consistent engine', sort: 'score', minScore: 0, maxSubs: 0}, thai: {lang: 'th', minScore: 0, maxSubs: 0, tag: '', sort: 'score'}
 };
@@ -5941,7 +6055,11 @@ document.addEventListener('click', async e => {
   if (aib) { const s = trendByKey(aib.dataset.ai); aiIdeas(s.label.replace(/^#/, ''), s.vids.slice(0, 8).map(([v]) => v.t), $('#aiBox')); return; }
   if (x.closest('[data-aitopic]')) { const el = $('#aiIn'); if (el && el.value.trim()) aiIdeas(el.value.trim(), [], $('#aiTopicBox')); return; }
   const tt = x.closest('[data-ttab]');
-  if (tt) { S.ttab = tt.dataset.ttab; saveState(); if ($('#dlg').open) $('#dlg').close(); if (S.tab !== 'trends') go('trends'); else renderContent(); if (tt.dataset.ttab === 'clips') tourEvent('clips'); return; }
+  if (tt) {
+    if ($('#dlg').open) $('#dlg').close();
+    if (tt.dataset.ttab === 'clips') { go('clips'); return; }   // the clip finder is a destination of its own
+    S.ttab = tt.dataset.ttab; saveState(); if (S.tab !== 'trends') go('trends'); else renderContent(); return;
+  }
   const creg = x.closest('[data-creg]');
   if (creg) { S.creg = creg.dataset.creg; saveState(); renderContent(); return; }
   if (x.closest('[data-call3]')) { S.call3 = !S.call3; saveState(); renderContent(); return; }
@@ -6073,7 +6191,6 @@ document.addEventListener('keydown', e => {
 });
 window.addEventListener('scroll', closePop, true);
 window.addEventListener('resize', closePop);
-$('#btnMenu').addEventListener('click', () => { document.body.classList.toggle('mini'); });
 $('#searchForm').addEventListener('submit', e => {
   e.preventDefault();
   const q = S.q.trim();
@@ -6397,7 +6514,7 @@ async function refresh() {
     if (!$('#dlg').open && !['playbook', 'mine', 'tools', 'saved'].includes(S.tab)) render(true); else renderSide();
     checkLocalAlerts();
   } catch (e) {
-    const box = $('#side .livebox');
+    const box = $('#content .tdlive');
     if (box) box.innerHTML = `<span class="dot"></span><span>${esc(t(STATIC ? 'offlineWeb' : 'offline'))}</span>`;
   }
 }
