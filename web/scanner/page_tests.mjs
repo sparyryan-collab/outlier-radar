@@ -54,7 +54,7 @@ const ctx = {
 vm.createContext(ctx);
 vm.runInContext('const nowTs = () => NOW_();', ctx);
 for (const name of ['speed', 'grow', 'young', 'when', 'accelerating', 'subStep', 'factCache', 'chAgeDays', 'chFacts', 'trendStage', 'weakSignal',
-  'topShare', 'freshShare', 'statusInfo', 'takeaway', 'chRisks', 'nextPacificMidnight', 'coolingOf', 'median', 'SERIES_RX', 'FMT_HABITS', 'formatFacts']) vm.runInContext(cut(name), ctx);
+  'topShare', 'freshShare', 'statusInfo', 'takeaway', 'chRisks', 'nextPacificMidnight', 'coolingOf', 'median', 'SERIES_RX', 'FMT_HABITS', 'formatFacts', 'vidOk', 'BD_STAGES', 'bdStageIdx', 'vidFromLink', 'bdFunnel', 'bdResult']) vm.runInContext(cut(name), ctx);
 const run = src => vm.runInContext(src, ctx);
 const H = 3600, D = 86400;
 let n = 0;
@@ -143,6 +143,17 @@ ok(hb.fmtQ === 0.25 && hb.fmtSeries === 0.375 && !('fmtEmoji' in hb), 'format: 2
 ok(fx.repeat && fx.repeat.w === 'tom and jerry vfx magic', 'format: overlapping phrases join into the series name');
 ok(fx.repeat.k === 4 && fx.repeat.n === 8, 'format: the series name is in 4 of 8 titles');
 ok(run('formatFacts([{d: 20, t: "a", v: 1}], words2)') === null, 'format: one Short is too few to say anything');
+
+// the idea pipeline: links, how far ideas got, and a published Short against the creator's usual
+ok(run("vidFromLink('https://www.youtube.com/shorts/dQw4w9WgXcQ?feature=share')") === 'dQw4w9WgXcQ', 'pipeline: a Shorts link gives its video id');
+ok(run("vidFromLink('https://youtu.be/dQw4w9WgXcQ')") === 'dQw4w9WgXcQ' && run("vidFromLink('https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=3')") === 'dQw4w9WgXcQ', 'pipeline: youtu.be and watch links work too');
+ok(run("vidFromLink('dQw4w9WgXcQ')") === 'dQw4w9WgXcQ' && run("vidFromLink('not a link')") === '', 'pipeline: a bare id works, anything else gives nothing');
+ok(JSON.stringify(run("bdFunnel([{stage: 'idea'}, {}, {stage: 'film'}, {stage: 'done'}])")) === '[4,2,2,1,1]', 'pipeline: the funnel counts ideas that reached each step');
+let rs = run('bdResult({v: 12000, p: NOW_() - 10 * 86400, at: NOW_()}, 4000)');
+ok(rs.x === 3 && Math.round(rs.days) === 10 && !rs.young, 'pipeline: 12K views at 10 days is 3x a usual of 4K');
+rs = run('bdResult({v: 900, p: NOW_() - 2 * 86400, at: NOW_()}, 4000)');
+ok(rs.young && rs.x < 1, 'pipeline: a 2-day-old Short is flagged as too young to judge');
+ok(run('bdResult({v: 5000, at: NOW_()}, null)').x === null && run('bdResult(null, 4000)') === null, 'pipeline: no usual means no comparison; no count means no result');
 
 // the status badge: late once well past the usual gap between refreshes
 const status = (ageH, gapH) => { ctx.DATA = {generated: NOW - ageH * H, status: {run_gap_h: gapH}, channels: [{last_probe: NOW - H}]}; return run('statusInfo()'); };
