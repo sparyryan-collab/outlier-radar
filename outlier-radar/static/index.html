@@ -932,6 +932,24 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .stage.cooling{background:color-mix(in srgb,var(--muted) 18%,transparent);color:var(--muted)}
 .vlegend i.crowded{background:var(--c2)}.vlegend i.cooling{background:var(--muted)}
 .viz .bub.crowded circle{fill:var(--c2)}.viz .bub.cooling circle{fill:var(--muted)}
+.fmtcard{background:var(--surface);border-radius:14px;padding:12px 14px;display:grid;gap:12px;margin:4px 0 6px}
+.fmtrow{display:grid;grid-template-columns:118px minmax(0,1fr);gap:10px;align-items:start}
+.fmtk{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.fmtk .i{width:16px;height:16px}
+.fmtv b{font-size:14px;font-weight:600}
+.fmtv small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+.fmtstrip{position:relative;height:14px;margin:6px 0 2px;border-radius:7px;background:var(--surface2)}
+.fmtstrip i{position:absolute;top:4px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--muted)}
+.fmtstrip i.band{top:0;height:14px;margin-left:0;border-radius:7px;background:color-mix(in srgb,var(--c1) 30%,transparent)}
+.fmtstrip i.top{background:var(--c2);width:8px;height:8px;top:3px;margin-left:-4px}
+.fmtweek{display:flex;gap:6px;align-items:flex-end;height:46px;margin-top:6px}
+.fmtweek span{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;max-width:30px;height:100%;justify-content:flex-end}
+.fmtweek i{display:block;width:100%;border-radius:3px 3px 0 0;background:var(--c1);min-height:2px}
+.fmtweek small{font-size:10px;color:var(--muted);margin:0}
+.fmtchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.fmtchips span{font-size:12px;border-radius:999px;padding:2px 9px;background:var(--surface2)}
+.fmtfoot{font-size:11.5px;color:var(--muted);margin:0}
+@media (max-width:600px){.fmtrow{grid-template-columns:1fr;gap:4px}}
 .sigtools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 2px}
 .sigsel{font-size:13px;color:var(--muted);display:none;align-items:center;gap:6px}
 .sigtab{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
@@ -2508,8 +2526,8 @@ Object.assign(T.th, {stUpdated: "อัปเดตเมื่อ {ago}", gVerd
   dTitle: "หาโอกาส", dcFast: "ได้วิวเร็วที่สุด", dcFastD: "คลิปที่ได้วิวต่อชั่วโมงมากที่สุดระหว่างการตรวจสองครั้งล่าสุด", dcFastNone: "ยังไม่มีคลิปที่ถูกตรวจสองครั้งล่าสุด รายการนี้จะเติมเมื่อมีการตรวจช่องอีกรอบ", dcBeat: "ชนะยอดปกติของช่อง", dcBeatD: "คลิปที่ได้วิวหลายเท่าของยอดปกติของช่องตัวเอง ไม่ว่าช่องจะเล็กหรือใหญ่", dcSmall: "ช่องเล็ก ผลงานใหญ่", dcSmallD: "ช่องที่มีผู้ติดตามไม่ถึง 5 หมื่นคน แต่คลิปปกติได้ 5 หมื่นวิวขึ้นไป และอย่างน้อย 10 เท่าของผู้ติดตาม", dcSpread: "กำลังเกิดในหลายช่อง", dcSpreadD: "หัวข้อที่ช่องในข้อมูลของเรา 3 ช่องขึ้นไปลงมากกว่าปกติใน 3 วันที่ผ่านมา ก่อนจะแออัด", dcSteady: "ฮิตต่อเนื่อง", dcSteadyD: "ช่องที่คลิปล่าสุดส่วนใหญ่เกิน 1 แสนวิว แปลว่ารูปแบบนี้ยังได้ผล", dcCrowded: "แออัดแล้ว", dcCrowdedD: "หัวข้อที่ช่องในข้อมูลของเราลงกันเยอะแล้ว จะโดดเด่นได้ยากถ้าไม่มีอะไรใหม่", dcNone: "ยังไม่มีอะไรในรายการนี้", rsSmall: "คลิปปกติได้วิว {r} เท่าของผู้ติดตาม", rsTrend: "คลิปใหม่ {n} คลิปจาก {k} ช่องใน 3 วัน",
   radD: "แต่ละวงคือเทรนด์ที่กำลังขึ้นในข้อมูลของเรา ยิ่งซ้าย: ยิ่งมีช่องของเราลงน้อย ยิ่งสูง: ยิ่งลงมากกว่าปกติ ยิ่งใหญ่: ยิ่งมีคลิปใหม่มากใน 3 วัน", radEarly: "เพิ่งเริ่ม: ช่องของเราไม่เกิน 4 ช่อง", radX: "จำนวนช่องที่ลงใน 3 วัน", radY: "คลิปใหม่เทียบกับปกติ", radSize: "วงใหญ่: คลิปใหม่มาก", radWeak: "สีจาง: สัญญาณอ่อน", radWeakS: "สัญญาณอ่อน", radFresh: "นับจากช่องที่ตรวจภายใน 2 วัน · เผยแพร่ข้อมูลเมื่อ {ago}", radList: "ดูเป็นรายการ", radFew: "ตอนนี้เทรนด์ที่กำลังขึ้นในข้อมูลของเรายังน้อยเกินกว่าจะวาดเรดาร์", oppD: "แต่ละวงคือหัวข้อ ยิ่งสูง: ยอดวิวปกติยิ่งมาก ยิ่งซ้าย: ยิ่งมีช่องของเราลงหัวข้อนี้น้อย ยิ่งใหญ่: คลิปไวรัลยิ่งเยอะ แตะเพื่อดู", oppSweet: "ช่องน้อย วิวสูง"});
 // Product pass (29 Oct 2026): trend stages, signals, format, focus, idea pipeline, evidence and alerts; the packs carry the same keys
-Object.assign(T.en, {stCrowded: "Crowded", stCooling: "Cooling", gStage: "How far a trend has spread among the channels we track: Early, Spreading or Crowded. Cooling means it was busier a few days ago.", mh_stage: "Early: 4 or fewer of our channels posted it in the last 3 days. Spreading: 5 or more channels and under 15 new Shorts. Crowded: 5 or more channels and 15 or more new Shorts. Cooling: it had a busy 3 days (8 or more Shorts, at least twice its earlier share of new Shorts) and that share has since halved.", mf_stage: "Counts over the last 3 days. Cooling looks back 2 weeks.", my_stage: "Describes how far a trend has spread in our data. Early doesn’t mean easy, Crowded doesn’t mean too late, and Cooling doesn’t mean over.", sigOpen: "Show every signal as a table", sigD: "Each column is a separate signal from the channels we track. Sort by the one that matters to you: we don’t blend them into one score.", sigTrend: "Trend", sigStage: "Stage", sigNew: "New Shorts, 3 days", sigCh: "Our channels", sigLift: "vs usual", sigViews: "Typical views", sigSort: "Sort by", sigEarly: "Early only", sigFoot: "Counts come from the {n} channels we track, not all of YouTube. Faded rows are weak signals.", coolT: "Cooling down", coolD: "Topics that were busier in our data a few days ago and have quietened since. Good to know before you start one.", coolRow: "Busiest: {p} new Shorts in 3 days around {d} · last 3 days: {n}", coolSheet: "Busier a few days ago: {p} new Shorts in 3 days around {d}, against {n} in the last 3 days. Counted in our data and adjusted for how much history we keep per channel.", coolTop: "Shorts from its busiest days", tnPeak: "busiest 3 days", tnNow: "last 3 days", tnCh3w: "channels in 3 weeks", dcCooling: "Cooling down", dcCoolingD: "Topics that were busier in our data a few days ago and have quietened since. Good to know before you start one.", dcCrowdedD: "Rising topics that 5 or more of our channels posted 15 or more Shorts about in 3 days. Harder to stand out unless you bring something new.", nfD: "Topics compared on separate signals from the channels we track: typical views, the share of Shorts that go viral and how many of our channels post. Pick one to sort by; we don’t blend them into a score.", nfByViews: "Typical views", nfByViral: "Share going viral", nfByFew: "Fewest of our channels"});
-Object.assign(T.th, {stCrowded: "ทำกันเยอะแล้ว", stCooling: "เริ่มซา", gStage: "เทรนด์กระจายไปในช่องที่เราติดตามมากแค่ไหน: เพิ่งเริ่ม กำลังกระจาย หรือทำกันเยอะแล้ว ส่วนเริ่มซาแปลว่าเมื่อไม่กี่วันก่อนคึกคักกว่านี้", mh_stage: "เพิ่งเริ่ม: ช่องของเรา 4 ช่องหรือน้อยกว่าโพสต์เรื่องนี้ใน 3 วันล่าสุด กำลังกระจาย: 5 ช่องขึ้นไปและคลิปใหม่ไม่ถึง 15 คลิป ทำกันเยอะแล้ว: 5 ช่องขึ้นไปและคลิปใหม่ 15 คลิปขึ้นไป เริ่มซา: เคยมีช่วง 3 วันที่คึกคัก (8 คลิปขึ้นไป และสัดส่วนคลิปใหม่อย่างน้อย 2 เท่าของก่อนหน้า) แล้วสัดส่วนนั้นลดลงเหลือครึ่งหนึ่งหรือน้อยกว่า", mf_stage: "นับจาก 3 วันล่าสุด ส่วนเริ่มซาย้อนดู 2 สัปดาห์", my_stage: "บอกว่าเทรนด์กระจายไปแค่ไหนในข้อมูลของเรา เพิ่งเริ่มไม่ได้แปลว่าง่าย ทำกันเยอะแล้วไม่ได้แปลว่าสายเกินไป และเริ่มซาไม่ได้แปลว่าจบแล้ว", sigOpen: "ดูทุกสัญญาณเป็นตาราง", sigD: "แต่ละคอลัมน์คือสัญญาณแยกกันจากช่องที่เราติดตาม เรียงตามตัวที่คุณสนใจได้เลย เราไม่รวมเป็นคะแนนเดียว", sigTrend: "เทรนด์", sigStage: "ระยะ", sigNew: "คลิปใหม่ 3 วัน", sigCh: "ช่องที่เราติดตาม", sigLift: "เทียบปกติ", sigViews: "วิวปกติ", sigSort: "เรียงตาม", sigEarly: "เฉพาะเพิ่งเริ่ม", sigFoot: "ตัวเลขมาจาก {n} ช่องที่เราติดตาม ไม่ใช่ทั้ง YouTube แถวที่จางคือสัญญาณอ่อน", coolT: "เริ่มซาแล้ว", coolD: "หัวข้อที่เมื่อไม่กี่วันก่อนคึกคักกว่านี้ในข้อมูลของเรา แล้วค่อย ๆ เงียบลง ควรรู้ไว้ก่อนเริ่มทำ", coolRow: "ช่วงคึกสุด: คลิปใหม่ {p} คลิปใน 3 วัน ราว {d} · 3 วันล่าสุด: {n}", coolSheet: "เมื่อไม่กี่วันก่อนคึกคักกว่านี้: คลิปใหม่ {p} คลิปใน 3 วัน ราว {d} เทียบกับ {n} คลิปใน 3 วันล่าสุด นับจากข้อมูลของเรา และปรับตามจำนวนประวัติที่เราเก็บต่อช่อง", coolTop: "คลิปจากช่วงที่คึกที่สุด", tnPeak: "3 วันที่คึกสุด", tnNow: "3 วันล่าสุด", tnCh3w: "ช่องใน 3 สัปดาห์", dcCooling: "เริ่มซาแล้ว", dcCoolingD: "หัวข้อที่เมื่อไม่กี่วันก่อนคึกคักกว่านี้ในข้อมูลของเรา แล้วค่อย ๆ เงียบลง ควรรู้ไว้ก่อนเริ่มทำ", dcCrowdedD: "หัวข้อที่กำลังขึ้น ซึ่งช่องของเรา 5 ช่องขึ้นไปโพสต์รวม 15 คลิปขึ้นไปใน 3 วัน จะโดดเด่นได้ยากถ้าไม่มีมุมใหม่", nfD: "เทียบหมวดด้วยสัญญาณแยกกันจากช่องที่เราติดตาม: วิวปกติ สัดส่วนคลิปที่ไวรัล และจำนวนช่องของเราที่โพสต์ เลือกเรียงทีละตัว เราไม่รวมเป็นคะแนน", nfByViews: "วิวปกติ", nfByViral: "สัดส่วนที่ไวรัล", nfByFew: "ช่องของเราโพสต์น้อยสุด"});
+Object.assign(T.en, {stCrowded: "Crowded", stCooling: "Cooling", gStage: "How far a trend has spread among the channels we track: Early, Spreading or Crowded. Cooling means it was busier a few days ago.", mh_stage: "Early: 4 or fewer of our channels posted it in the last 3 days. Spreading: 5 or more channels and under 15 new Shorts. Crowded: 5 or more channels and 15 or more new Shorts. Cooling: it had a busy 3 days (8 or more Shorts, at least twice its earlier share of new Shorts) and that share has since halved.", mf_stage: "Counts over the last 3 days. Cooling looks back 2 weeks.", my_stage: "Describes how far a trend has spread in our data. Early doesn’t mean easy, Crowded doesn’t mean too late, and Cooling doesn’t mean over.", sigOpen: "Show every signal as a table", sigD: "Each column is a separate signal from the channels we track. Sort by the one that matters to you: we don’t blend them into one score.", sigTrend: "Trend", sigStage: "Stage", sigNew: "New Shorts, 3 days", sigCh: "Our channels", sigLift: "vs usual", sigViews: "Typical views", sigSort: "Sort by", sigEarly: "Early only", sigFoot: "Counts come from the {n} channels we track, not all of YouTube. Faded rows are weak signals.", coolT: "Cooling down", coolD: "Topics that were busier in our data a few days ago and have quietened since. Good to know before you start one.", coolRow: "Busiest: {p} new Shorts in 3 days around {d} · last 3 days: {n}", coolSheet: "Busier a few days ago: {p} new Shorts in 3 days around {d}, against {n} in the last 3 days. Counted in our data and adjusted for how much history we keep per channel.", coolTop: "Shorts from its busiest days", tnPeak: "busiest 3 days", tnNow: "last 3 days", tnCh3w: "channels in 3 weeks", dcCooling: "Cooling down", dcCoolingD: "Topics that were busier in our data a few days ago and have quietened since. Good to know before you start one.", dcCrowdedD: "Rising topics that 5 or more of our channels posted 15 or more Shorts about in 3 days. Harder to stand out unless you bring something new.", nfD: "Topics compared on separate signals from the channels we track: typical views, the share of Shorts that go viral and how many of our channels post. Pick one to sort by; we don’t blend them into a score.", nfByViews: "Typical views", nfByViral: "Share going viral", nfByFew: "Fewest of our channels", fmtT: "Format DNA", fmtTrendT: "Format of Shorts on this trend", fmtMineT: "Your format", fmtLen: "Length", fmtLenV: "Most run {a}–{b} · typical {m}", fmtTopLen: "its 3 most-viewed: typical {m}", fmtTopKey: "orange dots: the 3 most-viewed", fmtRhythm: "Rhythm", fmtWeek: "About {n} a week", fmtDay: "About {n} a day", fmtWeekKey: "Uploads by weekday, in your time zone", fmtTitles: "Titles", fmtTitleLen: "Titles run about {n} characters", fmtQ: "questions", fmtTag: "hashtags", fmtNum: "numbers", fmtSeries: "numbered parts", fmtHook: "hook openers", fmtEmoji: "emoji", fmtPct: "{p}% {x}", fmtRepeat: "Same words in {k} of {n} titles: “{w}”", fmtFoot: "Read from titles, lengths and upload times only. We don’t watch or listen to the videos.", fmtFew: "Too few Shorts to read a format yet."});
+Object.assign(T.th, {stCrowded: "ทำกันเยอะแล้ว", stCooling: "เริ่มซา", gStage: "เทรนด์กระจายไปในช่องที่เราติดตามมากแค่ไหน: เพิ่งเริ่ม กำลังกระจาย หรือทำกันเยอะแล้ว ส่วนเริ่มซาแปลว่าเมื่อไม่กี่วันก่อนคึกคักกว่านี้", mh_stage: "เพิ่งเริ่ม: ช่องของเรา 4 ช่องหรือน้อยกว่าโพสต์เรื่องนี้ใน 3 วันล่าสุด กำลังกระจาย: 5 ช่องขึ้นไปและคลิปใหม่ไม่ถึง 15 คลิป ทำกันเยอะแล้ว: 5 ช่องขึ้นไปและคลิปใหม่ 15 คลิปขึ้นไป เริ่มซา: เคยมีช่วง 3 วันที่คึกคัก (8 คลิปขึ้นไป และสัดส่วนคลิปใหม่อย่างน้อย 2 เท่าของก่อนหน้า) แล้วสัดส่วนนั้นลดลงเหลือครึ่งหนึ่งหรือน้อยกว่า", mf_stage: "นับจาก 3 วันล่าสุด ส่วนเริ่มซาย้อนดู 2 สัปดาห์", my_stage: "บอกว่าเทรนด์กระจายไปแค่ไหนในข้อมูลของเรา เพิ่งเริ่มไม่ได้แปลว่าง่าย ทำกันเยอะแล้วไม่ได้แปลว่าสายเกินไป และเริ่มซาไม่ได้แปลว่าจบแล้ว", sigOpen: "ดูทุกสัญญาณเป็นตาราง", sigD: "แต่ละคอลัมน์คือสัญญาณแยกกันจากช่องที่เราติดตาม เรียงตามตัวที่คุณสนใจได้เลย เราไม่รวมเป็นคะแนนเดียว", sigTrend: "เทรนด์", sigStage: "ระยะ", sigNew: "คลิปใหม่ 3 วัน", sigCh: "ช่องที่เราติดตาม", sigLift: "เทียบปกติ", sigViews: "วิวปกติ", sigSort: "เรียงตาม", sigEarly: "เฉพาะเพิ่งเริ่ม", sigFoot: "ตัวเลขมาจาก {n} ช่องที่เราติดตาม ไม่ใช่ทั้ง YouTube แถวที่จางคือสัญญาณอ่อน", coolT: "เริ่มซาแล้ว", coolD: "หัวข้อที่เมื่อไม่กี่วันก่อนคึกคักกว่านี้ในข้อมูลของเรา แล้วค่อย ๆ เงียบลง ควรรู้ไว้ก่อนเริ่มทำ", coolRow: "ช่วงคึกสุด: คลิปใหม่ {p} คลิปใน 3 วัน ราว {d} · 3 วันล่าสุด: {n}", coolSheet: "เมื่อไม่กี่วันก่อนคึกคักกว่านี้: คลิปใหม่ {p} คลิปใน 3 วัน ราว {d} เทียบกับ {n} คลิปใน 3 วันล่าสุด นับจากข้อมูลของเรา และปรับตามจำนวนประวัติที่เราเก็บต่อช่อง", coolTop: "คลิปจากช่วงที่คึกที่สุด", tnPeak: "3 วันที่คึกสุด", tnNow: "3 วันล่าสุด", tnCh3w: "ช่องใน 3 สัปดาห์", dcCooling: "เริ่มซาแล้ว", dcCoolingD: "หัวข้อที่เมื่อไม่กี่วันก่อนคึกคักกว่านี้ในข้อมูลของเรา แล้วค่อย ๆ เงียบลง ควรรู้ไว้ก่อนเริ่มทำ", dcCrowdedD: "หัวข้อที่กำลังขึ้น ซึ่งช่องของเรา 5 ช่องขึ้นไปโพสต์รวม 15 คลิปขึ้นไปใน 3 วัน จะโดดเด่นได้ยากถ้าไม่มีมุมใหม่", nfD: "เทียบหมวดด้วยสัญญาณแยกกันจากช่องที่เราติดตาม: วิวปกติ สัดส่วนคลิปที่ไวรัล และจำนวนช่องของเราที่โพสต์ เลือกเรียงทีละตัว เราไม่รวมเป็นคะแนน", nfByViews: "วิวปกติ", nfByViral: "สัดส่วนที่ไวรัล", nfByFew: "ช่องของเราโพสต์น้อยสุด", fmtT: "DNA รูปแบบคลิป", fmtTrendT: "รูปแบบของคลิปในเทรนด์นี้", fmtMineT: "รูปแบบคลิปของคุณ", fmtLen: "ความยาว", fmtLenV: "ส่วนใหญ่ยาว {a}–{b} · ปกติ {m}", fmtTopLen: "3 คลิปที่วิวสูงสุด: ปกติ {m}", fmtTopKey: "จุดสีส้ม: 3 คลิปที่วิวสูงสุด", fmtRhythm: "จังหวะการลง", fmtWeek: "ราว {n} คลิปต่อสัปดาห์", fmtDay: "ราว {n} คลิปต่อวัน", fmtWeekKey: "จำนวนคลิปตามวันในสัปดาห์ ตามเวลาของคุณ", fmtTitles: "ชื่อคลิป", fmtTitleLen: "ชื่อยาวราว {n} ตัวอักษร", fmtQ: "เป็นคำถาม", fmtTag: "มีแฮชแท็ก", fmtNum: "มีตัวเลข", fmtSeries: "เป็นตอนมีเลข", fmtHook: "เปิดด้วยฮุก", fmtEmoji: "มีอีโมจิ", fmtPct: "{x} {p}%", fmtRepeat: "คำเดิมใน {k} จาก {n} ชื่อ: “{w}”", fmtFoot: "อ่านจากชื่อ ความยาว และเวลาที่ลงเท่านั้น เราไม่ได้ดูหรือฟังคลิป", fmtFew: "คลิปยังน้อยเกินไปที่จะอ่านรูปแบบได้"});
 // end of the product pass wording
 const TAGS = {
   'Consistent engine': {en: 'Steady hits', th: 'ฮิตสม่ำเสมอ', cls: 'good',
@@ -3524,6 +3542,69 @@ function simReason(c, o) {   // why a channel shows up as similar: a search they
   const tp = TOPICS.find(x => chTopics(c).has(x[0]) && chTopics(o).has(x[0]));
   return tp ? t('simTopic', {t: topicName(tp)}) : '';
 }
+/* ---------- Format DNA: how a channel's (or a trend's) Shorts are put together, read only from lengths, titles and upload times ---------- */
+const SERIES_RX = /\b(part|pt\.?|ep\.?|episode|day|round|level)\s*#?\d+|(^|\s)#\d+\b|ตอน(ที่)?\s*\d+|ภาค\s*\d+|วันที่\s*\d+/i;
+const FMT_HABITS = [['fmtQ', /[?？]/], ['fmtTag', /#[\p{L}\p{N}_]+/u], ['fmtNum', /\d/], ['fmtSeries', SERIES_RX], ['fmtHook', null], ['fmtEmoji', /\p{Extended_Pictographic}/u]];
+// vids: Shorts with d (seconds), p (upload time), t (title) and v (views). Returns null when there are too few to say anything.
+// termsFn splits a title into words and two-word phrases (the page's own termsOf unless a test passes one).
+function formatFacts(vids, termsFn) {
+  const timed = vids.filter(v => v.d > 0 && v.d <= 180), titles = vids.map(v => v.t || '').filter(Boolean);
+  if (timed.length < 5 && titles.length < 5) return null;
+  const out = {n: vids.length}, at = (a, p) => a[Math.round(p * (a.length - 1))];
+  if (timed.length >= 5) {
+    const lens = timed.map(v => v.d).sort((a, b) => a - b), top = new Set(timed.slice().sort((a, b) => b.v - a.v).slice(0, 3));
+    Object.assign(out, {lenMed: median(lens), lenLo: at(lens, 0.25), lenHi: at(lens, 0.75), dots: timed.map(v => ({d: v.d, top: top.has(v)}))});
+    if (timed.length >= 8) out.topLen = median([...top].map(v => v.d));
+  }
+  const ps = vids.map(v => v.p).filter(Boolean).sort((a, b) => a - b);
+  if (ps.length >= 4) {
+    out.perWeek = (ps.length - 1) / Math.max(86400, ps[ps.length - 1] - ps[0]) * 7 * 86400;   // over the stretch these uploads cover
+    out.days = [0, 0, 0, 0, 0, 0, 0];
+    ps.forEach(p => { out.days[(new Date(p * 1000).getDay() + 6) % 7]++; });   // Monday first, in the viewer's own time zone
+  }
+  if (titles.length >= 5) {
+    const hook = typeof HOOKS !== 'undefined' ? HOOKS : /^(pov|what if|how|why)\b/i;
+    out.habits = FMT_HABITS.map(([k, rx]) => [k, titles.filter(x => (rx || hook).test(x)).length / titles.length]).filter(h => h[1] >= 0.2).sort((a, b) => b[1] - a[1]);
+    const counts = new Map(), split = termsFn || termsOf;
+    titles.forEach(x => split(x).forEach(w => { if (w.includes(' ')) counts.set(w, (counts.get(w) || 0) + 1); }));
+    const top = [...counts.entries()].filter(([, k]) => k >= 3 && k >= titles.length * 0.4);
+    if (top.length) {   // phrases that chain by a word become one run ("tom and" + "and jerry" -> "tom and jerry"), kept only if whole titles carry it
+      const k = Math.max(...top.map(x => x[1])), set = top.filter(x => x[1] === k).map(x => x[0]), first = new Map(set.map(p => [p.split(' ')[0], p]));
+      const norm = x => ' ' + x.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, ' ').replace(/\s+/g, ' ').trim() + ' ';
+      let best = set[0];
+      for (const st of set.filter(p => !set.some(q => q.split(' ')[1] === p.split(' ')[0]))) {
+        let run = st, last = st.split(' ')[1];
+        for (let g = 0; first.has(last) && g < 12; g++) { last = first.get(last).split(' ')[1]; run += ' ' + last; }
+        if (run.length > best.length) best = run;
+      }
+      const has = titles.filter(x => norm(x).includes(' ' + best + ' ')).length;
+      out.repeat = has >= 3 && has >= titles.length * 0.4 ? {w: best, k: has, n: titles.length} : {w: set[0], k, n: titles.length};
+    }
+    out.titleLen = Math.round(median(titles.map(x => [...x].length)));
+  }
+  return out;
+}
+const weekday = i => new Intl.DateTimeFormat(LOC(), {weekday: 'narrow'}).format(new Date(2024, 0, 1 + i));   // 1 Jan 2024 was a Monday
+function formatCard(f, isTrend) {   // the facts as small pictures: every Short on a length strip, uploads per weekday, title habits
+  if (!f) return `<p class="pbmuted">${esc(t('fmtFew'))}</p>`;
+  const rows = [], row = (ic, k, body) => `<div class="fmtrow"><span class="fmtk">${ic}${esc(t(k))}</span><div class="fmtv">${body}</div></div>`;
+  if (f.dots) {
+    const max = Math.max(60, ...f.dots.map(x => x.d)), X = s => (100 * s / max).toFixed(1);
+    rows.push(row(IC.clock, 'fmtLen', `<b>${esc(t('fmtLenV', {a: fmtDur(f.lenLo), b: fmtDur(f.lenHi), m: fmtDur(f.lenMed)}))}</b>
+      <div class="fmtstrip" role="img" aria-label="${esc(t('fmtLenV', {a: fmtDur(f.lenLo), b: fmtDur(f.lenHi), m: fmtDur(f.lenMed)}))}"><i class="band" style="left:${X(f.lenLo)}%;width:${Math.max(1, X(f.lenHi) - X(f.lenLo)).toFixed(1)}%"></i>${f.dots.map(x => `<i class="${x.top ? 'top' : ''}" style="left:${X(x.d)}%"></i>`).join('')}</div>
+      <small>0:00 – ${esc(fmtDur(max))} · ${esc(t('fmtTopKey'))}${f.topLen != null ? ' · ' + esc(t('fmtTopLen', {m: fmtDur(f.topLen)})) : ''}</small>`));
+  }
+  if (f.days && !isTrend) {
+    const mx = Math.max(1, ...f.days), n = f.perWeek >= 14 ? Math.round(f.perWeek / 7 * 10) / 10 : f.perWeek >= 2 ? Math.round(f.perWeek) : Math.round(f.perWeek * 10) / 10;
+    rows.push(row(IC.calendar, 'fmtRhythm', `<b>${esc(t(f.perWeek >= 14 ? 'fmtDay' : 'fmtWeek', {n}))}</b>
+      <div class="fmtweek" role="img" aria-label="${esc(t('fmtWeekKey'))}">${f.days.map((k, i) => `<span><i style="height:${Math.max(4, 100 * k / mx).toFixed(0)}%"></i><small>${esc(weekday(i))}</small></span>`).join('')}</div><small>${esc(t('fmtWeekKey'))}</small>`));
+  }
+  if (f.habits) {
+    rows.push(row(IC.edit, 'fmtTitles', `<b>${esc(t('fmtTitleLen', {n: f.titleLen}))}</b>${f.habits.length ? `<div class="fmtchips">${f.habits.map(([k, p]) => `<span>${esc(t('fmtPct', {p: Math.round(100 * p), x: t(k)}))}</span>`).join('')}</div>` : ''}
+      ${f.repeat && !isTrend ? `<small>${esc(t('fmtRepeat', f.repeat))}</small>` : ''}`));
+  }
+  return `<div class="fmtcard">${rows.join('')}<p class="fmtfoot">${esc(t('fmtFoot'))}</p></div>`;
+}
 function drawSheet(keepScroll) {
   const c = findCh(SHEET_ID), body = $('#sheetBody');
   if (!c) return;
@@ -3551,6 +3632,7 @@ function drawSheet(keepScroll) {
         ${card('lTrend', xOr(c.trend), c.trend == null ? t('momNA') : c.mom_n ? t('momFoot', {n: c.mom_n}) : '', 'trend')}
       </div>
       ${risks.length ? `<h3>${esc(t('rkT'))}</h3><ul class="risks">${risks.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+      <h3>${esc(t('fmtT'))}</h3>${formatCard(formatFacts(c.series))}
       <h3>${esc(t('recent'))} <span class="seg"><button type="button" data-shsort="new" aria-pressed="${SHEET_SORT === 'new'}">${esc(t('newestFirst'))}</button><button type="button" data-shsort="top" aria-pressed="${SHEET_SORT === 'top'}">${esc(t('topFirst'))}</button></span></h3>
       <div class="vgrid">${vids.map(v => vCard(v, c, {noCh: true, showWhen: true})).join('')}</div>
       <details class="shmore"${S.detail ? ' open' : ''}><summary>${esc(t('moreStats'))}</summary>
@@ -4693,6 +4775,7 @@ function mineView() {
       <button type="button" class="ghost" data-minedrop>${esc(t('mineDisconnect'))}</button></div></div></div>`;
   h += `<div class="cards4"><div class="scard"><div class="lbl">${esc(t('mineUsual'))}</div><b>${usual ? esc(fmt(usual)) : '–'}</b></div><div class="scard"><div class="lbl">${esc(t('lBest'))}</div><b>${esc(fmt(best))}</b></div>
       <div class="scard"><div class="lbl">${esc(t('mineShorts'))}</div><b>${vs.length}</b></div>${chTalk(c) != null ? `<div class="scard"><div class="lbl">${esc(t('lTalk'))}</div><b>${esc(fmtTalk(chTalk(c)))}</b></div>` : ''}</div>`;
+  h += `<h3 class="subhead">${esc(t('fmtMineT'))}</h3>${formatCard(formatFacts(vs))}`;
   const an = chStats(c);
   if (an) h += `<h3 class="subhead">${esc(t('anT'))}</h3>${an}`;
   h += `<h3 class="subhead">${esc(t('mineYpp'))}</h3><div class="ypp">${bar(t('mineSubs'), d.subs, 1000)}${bar(t('mineViews90'), v90, target)}<p class="pbtip">${esc(t('mineYppNote'))}</p></div>`;
@@ -5723,6 +5806,7 @@ function openTrend(key) {
       : s.r ? `<p class="pbtip">${stageBadge(s)}${qm('stage')} ${esc(liftText(s))}${qm('lift')}</p>` : ''}
     <div class="mcards">${mcard(t('tShorts3'), String(s.r))}${mcard(t('tChannels'), String(s.chs.size))}${mcard(t('lTypical'), fmt(s.med))}${best ? mcard(t('lBest'), fmt(best[0].v)) : ''}</div>
     <div class="chartbox" style="margin-top:12px"><h4>${esc(t('tPerDay'))}</h4><div class="dbars">${bars}</div><div class="dbl"><span>${esc(shortDate(start))}</span><span>${esc(t('today'))}</span></div></div>
+    ${(fv => fv.length >= 5 ? `<h4 class="antitle" style="margin-top:14px">${esc(t('fmtTrendT'))}</h4>${formatCard(formatFacts(fv), true)}` : '')((s.cool && (s.pv || []).length ? s.pv : s.vids).map(([v]) => v))}
     ${(s.yt || []).length ? `<h4 class="antitle" style="margin-top:14px">${esc(t('tOnCharts'))}</h4><div class="blist">${s.yt.slice(0, 5).map(x => { YT_ITEMS.set(x.id, x); return `<button type="button" class="yrow2" data-play="${esc(x.id)}" data-c=""><span class="bnum">${x.region}</span><img loading="lazy" src="${thumb(x.id)}" alt=""><span class="bmain"><b>${esc(x.t)}</b><small>${esc(x.cht)} · ${esc(t('views', {n: fmt(x.v || 0)}))}</small></span></button>`; }).join('')}</div>` : ''}
     ${s.chs.size ? `<h4 class="antitle" style="margin-top:14px">${esc(t('tChans'))}</h4><div class="tchs">${[...s.chs].map(findCh).filter(Boolean).slice(0, 14).map(c => `<button type="button" class="tch" data-open-ch="${esc(c.ch_id)}">${avatarEl(c, 40)}<small>${esc(c.name)}</small></button>`).join('')}</div>` : ''}
     ${s.cool && (s.pv || []).length ? `<h4 class="antitle" style="margin-top:14px">${esc(t('coolTop'))}</h4><div class="vgrid">${s.pv.slice(0, locked ? 4 : 8).map(([v, c]) => vCard(v, c, {showWhen: true})).join('')}</div>` : ''}

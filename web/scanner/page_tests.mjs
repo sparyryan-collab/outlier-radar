@@ -54,7 +54,7 @@ const ctx = {
 vm.createContext(ctx);
 vm.runInContext('const nowTs = () => NOW_();', ctx);
 for (const name of ['speed', 'grow', 'young', 'when', 'accelerating', 'subStep', 'factCache', 'chAgeDays', 'chFacts', 'trendStage', 'weakSignal',
-  'topShare', 'freshShare', 'statusInfo', 'takeaway', 'chRisks', 'nextPacificMidnight', 'coolingOf']) vm.runInContext(cut(name), ctx);
+  'topShare', 'freshShare', 'statusInfo', 'takeaway', 'chRisks', 'nextPacificMidnight', 'coolingOf', 'median', 'SERIES_RX', 'FMT_HABITS', 'formatFacts']) vm.runInContext(cut(name), ctx);
 const run = src => vm.runInContext(src, ctx);
 const H = 3600, D = 86400;
 let n = 0;
@@ -127,6 +127,22 @@ ok(cool([2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4], flat(7, 50).concat(flat(7, 1
 ok(cool([0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 8, 8], flat(14, 100)) === null, 'cooling: a trend still at its peak is not cooling');
 ok(run("trendStage({chs: new Set([1, 2, 3, 4, 5, 6]), r: 10})") === 'spread', 'stage: 6 channels and 10 Shorts is spreading');
 ok(run("weakSignal({chs: new Set([1, 2, 3, 4, 5]), r: 5})") && !run("weakSignal({chs: new Set([1, 2, 3, 4, 5]), r: 10})"), 'weak signal: under 8 Shorts');
+
+// Format DNA: lengths, rhythm and title habits, from metadata only
+const words2 = x => { const w = x.toLowerCase().split(/\s+/).filter(Boolean), out = new Set(w); w.forEach((a, i) => { if (w[i + 1]) out.add(a + ' ' + w[i + 1]); }); return out; };
+ctx.words2 = words2;
+ctx.vids = [12, 15, 20, 25, 30, 35, 40, 58].map((d, i) => ({d, v: [9e5, 8e5, 7e5, 1e4, 1e4, 1e4, 1e4, 1e4][i], p: NOW - i * 2 * D,
+  t: ['Tom and Jerry vfx magic part 1', 'Tom and Jerry vfx magic part 2', 'Can you spot it?', 'Tom and Jerry vfx magic #shorts', 'Tom and Jerry vfx magic 10kg', 'Why cats sit like this?', 'Day 3 of my build', 'Wait for it 😂'][i]}));
+let fx = run('formatFacts(vids, words2)');
+ok(fx.lenMed === 27.5 && fx.lenLo === 20 && fx.lenHi === 35, 'format: length median and middle half (20–35 s)');
+ok(fx.topLen === 15, 'format: the 3 most-viewed run 15 s typically');
+ok(Math.abs(fx.perWeek - 3.5) < 0.01, 'format: 8 uploads over 14 days is 3.5 a week');
+ok(fx.days.reduce((a, b) => a + b, 0) === 8, 'format: every upload lands on a weekday');
+const hb = Object.fromEntries(fx.habits);
+ok(hb.fmtQ === 0.25 && hb.fmtSeries === 0.375 && !('fmtEmoji' in hb), 'format: 2 of 8 titles are questions, 3 are numbered parts, 1 emoji is under the 20% cut');
+ok(fx.repeat && fx.repeat.w === 'tom and jerry vfx magic', 'format: overlapping phrases join into the series name');
+ok(fx.repeat.k === 4 && fx.repeat.n === 8, 'format: the series name is in 4 of 8 titles');
+ok(run('formatFacts([{d: 20, t: "a", v: 1}], words2)') === null, 'format: one Short is too few to say anything');
 
 // the status badge: late once well past the usual gap between refreshes
 const status = (ageH, gapH) => { ctx.DATA = {generated: NOW - ageH * H, status: {run_gap_h: gapH}, channels: [{last_probe: NOW - H}]}; return run('statusInfo()'); };
