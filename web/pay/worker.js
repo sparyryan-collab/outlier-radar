@@ -15,6 +15,7 @@
 //   GITHUB_REPO            owner/name, for example sparyryan-collab/outlier-radar                                           [2]
 //   SITE_URL               the site's address, for example https://sparyryan-collab.github.io/outlier-radar                 [3]
 //   VAPID_PUBLIC_KEY, VAPID_PRIVATE_JWK, VAPID_SUBJECT   web push keys (node web/pay/vapid.mjs makes them) and a mailto: [3]
+//   ALERT_DAILY (optional, push alerts per person per day, default 2)                                                     [3]
 //   ANTHROPIC_API_KEY      Claude API key                                                                                    [4]
 //   AI_MODEL (optional, default claude-opus-5-5), AI_DAILY (optional, ideas requests per user per day, default 20),
 //   AI_GLOBAL_DAILY (optional, all users together per day, default 300)                                                      [4]

@@ -960,16 +960,16 @@ pre.log{background:var(--surface);border-radius:10px;padding:10px 12px;font-size
 .sigtools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 2px}
 .sigsel{font-size:13px;color:var(--muted);display:none;align-items:center;gap:6px}
 .sigtab{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
-.sigtab th{font-size:11.5px;font-weight:600;color:var(--muted);text-align:right;padding:6px;border-bottom:1px solid var(--line);white-space:nowrap}
+.sigtab th{font-size:11.5px;font-weight:600;color:var(--muted);text-align:end;padding:6px;border-bottom:1px solid var(--line);white-space:nowrap}
 .sigtab th button{border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;padding:2px 0}
 .sigtab th button[aria-pressed=true]{color:var(--text)}
-.sigtab td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;vertical-align:middle}
-.sigtab th:first-child,.sigtab td:first-child{text-align:left}
-.sigtab td:first-child button{border:0;background:transparent;color:var(--text);font:inherit;font-weight:600;cursor:pointer;padding:0;text-align:left}
+.sigtab td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:end;font-variant-numeric:tabular-nums;vertical-align:middle}
+.sigtab th:first-child,.sigtab td:first-child{text-align:start}
+.sigtab td:first-child button{border:0;background:transparent;color:var(--text);font:inherit;font-weight:600;cursor:pointer;padding:0;text-align:start}
 .sigtab td:first-child small{display:block;color:var(--muted);font-size:11px}
 .sigtab tr.sigweak td{opacity:.72}
 @media (max-width:600px){.sigsel{display:inline-flex}.sigtab thead{display:none}.sigtab tr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px 8px;padding:9px 2px;border-bottom:1px solid var(--line)}
-  .sigtab td{border:0;padding:0;text-align:left;align-self:end}.sigtab td:first-child{grid-column:1/4;align-self:start}.sigtab td:nth-child(2){grid-column:4;text-align:right;align-self:start}
+  .sigtab td{border:0;padding:0;text-align:start;align-self:end}.sigtab td:first-child{grid-column:1/4;align-self:start}.sigtab td:nth-child(2){grid-column:4;text-align:end;align-self:start}
   .sigtab td[data-l]::before{content:attr(data-l);display:block;font-size:10.5px;color:var(--muted)}.sigtab td:nth-child(2)::before{display:none}}
 .tcard .trio{aspect-ratio:16/7}
 .tcard .tbody{gap:8px}
